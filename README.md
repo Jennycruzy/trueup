@@ -10,7 +10,7 @@ The work is split into small workers: planner, runner, comparer, checker, dedupe
 
 ## Status: early build
 
-Only the skeleton exists. `trueup doctor` works. The other commands (`audit`, `sweep`, `fix`, `upstream`, `verify`, `report`) print "not built yet" and exit 2.
+`trueup doctor` and `trueup sweep <neatlogs|openinference|openllmetry>` work. `sweep` runs the plain-SDK scenarios against a fake provider and writes truth and trace to `.trueup/runs/<run_id>/`. It does not compare them yet. The other commands (`audit`, `fix`, `upstream`, `verify`, `report`) print "not built yet" and exit 2.
 
 Exit codes: 0 no mismatches, 1 mismatches found, 2 could not run.
 
@@ -21,7 +21,9 @@ Needs Python 3.12 and [uv](https://docs.astral.sh/uv/).
 ```sh
 uv sync
 uv run trueup doctor
-uv run pytest -q
+uv run pytest -q         # offline unit tests
+uv run pytest -q -m e2e  # builds per-library venvs, runs subprocesses
+uv run trueup sweep neatlogs
 ```
 
 ## License

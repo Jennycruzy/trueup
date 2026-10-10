@@ -14,3 +14,4 @@ dist/
 
 # Trueup working data
 .trueup/
+.ref/
