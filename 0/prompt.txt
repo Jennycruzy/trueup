@@ -1,0 +1,17 @@
+Continue building Trueup in this repository. Read README.md, hackathon.md, CHANGELOG.md and src/ first. This session is recorded by Entire and published: work only inside this repository and never mention anything outside it. Run every command in the foreground and wait for it (no background commands; use long timeouts). Do not git commit or push. Memory is limited: one library at a time.
+
+Secrets: the environment has TRUEUP_MODEL_KEY, TRUEUP_MODEL_BASE_URL, NEATLOGS_API_KEY and NEATLOGS_PROJECT. Never print, log, echo or write their values anywhere (not even partly). Check only whether they are set.
+
+Task 1: the model client and the planner.
+- `src/trueup/model.py`: one client using the `openai` SDK against TRUEUP_MODEL_BASE_URL (an OpenAI-compatible LiteLLM proxy). Models: `claude-sonnet-4.6` for planning and fixing, `claude-haiku` for cheap jobs. Never use any opus model. Retries with backoff on errors; invalid JSON from the model -> retry, then stop that worker with a clear error.
+- Spending guard: before every model call, GET `<base without /v1>/key/info` with the key as Bearer and read `info.spend`; refuse to call if spend >= 15.0 (USD) and stop with a clear message. Record spend before/after each run in the run directory. Unit-test the guard with a fake HTTP response.
+- Planner (`src/trueup/planner.py`): reads a tracing library's wrapper source (from its installed venv), the scenario library and the current findings, and proposes NEW scenarios as JSON data only (never code), each naming the expected truth in fields the comparer can check. Code validates every proposal against the scenario schema and the fake's supported behaviours; invalid ones are rejected with the reason and counted. At most 2 revision tries per rejected proposal (send the rejection reason back). Accepted proposals go to `scenarios/proposed/<lib>/` and can be swept with `trueup sweep <lib> --proposed`.
+- CLI: `trueup plan <lib> [--max N]` (default N=5).
+
+Task 2: trace Trueup itself with neatlogs.
+- Add `neatlogs` as a dependency. At the start of every trueup command that calls the model (plan now, fix later): neatlogs.init with the API key from the environment, the openai instrumentation, and tags (run id, library, trueup version). One trueup run = one neatlogs session. Each worker gets its own workflow name (`trueup-planner`, `trueup-runner`, `trueup-comparer`, `trueup-checker`, `trueup-deduper`) and custom attributes `trueup.run_id`, `trueup.library`, `trueup.verdict` where it applies. Flush on exit, including on a crash (test this). If NEATLOGS_API_KEY is not set, run without it and say so once. IMPORTANT: this outer tracing must not interfere with the inner per-scenario capture, which runs in separate subprocesses with export disabled; keep it that way and test that the inner spans never leave the machine.
+- `trueup doctor` reports whether neatlogs and the model are reachable (one cheap GET each; no model call).
+
+Then actually run `trueup plan openllmetry --max 3` and `trueup plan neatlogs --max 3` once each (real model calls; keep total cost low), sweep the accepted proposals, and run the checker on any lead they produce. Record in hackathon.md: proposals made, accepted, rejected with reasons, leads and findings from them, model tokens and cost (from the key's spend), and the neatlogs session ids (not URLs with secrets). Be honest if the planner found nothing new.
+
+Update CHANGELOG.md and README status. Plain words, no filler. `uv run pytest -q` must pass. Finish with a summary.

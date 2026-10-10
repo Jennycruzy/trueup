@@ -1,0 +1,47 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4M3Z30WTHT7SS88PTEY3K9E",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "CHANGELOG.md",
+    "README.md",
+    "hackathon.md",
+    "pyproject.toml",
+    "scenarios/proposed/neatlogs/p-an-async-stream-cut.json",
+    "scenarios/proposed/neatlogs/p-an-stream-helper-cut.json",
+    "scenarios/proposed/neatlogs/p-lc-tools.json",
+    "scenarios/proposed/openllmetry/p-an-async-stream-error.json",
+    "scenarios/proposed/openllmetry/p-an-stream-helper-error-event.json",
+    "scenarios/proposed/openllmetry/p-oa-chat-async-stream-error.json",
+    "src/trueup/check.py",
+    "src/trueup/cli.py",
+    "src/trueup/model.py",
+    "src/trueup/planner.py",
+    "src/trueup/scenarios/library.py",
+    "src/trueup/scenarios/proposed.py",
+    "src/trueup/scenarios/untraced.py",
+    "src/trueup/sweep.py",
+    "src/trueup/tracing.py",
+    "tests/test_planner.py",
+    "tests/test_tracing.py",
+    "uv.lock"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 106,
+    "cache_creation_tokens": 128059,
+    "cache_read_tokens": 4892590,
+    "output_tokens": 51054,
+    "api_call_count": 53
+  }
+}
