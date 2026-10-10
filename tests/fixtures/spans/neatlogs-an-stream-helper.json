@@ -1,0 +1,134 @@
+{
+ "scenario": "an-stream-helper",
+ "library": "neatlogs",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 5,
+     "output": 3
+    }
+   ],
+   "finish": [
+    [
+     "end_turn"
+    ]
+   ],
+   "tool_calls": [
+    []
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "msg_4cdafbd00001"
+   ],
+   "scenario": "an-stream-helper",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 5,
+      "output": 3
+     }
+    ],
+    "finish": [
+     [
+      "end_turn"
+     ]
+    ],
+    "tool_calls": [
+     []
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "text": "hello",
+     "blocks": [
+      "text"
+     ],
+     "tool_inputs": [],
+     "usage": [
+      5,
+      3
+     ]
+    }
+   },
+   "fake_log": [
+    {
+     "api": "anthropic.messages",
+     "path": "/v1/messages",
+     "scenario": "anth-plain",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "msg_4cdafbd00001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 5,
+      "output_tokens": 3,
+      "total_tokens": 8
+     },
+     "usage_sent": true,
+     "finish": [
+      "end_turn"
+     ],
+     "tool_calls": [],
+     "text": [
+      "hello"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "neatlogs",
+   "versions": {
+    "neatlogs": "1.4.26",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "anthropic.messages.create",
+     "kind": "INTERNAL",
+     "trace_id": "f99b58183ee24d69127f13c4ec1ec72d",
+     "span_id": "b0c12d3bf69ce530",
+     "parent_id": null,
+     "start_ns": 1791662476902316476,
+     "end_ns": 1791662476947009694,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "neatlogs.wrapper",
+     "attributes": {
+      "neatlogs.workflow_name": "child",
+      "neatlogs.span.kind": "llm",
+      "neatlogs.llm.provider": "anthropic",
+      "neatlogs.llm.system": "anthropic",
+      "neatlogs.llm.model_name": "anth-plain",
+      "neatlogs.llm.is_streaming": true,
+      "neatlogs.llm.input_messages.0.role": "user",
+      "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+      "neatlogs.llm.max_tokens": 64,
+      "neatlogs.llm.metrics.duration_ms": 44.195,
+      "neatlogs.instrumentation.name": "neatlogs.wrapper",
+      "neatlogs.metrics.duration_ms": 44.693218
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,140 @@
+{
+ "scenario": "oa-resp-reasoning",
+ "library": "openinference",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 11,
+     "output": 7
+    }
+   ],
+   "finish": [
+    [
+     "completed"
+    ]
+   ],
+   "tool_calls": [
+    []
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "resp_898b96630003"
+   ],
+   "scenario": "oa-resp-reasoning",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "completed"
+     ]
+    ],
+    "tool_calls": [
+     []
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "status": "completed",
+     "output_types": [
+      "reasoning",
+      "message"
+     ],
+     "text": "hello",
+     "total_tokens": 18
+    }
+   },
+   "fake_log": [
+    {
+     "api": "openai.responses",
+     "path": "/v1/responses",
+     "scenario": "resp-reasoning",
+     "stream": false,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "resp_898b96630003",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18,
+      "reasoning_tokens": 4
+     },
+     "usage_sent": true,
+     "finish": [
+      "completed"
+     ],
+     "tool_calls": [],
+     "text": [
+      "hello"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openinference",
+   "versions": {
+    "openinference-instrumentation-openai": "0.1.65",
+    "openinference-instrumentation-anthropic": "3.0.3",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "Response",
+     "kind": "INTERNAL",
+     "trace_id": "e2f79ea7430352559acb5032915703b6",
+     "span_id": "2fdf783245110711",
+     "parent_id": null,
+     "start_ns": 1791662540352300572,
+     "end_ns": 1791662540525516916,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.openai",
+     "attributes": {
+      "llm.system": "openai",
+      "input.mime_type": "application/json",
+      "output.mime_type": "application/json",
+      "llm.input_messages.1.message.role": "user",
+      "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+      "llm.model_name": "resp-reasoning",
+      "llm.token_count.total": 18,
+      "llm.token_count.prompt": 11,
+      "llm.token_count.completion": 7,
+      "llm.token_count.completion_details.reasoning": 4,
+      "llm.token_count.prompt_details.cache_read": 0,
+      "llm.output_messages.0.message.role": "assistant",
+      "llm.output_messages.0.message.contents.0.message_content.type": "reasoning",
+      "llm.output_messages.0.message.contents.0.message_content.text": "Think about the weather.",
+      "llm.output_messages.1.message.role": "assistant",
+      "llm.output_messages.1.message.contents.0.message_content.type": "text",
+      "llm.output_messages.1.message.contents.0.message_content.text": "hello",
+      "openinference.span.kind": "LLM"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

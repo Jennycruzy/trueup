@@ -6,7 +6,7 @@ from pathlib import Path
 
 import pytest
 
-from trueup.cli import EXIT_ERROR, EXIT_OK
+from trueup.cli import EXIT_ERROR, EXIT_MISMATCH, EXIT_OK
 from trueup.runner import NOT_RUN, RAN, run_scenario
 from trueup.runner.run import SRC, child_env
 from trueup.scenarios import plain_sdk
@@ -51,12 +51,17 @@ def test_child_crash_without_output_is_not_run(tmp_path):
     assert r["status"] == NOT_RUN and "exited 3" in r["reason"] and "boom" in r["reason"]
 
 
-def _fake_obs(sid):
+def _fake_obs(sid, span_code="OK"):
+    call = {"response_id": None, "outcome": "complete", "usage": None, "usage_sent": False, "text": [],
+            "finish": [], "tool_calls": [], "include_usage": False}
+    span = {"name": "chat", "span_id": "s1", "parent_id": None, "start_ns": 1,
+            "status": {"code": span_code}, "attributes": {"openinference.span.kind": "LLM"}, "events": []}
     return {
-        "scenario": sid, "library": "x", "status": RAN, "reason": None, "seconds": 1.0,
+        "scenario": sid, "library": "openinference", "status": RAN, "reason": None, "seconds": 1.0,
         "observation": {
-            "truth": {"calls": 1, "outcome": "ok", "app": {"outcome": "ok"}, "expected_mismatch": []},
-            "trace": {"spans": [{"name": "chat", "status": {"code": "OK"}}]},
+            "truth": {"calls": 1, "outcome": "ok", "app": {"outcome": "ok"}, "expected_mismatch": [],
+                      "fake_log": [call]},
+            "trace": {"library": "openinference", "spans": [span]},
         },
     }
 
@@ -76,6 +81,31 @@ def test_sweep_writes_one_file_per_scenario_and_summary(tmp_path):
     summary = (run_dir / "summary.txt").read_text()
     assert f"ran: {len(ids)}" in summary and "not run: 0" in summary
     assert exit_code(results) == EXIT_OK
+    leads = json.loads((run_dir / "leads.json").read_text())
+    assert leads["counts"]["leads"] == 0 and leads["library"] == "openinference"
+
+
+def test_sweep_with_a_lead_exits_1_and_writes_leads(tmp_path):
+    lines = []
+    run_dir, results = sweep(
+        tmp_path, "openinference",
+        ensure=lambda root, lib: Path("/py"),
+        run=lambda py, lib, sid: _fake_obs(sid, "ERROR" if sid == "oa-chat-plain" else "OK"),
+        out=lines.append,
+    )
+    assert exit_code(results) == EXIT_MISMATCH
+    leads = json.loads((run_dir / "leads.json").read_text())
+    assert leads["counts"]["by_check"] == {"run_status": 1}
+    assert any(ln.startswith("oa-chat-plain") and "run_status" in ln and ln.endswith("HIGH")
+               for out in lines for ln in out.splitlines())
+    assert "run_status" in (run_dir / "summary.txt").read_text()
+
+
+def test_leads_win_over_not_run_in_the_exit_code():
+    r = _fake_obs("a", "ERROR")
+    r["mismatches"] = [{"field": "f", "truth": 1, "trace": 2, "severity": "high", "check": "run_status"}]
+    assert exit_code([r, {"scenario": "b", "status": NOT_RUN, "reason": "x"}]) == EXIT_MISMATCH
+    assert exit_code([]) == EXIT_ERROR
 
 
 def test_sweep_venv_failure_reports_every_scenario_not_run(tmp_path):

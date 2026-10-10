@@ -1,0 +1,114 @@
+{
+ "scenario": "oa-resp-stream-cut",
+ "library": "openinference",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "exception",
+   "tokens": [
+    null
+   ],
+   "finish": [
+    []
+   ],
+   "tool_calls": [
+    []
+   ],
+   "fake": [
+    "cut"
+   ],
+   "response_ids": [
+    "resp_a5fab6c30002"
+   ],
+   "exception": "APIConnectionError",
+   "scenario": "oa-resp-stream-cut",
+   "expected": {
+    "calls": 1,
+    "outcome": "exception",
+    "exception": "APIConnectionError",
+    "tokens": [
+     null
+    ],
+    "fake": [
+     "cut"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "exception",
+    "exception_type": "APIConnectionError",
+    "exception_module": "openai",
+    "message": "Connection error."
+   },
+   "fake_log": [
+    {
+     "api": "openai.responses",
+     "path": "/v1/responses",
+     "scenario": "resp-cut",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "resp_a5fab6c30002",
+     "outcome": "cut",
+     "usage": null,
+     "usage_sent": false,
+     "finish": [],
+     "tool_calls": [],
+     "text": [
+      "hel"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openinference",
+   "versions": {
+    "openinference-instrumentation-openai": "0.1.65",
+    "openinference-instrumentation-anthropic": "3.0.3",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "Response",
+     "kind": "INTERNAL",
+     "trace_id": "387fe8d17ee3c5d2aecd0ff4ee4d0454",
+     "span_id": "200af1421918c2c5",
+     "parent_id": null,
+     "start_ns": 1791662554713465924,
+     "end_ns": 1791662554852022796,
+     "status": {
+      "code": "ERROR",
+      "description": "APIConnectionError: Connection error."
+     },
+     "scope": "openinference.instrumentation.openai",
+     "attributes": {
+      "llm.system": "openai",
+      "input.mime_type": "application/json",
+      "llm.model_name": "resp-cut",
+      "llm.input_messages.1.message.role": "user",
+      "llm.input_messages.1.message.content": "hi",
+      "openinference.span.kind": "LLM"
+     },
+     "events": [
+      {
+       "name": "First Token Stream Event",
+       "attributes": {}
+      },
+      {
+       "name": "exception",
+       "attributes": {
+        "exception.type": "openai.APIConnectionError",
+        "exception.message": "Connection error.",
+        "exception.escaped": "False"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

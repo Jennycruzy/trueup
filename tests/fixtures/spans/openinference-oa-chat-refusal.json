@@ -1,0 +1,130 @@
+{
+ "scenario": "oa-chat-refusal",
+ "library": "openinference",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 11,
+     "output": 7
+    }
+   ],
+   "finish": [
+    [
+     "stop"
+    ]
+   ],
+   "tool_calls": [
+    []
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "chatcmpl-7e8fad610001"
+   ],
+   "scenario": "oa-chat-refusal",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "stop"
+     ]
+    ],
+    "tool_calls": [
+     []
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "text": null,
+     "refusal": "I can't help with that.",
+     "finish": "stop",
+     "total_tokens": 18
+    }
+   },
+   "fake_log": [
+    {
+     "api": "openai.chat",
+     "path": "/v1/chat/completions",
+     "scenario": "chat-refusal",
+     "stream": false,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "chatcmpl-7e8fad610001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18
+     },
+     "usage_sent": true,
+     "finish": [
+      "stop"
+     ],
+     "tool_calls": [],
+     "text": [
+      "I can't help with that."
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openinference",
+   "versions": {
+    "openinference-instrumentation-openai": "0.1.65",
+    "openinference-instrumentation-anthropic": "3.0.3",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "ChatCompletion",
+     "kind": "INTERNAL",
+     "trace_id": "a3524e9c7af4d94abe26707463d911d4",
+     "span_id": "7269be510057760c",
+     "parent_id": null,
+     "start_ns": 1791662520059260053,
+     "end_ns": 1791662520070980712,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.openai",
+     "attributes": {
+      "llm.system": "openai",
+      "input.mime_type": "application/json",
+      "output.mime_type": "application/json",
+      "llm.input_messages.0.message.role": "user",
+      "llm.input_messages.0.message.content": "What is the weather in Lagos?",
+      "llm.model_name": "chat-refusal",
+      "llm.token_count.total": 18,
+      "llm.token_count.prompt": 11,
+      "llm.token_count.completion": 7,
+      "llm.output_messages.0.message.role": "assistant",
+      "llm.finish_reason": "stop",
+      "openinference.span.kind": "LLM"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,113 @@
+{
+ "scenario": "oa-chat-stream-cut",
+ "library": "openllmetry",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "exception",
+   "tokens": [
+    null
+   ],
+   "finish": [
+    []
+   ],
+   "tool_calls": [
+    []
+   ],
+   "fake": [
+    "cut"
+   ],
+   "response_ids": [
+    "chatcmpl-39385fbf0001"
+   ],
+   "exception": "APIConnectionError",
+   "scenario": "oa-chat-stream-cut",
+   "expected": {
+    "calls": 1,
+    "outcome": "exception",
+    "exception": "APIConnectionError",
+    "tokens": [
+     null
+    ],
+    "fake": [
+     "cut"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "exception",
+    "exception_type": "APIConnectionError",
+    "exception_module": "openai",
+    "message": "Connection error."
+   },
+   "fake_log": [
+    {
+     "api": "openai.chat",
+     "path": "/v1/chat/completions",
+     "scenario": "chat-cut",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "chatcmpl-39385fbf0001",
+     "outcome": "cut",
+     "usage": null,
+     "usage_sent": false,
+     "finish": [],
+     "tool_calls": [],
+     "text": [
+      "hel"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openllmetry",
+   "versions": {
+    "traceloop-sdk": "0.62.4",
+    "opentelemetry-instrumentation-openai": "0.62.4",
+    "opentelemetry-instrumentation-anthropic": "0.62.4",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "openai.chat",
+     "kind": "CLIENT",
+     "trace_id": "fe2c5f2dcb58a89ee35c2e3cd4e99cd4",
+     "span_id": "7dae8ad66dcebc4f",
+     "parent_id": null,
+     "start_ns": 1791662653649529676,
+     "end_ns": 1791662653664687137,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai.v1",
+     "attributes": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.request.model": "chat-cut",
+      "gen_ai.is_streaming": true,
+      "gen_ai.input.messages": "[{\"role\": \"user\", \"parts\": [{\"content\": \"What is the weather in Lagos?\", \"type\": \"text\"}]}]",
+      "gen_ai.response.model": "chat-cut",
+      "gen_ai.response.id": "chatcmpl-39385fbf0001",
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"content\": \"hel\", \"type\": \"text\"}], \"finish_reason\": \"\"}]"
+     },
+     "events": [
+      {
+       "name": "gen_ai.content.completion.chunk",
+       "attributes": {}
+      },
+      {
+       "name": "gen_ai.content.completion.chunk",
+       "attributes": {}
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

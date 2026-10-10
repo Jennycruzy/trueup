@@ -1,12 +1,17 @@
 """Runs one scenario under one library. Executed in a fresh subprocess.
 
 python -m trueup.runner.child <library> <scenario_id> <out.json>
+python -m trueup.runner.child --audit <library> <script.py> <overrides.json> <out.json>
 """
 
 from __future__ import annotations
 
+import asyncio
 import gc
+import importlib.util
+import inspect
 import json
+import os
 import logging
 import sys
 import time
@@ -95,10 +100,62 @@ def run(library: str, scenario_id: str) -> dict[str, Any]:
     }
 
 
+def _load_main(script: str) -> Any:
+    spec = importlib.util.spec_from_file_location("trueup_audit_target", script)
+    if spec is None or spec.loader is None:
+        raise ImportError(f"cannot load {script}")
+    module = importlib.util.module_from_spec(spec)
+    sys.path.insert(0, os.path.dirname(os.path.abspath(script)))
+    spec.loader.exec_module(module)
+    fn = getattr(module, "main", None)
+    if not callable(fn):
+        raise AttributeError(f"{script} has no main()")
+    return fn
+
+
+def run_audit(library: str, script: str, overrides: dict[str, str]) -> dict[str, Any]:
+    """Run a user's main() with the SDKs pointed at the fake through env base URLs."""
+    logging.disable(logging.CRITICAL)
+    exporter, flush = SETUPS[library]()
+    with FakeProvider(overrides) as fake:
+        os.environ["OPENAI_BASE_URL"] = fake.openai_base_url
+        os.environ["ANTHROPIC_BASE_URL"] = fake.base_url
+        main_fn = _load_main(script)
+        t0 = time.monotonic()
+        try:
+            result = main_fn()
+            if inspect.iscoroutine(result):
+                result = asyncio.run(result)
+            app = {"outcome": "ok", "result": repr(result)[:500]}
+        except BaseException as e:  # noqa: BLE001 - the outcome is the data
+            app = {
+                "outcome": "exception",
+                "exception_type": type(e).__name__,
+                "exception_module": type(e).__module__,
+                "message": str(e)[:500],
+            }
+        app["seconds"] = round(time.monotonic() - t0, 3)
+        gc.collect()
+        flush()
+        fake_log = fake.log.entries()
+    spans = [span_to_dict(s) for s in exporter.get_finished_spans()]
+    return {
+        "truth": {**truth.derive(fake_log, app), "overrides": overrides, "app": app, "fake_log": fake_log},
+        "trace": {"library": library, "versions": _versions(library), "spans": spans},
+    }
+
+
 def main(argv: list[str]) -> int:
-    library, scenario_id, out_path = argv
+    if argv[0] == "--audit":
+        library, script, overrides_path, out_path = argv[1:]
+        with open(overrides_path) as f:
+            overrides = json.load(f)
+        job = lambda: run_audit(library, script, overrides)  # noqa: E731
+    else:
+        library, scenario_id, out_path = argv
+        job = lambda: run(library, scenario_id)  # noqa: E731
     try:
-        payload = {"ok": True, "observation": run(library, scenario_id)}
+        payload = {"ok": True, "observation": job()}
     except BaseException:  # noqa: BLE001 - reported as NOT RUN by the parent
         payload = {"ok": False, "error": traceback.format_exc(limit=8)}
     with open(out_path, "w") as f:

@@ -10,9 +10,15 @@ The work is split into small workers: planner, runner, comparer, checker, dedupe
 
 ## Status: early build
 
-`trueup doctor` and `trueup sweep <neatlogs|openinference|openllmetry>` work. `sweep` runs the plain-SDK scenarios against a fake provider and writes truth and trace to `.trueup/runs/<run_id>/`. It does not compare them yet. The other commands (`audit`, `fix`, `upstream`, `verify`, `report`) print "not built yet" and exit 2.
+`trueup doctor`, `trueup sweep <neatlogs|openinference|openllmetry>` and `trueup audit <script> --library <lib>` work.
 
-Exit codes: 0 no mismatches, 1 mismatches found, 2 could not run.
+`sweep` runs the plain-SDK scenarios against a fake provider, compares truth with the trace, prints a table of leads and writes truth, trace and `leads.json` to `.trueup/runs/<run_id>/`. A lead is a disagreement between truth and trace; it is not a confirmed bug.
+
+`audit` runs your script's `main()` against the fake (through `OPENAI_BASE_URL` / `ANTHROPIC_BASE_URL`) under the chosen library, once per fake scenario on each provider route the script calls, and compares the same way. It needs a `main()` with no arguments that uses the `openai` or `anthropic` SDK; see `src/trueup/audit.py` for its limits.
+
+The other commands (`fix`, `upstream`, `verify`, `report`) print "not built yet" and exit 2.
+
+Exit codes: 0 no leads, 1 leads found, 2 could not run.
 
 ## Run it
 
@@ -24,6 +30,7 @@ uv run trueup doctor
 uv run pytest -q         # offline unit tests
 uv run pytest -q -m e2e  # builds per-library venvs, runs subprocesses
 uv run trueup sweep neatlogs
+uv run trueup audit examples/agent.py --library openinference
 ```
 
 ## License

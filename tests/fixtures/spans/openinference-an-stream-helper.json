@@ -1,0 +1,140 @@
+{
+ "scenario": "an-stream-helper",
+ "library": "openinference",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 5,
+     "output": 3
+    }
+   ],
+   "finish": [
+    [
+     "end_turn"
+    ]
+   ],
+   "tool_calls": [
+    []
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "msg_0cdb32c20001"
+   ],
+   "scenario": "an-stream-helper",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 5,
+      "output": 3
+     }
+    ],
+    "finish": [
+     [
+      "end_turn"
+     ]
+    ],
+    "tool_calls": [
+     []
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "text": "hello",
+     "blocks": [
+      "text"
+     ],
+     "tool_inputs": [],
+     "usage": [
+      5,
+      3
+     ]
+    }
+   },
+   "fake_log": [
+    {
+     "api": "anthropic.messages",
+     "path": "/v1/messages",
+     "scenario": "anth-plain",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "msg_0cdb32c20001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 5,
+      "output_tokens": 3,
+      "total_tokens": 8
+     },
+     "usage_sent": true,
+     "finish": [
+      "end_turn"
+     ],
+     "tool_calls": [],
+     "text": [
+      "hello"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openinference",
+   "versions": {
+    "openinference-instrumentation-openai": "0.1.65",
+    "openinference-instrumentation-anthropic": "3.0.3",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "messages.stream",
+     "kind": "INTERNAL",
+     "trace_id": "e582d8c7f42e2cd285336e1331a10eac",
+     "span_id": "fe2cf3930b9d0d88",
+     "parent_id": null,
+     "start_ns": 1791662561265115127,
+     "end_ns": 1791662561313741701,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.anthropic",
+     "attributes": {
+      "llm.provider": "anthropic",
+      "llm.system": "anthropic",
+      "input.mime_type": "application/json",
+      "llm.request.model_name": "anth-plain",
+      "llm.input_messages.0.message.role": "user",
+      "llm.input_messages.0.message.content": "What is the weather in Lagos?",
+      "output.mime_type": "application/json",
+      "llm.model_name": "anth-plain",
+      "llm.response.model_name": "anth-plain",
+      "llm.output_messages.0.message.role": "assistant",
+      "llm.finish_reason": "end_turn",
+      "llm.output_messages.0.message.contents.0.message_content.type": "text",
+      "llm.output_messages.0.message.contents.0.message_content.text": "hello",
+      "llm.token_count.prompt": 5,
+      "llm.token_count.completion": 3,
+      "llm.token_count.total": 8,
+      "openinference.span.kind": "LLM"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

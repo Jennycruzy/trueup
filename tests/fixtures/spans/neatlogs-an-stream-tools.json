@@ -1,0 +1,150 @@
+{
+ "scenario": "an-stream-tools",
+ "library": "neatlogs",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 5,
+     "output": 3
+    }
+   ],
+   "finish": [
+    [
+     "tool_use"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "get_weather"
+    ]
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "msg_0f274ea40001"
+   ],
+   "scenario": "an-stream-tools",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 5,
+      "output": 3
+     }
+    ],
+    "finish": [
+     [
+      "tool_use"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ]
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "text": "hello",
+     "blocks": [
+      "thinking",
+      "text",
+      "tool_use"
+     ],
+     "tool_inputs": [
+      {
+       "city": "Lagos"
+      }
+     ],
+     "usage": [
+      5,
+      3
+     ]
+    }
+   },
+   "fake_log": [
+    {
+     "api": "anthropic.messages",
+     "path": "/v1/messages",
+     "scenario": "anth-tools",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "msg_0f274ea40001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 5,
+      "output_tokens": 3,
+      "total_tokens": 8
+     },
+     "usage_sent": true,
+     "finish": [
+      "tool_use"
+     ],
+     "tool_calls": [
+      {
+       "id": "toolu_0f274ea40002",
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Lagos\"}"
+      }
+     ],
+     "text": [
+      "hello"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "neatlogs",
+   "versions": {
+    "neatlogs": "1.4.26",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "anthropic.messages.create",
+     "kind": "INTERNAL",
+     "trace_id": "1a4c04e4d338f685a90e93d28fc6da07",
+     "span_id": "8b6d8c459d250238",
+     "parent_id": null,
+     "start_ns": 1791662481865589851,
+     "end_ns": 1791662481911280923,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "neatlogs.wrapper",
+     "attributes": {
+      "neatlogs.workflow_name": "child",
+      "neatlogs.span.kind": "llm",
+      "neatlogs.llm.provider": "anthropic",
+      "neatlogs.llm.system": "anthropic",
+      "neatlogs.llm.model_name": "anth-tools",
+      "neatlogs.llm.is_streaming": true,
+      "neatlogs.llm.input_messages.0.role": "user",
+      "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+      "neatlogs.llm.max_tokens": 64,
+      "neatlogs.llm.metrics.duration_ms": 45.099,
+      "neatlogs.instrumentation.name": "neatlogs.wrapper",
+      "neatlogs.metrics.duration_ms": 45.691072
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

@@ -1,0 +1,132 @@
+{
+ "scenario": "oa-chat-stream-cut",
+ "library": "neatlogs",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "exception",
+   "tokens": [
+    null
+   ],
+   "finish": [
+    []
+   ],
+   "tool_calls": [
+    []
+   ],
+   "fake": [
+    "cut"
+   ],
+   "response_ids": [
+    "chatcmpl-03d5dc560001"
+   ],
+   "exception": "APIConnectionError",
+   "scenario": "oa-chat-stream-cut",
+   "expected": {
+    "calls": 1,
+    "outcome": "exception",
+    "exception": "APIConnectionError",
+    "tokens": [
+     null
+    ],
+    "fake": [
+     "cut"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "exception",
+    "exception_type": "APIConnectionError",
+    "exception_module": "openai",
+    "message": "Connection error."
+   },
+   "fake_log": [
+    {
+     "api": "openai.chat",
+     "path": "/v1/chat/completions",
+     "scenario": "chat-cut",
+     "stream": true,
+     "include_usage": true,
+     "n": null,
+     "status_code": 200,
+     "response_id": "chatcmpl-03d5dc560001",
+     "outcome": "cut",
+     "usage": null,
+     "usage_sent": false,
+     "finish": [],
+     "tool_calls": [],
+     "text": [
+      "hel"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "neatlogs",
+   "versions": {
+    "neatlogs": "1.4.26",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "openai.chat.completions.create",
+     "kind": "INTERNAL",
+     "trace_id": "bcad31f542934dbc0c9bd38339de88db",
+     "span_id": "e9f9468c205aae59",
+     "parent_id": null,
+     "start_ns": 1791662431080600457,
+     "end_ns": 1791662431095739494,
+     "status": {
+      "code": "ERROR",
+      "description": "Connection error."
+     },
+     "scope": "neatlogs.wrapper",
+     "attributes": {
+      "neatlogs.workflow_name": "child",
+      "neatlogs.span.kind": "llm",
+      "neatlogs.llm.provider": "openai",
+      "neatlogs.llm.system": "openai",
+      "neatlogs.llm.is_streaming": true,
+      "neatlogs.llm.input_messages.0.role": "user",
+      "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+      "neatlogs.llm.output_messages.0.role": "assistant",
+      "neatlogs.llm.output_messages.0.content": "hel",
+      "neatlogs.llm.model_name": "chat-cut",
+      "neatlogs.llm.response_id": "chatcmpl-03d5dc560001",
+      "neatlogs.capture_fidelity": "native",
+      "neatlogs.stream.chunk_count": 2,
+      "neatlogs.instrumentation.name": "neatlogs.wrapper",
+      "neatlogs.metrics.duration_ms": 15.139037
+     },
+     "events": [
+      {
+       "name": "neatlogs.stream.chunk",
+       "attributes": {
+        "neatlogs.stream.chunk.index": 0,
+        "neatlogs.stream.chunk.summary": "{\"choices\":[{\"choice_index\":0,\"content_bytes\":0,\"reasoning_bytes\":0,\"tool_fragments\":0,\"finish_reason\":null}],\"usage\":false}"
+       }
+      },
+      {
+       "name": "neatlogs.stream.chunk",
+       "attributes": {
+        "neatlogs.stream.chunk.index": 1,
+        "neatlogs.stream.chunk.summary": "{\"choices\":[{\"choice_index\":0,\"content_bytes\":3,\"reasoning_bytes\":0,\"tool_fragments\":0,\"finish_reason\":null}],\"usage\":false}"
+       }
+      },
+      {
+       "name": "exception",
+       "attributes": {
+        "exception.type": "openai.APIConnectionError",
+        "exception.message": "Connection error.",
+        "exception.escaped": "False"
+       }
+      }
+     ]
+    }
+   ]
+  }
+ }
+}

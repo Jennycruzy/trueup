@@ -55,12 +55,19 @@ class Observation:
 
 @dataclass(frozen=True)
 class Mismatch:
-    """One field where truth and trace disagree."""
+    """One field where truth and trace disagree.
+
+    kind is "lead" (worth checking; not yet a confirmed bug) or "note" (a fact
+    worth recording that is not a disagreement, such as a library changing the
+    request).
+    """
 
     field: str
     truth: Any
     trace: Any
     severity: Severity
+    check: str = ""
+    kind: str = "lead"
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -68,6 +75,8 @@ class Mismatch:
             "truth": self.truth,
             "trace": self.trace,
             "severity": self.severity.value,
+            "check": self.check,
+            "kind": self.kind,
         }
 
     @classmethod
@@ -77,6 +86,8 @@ class Mismatch:
             truth=d["truth"],
             trace=d["trace"],
             severity=Severity(d["severity"]),
+            check=d.get("check", ""),
+            kind=d.get("kind", "lead"),
         )
 
 

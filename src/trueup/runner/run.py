@@ -46,24 +46,37 @@ def run_scenario(python: Path, library: str, scenario_id: str, timeout: float = 
         return not_run(scenario_id, library, str(e))
     if scenario.status != BUILT:
         return not_run(scenario_id, library, f"scenario is {scenario.status}")
+    return _run_child(python, library, scenario_id, [library, scenario_id], timeout)
+
+
+def run_audit(python: Path, library: str, script: Path, label: str, overrides: dict[str, str],
+              timeout: float = 90) -> dict[str, Any]:
+    """Run a user's script's main() with the fake answering as `overrides` say. Same shape as run_scenario."""
+    with tempfile.TemporaryDirectory(prefix="trueup-") as tmp:
+        ov = Path(tmp) / "overrides.json"
+        ov.write_text(json.dumps(overrides))
+        return _run_child(python, library, label, ["--audit", library, str(script.resolve()), str(ov)], timeout)
+
+
+def _run_child(python: Path, library: str, label: str, args: list[str], timeout: float) -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="trueup-") as tmp:
         out = Path(tmp) / "obs.json"
-        cmd = [str(python), "-m", "trueup.runner.child", library, scenario_id, str(out)]
+        cmd = [str(python), "-m", "trueup.runner.child", *args, str(out)]
         t0 = time.monotonic()
         try:
             p = subprocess.run(cmd, env=child_env(), cwd=tmp, capture_output=True, text=True, timeout=timeout)
         except subprocess.TimeoutExpired:
-            return not_run(scenario_id, library, f"timed out after {timeout:.0f} s", time.monotonic() - t0)
+            return not_run(label, library, f"timed out after {timeout:.0f} s", time.monotonic() - t0)
         except OSError as e:
-            return not_run(scenario_id, library, f"could not start {python}: {e}")
+            return not_run(label, library, f"could not start {python}: {e}")
         seconds = time.monotonic() - t0
         if not out.exists():
             tail = (p.stderr or p.stdout).strip()[-2000:]
-            return not_run(scenario_id, library, f"child exited {p.returncode} without output: {_last_line(tail)}",
+            return not_run(label, library, f"child exited {p.returncode} without output: {_last_line(tail)}",
                            seconds, detail=tail)
         payload = json.loads(out.read_text())
     if not payload["ok"]:
-        return not_run(scenario_id, library, "setup or harness error: " + _last_line(payload["error"]), seconds,
+        return not_run(label, library, "setup or harness error: " + _last_line(payload["error"]), seconds,
                        detail=payload["error"])
-    return {"scenario": scenario_id, "library": library, "status": RAN, "reason": None,
+    return {"scenario": label, "library": library, "status": RAN, "reason": None,
             "seconds": round(seconds, 3), "observation": payload["observation"]}

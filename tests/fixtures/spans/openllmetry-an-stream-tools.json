@@ -1,0 +1,156 @@
+{
+ "scenario": "an-stream-tools",
+ "library": "openllmetry",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 5,
+     "output": 3
+    }
+   ],
+   "finish": [
+    [
+     "tool_use"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "get_weather"
+    ]
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "msg_740b2e020001"
+   ],
+   "scenario": "an-stream-tools",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 5,
+      "output": 3
+     }
+    ],
+    "finish": [
+     [
+      "tool_use"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ]
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "text": "hello",
+     "blocks": [
+      "thinking",
+      "text",
+      "tool_use"
+     ],
+     "tool_inputs": [
+      {
+       "city": "Lagos"
+      }
+     ],
+     "usage": [
+      5,
+      3
+     ]
+    }
+   },
+   "fake_log": [
+    {
+     "api": "anthropic.messages",
+     "path": "/v1/messages",
+     "scenario": "anth-tools",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "msg_740b2e020001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 5,
+      "output_tokens": 3,
+      "total_tokens": 8
+     },
+     "usage_sent": true,
+     "finish": [
+      "tool_use"
+     ],
+     "tool_calls": [
+      {
+       "id": "toolu_740b2e020002",
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Lagos\"}"
+      }
+     ],
+     "text": [
+      "hello"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openllmetry",
+   "versions": {
+    "traceloop-sdk": "0.62.4",
+    "opentelemetry-instrumentation-openai": "0.62.4",
+    "opentelemetry-instrumentation-anthropic": "0.62.4",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "anthropic.chat",
+     "kind": "CLIENT",
+     "trace_id": "4800575883984146e3dde96105ad5b45",
+     "span_id": "3eb22142351d100c",
+     "parent_id": null,
+     "start_ns": 1791662712463177773,
+     "end_ns": 1791662712518334291,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.anthropic",
+     "attributes": {
+      "gen_ai.provider.name": "anthropic",
+      "gen_ai.operation.name": "chat",
+      "gen_ai.request.model": "anth-tools",
+      "gen_ai.request.max_tokens": 64,
+      "gen_ai.input.messages": "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"What is the weather in Lagos?\"}]}]",
+      "gen_ai.response.id": "msg_740b2e020001",
+      "gen_ai.usage.input_tokens": 5,
+      "gen_ai.usage.output_tokens": 4,
+      "gen_ai.usage.total_tokens": 9,
+      "gen_ai.usage.cache_read.input_tokens": 0,
+      "gen_ai.usage.cache_creation.input_tokens": 0,
+      "gen_ai.response.model": "anth-tools",
+      "gen_ai.response.finish_reasons": [
+       "tool_call"
+      ],
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"reasoning\", \"content\": \"Need the weather.\"}, {\"type\": \"text\", \"content\": \"hello\"}, {\"type\": \"tool_call\", \"id\": \"toolu_740b2e020002\", \"name\": \"get_weather\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

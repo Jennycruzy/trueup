@@ -1,0 +1,159 @@
+{
+ "scenario": "oa-chat-tools",
+ "library": "openinference",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 11,
+     "output": 7
+    }
+   ],
+   "finish": [
+    [
+     "tool_calls"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "get_weather",
+     "get_time"
+    ]
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "chatcmpl-63cff1d00001"
+   ],
+   "scenario": "oa-chat-tools",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "tool_calls"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "get_weather",
+      "get_time"
+     ]
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "tool_calls": [
+      {
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Lagos\"}"
+      },
+      {
+       "name": "get_time",
+       "arguments": "{\"tz\":\"WAT\"}"
+      }
+     ]
+    }
+   },
+   "fake_log": [
+    {
+     "api": "openai.chat",
+     "path": "/v1/chat/completions",
+     "scenario": "chat-tools",
+     "stream": false,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "chatcmpl-63cff1d00001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18
+     },
+     "usage_sent": true,
+     "finish": [
+      "tool_calls"
+     ],
+     "tool_calls": [
+      {
+       "id": "call_63cff1d00002",
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Lagos\"}"
+      },
+      {
+       "id": "call_63cff1d00003",
+       "name": "get_time",
+       "arguments": "{\"tz\":\"WAT\"}"
+      }
+     ],
+     "text": [
+      ""
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openinference",
+   "versions": {
+    "openinference-instrumentation-openai": "0.1.65",
+    "openinference-instrumentation-anthropic": "3.0.3",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "ChatCompletion",
+     "kind": "INTERNAL",
+     "trace_id": "6e86ba41e4cae2dffe5d6ef8b12cb031",
+     "span_id": "660c35f52ad7edbb",
+     "parent_id": null,
+     "start_ns": 1791662516008051291,
+     "end_ns": 1791662516019287540,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.openai",
+     "attributes": {
+      "llm.system": "openai",
+      "input.mime_type": "application/json",
+      "output.mime_type": "application/json",
+      "llm.input_messages.0.message.role": "user",
+      "llm.input_messages.0.message.content": "What is the weather in Lagos?",
+      "llm.model_name": "chat-tools",
+      "llm.token_count.total": 18,
+      "llm.token_count.prompt": 11,
+      "llm.token_count.completion": 7,
+      "llm.output_messages.0.message.role": "assistant",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_63cff1d00002",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+      "llm.output_messages.0.message.tool_calls.1.tool_call.id": "call_63cff1d00003",
+      "llm.output_messages.0.message.tool_calls.1.tool_call.function.name": "get_time",
+      "llm.output_messages.0.message.tool_calls.1.tool_call.function.arguments": "{\"tz\":\"WAT\"}",
+      "llm.finish_reason": "tool_calls",
+      "openinference.span.kind": "LLM"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

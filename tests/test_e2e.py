@@ -43,3 +43,13 @@ def test_neatlogs_run_is_fast_with_export_disabled():
     r = run_scenario(py, "neatlogs", "oa-chat-stream-cut", timeout=60)
     assert r["status"] == RAN, r["reason"]
     assert r["seconds"] < 30
+
+
+def test_audit_runs_the_example_agent_with_overrides(lib):
+    from trueup.runner.run import run_audit
+
+    name, py = lib
+    r = run_audit(py, name, ROOT / "examples" / "agent.py", "chat-500", {"/v1/chat/completions": "chat-500"})
+    assert r["status"] == RAN, r["reason"]
+    t = r["observation"]["truth"]
+    assert t["outcome"] == "exception" and t["fake_log"][0]["scenario"] == "chat-500"

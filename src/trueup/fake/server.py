@@ -17,6 +17,11 @@ ROUTES: dict[str, tuple[str, Callable[[str, dict[str, Any], Ids], Reply]]] = {
     "/v1/messages": ("anthropic.messages", anthropic_messages.handle),
 }
 SCENARIOS = openai_chat.SCENARIOS + openai_responses.SCENARIOS + anthropic_messages.SCENARIOS
+SCENARIOS_BY_ROUTE: dict[str, tuple[str, ...]] = {
+    "/v1/chat/completions": openai_chat.SCENARIOS,
+    "/v1/responses": openai_responses.SCENARIOS,
+    "/v1/messages": anthropic_messages.SCENARIOS,
+}
 
 
 class TruthLog:
@@ -63,7 +68,8 @@ class _Handler(BaseHTTPRequestHandler):
         except ValueError:
             req = {}
         api, handler = ROUTES.get(path, ("unknown", None))
-        scenario = str(req.get("model", ""))
+        # An override picks the scenario for a route regardless of the model name (used by audit).
+        scenario = self.server.overrides.get(path) or str(req.get("model", ""))
         if handler is None:
             reply = json_reply(404, {"error": {"message": f"no route {path}", "type": "not_found"}}, outcome="http_error")
         else:
@@ -105,12 +111,18 @@ class _Server(ThreadingHTTPServer):
     daemon_threads = True
     log: TruthLog
     ids: Ids
+    overrides: dict[str, str]
 
 
 class FakeProvider:
-    """Use as a context manager, or call start() and stop()."""
+    """Use as a context manager, or call start() and stop().
 
-    def __init__(self) -> None:
+    overrides maps a route (e.g. "/v1/chat/completions") to the fake scenario
+    every request on that route gets, whatever model the app asks for.
+    """
+
+    def __init__(self, overrides: dict[str, str] | None = None) -> None:
+        self.overrides = dict(overrides or {})
         self.log = TruthLog()
         self._server: _Server | None = None
         self._thread: threading.Thread | None = None
@@ -119,6 +131,7 @@ class FakeProvider:
         server = _Server(("127.0.0.1", 0), _Handler)
         server.log = self.log
         server.ids = Ids()
+        server.overrides = self.overrides
         self._server = server
         self._thread = threading.Thread(target=server.serve_forever, kwargs={"poll_interval": 0.05}, name="trueup-fake", daemon=True)
         self._thread.start()

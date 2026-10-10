@@ -1,0 +1,166 @@
+{
+ "scenario": "an-stream-tools",
+ "library": "openinference",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 5,
+     "output": 3
+    }
+   ],
+   "finish": [
+    [
+     "tool_use"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "get_weather"
+    ]
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "msg_b6b8d26c0001"
+   ],
+   "scenario": "an-stream-tools",
+   "expected": {
+    "calls": 1,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 5,
+      "output": 3
+     }
+    ],
+    "finish": [
+     [
+      "tool_use"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ]
+    ],
+    "fake": [
+     "complete"
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "text": "hello",
+     "blocks": [
+      "thinking",
+      "text",
+      "tool_use"
+     ],
+     "tool_inputs": [
+      {
+       "city": "Lagos"
+      }
+     ],
+     "usage": [
+      5,
+      3
+     ]
+    }
+   },
+   "fake_log": [
+    {
+     "api": "anthropic.messages",
+     "path": "/v1/messages",
+     "scenario": "anth-tools",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "msg_b6b8d26c0001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 5,
+      "output_tokens": 3,
+      "total_tokens": 8
+     },
+     "usage_sent": true,
+     "finish": [
+      "tool_use"
+     ],
+     "tool_calls": [
+      {
+       "id": "toolu_b6b8d26c0002",
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Lagos\"}"
+      }
+     ],
+     "text": [
+      "hello"
+     ],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openinference",
+   "versions": {
+    "openinference-instrumentation-openai": "0.1.65",
+    "openinference-instrumentation-anthropic": "3.0.3",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1"
+   },
+   "spans": [
+    {
+     "name": "messages.stream",
+     "kind": "INTERNAL",
+     "trace_id": "0a70f3c361158adcbba4acb31b547427",
+     "span_id": "ff5996dd6d3d1f38",
+     "parent_id": null,
+     "start_ns": 1791662565810505501,
+     "end_ns": 1791662565862086022,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.anthropic",
+     "attributes": {
+      "llm.provider": "anthropic",
+      "llm.system": "anthropic",
+      "input.mime_type": "application/json",
+      "llm.request.model_name": "anth-tools",
+      "llm.input_messages.0.message.role": "user",
+      "llm.input_messages.0.message.content": "What is the weather in Lagos?",
+      "output.mime_type": "application/json",
+      "llm.model_name": "anth-tools",
+      "llm.response.model_name": "anth-tools",
+      "llm.output_messages.0.message.role": "assistant",
+      "llm.finish_reason": "tool_use",
+      "llm.output_messages.0.message.contents.0.message_content.type": "reasoning",
+      "llm.output_messages.0.message.contents.0.message_content.text": "Need the weather.",
+      "llm.output_messages.0.message.contents.0.message_content.signature": "fake-sig",
+      "llm.output_messages.0.message.contents.1.message_content.type": "text",
+      "llm.output_messages.0.message.contents.1.message_content.text": "hello",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.id": "toolu_b6b8d26c0002",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\": \"Lagos\"}",
+      "llm.output_messages.0.message.contents.2.message_content.type": "tool_use",
+      "llm.output_messages.0.message.contents.2.tool_call.id": "toolu_b6b8d26c0002",
+      "llm.output_messages.0.message.contents.2.tool_call.function.name": "get_weather",
+      "llm.output_messages.0.message.contents.2.tool_call.function.arguments": "{\"city\": \"Lagos\"}",
+      "llm.token_count.prompt": 5,
+      "llm.token_count.completion": 3,
+      "llm.token_count.total": 8,
+      "openinference.span.kind": "LLM"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

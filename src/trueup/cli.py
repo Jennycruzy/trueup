@@ -16,7 +16,7 @@ EXIT_MISMATCH = 1  # mismatches found
 EXIT_ERROR = 2  # could not run
 
 KEY_VARS = ("NEATLOGS_API_KEY", "TRUEUP_MODEL_KEY")
-NOT_BUILT = ("audit", "fix", "upstream", "verify", "report")
+NOT_BUILT = ("fix", "upstream", "verify", "report")
 
 
 def doctor() -> int:
@@ -41,6 +41,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub.add_parser("doctor", help="check the local setup")
     sw = sub.add_parser("sweep", help="run the plain-SDK scenarios against one tracing library")
     sw.add_argument("library", choices=LIBRARIES)
+    au = sub.add_parser("audit", help="run your script's main() against the fake provider and compare its trace")
+    au.add_argument("script", type=Path, help="Python file with a main() that calls the openai or anthropic SDK")
+    au.add_argument("--library", required=True, choices=LIBRARIES, help="tracing library to set up")
     return parser
 
 
@@ -52,6 +55,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         from trueup.sweep import exit_code, sweep
 
         _, results = sweep(Path.cwd(), args.library)
+        return exit_code(results)
+    if args.command == "audit":
+        from trueup.audit import audit
+        from trueup.sweep import exit_code
+
+        _, results = audit(Path.cwd(), args.library, args.script)
         return exit_code(results)
     print(f"trueup {args.command}: not built yet", file=sys.stderr)
     return EXIT_ERROR
