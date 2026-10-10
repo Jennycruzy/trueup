@@ -39,8 +39,10 @@ def build_parser() -> argparse.ArgumentParser:
     for name in NOT_BUILT:
         sub.add_parser(name, help="not built yet")
     sub.add_parser("doctor", help="check the local setup")
-    sw = sub.add_parser("sweep", help="run the plain-SDK scenarios against one tracing library")
+    sw = sub.add_parser("sweep", help="run the scenarios against one tracing library")
     sw.add_argument("library", choices=LIBRARIES)
+    sw.add_argument("--framework", default="all", choices=("all", "none", "langchain", "openai-agents"),
+                    help="none: plain SDK; langchain: LangChain and LangGraph; default all")
     au = sub.add_parser("audit", help="run your script's main() against the fake provider and compare its trace")
     au.add_argument("script", type=Path, help="Python file with a main() that calls the openai or anthropic SDK")
     au.add_argument("--library", required=True, choices=LIBRARIES, help="tracing library to set up")
@@ -54,7 +56,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "sweep":
         from trueup.sweep import exit_code, sweep
 
-        _, results = sweep(Path.cwd(), args.library)
+        _, results = sweep(Path.cwd(), args.library, args.framework)
         return exit_code(results)
     if args.command == "audit":
         from trueup.audit import audit

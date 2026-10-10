@@ -207,3 +207,8 @@ APPS: dict[str, Callable[[str, str], dict[str, Any]]] = {
     for name, fn in dict(globals()).items()
     if callable(fn) and not name.startswith("_") and getattr(fn, "__module__", None) == __name__
 }
+
+# Framework apps live in their own module; the framework packages are imported lazily.
+from trueup.runner.framework_apps import FRAMEWORK_APPS  # noqa: E402
+
+APPS.update(FRAMEWORK_APPS)

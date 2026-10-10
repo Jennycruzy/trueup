@@ -12,6 +12,9 @@ Expected truth keys (only the ones listed are checked):
   finish      per call: finish/stop reason or response status
   tool_calls  per call: tool names the model asked for
   fake        per call: what the fake did (complete, failed, incomplete, error_event, cut, http_error)
+  tool_runs   framework scenarios: each real tool run, {"name", "outcome": "ok" | "raised"}
+  include_usage  per call: whether the app's own request asks for stream usage. When given,
+              the comparer notes a request that carries include_usage the app did not ask for.
 """
 
 from __future__ import annotations
@@ -148,34 +151,95 @@ SCENARIOS: tuple[Scenario, ...] = (
 )
 
 
-def _fw(id: str, framework: str, does: str) -> Scenario:
-    return Scenario(id, "openai", "chat" if framework.startswith("lang") else "responses", framework, does, "", "",
-                    status=NOT_BUILT)
+# Framework scenarios. Agent runs make several calls, so expectations are per call.
+TOOL = "get_weather"
 
 
-# Framework cases from the earlier harness. Listed so the gap is visible; not built yet.
+def _agent(calls: list[str], tokens: list[Any], finish: list[list[str]], tools: list[list[str]],
+           tool_runs: list[str], exc: str | None = None) -> dict[str, Any]:
+    out: dict[str, Any] = {
+        "calls": len(calls),
+        "outcome": "exception" if exc else "ok",
+        "tokens": tokens,
+        "finish": finish,
+        "tool_calls": tools,
+        "fake": calls,
+        "tool_runs": [{"name": TOOL, "outcome": o} for o in tool_runs],
+    }
+    if exc:
+        out["exception"] = exc
+    return out
+
+
+def _fw(id: str, framework: str, does: str, app: str, model: str, expected: dict[str, Any]) -> Scenario:
+    api = "responses" if framework == "openai-agents" else "chat"
+    return Scenario(id, "openai", api, framework, does, app, model, expected)
+
+
+C, OK2 = "complete", ["complete", "complete"]
+STOP, CALLS, DONE = ["stop"], ["tool_calls"], ["completed"]
+
 FRAMEWORK_SCENARIOS: tuple[Scenario, ...] = (
-    _fw("lc-invoke", "langchain", "ChatOpenAI.invoke, one call."),
-    _fw("lc-stream", "langchain", "ChatOpenAI.stream with stream_usage."),
-    _fw("lc-stream-error-event", "langchain", "Error event mid-stream through ChatOpenAI."),
-    _fw("lc-stream-cut", "langchain", "Dropped connection mid-stream through ChatOpenAI."),
-    _fw("lc-refusal", "langchain", "Refusal surfaced through additional_kwargs."),
-    _fw("lc-500", "langchain", "HTTP 500 through ChatOpenAI."),
-    _fw("lg-agent", "langgraph", "ReAct agent: tool call, then answer (2 LLM calls)."),
-    _fw("lg-tool-raises", "langgraph", "A tool raises inside the agent."),
-    _fw("lg-llm-fails", "langgraph", "Second LLM call returns 500."),
-    _fw("lg-parallel", "langgraph", "Two parallel tool calls in one step."),
-    _fw("lg-stream", "langgraph", "Agent run streamed."),
-    _fw("lg-recursion", "langgraph", "Agent loops until the recursion limit."),
-    _fw("ag-run", "openai-agents", "Runner.run_sync: tool call, then answer."),
-    _fw("ag-tool-raises", "openai-agents", "A function tool raises."),
-    _fw("ag-llm-fails", "openai-agents", "Second model call returns 500."),
-    _fw("ag-max-turns", "openai-agents", "Agent hits max_turns."),
-    _fw("ag-bad-tool", "openai-agents", "Model calls a tool that does not exist."),
-    _fw("ag-streamed", "openai-agents", "Runner.run_streamed, ok."),
-    _fw("ag-streamed-error", "openai-agents", "Error event in the second streamed call."),
-    _fw("ag-streamed-cut", "openai-agents", "Dropped connection in the second streamed call."),
+    # LangChain: ChatOpenAI
+    _fw("lc-invoke", "langchain", "ChatOpenAI.invoke, one call.", "lc_invoke", "chat-plain", _ok(OA_TOK, STOP)),
+    _fw("lc-stream", "langchain", "ChatOpenAI.stream with stream_usage=True.", "lc_stream", "chat-plain",
+        {**_ok(OA_TOK, STOP), "include_usage": [True]}),
+    _fw("lc-stream-error-event", "langchain", "Error event mid-stream through ChatOpenAI.stream.", "lc_stream",
+        "chat-error-event", {**_raises("APIError", "error_event"), "include_usage": [True]}),
+    _fw("lc-stream-cut", "langchain", "Connection drops mid-stream through ChatOpenAI.stream.", "lc_stream",
+        "chat-cut", {**_raises("OpenAIConnectionError", "cut"), "include_usage": [True]}),
+    _fw("lc-refusal", "langchain", "The model refuses; LangChain puts it in additional_kwargs.", "lc_invoke",
+        "chat-refusal", _ok(OA_TOK, STOP)),
+    _fw("lc-500", "langchain", "HTTP 500 through ChatOpenAI.invoke.", "lc_invoke", "chat-500",
+        _raises("OpenAIAPIError", "http_error")),
+    # LangGraph: create_react_agent with one tool
+    _fw("lg-agent", "langgraph", "ReAct agent: tool call, tool runs, then the answer (2 LLM calls).", "lg_agent",
+        "agent-chat", _agent(OK2, [OA_TOK, OA_TOK], [CALLS, STOP], [[TOOL], []], ["ok"])),
+    _fw("lg-tool-raises", "langgraph", "The tool raises; the agent run raises it.", "lg_agent_tool_raises",
+        "agent-chat", _agent([C], [OA_TOK], [CALLS], [[TOOL]], ["raised"], exc="RuntimeError")),
+    _fw("lg-llm-fails", "langgraph", "The second LLM call returns 500; the run raises.", "lg_agent",
+        "agent-chat-fail2",
+        _agent([C, "http_error"], [OA_TOK, None], [CALLS, []], [[TOOL], []], ["ok"], exc="OpenAIAPIError")),
+    _fw("lg-parallel", "langgraph", "Two tool calls in one reply, both run, then the answer.", "lg_agent",
+        "agent-chat-parallel", _agent(OK2, [OA_TOK, OA_TOK], [CALLS, STOP], [[TOOL, TOOL], []], ["ok", "ok"])),
+    _fw("lg-stream", "langgraph", "Agent run streamed with stream_mode=messages. No usage is asked for.",
+        "lg_agent_stream", "agent-chat",
+        {**_agent(OK2, [None, None], [CALLS, STOP], [[TOOL], []], ["ok"]), "include_usage": [False, False]}),
+    _fw("lg-step-limit", "langgraph",
+        "The model keeps calling the tool; with recursion_limit=6 the agent stops and answers that it needs more steps.",
+        "lg_agent_step_limit", "agent-chat-loop",
+        _agent([C] * 3, [OA_TOK] * 3, [CALLS] * 3, [[TOOL]] * 3, ["ok", "ok"])),
+    # OpenAI Agents SDK: Runner with one function tool, Responses API
+    _fw("ag-run", "openai-agents", "Runner.run_sync: tool call, tool runs, then the answer.", "ag_run",
+        "agent-resp", _agent(OK2, [OA_TOK, OA_TOK], [DONE, DONE], [[TOOL], []], ["ok"])),
+    _fw("ag-tool-raises", "openai-agents",
+        "The function tool raises; the SDK sends the error text to the model, which answers.",
+        "ag_run_tool_raises", "agent-resp", _agent(OK2, [OA_TOK, OA_TOK], [DONE, DONE], [[TOOL], []], ["raised"])),
+    _fw("ag-llm-fails", "openai-agents", "The second model call returns 500; the run raises.", "ag_run",
+        "agent-resp-fail2",
+        _agent([C, "http_error"], [OA_TOK, None], [DONE, []], [[TOOL], []], ["ok"], exc="InternalServerError")),
+    _fw("ag-max-turns", "openai-agents", "The model keeps calling the tool; max_turns=3 stops the run.",
+        "ag_run_max_turns", "agent-resp-loop",
+        _agent([C] * 3, [OA_TOK] * 3, [DONE] * 3, [[TOOL]] * 3, ["ok"] * 3, exc="MaxTurnsExceeded")),
+    _fw("ag-bad-tool", "openai-agents", "The model calls a tool the agent does not have; the SDK raises.",
+        "ag_run", "agent-resp-badtool",
+        _agent([C], [OA_TOK], [DONE], [["no_such_tool"]], [], exc="ModelBehaviorError")),
+    _fw("ag-streamed", "openai-agents", "Runner.run_streamed, all events read: tool call, then the answer.",
+        "ag_run_streamed", "agent-resp", _agent(OK2, [OA_TOK, OA_TOK], [DONE, DONE], [[TOOL], []], ["ok"])),
+    _fw("ag-streamed-error", "openai-agents", "Error event in the second streamed call; the SDK raises.",
+        "ag_run_streamed", "agent-resp-error-event",
+        _agent([C, "error_event"], [OA_TOK, None], [DONE, []], [[TOOL], []], ["ok"], exc="ModelBehaviorError")),
+    _fw("ag-streamed-cut", "openai-agents", "Connection drops in the second streamed call.", "ag_run_streamed",
+        "agent-resp-cut",
+        _agent([C, "cut"], [OA_TOK, None], [DONE, []], [[TOOL], []], ["ok"], exc="APIConnectionError")),
 )
+
+# --framework values for sweep. LangGraph runs on LangChain, so "langchain" covers both.
+FRAMEWORKS: dict[str, tuple[str, ...]] = {
+    "none": ("none",),
+    "langchain": ("langchain", "langgraph"),
+    "openai-agents": ("openai-agents",),
+}
 
 ALL: tuple[Scenario, ...] = SCENARIOS + FRAMEWORK_SCENARIOS
 _BY_ID = {s.id: s for s in ALL}
@@ -190,3 +254,10 @@ def get(scenario_id: str) -> Scenario:
 
 def plain_sdk() -> list[Scenario]:
     return [s for s in ALL if s.plain_sdk]
+
+
+def select(framework: str = "all") -> list[Scenario]:
+    """Scenarios for a sweep: "all", or a key of FRAMEWORKS."""
+    if framework == "all":
+        return list(ALL)
+    return [s for s in ALL if s.framework in FRAMEWORKS[framework]]

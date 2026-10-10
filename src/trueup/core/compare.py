@@ -1,13 +1,20 @@
 """Compare truth (the fake's log and the app outcome) with the exported spans. Pure.
 
 Checks, in order:
-  run_status   app raised / got a result -> top-level span ERROR / not ERROR
+  run_status   app raised / got a result -> top-level span ERROR / not ERROR. The top level is
+               the trace root (for the Agents SDK, "Agent workflow"); orphans only if no root
+               was exported
   call_status  provider error or failed stream -> that LLM span ERROR with an exception event
   call_count   one LLM span per provider request (this check reports extra spans)
   span_closed  every request has an ended, exported span (this check reports missing spans)
   tokens       per-span input/output tokens equal what the provider sent; only where usage was sent
   output       text, refusal and tool calls the app received are on the span; tool args equal as JSON
   finish       finish reason / response status recorded; failed and incomplete visible
+  tools        framework runs: every tool that really ran has a tool span; a tool that raised
+               has an ERROR span or an exception event
+  error_recorded  the app raised and no provider call failed (the error came from the
+               framework: unknown tool, max turns, a tool) -> some span is ERROR or has an
+               exception event
   request_changed  (note) the library changed the request, e.g. added stream_options.include_usage
 
 Severity: HIGH changes a number or status a dashboard shows by default (run
@@ -20,11 +27,12 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from trueup.core.adapters import ADAPTERS, Adapter, SpanFacts, facts, is_llm_span, norm_finish
+from trueup.core.adapters import ADAPTERS, Adapter, SpanFacts, facts, is_llm_span, norm_finish, tool_span_name
 from trueup.core.model import Mismatch, Observation, Severity
 
 HIGH, MEDIUM, LOW = Severity.HIGH, Severity.MEDIUM, Severity.LOW
-CHECKS = ("run_status", "call_status", "call_count", "span_closed", "tokens", "output", "finish", "request_changed")
+CHECKS = ("run_status", "call_status", "call_count", "span_closed", "tokens", "output", "finish", "tools",
+          "error_recorded", "request_changed")
 
 FAILED_CALL = ("http_error", "error_event", "cut")
 # The app got the whole reply for these, so output and finish must be on the span.
@@ -36,8 +44,16 @@ def _lead(check: str, field: str, truth: Any, trace: Any, severity: Severity) ->
 
 
 def top_level(spans: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Trace roots. A span whose parent was not exported counts only when no root was."""
+    roots = [s for s in spans if s.get("parent_id") is None]
+    if roots:
+        return roots
     ids = {s["span_id"] for s in spans}
     return [s for s in spans if s.get("parent_id") not in ids]
+
+
+def _errored(span: dict[str, Any]) -> bool:
+    return span["status"]["code"] == "ERROR" or any(e.get("name") == "exception" for e in span.get("events", []))
 
 
 def match_calls(calls: list[dict[str, Any]], llm: list[tuple[dict[str, Any], SpanFacts]]) -> list[int | None]:
@@ -107,7 +123,8 @@ def compare(obs: Observation, adapter: Adapter | None = None) -> list[Mismatch]:
         seen = sum((f.input_tokens or 0) + (f.output_tokens or 0) for _, f in llm)
         tokens_sum_ok = real == seen
 
-    expected_tokens = (truth.get("expected") or {}).get("tokens")
+    expected = truth.get("expected") or {}
+    expected_tokens = expected.get("tokens")
     partial = _partial_read(truth)
 
     for ci, call in enumerate(calls):
@@ -116,8 +133,13 @@ def compare(obs: Observation, adapter: Adapter | None = None) -> list[Mismatch]:
         si = match[ci]
 
         # request_changed (note): the app did not ask for usage, the request carried include_usage.
-        if (isinstance(expected_tokens, list) and ci < len(expected_tokens) and expected_tokens[ci] is None
-                and call.get("include_usage")):
+        # The scenario says what the app asks for; without that, no expected usage means it did not ask.
+        if "include_usage" in expected:
+            app_asked = ci < len(expected["include_usage"]) and expected["include_usage"][ci]
+        else:
+            app_asked = not (isinstance(expected_tokens, list) and ci < len(expected_tokens)
+                             and expected_tokens[ci] is None)
+        if not app_asked and call.get("include_usage"):
             out.append(Mismatch(field=f"{where} stream_options.include_usage", truth="not set by the app",
                                 trace="set in the request the provider got", severity=LOW,
                                 check="request_changed", kind="note"))
@@ -170,6 +192,40 @@ def compare(obs: Observation, adapter: Adapter | None = None) -> list[Mismatch]:
             if not ok:
                 out.append(_lead("finish", f"{where} finish", sorted(call["finish"]),
                                  sorted(f.finish) or None, MEDIUM))
+
+    out += _tools(truth.get("tool_runs") or [], spans, adapter)
+
+    # error_recorded: an error that did not come from a provider call must still show somewhere.
+    if app_raised and spans and not any(c.get("outcome") in FAILED_CALL for c in calls):
+        if not any(_errored(s) for s in spans):
+            out.append(_lead("error_recorded", "any span", f"ERROR or exception event ({truth.get('exception')})",
+                             "no span records an error", MEDIUM))
+    return out
+
+
+def _tools(runs: list[dict[str, Any]], spans: list[dict[str, Any]], adapter: Adapter) -> list[Mismatch]:
+    """Pair each real tool run with a tool span of the same name, in start order."""
+    if adapter.tool_kind is None:
+        return []
+    by_name: dict[str, list[dict[str, Any]]] = {}
+    for s in spans:
+        name = tool_span_name(adapter, s)
+        if name is not None:
+            by_name.setdefault(name, []).append(s)
+    out = []
+    for i, run in enumerate(runs):
+        where = f"tool run {i + 1} ({run['name']})"
+        queue = by_name.get(run["name"]) or []
+        if not queue:
+            out.append(_lead("tools", f"{where} span", f"tool span ({run['outcome']})", "no span", MEDIUM))
+            continue
+        span = queue.pop(0)
+        if run["outcome"] == "raised" and not _errored(span):
+            out.append(_lead("tools", f"{where} status", "ERROR or exception event (tool raised)",
+                             span["status"]["code"], MEDIUM))
+    extra = sum(len(q) for q in by_name.values())
+    if extra:
+        out.append(_lead("tools", "tool spans", f"{len(runs)} (tool runs)", len(runs) + extra, LOW))
     return out
 
 

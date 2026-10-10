@@ -7,7 +7,7 @@ import openai
 import pytest
 
 from trueup.fake import FakeProvider
-from trueup.runner import apps, setups
+from trueup.runner import apps, framework_apps, setups
 from trueup.runner.run import child_env
 from trueup.scenarios import library as lib
 
@@ -66,18 +66,25 @@ def test_reused_async_client_across_loops_fails():
             asyncio.run(call())
 
 
-@pytest.mark.parametrize("app", ["chat_async_stream", "an_async_create"])
-def test_async_apps_survive_repeated_asyncio_run(app):
+@pytest.mark.parametrize("app,model", [
+    ("chat_async_stream", "chat-plain"),
+    ("an_async_create", "anth-plain"),
+    # The Agents SDK runs each Runner call in a new loop; the apps give each agent its own client.
+    ("ag_run", "agent-resp"),
+    ("ag_run_streamed", "agent-resp"),
+])
+def test_async_apps_survive_repeated_asyncio_run(app, model):
     with FakeProvider() as f:
-        first = apps.APPS[app](f.base_url, "chat-plain" if app.startswith("chat") else "anth-plain")
-        second = apps.APPS[app](f.base_url, "chat-plain" if app.startswith("chat") else "anth-plain")
+        first = apps.APPS[app](f.base_url, model)
+        second = apps.APPS[app](f.base_url, model)
     assert first == second
 
 
-def test_apps_module_keeps_no_client_at_module_level():
-    src = inspect.getsource(apps)
+@pytest.mark.parametrize("module", [apps, framework_apps])
+def test_apps_module_keeps_no_client_at_module_level(module):
+    src = inspect.getsource(module)
     top_level = [ln for ln in src.splitlines() if ln and not ln[0].isspace()]
-    assert not any("OpenAI(" in ln or "Anthropic(" in ln for ln in top_level)
+    assert not any("OpenAI(" in ln or "Anthropic(" in ln or "set_default_openai_client" in ln for ln in top_level)
 
 
 # Trap 3: a fake that sends no usage makes missing tokens look like a bug.

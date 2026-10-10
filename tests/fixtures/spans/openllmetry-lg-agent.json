@@ -1,0 +1,861 @@
+{
+ "scenario": "lg-agent",
+ "library": "openllmetry",
+ "observation": {
+  "truth": {
+   "calls": 2,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 11,
+     "output": 7
+    },
+    {
+     "input": 11,
+     "output": 7
+    }
+   ],
+   "finish": [
+    [
+     "tool_calls"
+    ],
+    [
+     "stop"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "get_weather"
+    ],
+    []
+   ],
+   "fake": [
+    "complete",
+    "complete"
+   ],
+   "response_ids": [
+    "chatcmpl-715f04c20001",
+    "chatcmpl-715f04c20003"
+   ],
+   "tool_runs": [
+    {
+     "name": "get_weather",
+     "outcome": "ok"
+    }
+   ],
+   "scenario": "lg-agent",
+   "expected": {
+    "calls": 2,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     },
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "tool_calls"
+     ],
+     [
+      "stop"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ],
+     []
+    ],
+    "fake": [
+     "complete",
+     "complete"
+    ],
+    "tool_runs": [
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     }
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "answer": "It is sunny in Lagos."
+    },
+    "seconds": 0.09
+   },
+   "fake_log": [
+    {
+     "api": "openai.chat",
+     "path": "/v1/chat/completions",
+     "scenario": "agent-chat",
+     "stream": false,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "chatcmpl-715f04c20001",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18
+     },
+     "usage_sent": true,
+     "finish": [
+      "tool_calls"
+     ],
+     "tool_calls": [
+      {
+       "id": "call_715f04c20002",
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Lagos\"}"
+      }
+     ],
+     "text": [
+      ""
+     ],
+     "seq": 1
+    },
+    {
+     "api": "openai.chat",
+     "path": "/v1/chat/completions",
+     "scenario": "agent-chat",
+     "stream": false,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "chatcmpl-715f04c20003",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18
+     },
+     "usage_sent": true,
+     "finish": [
+      "stop"
+     ],
+     "tool_calls": [],
+     "text": [
+      "It is sunny in Lagos."
+     ],
+     "seq": 2
+    }
+   ]
+  },
+  "trace": {
+   "library": "openllmetry",
+   "versions": {
+    "traceloop-sdk": "0.62.4",
+    "opentelemetry-instrumentation-openai": "0.62.4",
+    "opentelemetry-instrumentation-anthropic": "0.62.4",
+    "opentelemetry-instrumentation-langchain": "0.62.4",
+    "opentelemetry-instrumentation-openai-agents": "0.62.4",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1",
+    "langchain-core": "1.6.9",
+    "langchain-openai": "1.7.0",
+    "langgraph": "1.2.14",
+    "openai-agents": "0.23.1"
+   },
+   "spans": [
+    {
+     "name": "create_agent react_agent",
+     "kind": "INTERNAL",
+     "trace_id": "4a05e857d8448f0ad6d581c0b238c5a2",
+     "span_id": "a90956fd9d1ba86f",
+     "parent_id": null,
+     "start_ns": 1791664109137826214,
+     "end_ns": 1791664109141566250,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "gen_ai.operation.name": "create_agent",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.agent.name": "react_agent",
+      "gen_ai.tool.definitions": "[{\"type\": \"function\", \"name\": \"get_weather\", \"description\": \"Get the weather for a city.\", \"parameters\": {\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather\", \"type\": \"object\"}}]"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task Prompt",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "cbca11fa5fd34ab1",
+     "parent_id": "af67d432e273d18e",
+     "start_ns": 1791664109147470235,
+     "end_ns": 1791664109147761768,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent.RunnableSequence",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 1,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.association.properties.checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "Prompt",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "Prompt",
+      "gen_ai.task.id": "01a12780-b65b-7ed3-93a6-09a2aa80347d",
+      "gen_ai.task.parent.id": "01a12780-b65b-7ed3-93a6-09935060b97a",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\", \"checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"Prompt\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\", \"checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"Prompt\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"kwargs\": {\"tags\": [\"seq:step:1\"]}}",
+      "gen_ai.task.output": "{\"outputs\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"kwargs\": {\"tags\": [\"seq:step:1\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "ChatOpenAI.chat",
+     "kind": "CLIENT",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "d603dfa03e014b83",
+     "parent_id": "af67d432e273d18e",
+     "start_ns": 1791664109148982555,
+     "end_ns": 1791664109164891274,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent.RunnableSequence",
+      "traceloop.association.properties.ls_integration": "langchain_chat_model",
+      "traceloop.association.properties.langgraph_step": 1,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.association.properties.checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.association.properties.ls_provider": "openai",
+      "traceloop.association.properties.ls_model_name": "agent-chat",
+      "traceloop.association.properties.ls_model_type": "chat",
+      "traceloop.association.properties.lc_versions": "{\"langchain-core\": \"1.6.9\", \"langchain\": \"1.4.4\", \"langchain-openai\": \"1.7.0\"}",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.operation.name": "chat",
+      "gen_ai.tool.definitions": "[{\"name\": \"get_weather\", \"description\": \"Get the weather for a city.\", \"parameters\": {\"properties\": {\"city\": {\"type\": \"string\"}}, \"required\": [\"city\"], \"type\": \"object\"}}]",
+      "gen_ai.request.model": "agent-chat",
+      "gen_ai.input.messages": "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"What is the weather in Lagos?\"}]}]",
+      "gen_ai.response.model": "agent-chat",
+      "gen_ai.response.id": "chatcmpl-715f04c20001",
+      "gen_ai.usage.input_tokens": 11,
+      "gen_ai.usage.output_tokens": 7,
+      "gen_ai.usage.total_tokens": 18,
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"id\": \"call_715f04c20002\", \"name\": \"get_weather\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+      "gen_ai.response.finish_reasons": [
+       "tool_call"
+      ]
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task RunnableSequence",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "af67d432e273d18e",
+     "parent_id": "ec8c5032ed561dcd",
+     "start_ns": 1791664109147099190,
+     "end_ns": 1791664109165057649,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 1,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.association.properties.checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "RunnableSequence",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "RunnableSequence",
+      "gen_ai.task.id": "01a12780-b65b-7ed3-93a6-09935060b97a",
+      "gen_ai.task.parent.id": "01a12780-b65a-7f12-9a5d-a227062b507d",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\", \"checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"RunnableSequence\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\", \"checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"RunnableSequence\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}",
+      "gen_ai.task.output": "{\"outputs\": {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task call_model",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "8861132595ee1d63",
+     "parent_id": "ec8c5032ed561dcd",
+     "start_ns": 1791664109146565137,
+     "end_ns": 1791664109165172979,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 1,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "call_model",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "call_model",
+      "gen_ai.task.id": "01a12780-b65a-7f12-9a5d-a23569eeaa4e",
+      "gen_ai.task.parent.id": "01a12780-b65a-7f12-9a5d-a227062b507d",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"call_model\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"call_model\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}",
+      "gen_ai.task.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task should_continue",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "1bc6cc0f0e95c896",
+     "parent_id": "ec8c5032ed561dcd",
+     "start_ns": 1791664109165412012,
+     "end_ns": 1791664109166762185,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 1,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "should_continue",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "should_continue",
+      "gen_ai.task.id": "01a12780-b66d-76c1-996c-8d102157ceda",
+      "gen_ai.task.parent.id": "01a12780-b65a-7f12-9a5d-a227062b507d",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:3\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"should_continue\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}], \"remaining_steps\": 10006}, \"tags\": [\"seq:step:3\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"should_continue\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": [\"Send(node='tools', arg={'__type': 'tool_call_with_context', 'tool_call': {'name': 'get_weather', 'args': {'city': 'Lagos'}, 'id': 'call_715f04c20002', 'type': 'tool_call'}, 'state': {'messages': [HumanMessage(content='What is the weather in Lagos?', additional_kwargs={}, response_metadata={}, id='c506c120-a0bb-40d8-890b-e2ba9c5b97e5'), AIMessage(content='', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18, 'completion_tokens_details': None, 'prompt_tokens_details': None}, 'model_provider': 'openai', 'model_name': 'agent-chat', 'system_fingerprint': None, 'id': 'chatcmpl-715f04c20001', 'finish_reason': 'tool_calls', 'logprobs': None}, id='lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0', tool_calls=[{'name': 'get_weather', 'args': {'city': 'Lagos'}, 'id': 'call_715f04c20002', 'type': 'tool_call'}], invalid_tool_calls=[], usage_metadata={'input_tokens': 11, 'output_tokens': 7, 'total_tokens': 18, 'input_token_details': {}, 'output_token_details': {}})], 'remaining_steps': 10006}})\"], \"kwargs\": {\"tags\": [\"seq:step:3\"]}}",
+      "gen_ai.task.output": "{\"outputs\": [\"Send(node='tools', arg={'__type': 'tool_call_with_context', 'tool_call': {'name': 'get_weather', 'args': {'city': 'Lagos'}, 'id': 'call_715f04c20002', 'type': 'tool_call'}, 'state': {'messages': [HumanMessage(content='What is the weather in Lagos?', additional_kwargs={}, response_metadata={}, id='c506c120-a0bb-40d8-890b-e2ba9c5b97e5'), AIMessage(content='', additional_kwargs={'refusal': None}, response_metadata={'token_usage': {'completion_tokens': 7, 'prompt_tokens': 11, 'total_tokens': 18, 'completion_tokens_details': None, 'prompt_tokens_details': None}, 'model_provider': 'openai', 'model_name': 'agent-chat', 'system_fingerprint': None, 'id': 'chatcmpl-715f04c20001', 'finish_reason': 'tool_calls', 'logprobs': None}, id='lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0', tool_calls=[{'name': 'get_weather', 'args': {'city': 'Lagos'}, 'id': 'call_715f04c20002', 'type': 'tool_call'}], invalid_tool_calls=[], usage_metadata={'input_tokens': 11, 'output_tokens': 7, 'total_tokens': 18, 'input_token_details': {}, 'output_token_details': {}})], 'remaining_steps': 10006}})\"], \"kwargs\": {\"tags\": [\"seq:step:3\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task agent",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "ec8c5032ed561dcd",
+     "parent_id": "4195bc0adcd9347f",
+     "start_ns": 1791664109146244489,
+     "end_ns": 1791664109166897041,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 1,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:70008836-f777-c7ed-9ccf-da8218c4f851",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "agent",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "agent",
+      "gen_ai.task.id": "01a12780-b65a-7f12-9a5d-a227062b507d",
+      "gen_ai.task.parent.id": "01a12780-b658-7ad1-9040-ecc61631216a",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"graph:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"agent\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}], \"remaining_steps\": 10006}, \"tags\": [\"graph:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 1, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:70008836-f777-c7ed-9ccf-da8218c4f851\"}, \"kwargs\": {\"name\": \"agent\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"graph:step:1\"]}}",
+      "gen_ai.task.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"graph:step:1\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_tool get_weather",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "f6ab45be5da9838a",
+     "parent_id": "7a4f935e1827a33c",
+     "start_ns": 1791664109169714306,
+     "end_ns": 1791664109171520284,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "tools",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 2,
+      "traceloop.association.properties.langgraph_node": "tools",
+      "traceloop.association.properties.langgraph_triggers": [
+       "__pregel_push"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_push",
+       "0",
+       "False"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "tools:c781669d-a18e-dde8-1cce-df774b4bcb68",
+      "traceloop.association.properties.checkpoint_ns": "tools:c781669d-a18e-dde8-1cce-df774b4bcb68",
+      "traceloop.span.kind": "tool",
+      "traceloop.entity.name": "get_weather",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_tool",
+      "gen_ai.tool.name": "get_weather",
+      "gen_ai.tool.type": "function",
+      "gen_ai.tool.description": "Get the weather for a city.",
+      "traceloop.entity.input": "{\"input_str\": \"{'city': 'Lagos'}\", \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 2, \"langgraph_node\": \"tools\", \"langgraph_triggers\": [\"__pregel_push\"], \"langgraph_path\": [\"__pregel_push\", 0, false], \"langgraph_checkpoint_ns\": \"tools:c781669d-a18e-dde8-1cce-df774b4bcb68\", \"checkpoint_ns\": \"tools:c781669d-a18e-dde8-1cce-df774b4bcb68\"}, \"inputs\": {\"city\": \"Lagos\"}, \"kwargs\": {\"color\": \"green\", \"name\": null, \"tool_call_id\": \"call_715f04c20002\"}}",
+      "gen_ai.tool.call.arguments": "{\"input_str\": \"{'city': 'Lagos'}\", \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 2, \"langgraph_node\": \"tools\", \"langgraph_triggers\": [\"__pregel_push\"], \"langgraph_path\": [\"__pregel_push\", 0, false], \"langgraph_checkpoint_ns\": \"tools:c781669d-a18e-dde8-1cce-df774b4bcb68\", \"checkpoint_ns\": \"tools:c781669d-a18e-dde8-1cce-df774b4bcb68\"}, \"inputs\": {\"city\": \"Lagos\"}, \"kwargs\": {\"color\": \"green\", \"name\": null, \"tool_call_id\": \"call_715f04c20002\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"output\": {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}, \"kwargs\": {\"tags\": [\"seq:step:1\"], \"color\": \"green\", \"name\": \"get_weather\"}}",
+      "gen_ai.tool.call.result": "{\"output\": {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}, \"kwargs\": {\"tags\": [\"seq:step:1\"], \"color\": \"green\", \"name\": \"get_weather\"}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task tools",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "7a4f935e1827a33c",
+     "parent_id": "4195bc0adcd9347f",
+     "start_ns": 1791664109167481930,
+     "end_ns": 1791664109171938918,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 2,
+      "traceloop.association.properties.langgraph_node": "tools",
+      "traceloop.association.properties.langgraph_triggers": [
+       "__pregel_push"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_push",
+       "0",
+       "False"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "tools:c781669d-a18e-dde8-1cce-df774b4bcb68",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "tools",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "tools",
+      "gen_ai.task.id": "01a12780-b66f-7401-b90f-0f6718126421",
+      "gen_ai.task.parent.id": "01a12780-b658-7ad1-9040-ecc61631216a",
+      "traceloop.entity.input": "{\"inputs\": {\"__type\": \"tool_call_with_context\", \"tool_call\": {\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}, \"state\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}], \"remaining_steps\": 10006}}, \"tags\": [\"graph:step:2\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 2, \"langgraph_node\": \"tools\", \"langgraph_triggers\": [\"__pregel_push\"], \"langgraph_path\": [\"__pregel_push\", 0, false], \"langgraph_checkpoint_ns\": \"tools:c781669d-a18e-dde8-1cce-df774b4bcb68\"}, \"kwargs\": {\"name\": \"tools\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"__type\": \"tool_call_with_context\", \"tool_call\": {\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}, \"state\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}], \"remaining_steps\": 10006}}, \"tags\": [\"graph:step:2\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 2, \"langgraph_node\": \"tools\", \"langgraph_triggers\": [\"__pregel_push\"], \"langgraph_path\": [\"__pregel_push\", 0, false], \"langgraph_checkpoint_ns\": \"tools:c781669d-a18e-dde8-1cce-df774b4bcb68\"}, \"kwargs\": {\"name\": \"tools\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}]}, \"kwargs\": {\"tags\": [\"graph:step:2\"]}}",
+      "gen_ai.task.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}]}, \"kwargs\": {\"tags\": [\"graph:step:2\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task Prompt",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "23f35d708d56d462",
+     "parent_id": "a3cd2af604191df7",
+     "start_ns": 1791664109174636928,
+     "end_ns": 1791664109175154380,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent.RunnableSequence",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 3,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.association.properties.checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "Prompt",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "Prompt",
+      "gen_ai.task.id": "01a12780-b676-73e3-8c8f-12cbfb46adff",
+      "gen_ai.task.parent.id": "01a12780-b676-73e3-8c8f-12b7fbfb26c5",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\", \"checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"Prompt\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\", \"checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"Prompt\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"kwargs\": {\"tags\": [\"seq:step:1\"]}}",
+      "gen_ai.task.output": "{\"outputs\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"kwargs\": {\"tags\": [\"seq:step:1\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "ChatOpenAI.chat",
+     "kind": "CLIENT",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "034ff40a4322a05a",
+     "parent_id": "a3cd2af604191df7",
+     "start_ns": 1791664109175639861,
+     "end_ns": 1791664109221501282,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent.RunnableSequence",
+      "traceloop.association.properties.ls_integration": "langchain_chat_model",
+      "traceloop.association.properties.langgraph_step": 3,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.association.properties.checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.association.properties.ls_provider": "openai",
+      "traceloop.association.properties.ls_model_name": "agent-chat",
+      "traceloop.association.properties.ls_model_type": "chat",
+      "traceloop.association.properties.lc_versions": "{\"langchain-core\": \"1.6.9\", \"langchain\": \"1.4.4\", \"langchain-openai\": \"1.7.0\"}",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.operation.name": "chat",
+      "gen_ai.tool.definitions": "[{\"name\": \"get_weather\", \"description\": \"Get the weather for a city.\", \"parameters\": {\"properties\": {\"city\": {\"type\": \"string\"}}, \"required\": [\"city\"], \"type\": \"object\"}}]",
+      "gen_ai.request.model": "agent-chat",
+      "gen_ai.input.messages": "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"What is the weather in Lagos?\"}]}, {\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"id\": \"call_715f04c20002\", \"name\": \"get_weather\", \"arguments\": {\"city\": \"Lagos\"}}]}, {\"role\": \"tool\", \"parts\": [{\"type\": \"tool_call_response\", \"id\": \"call_715f04c20002\", \"response\": \"Sunny in Lagos\"}]}]",
+      "gen_ai.response.model": "agent-chat",
+      "gen_ai.response.id": "chatcmpl-715f04c20003",
+      "gen_ai.usage.input_tokens": 11,
+      "gen_ai.usage.output_tokens": 7,
+      "gen_ai.usage.total_tokens": 18,
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"text\", \"content\": \"It is sunny in Lagos.\"}], \"finish_reason\": \"stop\"}]",
+      "gen_ai.response.finish_reasons": [
+       "stop"
+      ]
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task RunnableSequence",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "a3cd2af604191df7",
+     "parent_id": "3505d59660c29fe5",
+     "start_ns": 1791664109174209397,
+     "end_ns": 1791664109221674820,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 3,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.association.properties.checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "RunnableSequence",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "RunnableSequence",
+      "gen_ai.task.id": "01a12780-b676-73e3-8c8f-12b7fbfb26c5",
+      "gen_ai.task.parent.id": "01a12780-b674-7063-8949-48e9b97fd14b",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\", \"checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"RunnableSequence\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\", \"checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"RunnableSequence\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"tool_calls\": [], \"invalid_tool_calls\": []}}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}",
+      "gen_ai.task.output": "{\"outputs\": {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"tool_calls\": [], \"invalid_tool_calls\": []}}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task call_model",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "d9fefe294d079da8",
+     "parent_id": "3505d59660c29fe5",
+     "start_ns": 1791664109172752623,
+     "end_ns": 1791664109221834885,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 3,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "call_model",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "call_model",
+      "gen_ai.task.id": "01a12780-b674-7063-8949-48f66df4dede",
+      "gen_ai.task.parent.id": "01a12780-b674-7063-8949-48e9b97fd14b",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"call_model\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"seq:step:1\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"call_model\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"tool_calls\": [], \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}",
+      "gen_ai.task.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"tool_calls\": [], \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"seq:step:1\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task should_continue",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "4c2b62dece6aa164",
+     "parent_id": "3505d59660c29fe5",
+     "start_ns": 1791664109222383937,
+     "end_ns": 1791664109222857455,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "agent",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 3,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "should_continue",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "should_continue",
+      "gen_ai.task.id": "01a12780-b6a6-7402-affb-0f98166e9500",
+      "gen_ai.task.parent.id": "01a12780-b674-7063-8949-48e9b97fd14b",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\"...[453 more chars]",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\"...[453 more chars]",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": \"__end__\", \"kwargs\": {\"tags\": [\"seq:step:3\"]}}",
+      "gen_ai.task.output": "{\"outputs\": \"__end__\", \"kwargs\": {\"tags\": [\"seq:step:3\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "execute_task agent",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "3505d59660c29fe5",
+     "parent_id": "4195bc0adcd9347f",
+     "start_ns": 1791664109172337345,
+     "end_ns": 1791664109223244360,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.association.properties.langgraph_step": 3,
+      "traceloop.association.properties.langgraph_node": "agent",
+      "traceloop.association.properties.langgraph_triggers": [
+       "branch:to:agent"
+      ],
+      "traceloop.association.properties.langgraph_path": [
+       "__pregel_pull",
+       "agent"
+      ],
+      "traceloop.association.properties.langgraph_checkpoint_ns": "agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0",
+      "traceloop.span.kind": "task",
+      "traceloop.entity.name": "agent",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "execute_task",
+      "gen_ai.task.name": "agent",
+      "gen_ai.task.id": "01a12780-b674-7063-8949-48e9b97fd14b",
+      "gen_ai.task.parent.id": "01a12780-b658-7ad1-9040-ecc61631216a",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"graph:step:3\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"agent\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}], \"remaining_steps\": 10004}, \"tags\": [\"graph:step:3\"], \"metadata\": {\"ls_integration\": \"langgraph\", \"langgraph_step\": 3, \"langgraph_node\": \"agent\", \"langgraph_triggers\": [\"branch:to:agent\"], \"langgraph_path\": [\"__pregel_pull\", \"agent\"], \"langgraph_checkpoint_ns\": \"agent:e99d05bf-f56d-367b-da35-0cee4aa3dfe0\"}, \"kwargs\": {\"name\": \"agent\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"tool_calls\": [], \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"graph:step:3\"]}}",
+      "gen_ai.task.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"tool_calls\": [], \"invalid_tool_calls\": []}}]}, \"kwargs\": {\"tags\": [\"graph:step:3\"]}}"
+     },
+     "events": []
+    },
+    {
+     "name": "LangGraph.workflow",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "4195bc0adcd9347f",
+     "parent_id": "124256b757a1ba6c",
+     "start_ns": 1791664109145008273,
+     "end_ns": 1791664109223893652,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "traceloop.workflow.name": "LangGraph",
+      "traceloop.entity.path": "",
+      "traceloop.association.properties.ls_integration": "langgraph",
+      "traceloop.span.kind": "workflow",
+      "traceloop.entity.name": "LangGraph",
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "invoke_agent",
+      "gen_ai.agent.name": "LangGraph",
+      "gen_ai.agent.id": "01a12780-b658-7ad1-9040-ecc61631216a",
+      "traceloop.entity.input": "{\"inputs\": {\"messages\": [[\"user\", \"What is the weather in Lagos?\"]]}, \"tags\": [], \"metadata\": {\"ls_integration\": \"langgraph\"}, \"kwargs\": {\"name\": \"LangGraph\"}}",
+      "gen_ai.task.input": "{\"inputs\": {\"messages\": [[\"user\", \"What is the weather in Lagos?\"]]}, \"tags\": [], \"metadata\": {\"ls_integration\": \"langgraph\"}, \"kwargs\": {\"name\": \"LangGraph\"}}",
+      "gen_ai.task.status": "success",
+      "traceloop.entity.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens...[134 more chars]",
+      "gen_ai.task.output": "{\"outputs\": {\"messages\": [{\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"HumanMessage\"], \"kwargs\": {\"content\": \"What is the weather in Lagos?\", \"type\": \"human\", \"id\": \"c506c120-a0bb-40d8-890b-e2ba9c5b97e5\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20001\", \"finish_reason\": \"tool_calls\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b65c-7931-bd29-41bc5beedf40-0\", \"tool_calls\": [{\"name\": \"get_weather\", \"args\": {\"city\": \"Lagos\"}, \"id\": \"call_715f04c20002\", \"type\": \"tool_call\"}], \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens\": 18, \"input_token_details\": {}, \"output_token_details\": {}}, \"invalid_tool_calls\": []}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"ToolMessage\"], \"kwargs\": {\"content\": \"Sunny in Lagos\", \"type\": \"tool\", \"name\": \"get_weather\", \"id\": \"f69d3e47-5348-477c-8e6f-826066dbdeb8\", \"tool_call_id\": \"call_715f04c20002\", \"status\": \"success\"}}, {\"lc\": 1, \"type\": \"constructor\", \"id\": [\"langchain\", \"schema\", \"messages\", \"AIMessage\"], \"kwargs\": {\"content\": \"It is sunny in Lagos.\", \"additional_kwargs\": {\"refusal\": null}, \"response_metadata\": {\"token_usage\": {\"completion_tokens\": 7, \"prompt_tokens\": 11, \"total_tokens\": 18, \"completion_tokens_details\": null, \"prompt_tokens_details\": null}, \"model_provider\": \"openai\", \"model_name\": \"agent-chat\", \"system_fingerprint\": null, \"id\": \"chatcmpl-715f04c20003\", \"finish_reason\": \"stop\", \"logprobs\": null}, \"type\": \"ai\", \"id\": \"lc_run--01a12780-b677-7f60-9609-bfed5e5624d2-0\", \"usage_metadata\": {\"input_tokens\": 11, \"output_tokens\": 7, \"total_tokens...[134 more chars]"
+     },
+     "events": []
+    },
+    {
+     "name": "invoke_agent LangGraph",
+     "kind": "INTERNAL",
+     "trace_id": "704ec19fa6d63d19efb983b3aa545fae",
+     "span_id": "124256b757a1ba6c",
+     "parent_id": null,
+     "start_ns": 1791664109141643417,
+     "end_ns": 1791664109223929870,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.langchain",
+     "attributes": {
+      "gen_ai.provider.name": "langgraph",
+      "gen_ai.operation.name": "invoke_agent",
+      "gen_ai.agent.name": "LangGraph",
+      "gen_ai.workflow.nodes": [
+       "agent",
+       "tools"
+      ],
+      "gen_ai.workflow.edges": [
+       "agent -> tools",
+       "tools -> agent"
+      ]
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

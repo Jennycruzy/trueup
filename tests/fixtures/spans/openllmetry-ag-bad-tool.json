@@ -1,0 +1,228 @@
+{
+ "scenario": "ag-bad-tool",
+ "library": "openllmetry",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "exception",
+   "tokens": [
+    {
+     "input": 11,
+     "output": 7
+    }
+   ],
+   "finish": [
+    [
+     "completed"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "no_such_tool"
+    ]
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "resp_649711cb0003"
+   ],
+   "tool_runs": [],
+   "exception": "ModelBehaviorError",
+   "scenario": "ag-bad-tool",
+   "expected": {
+    "calls": 1,
+    "outcome": "exception",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "completed"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "no_such_tool"
+     ]
+    ],
+    "fake": [
+     "complete"
+    ],
+    "tool_runs": [],
+    "exception": "ModelBehaviorError"
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "exception",
+    "exception_type": "ModelBehaviorError",
+    "exception_module": "agents.exceptions",
+    "message": "Tool no_such_tool not found in agent helper",
+    "seconds": 0.123
+   },
+   "fake_log": [
+    {
+     "api": "openai.responses",
+     "path": "/v1/responses",
+     "scenario": "agent-resp-badtool",
+     "stream": false,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "resp_649711cb0003",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18,
+      "reasoning_tokens": 0
+     },
+     "usage_sent": true,
+     "finish": [
+      "completed"
+     ],
+     "tool_calls": [
+      {
+       "id": "call_649711cb0002",
+       "name": "no_such_tool",
+       "arguments": "{\"city\":\"Lagos\"}"
+      }
+     ],
+     "text": [],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openllmetry",
+   "versions": {
+    "traceloop-sdk": "0.62.4",
+    "opentelemetry-instrumentation-openai": "0.62.4",
+    "opentelemetry-instrumentation-anthropic": "0.62.4",
+    "opentelemetry-instrumentation-langchain": "0.62.4",
+    "opentelemetry-instrumentation-openai-agents": "0.62.4",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1",
+    "langchain-core": "1.6.9",
+    "langchain-openai": "1.7.0",
+    "langgraph": "1.2.14",
+    "openai-agents": "0.23.1"
+   },
+   "spans": [
+    {
+     "name": "openai.response",
+     "kind": "CLIENT",
+     "trace_id": "618d67eb94e7ba8bd3bbfe8ebfc27f75",
+     "span_id": "808d14322566d850",
+     "parent_id": "92e50e6a9f5d1c41",
+     "start_ns": 1791664141356259328,
+     "end_ns": 1791664141470706487,
+     "status": {
+      "code": "UNSET",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai.v1",
+     "attributes": {
+      "gen_ai.agent.name": "helper",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.request.model": "agent-resp-badtool",
+      "gen_ai.headers": "{'User-Agent': 'Agents/Python 0.23.1'}",
+      "gen_ai.is_streaming": false,
+      "gen_ai.operation.name": "chat",
+      "gen_ai.response.id": "resp_649711cb0003",
+      "gen_ai.response.model": "agent-resp-badtool",
+      "gen_ai.usage.input_tokens": 11,
+      "gen_ai.usage.output_tokens": 7,
+      "gen_ai.usage.total_tokens": 18,
+      "gen_ai.usage.cache_read.input_tokens": 0,
+      "gen_ai.usage.reasoning_tokens": 0,
+      "gen_ai.response.finish_reasons": [
+       "tool_call"
+      ],
+      "gen_ai.input.messages": "[{\"role\": \"system\", \"parts\": [{\"type\": \"text\", \"content\": \"Answer with the tool.\"}]}, {\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"What is the weather in Lagos?\"}]}]",
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"no_such_tool\", \"id\": \"fc_649711cb0001\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+      "gen_ai.tool.definitions": "[{\"type\": \"function\", \"name\": \"get_weather\", \"parameters\": {\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}}]"
+     },
+     "events": []
+    },
+    {
+     "name": "openai.response",
+     "kind": "CLIENT",
+     "trace_id": "618d67eb94e7ba8bd3bbfe8ebfc27f75",
+     "span_id": "92e50e6a9f5d1c41",
+     "parent_id": "6ba2323446644054",
+     "start_ns": 1791664141355858901,
+     "end_ns": 1791664141470982751,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.agent.name": "helper",
+      "gen_ai.input.messages": "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"What is the weather in Lagos?\"}]}]",
+      "gen_ai.response.model": "agent-resp-badtool",
+      "gen_ai.response.id": "resp_649711cb0003",
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"no_such_tool\", \"id\": \"call_649711cb0002\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+      "gen_ai.response.finish_reasons": [
+       "tool_call"
+      ],
+      "gen_ai.usage.input_tokens": 11,
+      "gen_ai.usage.output_tokens": 7,
+      "gen_ai.usage.total_tokens": 18,
+      "gen_ai.usage.cache_read.input_tokens": 0,
+      "gen_ai.usage.reasoning_tokens": 0
+     },
+     "events": []
+    },
+    {
+     "name": "helper.agent",
+     "kind": "INTERNAL",
+     "trace_id": "618d67eb94e7ba8bd3bbfe8ebfc27f75",
+     "span_id": "6ba2323446644054",
+     "parent_id": "1a320d6ad31656b1",
+     "start_ns": 1791664141355096224,
+     "end_ns": 1791664141471680275,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "traceloop.span.kind": "agent",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.operation.name": "invoke_agent",
+      "gen_ai.agent.name": "helper"
+     },
+     "events": []
+    },
+    {
+     "name": "Agent Workflow",
+     "kind": "INTERNAL",
+     "trace_id": "618d67eb94e7ba8bd3bbfe8ebfc27f75",
+     "span_id": "1a320d6ad31656b1",
+     "parent_id": null,
+     "start_ns": 1791664141352573336,
+     "end_ns": 1791664141471740329,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "traceloop.span.kind": "workflow",
+      "gen_ai.provider.name": "openai",
+      "traceloop.workflow.name": "Agent Workflow"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

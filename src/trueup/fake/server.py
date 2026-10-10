@@ -17,6 +17,8 @@ ROUTES: dict[str, tuple[str, Callable[[str, dict[str, Any], Ids], Reply]]] = {
     "/v1/messages": ("anthropic.messages", anthropic_messages.handle),
 }
 SCENARIOS = openai_chat.SCENARIOS + openai_responses.SCENARIOS + anthropic_messages.SCENARIOS
+AGENT_SCENARIOS = openai_chat.AGENT_SCENARIOS + openai_responses.AGENT_SCENARIOS
+# Used by audit, one scenario per run. Agent flows need an agent loop, so they are not in it.
 SCENARIOS_BY_ROUTE: dict[str, tuple[str, ...]] = {
     "/v1/chat/completions": openai_chat.SCENARIOS,
     "/v1/responses": openai_responses.SCENARIOS,

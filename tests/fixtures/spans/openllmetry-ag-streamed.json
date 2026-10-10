@@ -1,0 +1,303 @@
+{
+ "scenario": "ag-streamed",
+ "library": "openllmetry",
+ "observation": {
+  "truth": {
+   "calls": 2,
+   "outcome": "ok",
+   "tokens": [
+    {
+     "input": 11,
+     "output": 7
+    },
+    {
+     "input": 11,
+     "output": 7
+    }
+   ],
+   "finish": [
+    [
+     "completed"
+    ],
+    [
+     "completed"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "get_weather"
+    ],
+    []
+   ],
+   "fake": [
+    "complete",
+    "complete"
+   ],
+   "response_ids": [
+    "resp_cce63e8d0003",
+    "resp_cce63e8d0005"
+   ],
+   "tool_runs": [
+    {
+     "name": "get_weather",
+     "outcome": "ok"
+    }
+   ],
+   "scenario": "ag-streamed",
+   "expected": {
+    "calls": 2,
+    "outcome": "ok",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     },
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "completed"
+     ],
+     [
+      "completed"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ],
+     []
+    ],
+    "fake": [
+     "complete",
+     "complete"
+    ],
+    "tool_runs": [
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     }
+    ]
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "ok",
+    "result": {
+     "answer": "It is sunny in Lagos.",
+     "events": 22
+    },
+    "seconds": 0.927
+   },
+   "fake_log": [
+    {
+     "api": "openai.responses",
+     "path": "/v1/responses",
+     "scenario": "agent-resp",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "resp_cce63e8d0003",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18,
+      "reasoning_tokens": 0
+     },
+     "usage_sent": true,
+     "finish": [
+      "completed"
+     ],
+     "tool_calls": [
+      {
+       "id": "call_cce63e8d0002",
+       "name": "get_weather",
+       "arguments": "{\"city\":\"Lagos\"}"
+      }
+     ],
+     "text": [],
+     "seq": 1
+    },
+    {
+     "api": "openai.responses",
+     "path": "/v1/responses",
+     "scenario": "agent-resp",
+     "stream": true,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "resp_cce63e8d0005",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18,
+      "reasoning_tokens": 0
+     },
+     "usage_sent": true,
+     "finish": [
+      "completed"
+     ],
+     "tool_calls": [],
+     "text": [
+      "It is sunny in Lagos."
+     ],
+     "seq": 2
+    }
+   ]
+  },
+  "trace": {
+   "library": "openllmetry",
+   "versions": {
+    "traceloop-sdk": "0.62.4",
+    "opentelemetry-instrumentation-openai": "0.62.4",
+    "opentelemetry-instrumentation-anthropic": "0.62.4",
+    "opentelemetry-instrumentation-langchain": "0.62.4",
+    "opentelemetry-instrumentation-openai-agents": "0.62.4",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1",
+    "langchain-core": "1.6.9",
+    "langchain-openai": "1.7.0",
+    "langgraph": "1.2.14",
+    "openai-agents": "0.23.1"
+   },
+   "spans": [
+    {
+     "name": "openai.response",
+     "kind": "CLIENT",
+     "trace_id": "e3ccc5248a89f9c52547fbd874cbe972",
+     "span_id": "1100b6c279a8653b",
+     "parent_id": "6a46558a2861062d",
+     "start_ns": 1791664127936911307,
+     "end_ns": 1791664128842134906,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.agent.name": "helper",
+      "gen_ai.input.messages": "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"What is the weather in Lagos?\"}]}]",
+      "gen_ai.response.model": "agent-resp",
+      "gen_ai.response.id": "resp_cce63e8d0003",
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"get_weather\", \"id\": \"call_cce63e8d0002\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+      "gen_ai.response.finish_reasons": [
+       "tool_call"
+      ],
+      "gen_ai.usage.input_tokens": 11,
+      "gen_ai.usage.output_tokens": 7,
+      "gen_ai.usage.total_tokens": 18,
+      "gen_ai.usage.cache_read.input_tokens": 0,
+      "gen_ai.usage.reasoning_tokens": 0
+     },
+     "events": []
+    },
+    {
+     "name": "get_weather.tool",
+     "kind": "INTERNAL",
+     "trace_id": "e3ccc5248a89f9c52547fbd874cbe972",
+     "span_id": "d57c5e40b8b54700",
+     "parent_id": "6a46558a2861062d",
+     "start_ns": 1791664128844255901,
+     "end_ns": 1791664128845556710,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "traceloop.span.kind": "tool",
+      "gen_ai.tool.name": "get_weather",
+      "gen_ai.tool.type": "function",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.operation.name": "execute_tool",
+      "gen_ai.agent.name": "helper",
+      "gen_ai.tool.call.arguments": "{\"city\":\"Lagos\"}",
+      "gen_ai.tool.call.result": "Sunny in Lagos"
+     },
+     "events": []
+    },
+    {
+     "name": "openai.response",
+     "kind": "CLIENT",
+     "trace_id": "e3ccc5248a89f9c52547fbd874cbe972",
+     "span_id": "f453991d5adec8e1",
+     "parent_id": "6a46558a2861062d",
+     "start_ns": 1791664128846745536,
+     "end_ns": 1791664128856201059,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "gen_ai.operation.name": "chat",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.agent.name": "helper",
+      "gen_ai.input.messages": "[{\"role\": \"user\", \"parts\": [{\"type\": \"text\", \"content\": \"What is the weather in Lagos?\"}]}, {\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"get_weather\", \"id\": \"fc_cce63e8d0001\", \"arguments\": {\"city\": \"Lagos\"}}]}, {\"role\": \"tool\", \"parts\": [{\"type\": \"tool_call_response\", \"id\": \"call_cce63e8d0002\", \"response\": \"Sunny in Lagos\"}]}]",
+      "gen_ai.response.model": "agent-resp",
+      "gen_ai.response.id": "resp_cce63e8d0005",
+      "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"text\", \"content\": \"It is sunny in Lagos.\"}], \"finish_reason\": \"stop\"}]",
+      "gen_ai.response.finish_reasons": [
+       "stop"
+      ],
+      "gen_ai.usage.input_tokens": 11,
+      "gen_ai.usage.output_tokens": 7,
+      "gen_ai.usage.total_tokens": 18,
+      "gen_ai.usage.cache_read.input_tokens": 0,
+      "gen_ai.usage.reasoning_tokens": 0
+     },
+     "events": []
+    },
+    {
+     "name": "helper.agent",
+     "kind": "INTERNAL",
+     "trace_id": "e3ccc5248a89f9c52547fbd874cbe972",
+     "span_id": "6a46558a2861062d",
+     "parent_id": "cfe86691f154a815",
+     "start_ns": 1791664127936075350,
+     "end_ns": 1791664128857511005,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "traceloop.span.kind": "agent",
+      "gen_ai.provider.name": "openai",
+      "gen_ai.operation.name": "invoke_agent",
+      "gen_ai.agent.name": "helper"
+     },
+     "events": []
+    },
+    {
+     "name": "Agent Workflow",
+     "kind": "INTERNAL",
+     "trace_id": "e3ccc5248a89f9c52547fbd874cbe972",
+     "span_id": "cfe86691f154a815",
+     "parent_id": null,
+     "start_ns": 1791664127935762125,
+     "end_ns": 1791664128857569015,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "opentelemetry.instrumentation.openai_agents",
+     "attributes": {
+      "traceloop.span.kind": "workflow",
+      "gen_ai.provider.name": "openai",
+      "traceloop.workflow.name": "Agent Workflow"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

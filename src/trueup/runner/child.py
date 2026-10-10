@@ -21,8 +21,9 @@ from typing import Any
 
 from trueup.fake import FakeProvider
 from trueup.runner import truth
+from trueup.runner import framework_apps
 from trueup.runner.apps import APPS
-from trueup.runner.setups import SETUPS, VERSIONED
+from trueup.runner.setups import SETUPS, VERSIONED, check_framework, quiet_agents_sdk
 from trueup.scenarios import get
 
 ATTR_MAX = 2000
@@ -66,8 +67,12 @@ def _versions(library: str) -> dict[str, str | None]:
 def run(library: str, scenario_id: str) -> dict[str, Any]:
     scenario = get(scenario_id)
     logging.disable(logging.CRITICAL)
-    exporter, flush = SETUPS[library]()
+    exporter, flush = SETUPS[library](scenario.framework)
+    check_framework(scenario.framework)
+    if scenario.framework == "openai-agents":
+        quiet_agents_sdk()
     app_fn = APPS[scenario.app]
+    framework_apps.TOOL_RUNS.clear()
     with FakeProvider() as fake:
         t0 = time.monotonic()
         try:
@@ -86,7 +91,7 @@ def run(library: str, scenario_id: str) -> dict[str, Any]:
         flush()
         fake_log = fake.log.entries()
     spans = [span_to_dict(s) for s in exporter.get_finished_spans()]
-    t = truth.derive(fake_log, app)
+    t = truth.derive(fake_log, app, framework_apps.TOOL_RUNS)
     return {
         "truth": {
             **t,

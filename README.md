@@ -12,7 +12,7 @@ The work is split into small workers: planner, runner, comparer, checker, dedupe
 
 `trueup doctor`, `trueup sweep <neatlogs|openinference|openllmetry>` and `trueup audit <script> --library <lib>` work.
 
-`sweep` runs the plain-SDK scenarios against a fake provider, compares truth with the trace, prints a table of leads and writes truth, trace and `leads.json` to `.trueup/runs/<run_id>/`. A lead is a disagreement between truth and trace; it is not a confirmed bug.
+`sweep` runs the scenarios (plain SDK, LangChain/LangGraph and the OpenAI Agents SDK; pick with `--framework`) against a fake provider, compares truth with the trace, prints a table of leads and writes truth, trace and `leads.json` to `.trueup/runs/<run_id>/`. A lead is a disagreement between truth and trace; it is not a confirmed bug.
 
 `audit` runs your script's `main()` against the fake (through `OPENAI_BASE_URL` / `ANTHROPIC_BASE_URL`) under the chosen library, once per fake scenario on each provider route the script calls, and compares the same way. It needs a `main()` with no arguments that uses the `openai` or `anthropic` SDK; see `src/trueup/audit.py` for its limits.
 
@@ -30,6 +30,7 @@ uv run trueup doctor
 uv run pytest -q         # offline unit tests
 uv run pytest -q -m e2e  # builds per-library venvs, runs subprocesses
 uv run trueup sweep neatlogs
+uv run trueup sweep openllmetry --framework openai-agents
 uv run trueup audit examples/agent.py --library openinference
 ```
 

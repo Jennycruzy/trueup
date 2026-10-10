@@ -1,0 +1,229 @@
+{
+ "scenario": "ag-bad-tool",
+ "library": "openinference",
+ "observation": {
+  "truth": {
+   "calls": 1,
+   "outcome": "exception",
+   "tokens": [
+    {
+     "input": 11,
+     "output": 7
+    }
+   ],
+   "finish": [
+    [
+     "completed"
+    ]
+   ],
+   "tool_calls": [
+    [
+     "no_such_tool"
+    ]
+   ],
+   "fake": [
+    "complete"
+   ],
+   "response_ids": [
+    "resp_1d27862f0003"
+   ],
+   "tool_runs": [],
+   "exception": "ModelBehaviorError",
+   "scenario": "ag-bad-tool",
+   "expected": {
+    "calls": 1,
+    "outcome": "exception",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "completed"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "no_such_tool"
+     ]
+    ],
+    "fake": [
+     "complete"
+    ],
+    "tool_runs": [],
+    "exception": "ModelBehaviorError"
+   },
+   "expected_mismatch": [],
+   "app": {
+    "outcome": "exception",
+    "exception_type": "ModelBehaviorError",
+    "exception_module": "agents.exceptions",
+    "message": "Tool no_such_tool not found in agent helper",
+    "seconds": 0.245
+   },
+   "fake_log": [
+    {
+     "api": "openai.responses",
+     "path": "/v1/responses",
+     "scenario": "agent-resp-badtool",
+     "stream": false,
+     "include_usage": false,
+     "n": null,
+     "status_code": 200,
+     "response_id": "resp_1d27862f0003",
+     "outcome": "complete",
+     "usage": {
+      "input_tokens": 11,
+      "output_tokens": 7,
+      "total_tokens": 18,
+      "reasoning_tokens": 0
+     },
+     "usage_sent": true,
+     "finish": [
+      "completed"
+     ],
+     "tool_calls": [
+      {
+       "id": "call_1d27862f0002",
+       "name": "no_such_tool",
+       "arguments": "{\"city\":\"Lagos\"}"
+      }
+     ],
+     "text": [],
+     "seq": 1
+    }
+   ]
+  },
+  "trace": {
+   "library": "openinference",
+   "versions": {
+    "openinference-instrumentation-openai": "0.1.65",
+    "openinference-instrumentation-anthropic": "3.0.3",
+    "openinference-instrumentation-langchain": "0.1.79",
+    "openinference-instrumentation-openai-agents": "2.5.3",
+    "openai": "3.28.0",
+    "anthropic": "1.13.0",
+    "opentelemetry-sdk": "1.45.1",
+    "langchain-core": "1.6.9",
+    "langchain-openai": "1.7.0",
+    "langgraph": "1.2.14",
+    "openai-agents": "0.23.1"
+   },
+   "spans": [
+    {
+     "name": "response",
+     "kind": "INTERNAL",
+     "trace_id": "ed346f696fd8f06ebd9676da2012d9ff",
+     "span_id": "1ad54770ff3523d2",
+     "parent_id": "d9eff72f1c8f17de",
+     "start_ns": 1791664011400131072,
+     "end_ns": 1791664011634085888,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.openai_agents",
+     "attributes": {
+      "llm.system": "openai",
+      "output.mime_type": "application/json",
+      "output.value": "{\"id\":\"resp_1d27862f0003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-badtool\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_1d27862f0002\",\"name\":\"no_such_tool\",\"type\":\"function_call\",\"id\":\"fc_1d27862f0001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+      "llm.token_count.completion": 7,
+      "llm.token_count.prompt": 11,
+      "llm.token_count.total": 18,
+      "llm.token_count.prompt_details.cache_read": 0,
+      "llm.token_count.completion_details.reasoning": 0,
+      "llm.output_messages.0.message.role": "assistant",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_1d27862f0002",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "no_such_tool",
+      "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+      "llm.model_name": "agent-resp-badtool",
+      "llm.finish_reason": "stop",
+      "llm.invocation_parameters": "{\"id\": \"resp_1d27862f0003\", \"created_at\": 0.0, \"model\": \"agent-resp-badtool\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+      "input.mime_type": "application/json",
+      "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}]",
+      "llm.input_messages.1.message.role": "user",
+      "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+      "openinference.span.kind": "LLM"
+     },
+     "events": []
+    },
+    {
+     "name": "turn",
+     "kind": "INTERNAL",
+     "trace_id": "ed346f696fd8f06ebd9676da2012d9ff",
+     "span_id": "d9eff72f1c8f17de",
+     "parent_id": "90760f097d31f40c",
+     "start_ns": 1791664011399465984,
+     "end_ns": 1791664011638808064,
+     "status": {
+      "code": "ERROR",
+      "description": "Tool not found: {'tool_name': 'no_such_tool'}"
+     },
+     "scope": "openinference.instrumentation.openai_agents",
+     "attributes": {
+      "openinference.span.kind": "CHAIN"
+     },
+     "events": []
+    },
+    {
+     "name": "helper",
+     "kind": "INTERNAL",
+     "trace_id": "ed346f696fd8f06ebd9676da2012d9ff",
+     "span_id": "90760f097d31f40c",
+     "parent_id": "246efe2595d20408",
+     "start_ns": 1791664011399315200,
+     "end_ns": 1791664011638976000,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.openai_agents",
+     "attributes": {
+      "graph.node.id": "helper",
+      "agent.name": "helper",
+      "openinference.span.kind": "AGENT"
+     },
+     "events": []
+    },
+    {
+     "name": "Agent workflow",
+     "kind": "INTERNAL",
+     "trace_id": "ed346f696fd8f06ebd9676da2012d9ff",
+     "span_id": "246efe2595d20408",
+     "parent_id": "6fe95fc3e073ddfe",
+     "start_ns": 1791664011398639872,
+     "end_ns": 1791664011639066880,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.openai_agents",
+     "attributes": {
+      "openinference.span.kind": "CHAIN"
+     },
+     "events": []
+    },
+    {
+     "name": "Agent workflow",
+     "kind": "INTERNAL",
+     "trace_id": "ed346f696fd8f06ebd9676da2012d9ff",
+     "span_id": "6fe95fc3e073ddfe",
+     "parent_id": null,
+     "start_ns": 1791664011398537867,
+     "end_ns": 1791664011639118307,
+     "status": {
+      "code": "OK",
+      "description": null
+     },
+     "scope": "openinference.instrumentation.openai_agents",
+     "attributes": {
+      "openinference.span.kind": "AGENT"
+     },
+     "events": []
+    }
+   ]
+  }
+ }
+}

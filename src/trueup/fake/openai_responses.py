@@ -17,6 +17,20 @@ SCENARIOS = (
     "resp-error-event",
     "resp-cut",
 )
+# Agent flows (OpenAI Agents SDK). Stateless, like the chat ones: no
+# function_call_output in the input yet -> call a tool; present -> answer.
+AGENT_SCENARIOS = (
+    "agent-resp",  # one tool call, then the answer
+    "agent-resp-loop",  # always calls the tool again
+    "agent-resp-fail2",  # tool call, then HTTP 500 once the tool output arrives
+    "agent-resp-badtool",  # calls a tool the agent does not have
+    "agent-resp-error-event",  # tool call, then an error event in the answer stream
+    "agent-resp-cut",  # tool call, then the connection drops in the answer stream
+)
+ANSWER = "It is sunny in Lagos."
+UNKNOWN_TOOL = "no_such_tool"
+ERROR_EVENT = ("resp-error-event", "agent-resp-error-event")
+CUT = ("resp-cut", "agent-resp-cut")
 INPUT_TOKENS = 11
 OUTPUT_TOKENS = 7
 REASONING_TOKENS = 4
@@ -43,22 +57,34 @@ def _message(ids: Ids, text: str, status: str = "completed") -> dict[str, Any]:
     }
 
 
-def _body(scenario: str, model: str, ids: Ids) -> dict[str, Any]:
+def has_tool_output(req: dict[str, Any]) -> bool:
+    inp = req.get("input")
+    return isinstance(inp, list) and any(isinstance(i, dict) and i.get("type") == "function_call_output" for i in inp)
+
+
+def _function_call(ids: Ids, name: str = "get_weather") -> dict[str, Any]:
+    return {
+        "type": "function_call",
+        "id": ids.new("fc_"),
+        "call_id": ids.new("call_"),
+        "name": name,
+        "arguments": '{"city":"Lagos"}',
+        "status": "completed",
+    }
+
+
+def _body(scenario: str, model: str, ids: Ids, req: dict[str, Any]) -> dict[str, Any]:
     reasoning = 0
     status = "completed"
     error = None
     incomplete = None
-    if scenario == "resp-tool":
-        output = [
-            {
-                "type": "function_call",
-                "id": ids.new("fc_"),
-                "call_id": ids.new("call_"),
-                "name": "get_weather",
-                "arguments": '{"city":"Lagos"}',
-                "status": "completed",
-            }
-        ]
+    if scenario in AGENT_SCENARIOS:
+        if scenario == "agent-resp-loop" or not has_tool_output(req):
+            output = [_function_call(ids, UNKNOWN_TOOL if scenario == "agent-resp-badtool" else "get_weather")]
+        else:
+            output = [_message(ids, ANSWER)]
+    elif scenario == "resp-tool":
+        output = [_function_call(ids)]
     elif scenario == "resp-reasoning":
         reasoning = REASONING_TOKENS
         output = [
@@ -117,13 +143,21 @@ def _facts(body: dict[str, Any]) -> dict[str, Any]:
 
 
 def handle(scenario: str, req: dict[str, Any], ids: Ids) -> Reply:
-    body = _body(scenario, req.get("model", ""), ids)
+    if scenario == "agent-resp-fail2" and has_tool_output(req):
+        return json_reply(
+            500,
+            {"error": {"message": "fake server error", "type": "server_error", "code": None, "param": None}},
+            outcome="http_error",
+        )
+    body = _body(scenario, req.get("model", ""), ids, req)
+    # Agent error and cut scenarios fail only on the answer (after the tool ran).
+    fails_here = scenario.startswith("resp-") or has_tool_output(req)
     if not req.get("stream"):
-        if scenario == "resp-cut":
+        if scenario in CUT and fails_here:
             raw = json.dumps(body).encode()
             return Reply(200, raw[: len(raw) // 2], cut=True, response_id=body["id"], outcome="cut")
-        if scenario == "resp-error-event":
-            return json_reply(400, {"error": {"message": "resp-error-event needs stream=true", "type": "invalid_request_error"}}, outcome="http_error")
+        if scenario in ERROR_EVENT and fails_here:
+            return json_reply(400, {"error": {"message": f"{scenario} needs stream=true", "type": "invalid_request_error"}}, outcome="http_error")
         return json_reply(200, body, **_facts(body))
     return _stream(scenario, body)
 
@@ -157,10 +191,10 @@ def _stream(scenario: str, body: dict[str, Any]) -> Reply:
             ev("response.content_part.added", item_id=item["id"], output_index=i, content_index=0,
                part={"type": "output_text", "text": "", "annotations": []})
             ev("response.output_text.delta", item_id=item["id"], output_index=i, content_index=0, delta=first, logprobs=[])
-            if scenario == "resp-error-event":
+            if scenario in ERROR_EVENT:
                 ev("error", code="server_error", message="fake stream error", param=None)
                 return stream_reply(parts, response_id=body["id"], outcome="error_event", text=[first])
-            if scenario == "resp-cut":
+            if scenario in CUT:
                 return stream_reply(parts, cut=True, response_id=body["id"], outcome="cut", text=[first])
             ev("response.output_text.delta", item_id=item["id"], output_index=i, content_index=0, delta=rest, logprobs=[])
             ev("response.output_text.done", item_id=item["id"], output_index=i, content_index=0, text=text, logprobs=[])

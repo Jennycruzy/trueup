@@ -53,3 +53,17 @@ def test_audit_runs_the_example_agent_with_overrides(lib):
     assert r["status"] == RAN, r["reason"]
     t = r["observation"]["truth"]
     assert t["outcome"] == "exception" and t["fake_log"][0]["scenario"] == "chat-500"
+
+
+@pytest.mark.parametrize("scenario", ["lg-agent", "ag-run"])
+def test_framework_scenario_runs_and_is_traced(lib, scenario):
+    # A framework instrumentation that silently does nothing would give a run with no tool span.
+    from trueup.core.adapters import ADAPTERS, tool_span_name
+
+    name, py = lib
+    r = run_scenario(py, name, scenario)
+    assert r["status"] == RAN, r["reason"]
+    obs = r["observation"]
+    assert obs["truth"]["expected_mismatch"] == []
+    tools = [tool_span_name(ADAPTERS[name], s) for s in obs["trace"]["spans"]]
+    assert "get_weather" in tools

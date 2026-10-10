@@ -187,3 +187,86 @@ def test_real_refusal_missing_in_neatlogs_and_openinference():
 def test_real_neatlogs_streamed_chat_note_but_no_lead():
     ms = compare(fixture("neatlogs-oa-chat-stream-cut"))
     assert [(m.check, m.kind) for m in ms] == [("request_changed", "note")]
+
+
+
+# Framework runs: root span, tool spans, errors that come from the framework.
+
+
+def tool_span(sid, name="get_weather", parent="root", code="UNSET", events=()):
+    return {"name": name, "span_id": sid, "parent_id": parent, "start_ns": 5,
+            "status": {"code": code, "description": None},
+            "attributes": {"neatlogs.span.kind": "tool", "neatlogs.tool.name": name},
+            "events": [{"name": e, "attributes": {}} for e in events]}
+
+
+def root(code="OK"):
+    return {"name": "Agent workflow", "span_id": "root", "parent_id": None, "start_ns": 0,
+            "status": {"code": code, "description": None}, "attributes": {}, "events": []}
+
+
+def fw_obs(spans, tool_runs, **kw):
+    o = obs([call()], spans, **kw)
+    return Observation(truth={**o.truth, "tool_runs": tool_runs}, trace=o.trace)
+
+
+def test_top_level_prefers_the_trace_root_over_orphans():
+    orphan = span("o", parent="never-exported", code="ERROR")
+    assert top_level([root(), orphan]) == [root()]
+    assert top_level([orphan]) == [orphan]
+
+
+def test_tool_run_without_span_and_raised_tool_shown_ok_are_medium():
+    runs = [{"name": "get_weather", "outcome": "ok"}, {"name": "get_weather", "outcome": "raised"}]
+    o = fw_obs([root(), span(parent="root"), tool_span("t1")], runs)
+    assert [(m.check, m.field, m.severity) for m in compare(o)] == [
+        ("tools", "tool run 2 (get_weather) span", Severity.MEDIUM)]
+    o = fw_obs([root(), span(parent="root"), tool_span("t1"), tool_span("t2", code="OK")], runs)
+    assert [(m.check, m.field) for m in compare(o)] == [("tools", "tool run 2 (get_weather) status")]
+    o = fw_obs([root(), span(parent="root"), tool_span("t1"), tool_span("t2", events=("exception",))], runs)
+    assert compare(o) == []
+
+
+def test_extra_tool_span_is_low():
+    o = fw_obs([root(), span(parent="root"), tool_span("t1"), tool_span("t2")], [{"name": "get_weather", "outcome": "ok"}])
+    assert checks(o) == [("tools", Severity.LOW)]
+
+
+def test_framework_error_recorded_nowhere_is_medium_and_root_ok_is_high():
+    o = fw_obs([root(), span(parent="root")], [], outcome="exception", exception="ModelBehaviorError")
+    assert checks(o) == [("error_recorded", Severity.MEDIUM), ("run_status", Severity.HIGH)]
+    turn = {**span("turn", parent="root"), "attributes": {}, "status": {"code": "ERROR", "description": "Tool not found"}}
+    o = fw_obs([root(), turn, span(parent="turn")], [], outcome="exception", exception="ModelBehaviorError")
+    assert checks(o) == [("run_status", Severity.HIGH)]
+
+
+def test_app_asked_for_stream_usage_is_not_a_request_change():
+    c = call("cut", usage=None, text=(), finish=(), include_usage=True)
+    exp = {"tokens": [None], "include_usage": [True]}
+    o = obs([c], [span(code="ERROR", events=("exception",))], outcome="exception", exception="X", expected=exp)
+    assert compare(o) == []
+    o = obs([c], [span(code="ERROR", events=("exception",))], outcome="exception", exception="X",
+            expected={**exp, "include_usage": [False]})
+    assert [(m.check, m.kind) for m in compare(o)] == [("request_changed", "note")]
+
+
+def test_real_agents_sdk_unknown_tool_root_ok():
+    # OpenInference: the root stays OK; the error is only on the turn span's status.
+    ms = compare(fixture("openinference-ag-bad-tool"))
+    assert [(m.check, m.severity) for m in ms] == [("run_status", Severity.HIGH)]
+    # OpenLLMetry: the root stays OK and no span records the error at all.
+    got = {m.check for m in compare(fixture("openllmetry-ag-bad-tool"))}
+    assert {"run_status", "error_recorded"} <= got
+
+
+def test_real_openllmetry_agents_sdk_doubles_llm_spans_only_when_not_streamed():
+    ms = compare(fixture("openllmetry-ag-run"))
+    [m] = [m for m in ms if m.check == "call_count"]
+    assert (m.truth, m.trace, m.severity) == ("2 (provider requests)", 4, Severity.HIGH)
+    assert [m.check for m in compare(fixture("openllmetry-ag-streamed"))] == []
+
+
+@pytest.mark.parametrize("name", ["openllmetry-lg-agent", "openinference-lg-agent", "neatlogs-lg-tool-raises"])
+def test_real_langgraph_spans_counted_right(name):
+    # LangGraph task, tool and workflow spans are not LLM calls; tool spans pair with tool runs.
+    assert [m.check for m in leads(compare(fixture(name))) if m.check in ("call_count", "tools", "span_closed")] == []

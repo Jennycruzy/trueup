@@ -13,7 +13,10 @@ trueup = "trueup.cli:main"
 [dependency-groups]
 dev = [
     "anthropic>=1.13.0",
+    "langchain-openai>=1.7.0",
+    "langgraph>=1.2.14",
     "openai>=3.28.0",
+    "openai-agents>=0.23.1",
     "pytest>=8",
 ]
 

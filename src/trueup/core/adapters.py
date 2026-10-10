@@ -38,7 +38,8 @@ def norm_finish(value: str | None) -> str | None:
 @dataclass(frozen=True)
 class Adapter:
     library: str
-    # A span is an LLM call if attributes[key] is in values (any value if values is empty).
+    # A span is an LLM call if attributes[key] is in values (any value if values is empty)
+    # and no llm_exclude rule matches (same shape).
     llm_kind: tuple[str, tuple[str, ...]]
     input_tokens: tuple[str, ...]
     output_tokens: tuple[str, ...]
@@ -53,6 +54,10 @@ class Adapter:
     tool_args: tuple[str, ...] = ()
     # JSON shape: one attribute with a list of {"parts": [{"type", "content"|"name"|"arguments"}]}.
     messages_json: str | None = None
+    llm_exclude: tuple[tuple[str, tuple[str, ...]], ...] = ()
+    # Tool spans (framework runs): same rule shape as llm_kind, and where the tool name is.
+    tool_kind: tuple[str, tuple[str, ...]] | None = None
+    tool_span_name: tuple[str, ...] = ()
 
 
 NEATLOGS = Adapter(
@@ -66,6 +71,8 @@ NEATLOGS = Adapter(
     refusal=(r"neatlogs\.llm\.output_messages\.\d+\.refusal",),
     tool_name=(r"neatlogs\.llm\.tool_calls\.(\d+)\.name",),
     tool_args=(r"neatlogs\.llm\.tool_calls\.(\d+)\.arguments",),
+    tool_kind=("neatlogs.span.kind", ("tool",)),
+    tool_span_name=("neatlogs.tool.name", "tool.name"),
 )
 
 OPENINFERENCE = Adapter(
@@ -81,12 +88,22 @@ OPENINFERENCE = Adapter(
     refusal=(r"llm\.output_messages\.\d+\.message\.refusal",),
     tool_name=(r"llm\.output_messages\.(\d+\.message\.tool_calls\.\d+)\.tool_call\.function\.name",),
     tool_args=(r"llm\.output_messages\.(\d+\.message\.tool_calls\.\d+)\.tool_call\.function\.arguments",),
+    tool_kind=("openinference.span.kind", ("TOOL",)),
+    tool_span_name=("tool.name",),
 )
 
 OPENLLMETRY = Adapter(
     library="openllmetry",
     # Error spans for failed streams carry no gen_ai.operation.name, so key on the provider.
+    # Framework spans carry a provider too (langgraph, openai): agent, task, tool and workflow
+    # spans are told apart by their operation name or traceloop.span.kind.
     llm_kind=("gen_ai.provider.name", ()),
+    llm_exclude=(
+        ("gen_ai.operation.name", ("create_agent", "invoke_agent", "execute_task", "execute_tool")),
+        ("traceloop.span.kind", ()),
+    ),
+    tool_kind=("traceloop.span.kind", ("tool",)),
+    tool_span_name=("gen_ai.tool.name",),
     input_tokens=("gen_ai.usage.input_tokens",),
     output_tokens=("gen_ai.usage.output_tokens",),
     response_id=("gen_ai.response.id",),
@@ -135,10 +152,24 @@ def _int(v: Any) -> int | None:
         return None
 
 
-def is_llm_span(adapter: Adapter, span: dict[str, Any]) -> bool:
-    key, values = adapter.llm_kind
-    v = span.get("attributes", {}).get(key)
+def _rule(rule: tuple[str, tuple[str, ...]], attrs: dict[str, Any]) -> bool:
+    key, values = rule
+    v = attrs.get(key)
     return v is not None and (not values or v in values)
+
+
+def is_llm_span(adapter: Adapter, span: dict[str, Any]) -> bool:
+    attrs = span.get("attributes", {})
+    return _rule(adapter.llm_kind, attrs) and not any(_rule(r, attrs) for r in adapter.llm_exclude)
+
+
+def tool_span_name(adapter: Adapter, span: dict[str, Any]) -> str | None:
+    """The tool's name if this is a tool span, else None."""
+    attrs = span.get("attributes", {})
+    if adapter.tool_kind is None or not _rule(adapter.tool_kind, attrs):
+        return None
+    name = _first(attrs, adapter.tool_span_name)
+    return name if isinstance(name, str) else span.get("name")
 
 
 def _flat_outputs(adapter: Adapter, attrs: dict[str, Any]) -> tuple[list[str], list[str], list[tuple[str, Any]]]:

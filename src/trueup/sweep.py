@@ -1,4 +1,4 @@
-"""trueup sweep <library>: run the plain-SDK scenarios against one library."""
+"""trueup sweep <library> [--framework ...]: run the scenarios against one library."""
 
 from __future__ import annotations
 
@@ -13,7 +13,7 @@ from trueup.core.compare import compare, leads
 from trueup.core.model import Mismatch, Observation
 from trueup.runner import NOT_RUN, RAN, run_scenario, venvs
 from trueup.runner.run import not_run
-from trueup.scenarios import plain_sdk
+from trueup.scenarios import select
 
 
 def new_run_id(library: str) -> str:
@@ -36,6 +36,7 @@ def summary_line(r: dict[str, Any]) -> str:
 def sweep(
     root: Path,
     library: str,
+    framework: str = "all",
     *,
     ensure: Callable[[Path, str], Path] = venvs.ensure,
     run: Callable[..., dict[str, Any]] = run_scenario,
@@ -45,7 +46,7 @@ def sweep(
     run_dir = root / ".trueup" / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
-    scenarios = plain_sdk()
+    scenarios = select(framework)
     try:
         out(f"preparing venv for {library}")
         python: Path | None = ensure(root, library)
@@ -67,7 +68,7 @@ def sweep(
     totals = (f"leads: {c['leads']} (high {c['by_severity']['high']}, medium {c['by_severity']['medium']}, "
               f"low {c['by_severity']['low']})  notes: {c['notes']}")
     lines = [
-        f"trueup sweep {library}  run {run_id}",
+        f"trueup sweep {library} --framework {framework}  run {run_id}",
         f"scenarios: {len(results)}  ran: {ran}  not run: {len(results) - ran}  "
         f"time: {time.monotonic() - started:.0f} s",
         totals,
@@ -81,6 +82,7 @@ def sweep(
     (run_dir / "index.json").write_text(json.dumps({
         "run_id": run_id,
         "library": library,
+        "framework": framework,
         "scenarios": [{"id": r["scenario"], "status": r["status"], "reason": r["reason"]} for r in results],
     }, indent=1))
     not_run_list = [{"scenario": r["scenario"], "reason": r["reason"]} for r in results if r["status"] != RAN]

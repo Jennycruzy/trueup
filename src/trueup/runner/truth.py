@@ -5,7 +5,8 @@ from __future__ import annotations
 from typing import Any
 
 
-def derive(fake_log: list[dict[str, Any]], app: dict[str, Any]) -> dict[str, Any]:
+def derive(fake_log: list[dict[str, Any]], app: dict[str, Any],
+           tool_runs: list[dict[str, str]] | None = None) -> dict[str, Any]:
     """Truth in the same shape as a scenario's `expected`."""
     out: dict[str, Any] = {
         "calls": len(fake_log),
@@ -18,6 +19,8 @@ def derive(fake_log: list[dict[str, Any]], app: dict[str, Any]) -> dict[str, Any
         "tool_calls": [[t["name"] for t in e["tool_calls"]] for e in fake_log],
         "fake": [e["outcome"] for e in fake_log],
         "response_ids": [e["response_id"] for e in fake_log],
+        "include_usage": [e["include_usage"] for e in fake_log],
+        "tool_runs": [dict(t) for t in tool_runs or []],
     }
     if app["outcome"] == "exception":
         out["exception"] = app["exception_type"]
