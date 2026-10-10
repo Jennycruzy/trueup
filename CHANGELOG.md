@@ -8,6 +8,8 @@
 - Grouping (`trueup.core.group`): leads with the same library, check, field and code path become one finding with a list of scenarios.
 - Deduper (`trueup.dedupe`): searches the library's GitHub issues and PRs in all states with `gh search issues --include-prs`, lists the integration's titles, records each search with its date and marks a finding "already known" with the link when a title names the integration and the behaviour. Read only.
 - Repro generator (`trueup.core.repro`): a short script that runs a scenario offline under a library and prints its leads.
+- Deduper: title matches read by hand that do not cover a finding are kept as "related" with the reason; token findings ignore titles about reasoning tokens.
+- Check results are cached per scenario in the run dir (`check-cache/`), so an interrupted check resumes.
 - Fix: the neatlogs adapter now also reads `llm.finish_reason`. neatlogs framework spans come from the OpenInference instrumentors and carry the finish reason only there. This removed 27 false finish leads.
 
 - Framework scenarios: 20 built (LangChain 6, LangGraph 6, OpenAI Agents SDK 8), each with expected truth, including which tools ran and which raised. App code in `trueup.runner.framework_apps`.

@@ -90,3 +90,55 @@ Answers to the three questions:
 1. Does a crashed Agents SDK run show OK at the top level? Yes, in all three libraries, in all 5 crash scenarios.
 2. Does OpenLLMetry with Traceloop.init double LLM calls and tokens for the Agents SDK? Yes in non-streamed runs (5 of 5 scenarios, exactly 2x). Streamed runs are not affected (3 of 3 have one span per call and the right tokens).
 3. Does an unknown-tool error appear anywhere in the trace? neatlogs and OpenInference: only as the status description of the `turn` span (ERROR, no exception event); the root stays OK. OpenLLMetry: nowhere.
+
+## 2026-10-10: the checker and the deduper
+
+- `trueup check <run_id|latest> --library <lib>` takes a sweep's leads through seven rules: reproduces twice in fresh processes; recommended setup with the framework installed; latest release (checked against PyPI) and the library's main branch (shallow clone, installed into `.trueup/venvs/<lib>-main`); the fake sent what truth claims; harness sane (own client per event loop, export off, no endpoint); another library or the OTel conventions show the right behaviour; a repro under 40 lines reproduces it. A lead that passes every rule is a finding; otherwise it is withdrawn with the failing rule, kept as a lead, or marked "disputed semantics". Withdrawn leads stay in `withdrawn.json`.
+- Findings with the same library, check, field and code path are grouped into one finding with a list of scenarios.
+- The deduper searches each library's issues and PRs (all states, `gh search issues --include-prs`), lists the integration's titles and records each search with its date (in `findings.json`). Read only: nothing was opened, commented on or posted.
+- Repros are generated per scenario in `.trueup/runs/<run>/repros/` (31 lines each). They run offline with fake keys, but they import trueup for the fake provider and the app code, so they are not yet standalone scripts for an upstream issue.
+
+### Trueup's own false alarm: neatlogs finish reason
+
+The neatlogs adapter read the finish reason only from `neatlogs.llm.finish_reason` / `neatlogs.llm.choices.N.finish_reason`. In the real spans from run `20261010T203332Z-neatlogs`, every framework LLM span (LangChain, LangGraph, Agents SDK) comes from an OpenInference instrumentor (scope `openinference.instrumentation.langchain` / `.openai_agents`). These spans carry the right finish reason in `llm.finish_reason`. neatlogs copies tokens and tool calls into its own namespace but not the finish reason. The finish reason is in the exported trace, so the leads were ours. The adapter now also reads `llm.finish_reason`.
+
+Same saved run, compared again: 58 leads before, 31 after. All 27 removed leads were `finish` leads on framework scenarios: ag-bad-tool 1, ag-llm-fails 1, ag-max-turns 3, ag-run 2, ag-streamed 2, ag-streamed-cut 1, ag-streamed-error 1, ag-tool-raises 2, lc-invoke 1, lc-refusal 1, lc-stream 1, lg-agent 2, lg-llm-fails 1, lg-parallel 2, lg-step-limit 3, lg-stream 2, lg-tool-raises 1. The 10 plain-SDK finish leads stay. Whether the neatlogs dashboard shows `llm.finish_reason` was not checked.
+
+### Results
+
+Checked against the latest releases (neatlogs 1.4.26; OpenInference openai 0.1.65, anthropic 3.0.3, langchain 0.1.79, openai-agents 2.5.3; OpenLLMetry 0.62.4, all equal to PyPI) and main (neatlogs `202f8776ea`, openinference `c364180e5b`, openllmetry `df4921a409`). Every main branch installed.
+
+| library | leads | finding leads | findings (grouped) | high | medium | withdrawn | disputed | already known |
+|---|---|---|---|---|---|---|---|---|
+| neatlogs | 31 | 27 | 12 | 3 | 9 | 0 | 2 groups (4 leads) | 3 |
+| openinference | 19 | 15 | 6 | 3 | 3 | 0 | 2 groups (4 leads) | 0 |
+| openllmetry | 29 | 23 | 9 | 6 | 3 | 2 (latest_and_main) | 2 groups (4 leads) | 1 |
+
+Withdrawn: openllmetry, oa-resp-failed and oa-resp-incomplete (no span for a Responses call with status failed or incomplete). Both reproduce on 0.62.4 but not on main, so they are fixed there.
+
+Disputed semantics, in all three libraries: (1) on Agents SDK provider failures the `response` span is ERROR but has no exception event (ag-llm-fails, ag-streamed-error, ag-streamed-cut); the conventions require the status, not the event. (2) the LangChain refusal is not recorded as output (lc-refusal); the GenAI conventions have no refusal part and no library records it.
+
+neatlogs findings:
+- HIGH: Agents SDK run that raises (5 scenarios): root "Agent workflow" span is OK.
+- HIGH: Responses stream ending in an error event: top-level span stays UNSET (and, MEDIUM, the call span has no exception event).
+- HIGH: `messages.stream()` (3): no tokens on the span. MEDIUM, same scenarios: no finish reason, no output text, no tool call.
+- MEDIUM: Responses create (5) and stream (2): no status/finish reason. Responses create and stream: function calls not recorded.
+- MEDIUM: chat refusal not recorded.
+- Already known: the `messages.stream()` output finding matches open PR https://github.com/neatlogs/neatlogs/pull/180 (issue https://github.com/neatlogs/neatlogs/issues/179). Both Responses tool-call findings match open PR https://github.com/neatlogs/neatlogs/pull/186 (issue https://github.com/neatlogs/neatlogs/issues/185). From its description, PR 180 also covers the `messages.stream()` tokens, finish and tool-call findings (same cause), but the automated title match only marked the output one.
+
+OpenInference findings:
+- HIGH: Agents SDK run that raises (5): root span OK.
+- HIGH: no span for a chat stream the app closes early, or for a Responses stream ending in an error event.
+- MEDIUM: Responses create (5) and stream (2): no status/finish reason.
+- MEDIUM: chat refusal not recorded. Not known: the title matcher hit PR 3996, PR 3797 and issue 3785. Read by hand, they are about streamed refusal fragments being overwritten, not a non-streamed refusal going missing. They are recorded as "related".
+
+OpenLLMetry findings:
+- HIGH: Agents SDK non-streamed runs (5): two LLM spans per model call (Agents SDK and OpenAI instrumentations), doubling calls and tokens.
+- HIGH: Agents SDK run that raises (5): root span OK.
+- HIGH: chat streams that raised (error event, cut) and the Responses error-event stream: top-level span OK; MEDIUM, the call span is OK with no exception event.
+- HIGH: no span for an Anthropic stream that errors or drops mid-stream (2).
+- HIGH: streamed Anthropic spans record 4 output tokens where the provider sent 3 (4). Already known: open PR https://github.com/traceloop/openllmetry/pull/4377 describes this exact double count (`message_start` added to the running total in `message_delta`).
+- MEDIUM: unknown tool name in an Agents SDK run is on no span.
+- Title matches read by hand and rejected: issue 4536 (spans not ended when the app stops reading early; ours is no span after an error or cut), and PRs 4461 and 4462 (reasoning tokens). Token findings now ignore titles about reasoning tokens.
+
+Limits: rule 6 passed for most findings because another library got the same scenario right. Three groups, the Agents SDK root status in each library, rely on the OTel status rule instead, since all three libraries get it wrong. The title matcher in the deduper made 9 matches; 5 were wrong when read by hand; every "already known" above was read by hand.

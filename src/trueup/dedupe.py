@@ -55,7 +55,19 @@ REVIEWED_NOT_COVERING: dict[tuple[str, str], str] = {
     ("openinference-output-openai-chat-create-output-text-missing",
      "https://github.com/Arize-ai/openinference/pull/3996"):
         "fixes streamed refusal fragments being overwritten; the finding is a non-streamed refusal not recorded",
+    **{("openinference-output-openai-chat-create-output-text-missing", f"https://github.com/Arize-ai/openinference/{u}"):
+       "about streamed refusal fragments; the finding is a non-streamed refusal not recorded"
+       for u in ("pull/3797", "issues/3785")},
+    ("openllmetry-span_closed-anthropic-messages-stream-span-missing",
+     "https://github.com/traceloop/openllmetry/issues/4536"):
+        "about spans not ended when the app stops reading early; the finding is no span after a mid-stream error or cut",
+    ("openllmetry-tokens-anthropic-messages-stream-tokens-wrong",
+     "https://github.com/traceloop/openllmetry/pull/4461"):
+        "adds reasoning token usage; the finding is 4 output tokens recorded where the provider sent 3",
 }
+
+# Title words that mean a different subject even when the behaviour words match.
+EXCLUDE = {"tokens": ("reasoning",)}
 
 
 def queries(f: Finding) -> list[str]:
@@ -83,6 +95,8 @@ def matches(f: Finding, items: list[dict[str, Any]]) -> list[dict[str, Any]]:
     out = []
     for it in items:
         t = it.get("title", "").lower()
+        if any(x in t for x in EXCLUDE.get(check, ())):
+            continue
         if any(i in t for i in integ) and any(p in t for p in phrases):
             out.append(it)
     return out

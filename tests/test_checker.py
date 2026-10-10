@@ -214,3 +214,12 @@ def test_reviewed_match_that_does_not_cover_is_related_only(monkeypatch):
                        "state": "open", "isPullRequest": True, "createdAt": "2026-01-01"}])
     out = dedupe.dedupe("neatlogs", [f], lambda args: hit)[f.id]
     assert out["status"] == "not found" and out["related"][0]["why_not"] == "different case"
+
+
+def test_token_findings_ignore_reasoning_token_titles():
+    f = group.group([_item("an-stream-helper", check="tokens", field="call 1 tokens",
+                           trace={"input": 5, "output": 4})])[0]
+    f.details["code_path"] = "anthropic messages stream"
+    items = [{"title": "feat(anthropic): emit reasoning tokens usage", "url": "u1"},
+             {"title": "anthropic stream output tokens counted wrong", "url": "u2"}]
+    assert [m["url"] for m in dedupe.matches(f, items)] == ["u2"]
