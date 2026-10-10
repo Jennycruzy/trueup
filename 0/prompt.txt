@@ -1,0 +1,16 @@
+You are building Trueup, an entry for neatHack (a 48-hour hackathon run by neatlogs, 10-12 Oct 2026). This session is recorded by Entire and published with the repo, so work only inside this repository, and never mention anything outside it. Do not run git commit or git push; the owner commits.
+
+What Trueup is (README first line, word for word):
+"Trueup finds where your AI agent's traces disagree with what really happened, fixes the tracing code, and proves the fix."
+
+Plain idea: teams watch their AI agents through tracing libraries (neatlogs, OpenInference, OpenLLMetry). These wrap the AI provider's SDK and record each call. When the wrapper gets a case wrong, the dashboard shows a crashed run as OK, misses a refusal, or shows double the real cost. Trueup runs the agent against a fake provider (truth), captures what the trace says, compares, and when they disagree finds the cause in the tracing library, writes a fix with a test, and proves it. Workers: planner, runner, comparer, checker, deduper, fixer, verifier, reporter. The language model proposes; code decides.
+
+Your task now is only the skeleton:
+1. A uv project, Python 3.12, src layout, package `trueup`, console script `trueup` (argparse is fine). Dependencies kept minimal: httpx; dev: pytest. Run `uv sync` and `uv run pytest -q`; uv is at ~/.local/bin/uv.
+2. Pure core in `src/trueup/core/` with no I/O: the data model as dataclasses (Finding, Run, Mismatch, Severity enum HIGH/MEDIUM/LOW, Observation holding truth and trace) with to_dict/from_dict round trip. Effects live in other modules later.
+3. CLI subcommands audit, sweep, fix, upstream, verify, report, doctor. Only `doctor` works now: it reports Python version, whether NEATLOGS_API_KEY and TRUEUP_MODEL_KEY are set (never print values), and exits 0 or 2. The rest exit 2 with "not built yet". Exit codes: 0 no mismatches, 1 mismatches found, 2 could not run.
+4. Tests for the data model round trip, severity ordering, and doctor (including that it never prints a key value).
+5. Files: LICENSE (MIT, copyright 2026 Jennycruzy), README.md (the first line above, then a short plain-language "what it does", "status: early build", and how to run tests), CHANGELOG.md, CONTRIBUTING.md, SECURITY.md, THIRD_PARTY_NOTICES.md (list httpx, pytest), .gitignore (include .env, .venv, .trueup/, .mcp.json), hackathon.md (a dated build log; first entry: 2026-10-10, skeleton), and .github/workflows/ci.yml running uv sync and pytest on push.
+6. Writing rules: plain words, no marketing filler ("seamless", "leverage", "robust" and similar are banned), no claims of results that do not exist yet.
+
+Finish by running the tests and printing a short summary of the files you made and the test count.
