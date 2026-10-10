@@ -85,3 +85,10 @@ def test_finish_synonyms():
     assert norm_finish("incomplete") == "length"
     assert norm_finish("failed") == "failed"
     assert norm_finish(None) is None
+
+
+def test_neatlogs_framework_spans_finish_from_openinference_key():
+    # neatlogs framework LLM spans come from OpenInference instrumentors; the finish reason
+    # is only in llm.finish_reason. Reading neatlogs.llm.* alone made 27 false finish leads.
+    fs = llm_facts("neatlogs", "lg-tool-raises")
+    assert fs and all(f.finish for f in fs)

@@ -66,7 +66,10 @@ NEATLOGS = Adapter(
     input_tokens=("neatlogs.llm.token_count.prompt",),
     output_tokens=("neatlogs.llm.token_count.completion",),
     response_id=("neatlogs.llm.response_id",),
-    finish=(r"neatlogs\.llm\.finish_reason", r"neatlogs\.llm\.choices\.\d+\.finish_reason"),
+    # Framework spans come from the OpenInference instrumentors neatlogs wraps. neatlogs copies
+    # their tokens and tool calls into its namespace but not the finish reason, which stays in
+    # OpenInference's llm.finish_reason on the same exported span.
+    finish=(r"neatlogs\.llm\.finish_reason", r"neatlogs\.llm\.choices\.\d+\.finish_reason", r"llm\.finish_reason"),
     text=(r"neatlogs\.llm\.output_messages\.\d+\.content",),
     refusal=(r"neatlogs\.llm\.output_messages\.\d+\.refusal",),
     tool_name=(r"neatlogs\.llm\.tool_calls\.(\d+)\.name",),

@@ -46,6 +46,9 @@ def build_parser() -> argparse.ArgumentParser:
     au = sub.add_parser("audit", help="run your script's main() against the fake provider and compare its trace")
     au.add_argument("script", type=Path, help="Python file with a main() that calls the openai or anthropic SDK")
     au.add_argument("--library", required=True, choices=LIBRARIES, help="tracing library to set up")
+    ck = sub.add_parser("check", help="run the checker and dedupe over a sweep's leads")
+    ck.add_argument("run_id", help="a run id under .trueup/runs, or latest")
+    ck.add_argument("--library", choices=LIBRARIES, help="with latest: the newest sweep of this library")
     return parser
 
 
@@ -64,6 +67,15 @@ def main(argv: Sequence[str] | None = None) -> int:
 
         _, results = audit(Path.cwd(), args.library, args.script)
         return exit_code(results)
+    if args.command == "check":
+        from trueup.check import check
+
+        try:
+            res = check(Path.cwd(), args.run_id, args.library)
+        except (FileNotFoundError, ValueError) as e:
+            print(f"trueup check: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        return EXIT_MISMATCH if res["counts"]["findings"] else EXIT_OK
     print(f"trueup {args.command}: not built yet", file=sys.stderr)
     return EXIT_ERROR
 
