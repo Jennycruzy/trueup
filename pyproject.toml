@@ -1,0 +1,24 @@
+[project]
+name = "trueup"
+version = "0.0.1"
+description = "Finds where AI agent traces disagree with what really happened."
+readme = "README.md"
+license = "MIT"
+requires-python = ">=3.12"
+dependencies = ["httpx>=0.27"]
+
+[project.scripts]
+trueup = "trueup.cli:main"
+
+[dependency-groups]
+dev = ["pytest>=8"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/trueup"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
