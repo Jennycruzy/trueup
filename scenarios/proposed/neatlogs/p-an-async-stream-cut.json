@@ -1,0 +1,20 @@
+{
+ "id": "p-an-async-stream-cut",
+ "provider": "anthropic",
+ "api": "messages",
+ "framework": "none",
+ "does": "Async client inside asyncio.run, non-streaming create call",
+ "app": "an_async_create",
+ "model": "anth-cut",
+ "expected": {
+  "calls": 1,
+  "outcome": "exception",
+  "exception": "APIConnectionError",
+  "fake": [
+   "cut"
+  ],
+  "tokens": [
+   null
+  ]
+ }
+}

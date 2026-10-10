@@ -246,10 +246,14 @@ _BY_ID = {s.id: s for s in ALL}
 
 
 def get(scenario_id: str) -> Scenario:
-    try:
+    if scenario_id in _BY_ID:
         return _BY_ID[scenario_id]
-    except KeyError:
-        raise KeyError(f"unknown scenario {scenario_id!r}") from None
+    from trueup.scenarios import proposed  # accepted planner proposals, scenarios/proposed/<lib>/<id>.json
+
+    found = proposed.find(scenario_id)
+    if found is None:
+        raise KeyError(f"unknown scenario {scenario_id!r}")
+    return found
 
 
 def plain_sdk() -> list[Scenario]:

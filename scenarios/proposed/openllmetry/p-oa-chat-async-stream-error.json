@@ -1,0 +1,23 @@
+{
+ "id": "p-oa-chat-async-stream-error",
+ "provider": "openai",
+ "api": "chat",
+ "framework": "none",
+ "does": "async openai chat stream that receives an error event mid-stream",
+ "app": "chat_async_stream",
+ "model": "chat-error-event",
+ "expected": {
+  "calls": 1,
+  "outcome": "exception",
+  "exception": "APIError",
+  "fake": [
+   "error_event"
+  ],
+  "tokens": [
+   null
+  ],
+  "include_usage": [
+   true
+  ]
+ }
+}

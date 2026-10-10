@@ -6,7 +6,7 @@ import argparse
 import os
 import sys
 from pathlib import Path
-from typing import Sequence
+from typing import Any, Callable, Sequence
 
 from trueup.runner.setups import LIBRARIES
 
@@ -15,11 +15,12 @@ EXIT_OK = 0  # no mismatches
 EXIT_MISMATCH = 1  # mismatches found
 EXIT_ERROR = 2  # could not run
 
-KEY_VARS = ("NEATLOGS_API_KEY", "TRUEUP_MODEL_KEY")
+KEY_VARS = ("NEATLOGS_API_KEY", "NEATLOGS_PROJECT", "TRUEUP_MODEL_KEY", "TRUEUP_MODEL_BASE_URL")
 NOT_BUILT = ("fix", "upstream", "verify", "report")
+NEATLOGS_ENDPOINT = "https://ingest.neatlogs.com"
 
 
-def doctor() -> int:
+def doctor(http_get: Callable[..., Any] | None = None) -> int:
     ok = sys.version_info >= (3, 12)
     v = sys.version_info
     print(f"python: {v.major}.{v.minor}.{v.micro} ({'ok' if ok else 'need 3.12+'})")
@@ -27,7 +28,40 @@ def doctor() -> int:
         # Only report presence. Never print the value.
         state = "set" if os.environ.get(name) else "not set"
         print(f"{name}: {state}")
+    print(f"neatlogs: {reach_neatlogs(http_get)}")
+    print(f"model proxy: {reach_model(http_get)}")
     return EXIT_OK if ok else EXIT_ERROR
+
+
+def _get(http_get: Callable[..., Any] | None, url: str, **kw: Any) -> Any:
+    import httpx
+
+    kw.setdefault("timeout", 10)
+    return (http_get or httpx.get)(url, **kw)
+
+
+def reach_neatlogs(http_get: Callable[..., Any] | None = None) -> str:
+    """One GET to the neatlogs ingest endpoint. Any HTTP reply means reachable."""
+    url = os.environ.get("NEATLOGS_ENDPOINT") or NEATLOGS_ENDPOINT
+    try:
+        return f"reachable (HTTP {_get(http_get, url).status_code})"
+    except Exception as e:  # noqa: BLE001
+        return f"not reachable ({type(e).__name__})"
+
+
+def reach_model(http_get: Callable[..., Any] | None = None) -> str:
+    """One GET to <proxy>/key/info (no model call): reachable, key accepted, spend against the limit."""
+    from trueup.model import BASE_VAR, KEY_VAR, SPEND_LIMIT, ModelError, get_spend
+
+    if not os.environ.get(BASE_VAR) or not os.environ.get(KEY_VAR):
+        return f"not checked ({BASE_VAR} or {KEY_VAR} not set)"
+    try:
+        spend = get_spend(os.environ[BASE_VAR], os.environ[KEY_VAR], lambda u, **kw: _get(http_get, u, **kw))
+    except ModelError as e:
+        return f"reachable, but {e}"
+    except Exception as e:  # noqa: BLE001
+        return f"not reachable ({type(e).__name__})"
+    return f"reachable, key spend ${spend:.4f} of ${SPEND_LIMIT:.2f} limit"
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -43,6 +77,11 @@ def build_parser() -> argparse.ArgumentParser:
     sw.add_argument("library", choices=LIBRARIES)
     sw.add_argument("--framework", default="all", choices=("all", "none", "langchain", "openai-agents"),
                     help="none: plain SDK; langchain: LangChain and LangGraph; default all")
+    sw.add_argument("--proposed", nargs="?", const="", metavar="FROM",
+                    help="sweep accepted planner proposals from scenarios/proposed/<FROM> (default: this library)")
+    pl = sub.add_parser("plan", help="ask the model for new scenarios (data only), keep the ones code accepts")
+    pl.add_argument("library", choices=LIBRARIES)
+    pl.add_argument("--max", type=int, default=5, help="most proposals to ask for (default 5)")
     au = sub.add_parser("audit", help="run your script's main() against the fake provider and compare its trace")
     au.add_argument("script", type=Path, help="Python file with a main() that calls the openai or anthropic SDK")
     au.add_argument("--library", required=True, choices=LIBRARIES, help="tracing library to set up")
@@ -59,8 +98,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     if args.command == "sweep":
         from trueup.sweep import exit_code, sweep
 
-        _, results = sweep(Path.cwd(), args.library, args.framework)
+        proposed = None if args.proposed is None else (args.proposed or args.library)
+        if proposed is not None and proposed not in LIBRARIES:
+            print(f"trueup sweep: --proposed must name a library: {', '.join(LIBRARIES)}", file=sys.stderr)
+            return EXIT_ERROR
+        _, results = sweep(Path.cwd(), args.library, args.framework, proposed=proposed)
         return exit_code(results)
+    if args.command == "plan":
+        return plan_command(args.library, args.max)
     if args.command == "audit":
         from trueup.audit import audit
         from trueup.sweep import exit_code
@@ -78,6 +123,25 @@ def main(argv: Sequence[str] | None = None) -> int:
         return EXIT_MISMATCH if res["counts"]["findings"] else EXIT_OK
     print(f"trueup {args.command}: not built yet", file=sys.stderr)
     return EXIT_ERROR
+
+
+def plan_command(library: str, max_n: int) -> int:
+    from trueup import tracing
+    from trueup.model import ModelError
+    from trueup.planner import plan
+    from trueup.sweep import new_run_id
+
+    run_id = new_run_id(f"plan-{library}")
+
+    def body() -> int:
+        try:
+            res = plan(Path.cwd(), library, max_n, run_id=run_id)
+        except (ModelError, FileNotFoundError) as e:
+            print(f"trueup plan: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        return EXIT_ERROR if res["error"] else EXIT_OK
+
+    return tracing.run_traced(run_id, library, "plan", body)
 
 
 if __name__ == "__main__":

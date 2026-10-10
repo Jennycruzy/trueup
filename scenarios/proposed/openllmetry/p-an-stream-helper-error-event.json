@@ -1,0 +1,20 @@
+{
+ "id": "p-an-stream-helper-error-event",
+ "provider": "anthropic",
+ "api": "messages",
+ "framework": "none",
+ "does": "anthropic stream helper (with_streaming_response) that receives an error event",
+ "app": "an_stream_helper",
+ "model": "anth-error-event",
+ "expected": {
+  "calls": 1,
+  "outcome": "exception",
+  "exception": "APIStatusError",
+  "fake": [
+   "error_event"
+  ],
+  "tokens": [
+   null
+  ]
+ }
+}

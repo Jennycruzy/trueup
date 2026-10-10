@@ -142,3 +142,48 @@ OpenLLMetry findings:
 - Title matches read by hand and rejected: issue 4536 (spans not ended when the app stops reading early; ours is no span after an error or cut), and PRs 4461 and 4462 (reasoning tokens). Token findings now ignore titles about reasoning tokens.
 
 Limits: rule 6 passed for most findings because another library got the same scenario right. Three groups, the Agents SDK root status in each library, rely on the OTel status rule instead, since all three libraries get it wrong. The title matcher in the deduper made 9 matches; 5 were wrong when read by hand; every "already known" above was read by hand.
+
+## 2026-10-10: the planner, the model client and tracing Trueup with neatlogs
+
+- `trueup plan <lib>` asks `claude-sonnet-4.6` for new scenarios as JSON and keeps only what code accepts: valid schema, an existing app, a fake behaviour that app's route supports, an app + model pair not yet covered, and expected truth that an untraced run confirms. Rejected proposals go back to the model with the reason, twice at most. Accepted ones are in `scenarios/proposed/<lib>/` and run with `trueup sweep <lib> --proposed [FROM]`.
+- Spending guard: the key's spend is read from the proxy before every call; at $15 Trueup stops.
+- Trueup's own run is traced to neatlogs: one session per run, one trace per worker. The scenario subprocesses still get no neatlogs key and have export off; an e2e test watches every outgoing connection from a scenario child and sees none.
+
+### Real runs
+
+`trueup plan openllmetry --max 3` (neatlogs session `20261010T234842Z-plan-openllmetry`) and `trueup plan neatlogs --max 3` (session `20261010T235208Z-plan-neatlogs`). The session id is the run id.
+
+| run | proposals | accepted | rejected | model calls | tokens in / out |
+|---|---|---|---|---|---|
+| openllmetry | 3 | 3 (all after 1-2 revisions) | 0 | 5 | 29,329 / 1,729 |
+| neatlogs | 3 | 3 (2 after revisions) | 0 | 4 | 30,972 / 1,529 |
+
+No proposal was finally rejected, but 6 of 9 tries were rejected first. Reasons: `expected.exception` missing when outcome is exception (4; my first prompt told the model to leave out fields when unsure, and it was not told this one is required), wrong exception class (3: guessed `APIStatusError` or `APIConnectionError`; the untraced run gave `BadRequestError`, `APIConnectionError` and `RemoteProtocolError`), and wrong fake outcome (1: guessed `error_event`; the fake answered HTTP 400 because the app does not stream).
+
+Cost: the per-run spend deltas were $0.0909 and $0.1000. The key's total spend after both runs is $0.2528. The extra $0.06 showed up between and after the runs, when Trueup made no model call, so the proxy's spend figure lags. Tokens at Sonnet list prices ($3 / $15 per million) come to about $0.23, which matches the total. The per-run `run_cost_usd` in `spend.json` reads low for this reason.
+
+Two problems in the planner's output, both fixed:
+- `p-an-async-stream-error` said "async anthropic stream", but `an_async_create` does not stream; with the error-event fake model the fake answers HTTP 400. The truth was right (the untraced run confirmed it); only the prose was wrong. Code cannot check prose. I corrected its `does` by hand (the file says so), and the prompt now gives each app's real description. The neatlogs run's descriptions were accurate.
+- `p-oa-chat-async-stream-error` caused a false "library changed the request" note: the proposal had `tokens: [null]` and no `include_usage`, so the comparer assumed the app did not ask for usage. The planner now copies `include_usage` from the untraced run (no library there) into accepted chat proposals.
+
+Accepted scenarios: openllmetry `p-an-async-stream-error`, `p-an-stream-helper-error-event`, `p-oa-chat-async-stream-error`; neatlogs `p-an-async-stream-cut`, `p-an-stream-helper-cut`, `p-lc-tools`.
+
+### Leads and findings from them
+
+Each set of proposals was swept under all three libraries, so the checker's reference rule had another library to compare against. OpenInference recorded all 6 correctly.
+
+| sweep | leads | checked findings |
+|---|---|---|
+| openllmetry, its proposals (`20261010T235010Z-openllmetry-proposed`) | 3 | 3 (2 high, 1 medium) |
+| neatlogs, openllmetry's proposals (`20261010T235028Z-neatlogs-proposed`) | 2 | 2 (1 high, 1 medium) |
+| neatlogs, its proposals (`20261010T235240Z-neatlogs-proposed`) | 2 | 2 (1 high, 1 medium) |
+| openllmetry, neatlogs' proposals (`20261010T235247Z-openllmetry-proposed`) | 1 | 1 (high) |
+| openinference, both sets | 0 | - |
+
+Every lead passed all seven rules (reproduced twice, latest release and main, repro). Nothing was withdrawn. The deduper found no matching issue or PR.
+
+- neatlogs, new: when a `messages.stream()` stream fails (error event, or a cut connection) the span is OK, with no exception event (HIGH run status, MEDIUM call status; one finding each in two runs). Earlier sweeps only covered failures through `messages.create(stream=True)`, which neatlogs records right. The known `messages.stream()` gaps (PR 180: no tokens, text, finish) are about successful streams; whether PR 180 also fixes this was not checked.
+- openllmetry: no span at all when a `messages.stream()` stream fails (error event, cut). The async chat stream that gets an error event ends OK with no exception event. These look like the same causes as the earlier findings (no span for Anthropic `create(stream=True)` errors; chat streams that raised end OK) reached through other code paths: the stream helper and the async client. I count them as more evidence for known findings, not new bugs, until the code says otherwise.
+- `p-an-async-stream-error`, `p-an-async-stream-cut` and `p-lc-tools` gave no lead in any library.
+
+So the planner found one new neatlogs behaviour (`messages.stream()` failures show OK) and widened two openllmetry findings to new code paths. All 6 accepted proposals were near variations on existing ones: failure fake models paired with a different app.

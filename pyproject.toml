@@ -5,7 +5,11 @@ description = "Finds where AI agent traces disagree with what really happened."
 readme = "README.md"
 license = "MIT"
 requires-python = ">=3.12"
-dependencies = ["httpx>=0.27"]
+dependencies = [
+    "httpx>=0.27",
+    "neatlogs>=1.4.26",
+    "openai>=3.28.0",
+]
 
 [project.scripts]
 trueup = "trueup.cli:main"

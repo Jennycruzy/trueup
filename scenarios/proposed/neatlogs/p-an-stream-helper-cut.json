@@ -1,0 +1,20 @@
+{
+ "id": "p-an-stream-helper-cut",
+ "provider": "anthropic",
+ "api": "messages",
+ "framework": "none",
+ "does": "Uses messages.stream, reads text_stream and the final message",
+ "app": "an_stream_helper",
+ "model": "anth-cut",
+ "expected": {
+  "calls": 1,
+  "outcome": "exception",
+  "exception": "RemoteProtocolError",
+  "fake": [
+   "cut"
+  ],
+  "tokens": [
+   null
+  ]
+ }
+}

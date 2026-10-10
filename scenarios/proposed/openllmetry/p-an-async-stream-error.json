@@ -1,0 +1,17 @@
+{
+ "id": "p-an-async-stream-error",
+ "provider": "anthropic",
+ "api": "messages",
+ "framework": "none",
+ "does": "Async messages.create (not streamed) on the error-event fake model; the fake answers HTTP 400, the app gets BadRequestError. (Description corrected by hand: the model said it streams.)",
+ "app": "an_async_create",
+ "model": "anth-error-event",
+ "expected": {
+  "calls": 1,
+  "outcome": "exception",
+  "exception": "BadRequestError",
+  "fake": [
+   "http_error"
+  ]
+ }
+}

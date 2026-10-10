@@ -8,12 +8,14 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
+from trueup import tracing
 from trueup.core import report
 from trueup.core.compare import compare, leads
 from trueup.core.model import Mismatch, Observation
 from trueup.runner import NOT_RUN, RAN, run_scenario, venvs
 from trueup.runner.run import not_run
-from trueup.scenarios import select
+from trueup.scenarios import FRAMEWORKS, select
+from trueup.scenarios.proposed import load as load_proposed
 
 
 def new_run_id(library: str) -> str:
@@ -38,15 +40,17 @@ def sweep(
     library: str,
     framework: str = "all",
     *,
+    proposed: str | None = None,
     ensure: Callable[[Path, str], Path] = venvs.ensure,
     run: Callable[..., dict[str, Any]] = run_scenario,
     out: Callable[[str], None] = print,
 ) -> tuple[Path, list[dict[str, Any]]]:
-    run_id = new_run_id(library)
+    run_id = new_run_id(library) + ("-proposed" if proposed else "")
     run_dir = root / ".trueup" / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
-    scenarios = select(framework)
+    scenarios = select(framework) if proposed is None else [
+        s for s in load_proposed(proposed) if framework == "all" or s.framework in FRAMEWORKS[framework]]
     try:
         out(f"preparing venv for {library}")
         python: Path | None = ensure(root, library)
@@ -54,13 +58,19 @@ def sweep(
     except Exception as e:  # noqa: BLE001 - every scenario is reported NOT RUN
         python, venv_error = None, f"venv not ready: {e}"
     results = []
-    for s in scenarios:
-        r = not_run(s.id, library, venv_error) if python is None else run(python, library, s.id)
-        if r["status"] == RAN:
-            r["mismatches"] = [m.to_dict() for m in compare(Observation.from_dict(r["observation"]))]
-        results.append(r)
-        out(summary_line(r))
-        (run_dir / f"{s.id}.json").write_text(json.dumps(r, indent=1, default=str))
+    with tracing.worker("trueup-runner") as span:
+        for s in scenarios:
+            r = not_run(s.id, library, venv_error) if python is None else run(python, library, s.id)
+            results.append(r)
+            out(summary_line(r))
+        tracing.set_verdict(span, f"ran {sum(r['status'] == RAN for r in results)}/{len(results)}")
+    with tracing.worker("trueup-comparer") as span:
+        for r in results:
+            if r["status"] == RAN:
+                r["mismatches"] = [m.to_dict() for m in compare(Observation.from_dict(r["observation"]))]
+            (run_dir / f"{r['scenario']}.json").write_text(json.dumps(r, indent=1, default=str))
+        n = sum(len(leads([Mismatch.from_dict(m) for m in r.get("mismatches", [])])) for r in results)
+        tracing.set_verdict(span, f"{n} leads")
     ran = sum(r["status"] == RAN for r in results)
     by = by_scenario(results)
     c = report.counts(by)
@@ -68,7 +78,7 @@ def sweep(
     totals = (f"leads: {c['leads']} (high {c['by_severity']['high']}, medium {c['by_severity']['medium']}, "
               f"low {c['by_severity']['low']})  notes: {c['notes']}")
     lines = [
-        f"trueup sweep {library} --framework {framework}  run {run_id}",
+        f"trueup sweep {library} --framework {framework}{f' --proposed {proposed}' if proposed else ''}  run {run_id}",
         f"scenarios: {len(results)}  ran: {ran}  not run: {len(results) - ran}  "
         f"time: {time.monotonic() - started:.0f} s",
         totals,
@@ -83,6 +93,7 @@ def sweep(
         "run_id": run_id,
         "library": library,
         "framework": framework,
+        "proposed": proposed,
         "scenarios": [{"id": r["scenario"], "status": r["status"], "reason": r["reason"]} for r in results],
     }, indent=1))
     not_run_list = [{"scenario": r["scenario"], "reason": r["reason"]} for r in results if r["status"] != RAN]

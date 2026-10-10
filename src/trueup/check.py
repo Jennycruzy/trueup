@@ -23,7 +23,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Callable
 
-from trueup import dedupe
+from trueup import dedupe, tracing
 from trueup.core import checker, group, repro
 from trueup.core.compare import compare, leads
 from trueup.core.model import Observation
@@ -49,6 +49,13 @@ HARNESS_ENV = ("NEATLOGS_DISABLE_EXPORT", "NEATLOGS_ENDPOINT", "OTEL_EXPORTER_OT
                "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT", "OTEL_TRACES_EXPORTER", "TRACELOOP_BASE_URL")
 
 
+def sweeps(root: Path, library: str | None) -> list[Path]:
+    """Sweep run dirs (leads.json, not audits), oldest first. Proposed-scenario sweeps end in -proposed."""
+    runs = root / ".trueup" / "runs"
+    return sorted(d for d in runs.glob("*") if (d / "leads.json").exists() and "-audit-" not in d.name
+                  and (library is None or d.name.endswith((f"-{library}", f"-{library}-proposed"))))
+
+
 def find_run(root: Path, run_id: str, library: str | None) -> Path:
     runs = root / ".trueup" / "runs"
     if run_id != "latest":
@@ -56,8 +63,7 @@ def find_run(root: Path, run_id: str, library: str | None) -> Path:
         if not (d / "leads.json").exists():
             raise FileNotFoundError(f"no leads.json in {d}")
         return d
-    cands = sorted(d for d in runs.glob("*") if (d / "leads.json").exists() and "-audit-" not in d.name
-                   and (library is None or d.name.endswith(f"-{library}")))
+    cands = sweeps(root, library)
     if not cands:
         raise FileNotFoundError(f"no sweep with leads.json for {library or 'any library'}")
     return cands[-1]
@@ -90,27 +96,20 @@ def pypi_latest(dist: str) -> str | None:
         return None
 
 
-def other_runs(root: Path, library: str) -> dict[str, Path]:
-    """Newest sweep run dir per other library."""
-    out = {}
-    for lib in LIBRARIES:
-        if lib == library:
-            continue
-        try:
-            out[lib] = find_run(root, "latest", lib)
-        except FileNotFoundError:
-            pass
-    return out
+def other_runs(root: Path, library: str) -> dict[str, list[Path]]:
+    """Sweep run dirs per other library, newest first."""
+    return {lib: sweeps(root, lib)[::-1] for lib in LIBRARIES if lib != library and sweeps(root, lib)}
 
 
-def other_evidence(dirs: dict[str, Path], scenario: str) -> dict[str, Any]:
+def other_evidence(dirs: dict[str, list[Path]], scenario: str) -> dict[str, Any]:
+    """Each other library's newest sweep of this scenario."""
     out: dict[str, Any] = {}
-    for lib, d in dirs.items():
-        p = d / f"{scenario}.json"
-        if not p.exists():
-            out[lib] = {"status": "missing", "run": d.name}
+    for lib, ds in dirs.items():
+        d = next((d for d in ds if (d / f"{scenario}.json").exists()), None)
+        if d is None:
+            out[lib] = {"status": "missing", "run": ds[0].name}
             continue
-        r = json.loads(p.read_text())
+        r = json.loads((d / f"{scenario}.json").read_text())
         out[lib] = {"status": r["status"], "run": d.name,
                     "leads": _sigs(r["observation"]) if r["status"] == RAN else []}
     return out
@@ -217,13 +216,17 @@ def check(root: Path, run_id: str, library: str | None, out: Callable[[str], Non
     lib = json.loads((run_dir / "leads.json").read_text())["library"]
     if library and lib != library:
         raise ValueError(f"{run_dir.name} is a {lib} sweep, not {library}")
-    evidence = gather(root, run_dir, lib, out)
-    items = decide(evidence)
+    with tracing.worker("trueup-checker") as span:
+        evidence = gather(root, run_dir, lib, out)
+        items = decide(evidence)
+        findings = group.group([i for i in items if i["status"] == checker.FINDING])
+        tracing.set_verdict(span, f"{len(findings)} findings from {len(items)} leads")
     checked_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
-    findings = group.group([i for i in items if i["status"] == checker.FINDING])
     out("searching GitHub issues and PRs (read only)")
-    known = dedupe.dedupe(lib, findings, search)
+    with tracing.worker("trueup-deduper") as span:
+        known = dedupe.dedupe(lib, findings, search)
+        tracing.set_verdict(span, f"{sum(k['status'] == 'already known' for k in known.values())} already known")
     finding_dicts = [{**f.to_dict(), "dedupe": known[f.id]} for f in findings]
     disputed = [f.to_dict() for f in group.group([i for i in items if i["status"] == checker.DISPUTED_SEMANTICS])]
     open_leads = [i for i in items if i["status"] == checker.LEAD]

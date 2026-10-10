@@ -1,0 +1,36 @@
+{
+ "id": "p-lc-tools",
+ "provider": "openai",
+ "api": "chat",
+ "framework": "langchain",
+ "does": "ChatOpenAI.invoke, one call",
+ "app": "lc_invoke",
+ "model": "chat-tools",
+ "expected": {
+  "calls": 1,
+  "outcome": "ok",
+  "fake": [
+   "complete"
+  ],
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "finish": [
+   [
+    "tool_calls"
+   ]
+  ],
+  "tool_calls": [
+   [
+    "get_weather",
+    "get_time"
+   ]
+  ],
+  "include_usage": [
+   false
+  ]
+ }
+}
