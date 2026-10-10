@@ -1,0 +1,18 @@
+Continue building Trueup in this repository. Read README.md, hackathon.md, CHANGELOG.md and src/ first. This session is recorded by Entire and published: work only inside this repository and never mention anything outside it. Do not git commit or push.
+
+Task: the comparer and the reports (pure core, no I/O, fully unit tested).
+1. `src/trueup/core/compare.py`: given an Observation (truth from the fake's log + app outcome, trace = exported spans), apply these checks and return Mismatches with severity:
+   - Run status: app raised / got a result -> top-level span ERROR / not ERROR. HIGH if a crash shows OK at the top level.
+   - Call status: provider returned an error or the stream failed -> that LLM span ERROR with an exception event. MEDIUM.
+   - Call count: provider requests logged -> one LLM span per request. HIGH if duplicated or missing.
+   - Tokens: provider usage -> per-span tokens equal and the sum over LLM spans equals the real sum. HIGH if the sum is off. Only compare when the fake actually sent usage.
+   - Output: text / refusal / tool calls the app received -> recorded on the span, tool args exact. MEDIUM.
+   - Finish: finish reason / response status recorded; failed/incomplete visible. MEDIUM.
+   - Span closed: call ended -> span ended and exported. HIGH if a call disappears.
+   Severity rule: HIGH changes a number or status a dashboard shows by default (run status, cost, call count); MEDIUM is wrong or missing detail in a span; LOW is extra or cosmetic.
+   Each library names attributes differently (neatlogs, OpenInference `llm.*`/`openinference.*`, OpenLLMetry `gen_ai.*`/`llm.*`): put the attribute mapping in one small adapter per library, data-driven, and test each adapter against real span JSON saved from the sweeps in `.trueup/runs/` (copy a few small samples into `tests/fixtures/`, no secrets in them).
+   Where truth was changed by the library itself (e.g. a library adding stream_options.include_usage), compare against what the provider really sent, and record that the library changed the request as a LOW note, not a bug.
+2. Leads: a mismatch is a "lead" (never called a bug here). `trueup sweep <lib>` now runs the comparer and prints a table: scenario, check, expected, actual, severity; writes `leads.json`; exits 1 if any lead, 0 if none, 2 if it could not run.
+3. `trueup audit <agent.py>`: run a user's script's `main()` under each plain-SDK scenario with the fake provider via env base URLs (OPENAI_BASE_URL / ANTHROPIC_BASE_URL) and the chosen tracing library, then compare. Keep it simple and honest; document limits.
+4. Re-run the sweeps for all three libraries (one at a time, memory is limited) and save the leads. Write the counts per library and per check into hackathon.md. Do not describe any lead as a confirmed bug; the self-check comes next.
+5. Update CHANGELOG.md. Plain words, no filler. Run `uv run pytest -q`. Finish with a summary: tests, leads per library by severity, anything not done.
