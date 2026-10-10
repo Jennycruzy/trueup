@@ -1,0 +1,78 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4KPT0834CBK00PT88AC3ZZ9",
+  "session_id": "0fa29888-30b6-4ae3-903e-c97a928c47ce",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-10T20:06:58.462312704Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    ".gitignore",
+    "CHANGELOG.md",
+    "README.md",
+    "hackathon.md",
+    "pyproject.toml",
+    "src/trueup/cli.py",
+    "src/trueup/fake/__init__.py",
+    "src/trueup/fake/anthropic_messages.py",
+    "src/trueup/fake/openai_chat.py",
+    "src/trueup/fake/openai_responses.py",
+    "src/trueup/fake/reply.py",
+    "src/trueup/fake/server.py",
+    "src/trueup/runner/__init__.py",
+    "src/trueup/runner/apps.py",
+    "src/trueup/runner/child.py",
+    "src/trueup/runner/run.py",
+    "src/trueup/runner/setups.py",
+    "src/trueup/runner/truth.py",
+    "src/trueup/runner/venvs.py",
+    "src/trueup/scenarios/__init__.py",
+    "src/trueup/scenarios/library.py",
+    "src/trueup/sweep.py",
+    "tests/test_e2e.py",
+    "tests/test_fake_fixtures.py",
+    "tests/test_runner.py",
+    "tests/test_scenarios.py",
+    "tests/test_traps.py",
+    "uv.lock"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "3d466e51756f",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 80,
+    "cache_creation_tokens": 114110,
+    "cache_read_tokens": 3025440,
+    "output_tokens": 58700,
+    "api_call_count": 40
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-10T20:06:58.414974767Z",
+    "agent_lines": 2603,
+    "agent_removed": 5,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 2603,
+    "total_lines_changed": 2608,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        ".gitignore": 1
+      }
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4KPT0834CBK00PT88AC3ZZ9",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".gitignore",
+    "CHANGELOG.md",
+    "README.md",
+    "hackathon.md",
+    "pyproject.toml",
+    "src/trueup/cli.py",
+    "src/trueup/fake/__init__.py",
+    "src/trueup/fake/anthropic_messages.py",
+    "src/trueup/fake/openai_chat.py",
+    "src/trueup/fake/openai_responses.py",
+    "src/trueup/fake/reply.py",
+    "src/trueup/fake/server.py",
+    "src/trueup/runner/__init__.py",
+    "src/trueup/runner/apps.py",
+    "src/trueup/runner/child.py",
+    "src/trueup/runner/run.py",
+    "src/trueup/runner/setups.py",
+    "src/trueup/runner/truth.py",
+    "src/trueup/runner/venvs.py",
+    "src/trueup/scenarios/__init__.py",
+    "src/trueup/scenarios/library.py",
+    "src/trueup/sweep.py",
+    "tests/test_e2e.py",
+    "tests/test_fake_fixtures.py",
+    "tests/test_runner.py",
+    "tests/test_scenarios.py",
+    "tests/test_traps.py",
+    "uv.lock"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 80,
+    "cache_creation_tokens": 114110,
+    "cache_read_tokens": 3025440,
+    "output_tokens": 58700,
+    "api_call_count": 40
+  }
+}
