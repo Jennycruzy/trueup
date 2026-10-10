@@ -1,0 +1,66 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4KTSSRVXBCQ1SJY6TCXBF7A",
+  "session_id": "5d9d7af0-ded5-4439-a209-9f577f218c21",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-10T21:16:46.710149369Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "CHANGELOG.md",
+    "README.md",
+    "src/trueup/check.py",
+    "src/trueup/cli.py",
+    "src/trueup/core/adapters.py",
+    "src/trueup/core/checker.py",
+    "src/trueup/core/group.py",
+    "src/trueup/core/repro.py",
+    "src/trueup/dedupe.py",
+    "src/trueup/runner/venvs.py",
+    "tests/test_adapters.py",
+    "tests/test_checker.py"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "55138ec06c8e",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 78,
+    "cache_creation_tokens": 120291,
+    "cache_read_tokens": 3647883,
+    "output_tokens": 48679,
+    "api_call_count": 40
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-10T21:16:46.65117765Z",
+    "agent_lines": 1082,
+    "agent_removed": 2,
+    "human_added": 30,
+    "human_modified": 13,
+    "human_removed": 0,
+    "total_committed": 1125,
+    "total_lines_changed": 1127,
+    "agent_percentage": 96.18456078083408,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    },
+    {
+      "checkpoint_number": 2,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 1095,
+      "agent_lines_removed": 2
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+Continue building Trueup in this repository. Read README.md, hackathon.md, CHANGELOG.md and src/ first. This session is recorded by Entire and published: work only inside this repository and never mention anything outside it. Do not git commit or push. Memory is limited: one library at a time.
+
+Task: the checker (false-alarm control) and the deduper. A lead becomes a "finding" only if every checker rule passes; otherwise it is "withdrawn" with the rule that failed. Withdrawn leads are kept and counted, never deleted.
+
+Checker rules (each a pure function over recorded data, with unit tests; the effects that gather the data live outside core):
+1. Reproduces in a fresh process, twice, with the same result.
+2. Reproduces on the library's recommended setup with the framework package installed.
+3. Reproduces on the latest release and on the library's main branch (install the instrumentation packages from a shallow clone of main into a separate venv `.trueup/venvs/<lib>-main`; neatlogs: github.com/neatlogs/neatlogs, OpenInference: github.com/Arize-ai/openinference, OpenLLMetry: github.com/traceloop/openllmetry). If main can't be installed, the rule reports "could not check" with the reason, and the lead stays a lead (not a finding) unless every other rule passes and the reason is recorded.
+4. The fake sent what truth claims (usage present when tokens are compared; unique response ids per call).
+5. No shared async client across event loops; no export to a dead endpoint.
+6. A second library on the same scenario shows the correct behaviour, or the OpenTelemetry GenAI semantic conventions define it. If all libraries agree and there is no reference, the lead is marked "disputed semantics", not a finding.
+7. A minimal repro under 40 lines that runs with no keys exists (generate it from the scenario; run it to prove it reproduces).
+
+Also: the neatlogs adapter may be producing false leads for finish reason (neatlogs spans carry OpenInference's `llm.finish_reason` but the adapter reads only `neatlogs.llm.finish_reason`). Look at the real spans, decide from evidence, fix the adapter if it is wrong, and record in hackathon.md which leads that removed and why. That is an honest example of Trueup catching its own false alarm; keep the before and after counts.
+
+Dedupe (`src/trueup/dedupe.py`): for each finding, search the library's GitHub issues and PRs (all states) with `gh search issues/prs` using keywords from the finding, list the integration's issue titles, and record the searches with dates. If an existing issue/PR covers it, mark "already known" with the link. Never open, comment or post anything; read only.
+
+Group leads that share a cause (same library, same check, same code path) into one finding with a list of scenarios, so the report is not 50 near-duplicates.
+
+CLI: `trueup check <run_id|latest> [--library x]` runs the checker and dedupe over a sweep's leads and writes `findings.json` and `withdrawn.json`, printing a summary table (findings by severity, withdrawn by rule, already-known). Run it for all three libraries, one at a time, and write the results to hackathon.md (counts and short plain descriptions; no claim beyond the evidence).
+
+Update CHANGELOG.md. Plain words, no filler. `uv run pytest -q` must pass. Finish with a summary: tests, findings per library, withdrawn by rule, already-known with links, and anything not done.
