@@ -1,0 +1,22 @@
+Continue building Trueup in this repository. Read README.md, hackathon.md, CHANGELOG.md and src/ first. This session is recorded by Entire and published: work only inside this repository and never mention anything outside it. Do not git commit or push. Memory on this machine is limited: build and run one library at a time.
+
+Task: build the framework scenarios that are listed but marked not_built (rough reference: `.ref/run2.py`, `.ref/fake2.py`, `.ref/tl.py`, `.ref/tls.py`; rebuild properly, don't copy).
+1. Fake provider: agent flows (tool call, then the answer after the tool result), parallel tools, loops (the model keeps calling a tool, for max turns), a tool name that doesn't exist, the LLM failing on the second call, and the OpenAI Agents SDK Responses flows including the full streaming event sequence, an error event and a cut. Fixture-test each against the real SDKs.
+2. Scenarios: LangChain/LangGraph (invoke, stream, stream error, stream cut, refusal, 500, ReAct agent, tool raises, LLM fails on second call, parallel tools, agent streaming, step limit) and OpenAI Agents SDK (agent with tool, tool raises, LLM fails on second call, max turns, unknown tool, streamed run, streamed run with error event, streamed run cut). Each with expected truth the comparer can check.
+3. Runner: each library's recommended setup for frameworks, with the framework packages installed in its venv (a framework instrumentation silently does nothing if the framework package is missing; add a regression test that fails loudly in that case):
+   - neatlogs: neatlogs.init(instrumentations=[<framework key per its README>]), export disabled.
+   - openinference: LangChainInstrumentor, OpenAIAgentsInstrumentor (plus OpenAIInstrumentor for plain SDK use).
+   - openllmetry: Traceloop.init(exporter=<in-memory>, disable_batch=True).
+   Don't reuse one async client across asyncio.run loops. The run status check uses the top-level span (for the Agents SDK, the "Agent workflow" / trace root).
+4. `trueup sweep <lib> --framework langchain|openai-agents|all` (default: everything). Re-run all three libraries, one at a time. Add counts per library and per check to hackathon.md as leads (not confirmed bugs). Pay attention to: whether a crashed Agents SDK run shows OK at the top level; whether OpenLLMetry with Traceloop.init and the Agents SDK records twice the real number of LLM calls and tokens in non-streaming runs (and whether streaming is unaffected); whether an unknown-tool error appears anywhere in the trace.
+5. Update CHANGELOG.md. Plain words, no filler. `uv run pytest -q` must pass. Finish with a summary: tests, scenarios run per library, NOT RUN with reasons, leads per library by severity, and the answers to the three questions in item 4.
+
+---
+
+<task-notification>
+<task-id>bsbrwy8gv</task-id>
+<tool-use-id>toolu_01RxrDc221K5NW5meBNkqYT4</tool-use-id>
+<output-file>/tmp/claude-0/-root-trueup/e1ad7abc-4244-41c6-bf55-6c456fc4666f/tasks/bsbrwy8gv.output</output-file>
+<status>completed</status>
+<summary>Background command "Sweep all three libraries sequentially" completed (exit code 0)</summary>
+</task-notification>
