@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import atexit
 import contextlib
+import json
 import os
 import sys
 from typing import Any, Callable, Iterator
@@ -110,10 +111,13 @@ def worker(name: str, **attrs: Any) -> Iterator[Any]:
     a = {"trueup.run_id": _state["run_id"], "trueup.library": _state["library"], "neatlogs.workflow.name": name,
          **({"trueup.variant": _state["variant"]} if _state["variant"] else {}),
          **{f"trueup.{k}": v for k, v in attrs.items()}}
-    with neatlogs.trace(name=name, kind="AGENT", session_id=_state["run_id"], **a):
-        from opentelemetry import trace as otel
-
-        yield otel.get_current_span()
+    # Use the span trace() yields: neatlogs keeps its own context, so OTel's current span can be another one.
+    with neatlogs.trace(name=name, kind="AGENT", session_id=_state["run_id"], **a) as span:
+        # neatlogs' exporter reads output.value and metadata (OpenInference names); trueup.* alone never shows.
+        if span is not None:
+            labels = {k: str(v) for k, v in a.items() if k.startswith("trueup.")}
+            span.set_attribute("metadata", json.dumps(labels))
+        yield span
     if _state["variant"] == "v2":
         try:
             if neatlogs.flush() is False:
@@ -124,9 +128,29 @@ def worker(name: str, **attrs: Any) -> Iterator[Any]:
             print(f"neatlogs flush failed ({type(e).__name__})", file=sys.stderr)
 
 
+def mark(name: str, **attrs: Any) -> None:
+    """A child step named after an event (e.g. "lead withdrawn"). neatlogs detections match span names reliably,
+    not the output text of an agent span, so events a detection must see get their own named step."""
+    if not active():
+        return
+    import neatlogs
+
+    try:
+        with neatlogs.trace(name=name, kind="TOOL", **{f"trueup.{k}": str(v) for k, v in attrs.items()}) as span:
+            if span is not None and attrs:
+                span.set_attribute("output.value", json.dumps({k: str(v) for k, v in attrs.items()}))
+    except Exception as e:  # noqa: BLE001 - tracing must not stop the run
+        print(f"neatlogs mark failed ({type(e).__name__})", file=sys.stderr)
+
+
 def set_verdict(span: Any, verdict: str) -> None:
     if span is not None:
         span.set_attribute("trueup.verdict", verdict)
+        # The verdict is the worker's output in neatlogs, so it shows in the trace list and detections see it.
+        span.set_attribute("neatlogs.agent.output", verdict)
+        span.set_attribute("output.value", verdict)
+        meta = json.loads((getattr(span, "attributes", None) or {}).get("metadata") or "{}")
+        span.set_attribute("metadata", json.dumps({**meta, "trueup.verdict": verdict}))
 
 
 def run_traced(run_id: str, library: str, command: str, body: Callable[[], int],

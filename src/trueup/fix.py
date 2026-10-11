@@ -26,6 +26,7 @@ from trueup.fixer import patch as pt
 from trueup.fixer import targets as tg
 from trueup.fixer import verify as vf
 from trueup.model import PLAN_MODEL, ModelClient, ModelError, record_spend
+from trueup.state import State
 
 MAX_TRIES = 3
 
@@ -171,6 +172,8 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
     fix_dir = out_dir or root / "fixes" / finding_id
     run_dir.mkdir(parents=True, exist_ok=True)
     fix_dir.mkdir(parents=True, exist_ok=True)
+    with State(root) as state:
+        state.begin_run(run_id, "fix", finding_id)
     cached = root / "fixes" / finding_id / "baseline.json"
     if out_dir and cached.exists() and not (fix_dir / "baseline.json").exists():
         (fix_dir / "baseline.json").write_text(cached.read_text())
@@ -205,10 +208,34 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
             sorted({found_in.parent / n for n in finding["details"]["runs"].values()}), finding), variant)
         first = messages
         for n in range(1, max_tries + 1):
+            with State(root) as state:
+                saved_try = state.observation(run_id, f"fixer:try:{n}")
+            if saved_try:
+                rec = saved_try["result"]
+                result["tries"].append(rec)
+                out(f"try {n}: resumed {'PASS' if rec['ok'] else 'FAIL'} from state.db")
+                if rec["ok"]:
+                    result["fixed"] = True
+                    if not (fix_dir / "patch.diff").exists():
+                        write_fix(fix_dir, finding, target, base, rec)
+                    break
+                draft = rec.get("draft")
+                if variant == "v2":
+                    messages = pt.revision_prompt_v2(first, draft, rec["reason"],
+                                                     [t["reason"] for t in result["tries"][:-1]])
+                else:
+                    messages = pt.revision_prompt(messages, draft, rec["reason"])
+                continue
             out(f"try {n}/{max_tries}: asking {PLAN_MODEL} for a patch")
             rec: dict[str, Any] = {"try": n}
             with tracing.worker("trueup-fixer", step=f"draft {n}") as span:
-                draft = client.chat_json(PLAN_MODEL, messages, max_tokens=12000, lenient=variant == "v2")
+                with State(root) as state:
+                    saved_draft = state.observation(run_id, f"fixer:draft:{n}")
+                if saved_draft:
+                    draft = saved_draft["draft"]
+                    out(f"try {n}: resumed paid draft from state.db")
+                else:
+                    draft = checkpointed_draft(root, run_id, n, client, messages, variant)
                 rec["explanation"] = draft.get("explanation") if isinstance(draft, dict) else None
                 rec["draft"] = draft
                 try:
@@ -218,18 +245,26 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
                 except pt.PatchError as e:
                     rec.update(ok=False, stage="apply", reason=f"patch does not apply: {e}")
                     tracing.set_verdict(span, "does not apply")
+                    tracing.mark("fix attempt failed", stage="apply", attempt=n)
             if "stage" not in rec:
                 with tracing.worker("trueup-verifier", step=f"try {n}") as span:
                     rec.update(verify_try(root, clone, target, finding, draft, writes, base, out, variant))
                     rec["stage"] = "verified" if rec["ok"] else "verify"
                     rec["diff"] = pt.diff(clone)
                     tracing.set_verdict(span, "pass" if rec["ok"] else "fail")
+                    if not rec["ok"]:
+                        tracing.mark("fix attempt failed", stage="verify", attempt=n)
             out(f"try {n}: {'PASS' if rec['ok'] else 'FAIL'}: {_short(rec['reason'], 400)}")
             result["tries"].append(rec)
             if rec["ok"]:
                 result["fixed"] = True
                 write_fix(fix_dir, finding, target, base, rec)
+                with State(root) as state:
+                    state.save_observation(run_id, f"fixer:try:{n}",
+                                           {"status": "complete", "result": rec})
                 break
+            with State(root) as state:
+                state.save_observation(run_id, f"fixer:try:{n}", {"status": "complete", "result": rec})
             if variant == "v2":
                 messages = pt.revision_prompt_v2(first, draft, rec["reason"],
                                                  [t["reason"] for t in result["tries"][:-1]])
@@ -248,13 +283,28 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
         result["wall_s"] = round(time.monotonic() - t0, 1)
         result["traces_opened"] = tracing.opened()
         write_log(fix_dir, run_dir, result)
+        with State(root) as state:
+            state.finish_run(run_id, "fixed" if result["fixed"] else "error" if result["error"] else "not_fixed")
     out(f"{finding_id}: {'fixed, verified' if result['fixed'] else 'NOT fixed'} after {len(result['tries'])} "
         f"tr{'y' if len(result['tries']) == 1 else 'ies'}; model cost ${result['cost_usd']}; wrote {fix_dir}")
-    from trueup.state import State
     with State(root) as state:
         status = "fixed" if result["fixed"] else "error" if result["error"] else "not_fixed"
         state.save_fix(finding_id, status, result)
     return result
+
+
+def checkpointed_draft(root: Path, run_id: str, number: int, client: ModelClient,
+                       messages: list[dict[str, str]], variant: str) -> Any:
+    """Make one paid draft call at most once for a run/try, even across process restarts."""
+    step = f"fixer:draft:{number}"
+    with State(root) as state:
+        saved = state.observation(run_id, step)
+    if saved:
+        return saved["draft"]
+    draft = client.chat_json(PLAN_MODEL, messages, max_tokens=12000, lenient=variant == "v2")
+    with State(root) as state:
+        state.save_observation(run_id, step, {"status": "complete", "draft": draft})
+    return draft
 
 
 def locate_only(root: Path, finding_id: str, out: Callable[[str], None] = print) -> dict[str, Any]:

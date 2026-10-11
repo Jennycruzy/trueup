@@ -329,3 +329,20 @@ From a fresh clone of the working tree (copied into a temp git repo inside `.tru
 The sweep shows the double count: 2 provider calls, 4 LLM spans. Exit 1 means a lead was found. The download time depends on the network.
 
 Spend for this session: key at $5.9869 before, $7.2802 after ($1.29). The $15 guard stayed on; only `claude-sonnet-4.6` was called.
+
+## 2026-10-11: the "missing" neatlogs traces were late, not lost
+
+- A test trace sent at 17:22 UTC showed up in neatlogs search within 20 seconds; the SDK's delivery report showed no dropped spans and no export failures (OBSERVED).
+- Searching again for every planner and fixer run: all 19 sessions are now in neatlogs, including the four planner sessions that searched as empty last night (OBSERVED).
+- Many of those traces carry a neatlogs time of 06:51–06:56 UTC, for runs made between 00:00 and 01:45 UTC. So neatlogs took them in about five hours late; Trueup sent them on time (OBSERVED from the timestamps; why neatlogs was late is not known).
+- So the earlier line "the per-worker flush did not help" was measuring neatlogs' delay, not Trueup's sending. Nothing in Trueup's tracing code was changed for this.
+
+## 2026-10-11: neatlogs detections on Trueup's own traces
+
+- Each worker trace showed an empty output in neatlogs. Two causes (OBSERVED): `neatlogs.trace()` keeps its own context, so `opentelemetry.trace.get_current_span()` was another span and our attributes went nowhere; and neatlogs shows only its own keys, so `trueup.verdict` never appeared. Trueup now uses the span `trace()` yields and also writes the verdict as the span output (`neatlogs.agent.output` and `output.value`). After the change a checker trace shows "12 findings from 31 leads, 0 withdrawn" as its output. Test: `test_verdict_and_labels_go_where_neatlogs_reads_them`.
+- The checker verdict now says how many leads it withdrew.
+- Four detections, created through the neatlogs MCP server in a "Trueup" group: checker withdrew a lead; fix attempt failed (did not apply, or failed the verifier); model reply was not JSON (prose at the start of the reply); command could not run.
+- First backfill over 14 days (OBSERVED): "model reply was not JSON" flagged 21 of 34 model calls. This matches the v1 waste: replies that open with prose. In v2 most of these still parse, because v2 takes the first JSON object in the reply, so the name overstates it: it flags prose before the JSON, not a failed parse. The other three detections had nothing to match yet, because older traces carry no output; they apply to runs from 18:00 UTC on.
+- A fresh OpenLLMetry sweep + check (`20261011T180637Z-openllmetry`) withdrew 2 leads by the latest_and_main rule; its checker trace should fire "checker withdrew a lead" once neatlogs has taken it in.
+- Not yet explained: the neatlogs release sweep now shows 31 leads where earlier runs showed 35.
+- Correction (OBSERVED, 18:40 UTC): detections cannot match the output text of an agent span, though the trace view shows it. A rule on the checker's output ("2 withdrawn") matched nothing, while a rule on the span name matched every checker run. So events a detection must see are now their own named child steps (`tracing.mark`): "lead withdrawn" (one per withdrawn lead, with its scenario and the rule that failed), "fix attempt failed" (apply or verify) and "command could not run". New detections match those names. "Trueup: lead withdrawn (own false alarm)" fired twice on the next OpenLLMetry check (`20261011T180637Z-openllmetry`, both by latest_and_main). The three output-text detections are retired.

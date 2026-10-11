@@ -82,6 +82,8 @@ def traced_worker_command(command: str, target: str, worker: str, body: Callable
             code = body()
             tracing.set_verdict(span, {EXIT_OK: "ok", EXIT_MISMATCH: "mismatch", EXIT_ERROR: "error"}.get(
                 code, f"exit {code}"))
+            if code == EXIT_ERROR:
+                tracing.mark("command could not run", command=command)
             return code
 
     return tracing.run_traced(rid, target, command, wrapped)

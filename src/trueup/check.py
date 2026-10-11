@@ -225,7 +225,11 @@ def check(root: Path, run_id: str, library: str | None, out: Callable[[str], Non
         evidence = gather(root, run_dir, lib, out)
         items = decide(evidence)
         findings = group.group([i for i in items if i["status"] == checker.FINDING])
-        tracing.set_verdict(span, f"{len(findings)} findings from {len(items)} leads")
+        withdrawn = sum(i["status"] == checker.WITHDRAWN for i in items)
+        for i in items:
+            if i["status"] == checker.WITHDRAWN:
+                tracing.mark("lead withdrawn", scenario=i["scenario"], rule=(i["decided_by"] or {}).get("rule", ""))
+        tracing.set_verdict(span, f"{len(findings)} findings from {len(items)} leads, {withdrawn} withdrawn")
     checked_at = datetime.now(timezone.utc).isoformat(timespec="seconds")
 
     out("searching GitHub issues and PRs (read only)")

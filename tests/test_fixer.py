@@ -10,7 +10,8 @@ import pytest
 from trueup import tracing
 from trueup.cli import build_parser
 from trueup.core.repro import line_count
-from trueup.fix import find_finding
+from trueup.fix import checkpointed_draft, find_finding
+from trueup.state import State
 from trueup.fixer import locate as loc
 from trueup.fixer import patch as pt
 from trueup.fixer import targets as tg
@@ -38,6 +39,24 @@ def draft(**kw):
          "test": {"file": "pkg/tests/test_trueup_w.py", "content": "def test_x():\n    assert True\n"}}
     d.update(kw)
     return d
+
+
+def test_paid_fixer_draft_is_reused_after_restart(tmp_path: Path) -> None:
+    class Client:
+        def __init__(self):
+            self.calls = 0
+
+        def chat_json(self, *args, **kwargs):
+            self.calls += 1
+            return {"edits": [{"file": "x", "old": "a", "new": "b"}], "test": {"file": "t", "content": "x"}}
+
+    with State(tmp_path) as state:
+        state.begin_run("fix-run", "fix", "finding")
+    first, second = Client(), Client()
+    one = checkpointed_draft(tmp_path, "fix-run", 1, first, [], "v2")
+    two = checkpointed_draft(tmp_path, "fix-run", 1, second, [], "v2")
+    assert one == two
+    assert first.calls == 1 and second.calls == 0
 
 
 def test_check_draft_applies_and_returns_writes(repo: Path) -> None:

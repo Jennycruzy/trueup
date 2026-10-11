@@ -23,7 +23,7 @@ FAKE_NEATLOGS = textwrap.dedent('''
     @contextlib.contextmanager
     def trace(name, **kw):
         _w("trace " + name + " session=" + kw["session_id"] + " lib=" + kw["trueup.library"])
-        yield
+        yield None
 ''')
 
 
@@ -149,3 +149,57 @@ def test_inner_spans_never_leave_the_machine(tmp_path, monkeypatch):
     payload = json.loads(out.read_text())
     assert payload["ok"] and payload["observation"]["trace"]["spans"]  # spans were captured in memory
     assert not net.exists() or net.read_text() == "", net.read_text()
+
+
+def test_verdict_and_labels_go_where_neatlogs_reads_them(monkeypatch):
+    # neatlogs drops unknown span attributes from its view; detections see output.value and metadata.
+    import contextlib
+    import json
+    import types
+
+    from opentelemetry.sdk.trace import TracerProvider
+    from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+    from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+    exp = InMemorySpanExporter()
+    provider = TracerProvider()
+    provider.add_span_processor(SimpleSpanProcessor(exp))
+    tracer = provider.get_tracer("t")
+
+    @contextlib.contextmanager
+    def trace(name, **kw):
+        with tracer.start_as_current_span(name) as span:
+            yield span
+
+    monkeypatch.setitem(sys.modules, "neatlogs", types.SimpleNamespace(trace=trace, flush=lambda: True))
+    monkeypatch.setitem(tracing._state, "active", True)
+    monkeypatch.setitem(tracing._state, "run_id", "r1")
+    monkeypatch.setitem(tracing._state, "library", "openinference")
+    monkeypatch.setitem(tracing._state, "variant", None)
+    with tracing.worker("trueup-verifier", step="draft 1") as span:
+        tracing.set_verdict(span, "fail")
+    (s,) = exp.get_finished_spans()
+    assert s.attributes["neatlogs.agent.output"] == s.attributes["output.value"] == "fail"
+    meta = json.loads(s.attributes["metadata"])
+    assert meta["trueup.step"] == "draft 1" and meta["trueup.library"] == "openinference"
+    assert meta["trueup.verdict"] == "fail"
+
+
+def test_mark_is_a_named_child_step_and_silent_when_off(monkeypatch):
+    import contextlib
+    import types
+
+    names = []
+
+    @contextlib.contextmanager
+    def trace(name, **kw):
+        names.append((name, kw.get("kind")))
+        yield None
+
+    monkeypatch.setitem(sys.modules, "neatlogs", types.SimpleNamespace(trace=trace))
+    monkeypatch.setitem(tracing._state, "active", False)
+    tracing.mark("lead withdrawn", rule="latest_and_main")
+    assert names == []
+    monkeypatch.setitem(tracing._state, "active", True)
+    tracing.mark("lead withdrawn", rule="latest_and_main")
+    assert names == [("lead withdrawn", "TOOL")]
