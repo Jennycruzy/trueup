@@ -53,10 +53,41 @@
  "field": "output text",
  "fixed": false,
  "found_in": [
-  "20261010T203332Z-neatlogs"
+  "20261010T203332Z-neatlogs",
+  "20261011T174813Z-neatlogs"
  ],
  "id": "neatlogs-output-anthropic-messages-stream-output-text-missing",
  "leads": [
+  {
+   "check": "output",
+   "field": "call 1 output text",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "an-stream-helper",
+   "severity": "medium",
+   "trace": null,
+   "truth": "hello"
+  },
+  {
+   "check": "output",
+   "field": "call 1 output text",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "an-stream-thinking",
+   "severity": "medium",
+   "trace": null,
+   "truth": "hello"
+  },
+  {
+   "check": "output",
+   "field": "call 1 output text",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "an-stream-tools",
+   "severity": "medium",
+   "trace": null,
+   "truth": "hello"
+  },
   {
    "check": "output",
    "field": "call 1 output text",

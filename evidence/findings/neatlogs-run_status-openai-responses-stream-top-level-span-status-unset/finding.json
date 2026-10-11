@@ -39,10 +39,21 @@
  "field": "top-level span status",
  "fixed": false,
  "found_in": [
-  "20261010T203332Z-neatlogs"
+  "20261010T203332Z-neatlogs",
+  "20261011T174813Z-neatlogs"
  ],
  "id": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
  "leads": [
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-stream-error-event",
+   "severity": "high",
+   "trace": "UNSET",
+   "truth": "ERROR (app raised RuntimeError)"
+  },
   {
    "check": "run_status",
    "field": "top-level span status",

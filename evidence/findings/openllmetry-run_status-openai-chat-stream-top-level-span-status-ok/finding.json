@@ -40,7 +40,8 @@
  "fixed": false,
  "found_in": [
   "20261010T203755Z-openllmetry",
-  "20261010T235010Z-openllmetry-proposed"
+  "20261010T235010Z-openllmetry-proposed",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-run_status-openai-chat-stream-top-level-span-status-ok",
  "leads": [
@@ -73,6 +74,26 @@
    "severity": "high",
    "trace": "OK",
    "truth": "ERROR (app raised APIError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "oa-chat-stream-error-event",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised APIError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "oa-chat-stream-cut",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised APIConnectionError)"
   }
  ],
  "library": "openllmetry",

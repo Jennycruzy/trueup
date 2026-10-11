@@ -24,8 +24,8 @@ KEY_VAR = "NEATLOGS_API_KEY"
 WORKERS = ("trueup-planner", "trueup-runner", "trueup-comparer", "trueup-checker", "trueup-deduper",
            "trueup-fixer", "trueup-verifier", "trueup-reporter")
 
-_state: dict[str, Any] = {"active": False, "run_id": None, "library": None, "flushed": False, "variant": None,
-                         "opened": [], "delivery": "not configured"}
+_state: dict[str, Any] = {"active": False, "run_id": None, "library": None, "flushed": False, "closed": False,
+                         "variant": None, "opened": [], "delivery": "not configured"}
 
 
 def active() -> bool:
@@ -47,14 +47,15 @@ def delivery() -> str:
 
 
 def start(run_id: str, library: str, command: str, out: Callable[[str], None] = print,
-          init: Callable[..., Any] | None = None, variant: str | None = None) -> bool:
+          init: Callable[..., Any] | None = None, variant: str | None = None,
+          pii_enabled: bool = False) -> bool:
     """Start one Neatlogs session for a Trueup command. Returns whether tracing is on.
 
     variant (v1/v2) goes into the tags. With v2 every worker trace is flushed when it ends: of the
     traces v1's fix and plan runs opened, neatlogs holds 9 (session 20261010T235208Z-plan-neatlogs has
     none), and v1 flushed only once at exit."""
-    _state.update(active=False, run_id=run_id, library=library, flushed=False, variant=variant, opened=[],
-                  delivery="not configured")
+    _state.update(active=False, run_id=run_id, library=library, flushed=False, closed=False, variant=variant,
+                  opened=[], delivery="not configured")
     if not os.environ.get(KEY_VAR):
         out(f"{KEY_VAR} is not set: running without neatlogs tracing")
         return False
@@ -65,6 +66,7 @@ def start(run_id: str, library: str, command: str, out: Callable[[str], None] = 
     try:
         # Trueup has no end users; the team name fills neatlogs' user column (TRUEUP_USER overrides it).
         init(api_key=os.environ[KEY_VAR], workflow_name="trueup", instrumentations=["openai"],
+             pii_enabled=pii_enabled,
              user_id=os.environ.get("TRUEUP_USER", "jenny-builds"),
              tags=[f"run_id:{run_id}", f"library:{library}", f"trueup:{__version__}", f"command:{command}"]
              + ([f"variant:{variant}"] if variant else []))
@@ -73,7 +75,7 @@ def start(run_id: str, library: str, command: str, out: Callable[[str], None] = 
         return False
     _state["active"] = True
     _state["delivery"] = "pending"
-    atexit.register(flush)
+    atexit.register(shutdown)
     out(f"neatlogs tracing on, session {run_id}")
     return True
 
@@ -97,6 +99,24 @@ def flush() -> bool:
         _state["delivery"] = "failed"
         print(f"neatlogs flush failed ({type(e).__name__})", file=sys.stderr)
         return False
+
+
+def shutdown() -> bool:
+    """Flush pending spans and close the Neatlogs exporter exactly once."""
+    if not active() or _state["closed"]:
+        return _state["delivery"] in ("not configured", "delivered")
+    delivered = flush()
+    _state["closed"] = True
+    try:
+        import neatlogs
+
+        neatlogs.shutdown()
+    except Exception as e:  # noqa: BLE001 - tracing must not stop the run
+        _state["delivery"] = "failed"
+        print(f"neatlogs shutdown failed ({type(e).__name__})", file=sys.stderr)
+        return False
+    _state["active"] = False
+    return delivered
 
 
 @contextlib.contextmanager
@@ -156,10 +176,11 @@ def set_verdict(span: Any, verdict: str) -> None:
 
 
 def run_traced(run_id: str, library: str, command: str, body: Callable[[], int],
-               out: Callable[[str], None] = print, variant: str | None = None) -> int:
-    """Start tracing, run the command, and flush on the way out, also when it raises."""
-    start(run_id, library, command, out, variant=variant)
+               out: Callable[[str], None] = print, variant: str | None = None,
+               pii_enabled: bool = False) -> int:
+    """Start tracing, then flush and shut down on the way out, also when it raises."""
+    start(run_id, library, command, out, variant=variant, pii_enabled=pii_enabled)
     try:
         return body()
     finally:
-        flush()
+        shutdown()

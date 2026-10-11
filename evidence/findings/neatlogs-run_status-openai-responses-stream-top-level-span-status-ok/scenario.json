@@ -1,0 +1,23 @@
+{
+ "api": "responses",
+ "app": "resp_stream",
+ "does": "streams a Responses call that ends with status=failed",
+ "expected": {
+  "calls": 1,
+  "exception": "RuntimeError",
+  "fake": [
+   "failed"
+  ],
+  "finish": [
+   [
+    "failed"
+   ]
+  ],
+  "outcome": "exception"
+ },
+ "framework": "none",
+ "id": "p-resp-stream-failed",
+ "model": "resp-failed",
+ "provider": "openai",
+ "status": "built"
+}

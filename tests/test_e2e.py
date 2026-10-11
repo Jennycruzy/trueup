@@ -4,6 +4,7 @@ Builds the venv on first use (needs network), one library at a time.
 """
 
 from pathlib import Path
+import os
 
 import pytest
 
@@ -13,7 +14,11 @@ pytestmark = pytest.mark.e2e
 ROOT = Path(__file__).resolve().parents[1]
 
 
-@pytest.fixture(scope="module", params=["neatlogs", "openinference", "openllmetry"])
+E2E_LIBRARIES = [os.environ["TRUEUP_E2E_LIBRARY"]] if os.environ.get("TRUEUP_E2E_LIBRARY") else [
+    "neatlogs", "openinference", "openllmetry"]
+
+
+@pytest.fixture(scope="module", params=E2E_LIBRARIES)
 def lib(request):
     return request.param, venvs.ensure(ROOT, request.param)
 

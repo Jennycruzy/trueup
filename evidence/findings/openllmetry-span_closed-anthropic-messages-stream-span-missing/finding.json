@@ -47,7 +47,8 @@
  "found_in": [
   "20261010T203755Z-openllmetry",
   "20261010T235010Z-openllmetry-proposed",
-  "20261010T235247Z-openllmetry-proposed"
+  "20261010T235247Z-openllmetry-proposed",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-span_closed-anthropic-messages-stream-span-missing",
  "leads": [
@@ -87,6 +88,26 @@
    "kind": "lead",
    "library": "openllmetry",
    "scenario": "p-an-stream-helper-cut",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (cut)"
+  },
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-error-event",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (error_event)"
+  },
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-cut",
    "severity": "high",
    "trace": "no span",
    "truth": "ended and exported (cut)"

@@ -1,0 +1,224 @@
+{
+ "source": "Neatlogs MCP",
+ "views": {
+  "cost": {
+   "data": {
+    "breakdown": "cost",
+    "period": {
+     "from": "2026-09-27T19:08:22Z",
+     "to": "2026-10-11T19:08:22Z"
+    },
+    "rows": [
+     {
+      "group": "neatlogs.doctor.v2",
+      "totalCostUsd": 0,
+      "totalTokens": 18,
+      "traceCount": 1
+     },
+     {
+      "group": "trueup",
+      "totalCostUsd": 0,
+      "totalTokens": 1489009,
+      "traceCount": 107
+     }
+    ],
+    "truncation": {
+     "limit": 100,
+     "truncated": false
+    }
+   },
+   "entity_level": "trace",
+   "ingestion_complete": null,
+   "ingestion_watermark": null,
+   "interval": "[from,to)",
+   "observed_at": "2026-10-11T19:08:22.287Z",
+   "project_id": "45fe2a17-9a15-4d69-a3bc-134a98385c58",
+   "readiness": "persisted_records_only",
+   "view": "cost",
+   "workflow_name": null
+  },
+  "detections": {
+   "data": {
+    "breakdown": "detections",
+    "period": {
+     "from": "2026-09-27T19:08:22Z",
+     "to": "2026-10-11T19:08:22Z"
+    },
+    "rows": [
+     {
+      "group": "Trueup: lead withdrawn (own false alarm)",
+      "hitCount": 2,
+      "traceCount": 1
+     },
+     {
+      "group": "Slow LLM Response",
+      "hitCount": 1,
+      "traceCount": 1
+     }
+    ],
+    "truncation": {
+     "limit": 100,
+     "truncated": false
+    }
+   },
+   "entity_level": "trace",
+   "ingestion_complete": null,
+   "ingestion_watermark": null,
+   "interval": "[from,to)",
+   "observed_at": "2026-10-11T19:08:22.604Z",
+   "project_id": "45fe2a17-9a15-4d69-a3bc-134a98385c58",
+   "readiness": "persisted_records_only",
+   "view": "detections",
+   "workflow_name": null
+  },
+  "errors": {
+   "data": {
+    "breakdown": "errors",
+    "period": {
+     "from": "2026-09-27T19:08:22Z",
+     "to": "2026-10-11T19:08:22Z"
+    },
+    "rows": [],
+    "truncation": {
+     "limit": 100,
+     "truncated": false
+    }
+   },
+   "entity_level": "trace",
+   "ingestion_complete": null,
+   "ingestion_watermark": null,
+   "interval": "[from,to)",
+   "observed_at": "2026-10-11T19:08:22.380Z",
+   "project_id": "45fe2a17-9a15-4d69-a3bc-134a98385c58",
+   "readiness": "persisted_records_only",
+   "view": "errors",
+   "workflow_name": null
+  },
+  "kpis": {
+   "data": {
+    "baseline": {
+     "error_count": 0,
+     "error_rate": null,
+     "error_rate_denominator": 0,
+     "last_record_updated_at": null,
+     "latency_ms": {
+      "p50": null,
+      "p95": null,
+      "p99": null,
+      "sample_count": 0
+     },
+     "total_cost_usd": null,
+     "total_tokens": null,
+     "trace_count": 0,
+     "window": {
+      "from": "2026-09-13T19:08:22.000Z",
+      "to": "2026-09-27T19:08:22Z"
+     }
+    },
+    "current": {
+     "error_count": 0,
+     "error_rate": 0,
+     "error_rate_denominator": 108,
+     "last_record_updated_at": "2026-10-11T19:05:48.544Z",
+     "latency_ms": {
+      "p50": 22600,
+      "p95": 235117.94999999937,
+      "p99": 418006.61999999994,
+      "sample_count": 108
+     },
+     "total_cost_usd": 0,
+     "total_tokens": 1489027,
+     "trace_count": 108,
+     "window": {
+      "from": "2026-09-27T19:08:22Z",
+      "to": "2026-10-11T19:08:22Z"
+     }
+    }
+   },
+   "entity_level": "trace",
+   "ingestion_complete": null,
+   "ingestion_watermark": null,
+   "interval": "[from,to)",
+   "observed_at": "2026-10-11T19:08:22.143Z",
+   "project_id": "45fe2a17-9a15-4d69-a3bc-134a98385c58",
+   "readiness": "persisted_records_only",
+   "view": "kpis",
+   "workflow_name": null
+  },
+  "time": {
+   "data": {
+    "breakdown": "time",
+    "period": {
+     "from": "2026-09-27T19:08:22Z",
+     "to": "2026-10-11T19:08:22Z"
+    },
+    "rows": [
+     {
+      "averageDurationMs": 57412.64485981308,
+      "group": "trueup",
+      "totalDurationMs": 6143153,
+      "traceCount": 107
+     },
+     {
+      "averageDurationMs": 4,
+      "group": "neatlogs.doctor.v2",
+      "totalDurationMs": 4,
+      "traceCount": 1
+     }
+    ],
+    "truncation": {
+     "limit": 100,
+     "truncated": false
+    }
+   },
+   "entity_level": "trace",
+   "ingestion_complete": null,
+   "ingestion_watermark": null,
+   "interval": "[from,to)",
+   "observed_at": "2026-10-11T19:08:22.475Z",
+   "project_id": "45fe2a17-9a15-4d69-a3bc-134a98385c58",
+   "readiness": "persisted_records_only",
+   "view": "time",
+   "workflow_name": null
+  },
+  "workflows": {
+   "data": {
+    "facets": [
+     {
+      "field": "workflowName",
+      "hasMore": false,
+      "options": [
+       {
+        "count": 107,
+        "label": "trueup",
+        "value": "trueup"
+       },
+       {
+        "count": 1,
+        "label": "neatlogs.doctor.v2",
+        "value": "neatlogs.doctor.v2"
+       }
+      ]
+     }
+    ],
+    "period": {
+     "from": "2026-09-27T19:08:22Z",
+     "to": "2026-10-11T19:08:22Z"
+    }
+   },
+   "entity_level": "trace",
+   "ingestion_complete": null,
+   "ingestion_watermark": null,
+   "interval": "[from,to)",
+   "observed_at": "2026-10-11T19:08:22.694Z",
+   "project_id": "45fe2a17-9a15-4d69-a3bc-134a98385c58",
+   "readiness": "persisted_records_only",
+   "view": "workflows",
+   "workflow_name": null
+  }
+ },
+ "window": {
+  "from": "2026-09-27 19:08:22+00:00",
+  "to": "2026-10-11 19:08:22+00:00"
+ }
+}

@@ -327,6 +327,12 @@ def build(root: Path, out: Callable[[str], None] = print) -> Path:
     if not business_plan.is_file():
         raise FileNotFoundError(f"missing cfo.ai business-plan artifact: {business_plan}")
     shutil.copy(business_plan, ev / "business-plan.md")
+    neatlogs_evidence = root / ".trueup" / "neatlogs"
+    if neatlogs_evidence.is_dir():
+        shutil.copytree(neatlogs_evidence, ev / "neatlogs")
+    entire_evidence = root / ".trueup" / "entire"
+    if entire_evidence.is_dir():
+        shutil.copytree(entire_evidence, ev / "entire")
     merged = _merged_findings(runs)
     run_rows: dict[str, dict[str, Any]] = {}
     for fid, x in sorted(merged.items()):
@@ -350,7 +356,13 @@ def build(root: Path, out: Callable[[str], None] = print) -> Path:
             "fixed": (root / "fixes" / fid / "proof.json").exists(),
         }
         _dump(d / "finding.json", finding)
-        _dump(d / "scenario.json", get_scenario(sid).to_dict())
+        try:
+            scenario = get_scenario(sid)
+        except KeyError:
+            from trueup.check import scenario_for_run
+
+            scenario = scenario_for_run(root, sid, r["observation"])
+        _dump(d / "scenario.json", scenario.to_dict())
         _dump(d / "truth.json", truth)
         _dump(d / "spans.json", spans)
         repro = up / "repro.py" if (up / "repro.py").exists() else rdir / "repros" / f"{x['library']}-{sid}.py"
@@ -421,6 +433,13 @@ def _received(root: Path, session: str) -> int:
     return _load(p)["totals"]["traces"] if p.exists() else 0
 
 
+def _trace_links(root: Path, session: str) -> list[str]:
+    p = root / ".trueup" / "neatlogs-api" / "v1v2" / f"{session}.json"
+    if not p.exists():
+        return []
+    return [f"https://app.neatlogs.com/traces/{t['trace_id']}" for t in _load(p).get("traces", [])]
+
+
 def _v1v2(root: Path, runs: Path, ev: Path, merged: dict[str, Any], run_rows: dict[str, Any]) -> None:
     answer = {}
     for x in merged.values():
@@ -450,7 +469,8 @@ def _v1v2(root: Path, runs: Path, ev: Path, merged: dict[str, Any], run_rows: di
                       "leads": leads, "traces_opened": len(p.get("traces_opened", [])),
                       "traces_received": _received(root, rid)})
         run_rows[rid] = {"run_id": rid, "kind": "plan", "library": p["library"], "variant": variant,
-                         "neatlogs_session": rid, "versions": {"model": p["model"]}}
+                         "neatlogs_session": rid, "neatlogs_trace_links": _trace_links(root, rid),
+                         "versions": {"model": p["model"]}}
         run_rows[sweep_id] = {"run_id": sweep_id, "kind": "sweep (proposals)", "library": p["library"],
                               "variant": variant, "neatlogs_session": None, "versions": {}}
     history = []
@@ -468,7 +488,8 @@ def _v1v2(root: Path, runs: Path, ev: Path, merged: dict[str, Any], run_rows: di
                       "usage": {**t["usage"], "key_spend_delta_usd": t["cost_usd"]}, "wall_s": t["wall_s"],
                       "traces_opened": len(t.get("traces_opened", [])), "traces_received": _received(root, rid)})
         run_rows[rid] = {"run_id": rid, "kind": "fix", "library": t["library"], "variant": variant,
-                         "neatlogs_session": rid, "versions": {"model": t["model"], "clone_commit": t.get("commit")}}
+                         "neatlogs_session": rid, "neatlogs_trace_links": _trace_links(root, rid),
+                         "versions": {"model": t["model"], "clone_commit": t.get("commit")}}
     fix_history = []
     for f in sorted((root / "fixes" / COMPARISON["fix_finding"] / "runs").glob("*.json")):
         t = _load(f)

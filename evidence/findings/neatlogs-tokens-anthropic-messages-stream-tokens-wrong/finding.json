@@ -45,10 +45,59 @@
  "field": "tokens",
  "fixed": false,
  "found_in": [
-  "20261010T203332Z-neatlogs"
+  "20261010T203332Z-neatlogs",
+  "20261011T174813Z-neatlogs"
  ],
  "id": "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
  "leads": [
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "an-stream-helper",
+   "severity": "high",
+   "trace": {
+    "input": null,
+    "output": null
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "an-stream-thinking",
+   "severity": "high",
+   "trace": {
+    "input": null,
+    "output": null
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "an-stream-tools",
+   "severity": "high",
+   "trace": {
+    "input": null,
+    "output": null
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
   {
    "check": "tokens",
    "field": "call 1 tokens",

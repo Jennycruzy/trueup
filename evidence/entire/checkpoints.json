@@ -1,0 +1,11 @@
+{
+ "source_command": "entire checkpoint explain <checkpoint-id> --json",
+ "checkpoints": [
+  {"worker": "runner", "checkpoint_id": "01M4KPT0834CBK00PT88AC3ZZ9", "date": "2026-10-10T20:06:58Z", "message": "Add fake provider, scenarios and runner", "key_files": ["src/trueup/fake/server.py", "src/trueup/runner/run.py", "src/trueup/sweep.py"]},
+  {"worker": "comparer", "checkpoint_id": "01M4KQJT5SG43C09G0F9R3903K", "date": "2026-10-10T20:20:31Z", "message": "Add comparer, leads report and audit", "key_files": ["src/trueup/core/compare.py", "src/trueup/audit.py", "src/trueup/core/report.py"]},
+  {"worker": "checker and deduper", "checkpoint_id": "01M4KTSSRVXBCQ1SJY6TCXBF7A", "date": "2026-10-10T21:16:46Z", "message": "Add checker and deduper", "key_files": ["src/trueup/check.py", "src/trueup/core/checker.py", "src/trueup/dedupe.py"]},
+  {"worker": "planner", "checkpoint_id": "01M4M3Z30WTHT7SS88PTEY3K9E", "date": "2026-10-10T23:56:57Z", "message": "Add planner and Neatlogs tracing", "key_files": ["src/trueup/planner.py", "src/trueup/model.py", "src/trueup/tracing.py"]},
+  {"worker": "fixer and verifier", "checkpoint_id": "01M4M8M1GSQ2BM1RX2JKDJHPD6", "date": "2026-10-11T01:18:18Z", "message": "Add fixer, verifier and upstream drafts", "key_files": ["src/trueup/fix.py", "src/trueup/fixer/verify.py", "src/trueup/upstream.py"]},
+  {"worker": "reporter", "checkpoint_id": "01M4NPN04FXE2DR9FKC7KHF09Z", "date": "2026-10-11T14:42:43Z", "message": "Add evidence bundle, report and v2", "key_files": ["src/trueup/cli.py", "README.md", ".github/workflows/ci.yml"]}
+ ]
+}

@@ -2,6 +2,7 @@
 
 import json
 import sys
+import venv
 from pathlib import Path
 
 import pytest
@@ -42,8 +43,10 @@ def test_missing_python_is_not_run():
 
 @pytest.mark.e2e  # spawns a subprocess
 def test_library_import_failure_is_not_run(tmp_path):
-    # This interpreter has no neatlogs, so setup fails inside the child.
-    r = run_scenario(Path(sys.executable), "neatlogs", "oa-chat-plain", timeout=60)
+    # Use a genuinely empty interpreter; neatlogs is a normal dependency of the project interpreter.
+    empty = tmp_path / "empty"
+    venv.EnvBuilder(with_pip=False).create(empty)
+    r = run_scenario(empty / "bin" / "python", "neatlogs", "oa-chat-plain", timeout=60)
     assert r["status"] == NOT_RUN
     assert "neatlogs" in r["reason"]
 

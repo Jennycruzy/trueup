@@ -59,6 +59,46 @@
     "lc-refusal"
    ],
    "title": "openllmetry, langchain: output text not recorded"
+  },
+  {
+   "id": "neatlogs-call_status-openai-agents-span-status-error-no-exception-event",
+   "reason": "openinference, openllmetry behave the same and no OTel convention defines it",
+   "run_id": "20261011T174813Z-neatlogs",
+   "scenarios": [
+    "ag-llm-fails",
+    "ag-streamed-cut",
+    "ag-streamed-error"
+   ],
+   "title": "neatlogs, openai-agents: span status is ERROR, no exception event"
+  },
+  {
+   "id": "neatlogs-output-langchain-output-text-missing",
+   "reason": "openinference, openllmetry behave the same and no OTel convention defines it",
+   "run_id": "20261011T174813Z-neatlogs",
+   "scenarios": [
+    "lc-refusal"
+   ],
+   "title": "neatlogs, langchain: output text not recorded"
+  },
+  {
+   "id": "openllmetry-call_status-openai-agents-span-status-error-no-exception-event",
+   "reason": "neatlogs, openinference behave the same and no OTel convention defines it",
+   "run_id": "20261011T180637Z-openllmetry",
+   "scenarios": [
+    "ag-llm-fails",
+    "ag-streamed-cut",
+    "ag-streamed-error"
+   ],
+   "title": "openllmetry, openai-agents: span status is ERROR, no exception event"
+  },
+  {
+   "id": "openllmetry-output-langchain-output-text-missing",
+   "reason": "neatlogs, openinference behave the same and no OTel convention defines it",
+   "run_id": "20261011T180637Z-openllmetry",
+   "scenarios": [
+    "lc-refusal"
+   ],
+   "title": "openllmetry, langchain: output text not recorded"
   }
  ],
  "withdrawn": [
@@ -80,6 +120,28 @@
    "reason": "does not reproduce on main (df4921a409); fixed there",
    "rule": "latest_and_main",
    "run_id": "20261010T203755Z-openllmetry",
+   "scenario": "oa-resp-incomplete",
+   "trace": "no span",
+   "truth": "ended and exported (incomplete)"
+  },
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "library": "openllmetry",
+   "reason": "does not reproduce on main (df4921a409); fixed there",
+   "rule": "latest_and_main",
+   "run_id": "20261011T180637Z-openllmetry",
+   "scenario": "oa-resp-failed",
+   "trace": "no span",
+   "truth": "ended and exported (failed)"
+  },
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "library": "openllmetry",
+   "reason": "does not reproduce on main (df4921a409); fixed there",
+   "rule": "latest_and_main",
+   "run_id": "20261011T180637Z-openllmetry",
    "scenario": "oa-resp-incomplete",
    "trace": "no span",
    "truth": "ended and exported (incomplete)"

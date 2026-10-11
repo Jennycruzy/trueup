@@ -115,6 +115,8 @@ def seen_outcomes() -> list[dict[str, Any]]:
 
 def first_prompt(library: str, source: str, findings: list[dict[str, Any]], n: int,
                  variant: str = "v2") -> list[dict[str, str]]:
+    from trueup.managed_prompts import production
+
     seen = ""
     if variant == "v2":
         seen = ("What really happened in the existing scenarios (untraced runs). The same fake model gives "
@@ -125,7 +127,8 @@ def first_prompt(library: str, source: str, findings: list[dict[str, Any]], n: i
             f"Existing scenarios (do not repeat an app + model pair):\n{json.dumps(library_summary())}\n\n{seen}"
             f"Current findings for {library}:\n{json.dumps(findings)}\n\n"
             f"Wrapper source of {library} as installed:\n{source}\n\nPropose at most {n} new scenarios.")
-    return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
+    system = production(f"trueup-planner-{variant}", SYSTEM, enabled=tracing.active())
+    return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
 
 def revision_prompt(p: Any, reasons: list[str]) -> list[dict[str, str]]:

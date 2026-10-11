@@ -1,13 +1,13 @@
 {
- "already_known": 4,
- "disputed_groups": 6,
+ "already_known": 5,
+ "disputed_groups": 10,
  "findings": {
   "by_library": {
    "neatlogs": {
-    "findings": 14,
-    "high": 4,
+    "findings": 17,
+    "high": 6,
     "low": 0,
-    "medium": 10
+    "medium": 11
    },
    "openinference": {
     "findings": 6,
@@ -23,11 +23,11 @@
    }
   },
   "by_severity": {
-   "high": 13,
+   "high": 15,
    "low": 0,
-   "medium": 16
+   "medium": 17
   },
-  "total": 29
+  "total": 32
  },
  "fixes": {
   "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok": {
@@ -95,7 +95,7 @@
    "job": "planner",
    "json_retries": 0,
    "output_tokens": 2671,
-   "recall": "2 of 23",
+   "recall": "5 of 26",
    "runs": [
     "20261011T013638Z-plan-openllmetry",
     "20261011T013725Z-plan-neatlogs"
@@ -115,7 +115,7 @@
    "job": "planner",
    "json_retries": 0,
    "output_tokens": 2281,
-   "recall": "3 of 23",
+   "recall": "5 of 26",
    "runs": [
     "20261011T013704Z-plan-openllmetry",
     "20261011T013748Z-plan-neatlogs"
@@ -165,7 +165,7 @@
   }
  ],
  "withdrawn_by_rule": {
-  "latest_and_main": 2,
+  "latest_and_main": 4,
   "trueup_own_false_alarm": 27
  }
 }

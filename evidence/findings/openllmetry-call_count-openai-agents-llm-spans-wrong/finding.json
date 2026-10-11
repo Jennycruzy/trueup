@@ -39,10 +39,61 @@
  "field": "LLM spans",
  "fixed": true,
  "found_in": [
-  "20261010T203755Z-openllmetry"
+  "20261010T203755Z-openllmetry",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-call_count-openai-agents-llm-spans-wrong",
  "leads": [
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-run",
+   "severity": "high",
+   "trace": 4,
+   "truth": "2 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-tool-raises",
+   "severity": "high",
+   "trace": 4,
+   "truth": "2 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-llm-fails",
+   "severity": "high",
+   "trace": 4,
+   "truth": "2 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-max-turns",
+   "severity": "high",
+   "trace": 6,
+   "truth": "3 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-bad-tool",
+   "severity": "high",
+   "trace": 2,
+   "truth": "1 (provider requests)"
+  },
   {
    "check": "call_count",
    "field": "LLM spans",

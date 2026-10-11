@@ -1,0 +1,69 @@
+{
+ "app": {
+  "exception_module": "builtins",
+  "exception_type": "RuntimeError",
+  "message": "Didn't receive a `response.completed` event.",
+  "outcome": "exception",
+  "seconds": 0.976
+ },
+ "calls": 1,
+ "exception": "RuntimeError",
+ "expected": {
+  "calls": 1,
+  "exception": "RuntimeError",
+  "fake": [
+   "failed"
+  ],
+  "finish": [
+   [
+    "failed"
+   ]
+  ],
+  "outcome": "exception"
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "failed"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.responses",
+   "finish": [
+    "failed"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "failed",
+   "path": "/v1/responses",
+   "response_id": "resp_e2f3ffd30001",
+   "scenario": "resp-failed",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [],
+   "tool_calls": [],
+   "usage": null,
+   "usage_sent": false
+  }
+ ],
+ "finish": [
+  [
+   "failed"
+  ]
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "exception",
+ "response_ids": [
+  "resp_e2f3ffd30001"
+ ],
+ "scenario": "p-resp-stream-failed",
+ "tokens": [
+  null
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

@@ -90,6 +90,9 @@ JSON_ONLY = "\n\nThe first character of your reply is \"{\". No text before or a
 
 def first_prompt(finding: dict[str, Any], target: Target, located: dict[str, Any], source: str,
                  style: str, spans: dict[str, Any] | None = None, variant: str = "v1") -> list[dict[str, str]]:
+    from trueup import tracing
+    from trueup.managed_prompts import production
+
     d = finding["details"]
     leads = [{k: x.get(k) for k in ("scenario", "field", "truth", "trace")} for x in d.get("leads", [])]
     user = (f"Library: {target.library} (repo commit {located['commit'][:10]}).\n"
@@ -105,7 +108,9 @@ def first_prompt(finding: dict[str, Any], target: Target, located: dict[str, Any
             f"Located definitions:\n{json.dumps(located['definitions'])}\n"
             f"Callers:\n{json.dumps(located['callers'][:60])}\n\n"
             f"Source:\n{source}\n\nTest style of {target.packages[0].path}:\n{style}")
-    return [{"role": "system", "content": SYSTEM + (JSON_ONLY if variant == "v2" else "")},
+    fallback = SYSTEM + (JSON_ONLY if variant == "v2" else "")
+    system = production(f"trueup-fixer-{variant}", fallback, enabled=tracing.active())
+    return [{"role": "system", "content": system},
             {"role": "user", "content": user}]
 
 

@@ -2,10 +2,12 @@
 
 import copy
 import json
+from pathlib import Path
 
 import pytest
 
 from trueup import dedupe
+from trueup.check import scenario_for_run
 from trueup.cli import EXIT_ERROR, main
 from trueup.core import checker, group, repro
 from trueup.core.checker import COULD_NOT_CHECK, DISPUTED, FAIL, PASS
@@ -13,6 +15,17 @@ from trueup.core.checker import COULD_NOT_CHECK, DISPUTED, FAIL, PASS
 LEAD = {"scenario": "oa-resp-plain", "library": "neatlogs", "check": "finish", "field": "call 1 finish",
         "truth": ["completed"], "trace": None, "severity": "medium"}
 SIG = checker.signature(LEAD)
+
+
+def test_temporary_comparison_scenario_is_recovered_from_retained_proposal(tmp_path):
+    data = {"id": "p-temp", "provider": "openai", "api": "responses", "framework": "none",
+            "does": "streams", "app": "resp_stream", "model": "resp-failed",
+            "expected": {"calls": 1, "outcome": "exception", "exception": "RuntimeError", "fake": ["failed"]}}
+    path = tmp_path / ".trueup" / "v1v2" / "v1" / "proposed" / "neatlogs" / "p-temp.json"
+    path.parent.mkdir(parents=True)
+    path.write_text(json.dumps(data))
+    got = scenario_for_run(tmp_path, "p-temp", {"truth": {"expected": data["expected"]}})
+    assert got.id == "p-temp" and got.app == "resp_stream"
 
 
 def evidence(**over):

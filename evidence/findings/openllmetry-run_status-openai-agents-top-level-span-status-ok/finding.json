@@ -39,10 +39,61 @@
  "field": "top-level span status",
  "fixed": false,
  "found_in": [
-  "20261010T203755Z-openllmetry"
+  "20261010T203755Z-openllmetry",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-run_status-openai-agents-top-level-span-status-ok",
  "leads": [
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-llm-fails",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised InternalServerError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-max-turns",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised MaxTurnsExceeded)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-bad-tool",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised ModelBehaviorError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-streamed-error",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised ModelBehaviorError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-streamed-cut",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised APIConnectionError)"
+  },
   {
    "check": "run_status",
    "field": "top-level span status",

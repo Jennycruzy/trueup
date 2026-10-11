@@ -1,0 +1,74 @@
+{
+ "check": "run_status",
+ "code_path": "openai responses stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-11T19:14:20+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "responses span status error stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-11T19:14:23+00:00",
+    "hits": 1,
+    "include_prs": true,
+    "query": "span status error stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "run_status",
+  "field": "top-level span status",
+  "kind": "lead",
+  "library": "neatlogs",
+  "scenario": "p-resp-stream-failed",
+  "severity": "high",
+  "trace": "OK",
+  "truth": "ERROR (app raised RuntimeError)"
+ },
+ "example_run": "20261011T013836Z-neatlogs-proposed",
+ "field": "top-level span status",
+ "fixed": false,
+ "found_in": [
+  "20261011T013836Z-neatlogs-proposed"
+ ],
+ "id": "neatlogs-run_status-openai-responses-stream-top-level-span-status-ok",
+ "leads": [
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "p-resp-stream-failed",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised RuntimeError)"
+  }
+ ],
+ "library": "neatlogs",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main 202f8776ea",
+  "recommended_setup": "neatlogs.init(instrumentations=<README keys>); framework none",
+  "reference": "OTel trace API: set span status to Error when the operation it covers failed",
+  "repro": ".trueup/runs/20261011T013836Z-neatlogs-proposed/repros/neatlogs-p-resp-stream-failed.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "p-resp-stream-failed"
+ ],
+ "severity": "high",
+ "title": "neatlogs, openai responses stream: top-level span status is OK",
+ "trace": "OK",
+ "upstream": null
+}

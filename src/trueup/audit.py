@@ -79,6 +79,7 @@ def audit(
     upstream: str | None = None,
     record_run: Callable[..., dict[str, Any]] = run_record_audit,
     cases: str = "builtin",
+    neatlogs: bool = False,
 ) -> tuple[Path, list[dict[str, Any]]]:
     run_id = run_id or new_run_id(library).replace(f"-{library}", f"-audit-{library}")
     run_dir = root / ".trueup" / "runs" / run_id
@@ -122,6 +123,10 @@ def audit(
         for r in results:
             if r["status"] == RAN:
                 r["mismatches"] = [m.to_dict() for m in compare(Observation.from_dict(r["observation"]))]
+                if neatlogs:
+                    for mismatch in r["mismatches"]:
+                        tracing.mark("Trueup mismatch", scenario=r["scenario"], check=mismatch["check"],
+                                     field=mismatch["field"], severity=mismatch["severity"])
         tracing.set_verdict(span, f"{sum(len(r.get('mismatches', [])) for r in results)} mismatches")
     for r in results:
         name = r["scenario"].replace("/", "_")

@@ -1,0 +1,25 @@
+{
+ "by_status": {
+  "archived": {
+   "total": 0,
+   "triage_cards": []
+  },
+  "draft": {
+   "total": 0,
+   "triage_cards": []
+  },
+  "in_progress": {
+   "total": 0,
+   "triage_cards": []
+  },
+  "open": {
+   "total": 0,
+   "triage_cards": []
+  },
+  "resolved": {
+   "total": 0,
+   "triage_cards": []
+  }
+ },
+ "source": "Neatlogs MCP"
+}

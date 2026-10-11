@@ -1,0 +1,1566 @@
+{
+ "detections": {
+  "detections": [
+   {
+    "created_at": "2026-10-11T18:50:16.757416Z",
+    "description": "A Trueup command ended with could not run.",
+    "display_name": "Trueup: command could not run (exit 2)",
+    "group_name": "Trueup",
+    "id": "9bb116b6-5c20-4ef2-8180-d34fc76c93ae",
+    "is_active": true,
+    "run_on": {
+     "frequency": "trace",
+     "span_names": null,
+     "span_types": null
+    },
+    "slug": "custom_conditional_oph2gGbh2i",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-11T18:50:16.896100Z"
+   },
+   {
+    "created_at": "2026-10-11T18:50:16.636543Z",
+    "description": "A drafted fix did not apply or failed the verifier, so Trueup sent it back to the model.",
+    "display_name": "Trueup: fix attempt failed (retried)",
+    "group_name": "Trueup",
+    "id": "cba66c38-9548-4ba9-b714-9238e741885d",
+    "is_active": true,
+    "run_on": {
+     "frequency": "trace",
+     "span_names": null,
+     "span_types": null
+    },
+    "slug": "custom_conditional_n6gpNpJLjq",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-11T18:50:16.775857Z"
+   },
+   {
+    "created_at": "2026-10-11T18:43:14.906581Z",
+    "description": "Trueup's checker refused to call a lead a bug: it failed one of the seven rules. One hit per withdrawn lead.",
+    "display_name": "Trueup: lead withdrawn (own false alarm)",
+    "group_name": "Trueup",
+    "id": "c63f9e79-8527-4aa6-9acb-ea151fcd1260",
+    "is_active": true,
+    "run_on": {
+     "frequency": "trace",
+     "span_names": null,
+     "span_types": null
+    },
+    "slug": "custom_conditional_nnME8uXUoL",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-11T18:43:15.047845Z"
+   },
+   {
+    "created_at": "2026-10-11T18:27:04.528141Z",
+    "description": "A Trueup command ended with 'could not run' (exit 2).",
+    "display_name": "Trueup: command could not run",
+    "group_name": "Trueup",
+    "id": "960b5d1e-6c42-4244-b785-4dab8ba7654f",
+    "is_active": true,
+    "run_on": {
+     "frequency": "trace",
+     "span_names": null,
+     "span_types": null
+    },
+    "slug": "custom_conditional_unKbTc3rD6",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-11T18:27:04.714081Z"
+   },
+   {
+    "created_at": "2026-10-11T18:27:04.408382Z",
+    "description": "The model answered in prose instead of the JSON Trueup asked for, which costs a retry.",
+    "display_name": "Trueup: model reply was not JSON",
+    "group_name": "Trueup",
+    "id": "50535558-1c7a-4901-b7e7-41ab934203ff",
+    "is_active": true,
+    "run_on": {
+     "frequency": "span_type",
+     "span_names": null,
+     "span_types": [
+      "LLM"
+     ]
+    },
+    "slug": "custom_regex_m9KE0JZELy",
+    "threshold": 0.5,
+    "type": "regex",
+    "updated_at": "2026-10-11T18:27:07.444386Z"
+   },
+   {
+    "created_at": "2026-10-11T18:27:04.282277Z",
+    "description": "A drafted fix did not apply or did not pass the verifier, so Trueup sent it back to the model.",
+    "display_name": "Trueup: fix attempt failed",
+    "group_name": "Trueup",
+    "id": "41a85c7e-2a32-44c9-98e1-0d21cfcd9026",
+    "is_active": true,
+    "run_on": {
+     "frequency": "trace",
+     "span_names": null,
+     "span_types": null
+    },
+    "slug": "custom_conditional_hKOocuD-fg",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-11T18:27:04.484056Z"
+   },
+   {
+    "created_at": "2026-10-11T18:27:04.159590Z",
+    "description": "The checker refused to call a lead a bug (it failed one of the seven rules). Trueup catching its own false alarm.",
+    "display_name": "Trueup: checker withdrew a lead",
+    "group_name": "Trueup",
+    "id": "3c762d1c-6f6f-4d42-a5a9-0705f90b30d4",
+    "is_active": true,
+    "run_on": {
+     "frequency": "trace",
+     "span_names": null,
+     "span_types": null
+    },
+    "slug": "custom_conditional_rLLODurFz7",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-11T18:27:04.344127Z"
+   },
+   {
+    "created_at": "2026-10-10T10:52:25.586734Z",
+    "description": "Flags single LLM calls costing more than $1.00",
+    "display_name": "Expensive LLM Call",
+    "group_name": "Neutral",
+    "id": "ee0d7a7e-7b8c-4e2d-a5c6-b713df40bc45",
+    "is_active": true,
+    "run_on": {
+     "frequency": "span_type",
+     "span_names": null,
+     "span_types": [
+      "LLM"
+     ]
+    },
+    "slug": "custom_conditional_QZ4y6IFxmJ",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-10T10:52:25.715876Z"
+   },
+   {
+    "created_at": "2026-10-10T10:52:25.423926Z",
+    "description": "Flags LLM calls taking longer than 30 seconds",
+    "display_name": "Slow LLM Response",
+    "group_name": "Neutral",
+    "id": "0a2fc620-95c2-440b-a191-55bb20751168",
+    "is_active": true,
+    "run_on": {
+     "frequency": "span_type",
+     "span_names": null,
+     "span_types": [
+      "LLM"
+     ]
+    },
+    "slug": "custom_conditional_R8XD0-54Fm",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-10T10:52:25.565515Z"
+   },
+   {
+    "created_at": "2026-10-10T10:52:25.252789Z",
+    "description": "Detects execution failures across any span (status = ERROR)",
+    "display_name": "Execution Failed",
+    "group_name": "Negative",
+    "id": "1715526c-52ea-4681-ae54-d918703cd32c",
+    "is_active": true,
+    "run_on": {
+     "frequency": "trace",
+     "span_names": null,
+     "span_types": null
+    },
+    "slug": "custom_conditional_i-qB7AoUY6",
+    "threshold": 0.5,
+    "type": "conditional",
+    "updated_at": "2026-10-10T10:52:25.400975Z"
+   }
+  ],
+  "total": 10
+ },
+ "source": "Neatlogs MCP",
+ "trends": [
+  {
+   "detection_name": "Trueup: command could not run (exit 2)",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "9bb116b6-5c20-4ef2-8180-d34fc76c93ae",
+    "detection_name": "Trueup: command could not run (exit 2)",
+    "end_date": "2026-10-11T19:08:20.983Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:20.983Z",
+    "total_occurrences": 0
+   }
+  },
+  {
+   "detection_name": "Trueup: fix attempt failed (retried)",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "cba66c38-9548-4ba9-b714-9238e741885d",
+    "detection_name": "Trueup: fix attempt failed (retried)",
+    "end_date": "2026-10-11T19:08:21.106Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.106Z",
+    "total_occurrences": 0
+   }
+  },
+  {
+   "detection_name": "Trueup: lead withdrawn (own false alarm)",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 2,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "c63f9e79-8527-4aa6-9acb-ea151fcd1260",
+    "detection_name": "Trueup: lead withdrawn (own false alarm)",
+    "end_date": "2026-10-11T19:08:21.223Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.223Z",
+    "total_occurrences": 2
+   }
+  },
+  {
+   "detection_name": "Trueup: command could not run",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "960b5d1e-6c42-4244-b785-4dab8ba7654f",
+    "detection_name": "Trueup: command could not run",
+    "end_date": "2026-10-11T19:08:21.337Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.337Z",
+    "total_occurrences": 0
+   }
+  },
+  {
+   "detection_name": "Trueup: model reply was not JSON",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 21,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "50535558-1c7a-4901-b7e7-41ab934203ff",
+    "detection_name": "Trueup: model reply was not JSON",
+    "end_date": "2026-10-11T19:08:21.454Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.454Z",
+    "total_occurrences": 21
+   }
+  },
+  {
+   "detection_name": "Trueup: fix attempt failed",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "41a85c7e-2a32-44c9-98e1-0d21cfcd9026",
+    "detection_name": "Trueup: fix attempt failed",
+    "end_date": "2026-10-11T19:08:21.563Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.563Z",
+    "total_occurrences": 0
+   }
+  },
+  {
+   "detection_name": "Trueup: checker withdrew a lead",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "3c762d1c-6f6f-4d42-a5a9-0705f90b30d4",
+    "detection_name": "Trueup: checker withdrew a lead",
+    "end_date": "2026-10-11T19:08:21.681Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.681Z",
+    "total_occurrences": 0
+   }
+  },
+  {
+   "detection_name": "Expensive LLM Call",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "ee0d7a7e-7b8c-4e2d-a5c6-b713df40bc45",
+    "detection_name": "Expensive LLM Call",
+    "end_date": "2026-10-11T19:08:21.796Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.796Z",
+    "total_occurrences": 0
+   }
+  },
+  {
+   "detection_name": "Slow LLM Response",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 1,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "0a2fc620-95c2-440b-a191-55bb20751168",
+    "detection_name": "Slow LLM Response",
+    "end_date": "2026-10-11T19:08:21.918Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:21.918Z",
+    "total_occurrences": 1
+   }
+  },
+  {
+   "detection_name": "Execution Failed",
+   "trend": {
+    "data_points": [
+     {
+      "count": 0,
+      "date": "2026-09-11T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-12T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-13T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-14T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-15T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-16T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-17T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-18T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-19T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-20T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-21T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-22T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-23T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-24T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-25T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-26T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-27T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-28T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-29T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-09-30T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-01T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-02T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-03T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-04T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-05T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-06T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-07T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-08T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-09T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-10T00:00:00Z"
+     },
+     {
+      "count": 0,
+      "date": "2026-10-11T00:00:00Z"
+     }
+    ],
+    "detection_id": "1715526c-52ea-4681-ae54-d918703cd32c",
+    "detection_name": "Execution Failed",
+    "end_date": "2026-10-11T19:08:22.028Z",
+    "granularity": "day",
+    "period": "30d",
+    "start_date": "2026-09-11T19:08:22.028Z",
+    "total_occurrences": 0
+   }
+  }
+ ]
+}

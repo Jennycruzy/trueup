@@ -41,10 +41,71 @@
  "field": "finish",
  "fixed": false,
  "found_in": [
-  "20261010T203332Z-neatlogs"
+  "20261010T203332Z-neatlogs",
+  "20261011T174813Z-neatlogs"
  ],
  "id": "neatlogs-finish-openai-responses-create-finish-missing",
  "leads": [
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-plain",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-tool",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-reasoning",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-failed",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "failed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-incomplete",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "incomplete"
+   ]
+  },
   {
    "check": "finish",
    "field": "call 1 finish",

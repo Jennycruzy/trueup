@@ -39,10 +39,21 @@
  "field": "any span",
  "fixed": false,
  "found_in": [
-  "20261010T203755Z-openllmetry"
+  "20261010T203755Z-openllmetry",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-error_recorded-openai-agents-any-span-missing",
  "leads": [
+  {
+   "check": "error_recorded",
+   "field": "any span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-bad-tool",
+   "severity": "medium",
+   "trace": "no span records an error",
+   "truth": "ERROR or exception event (ModelBehaviorError)"
+  },
   {
    "check": "error_recorded",
    "field": "any span",

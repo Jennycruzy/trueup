@@ -31,6 +31,7 @@ from trueup.runner import RAN, run_scenario, venvs
 from trueup.runner.run import child_env
 from trueup.runner.setups import LIBRARIES
 from trueup.scenarios import get
+from trueup.scenarios.proposed import from_dict as proposed_from_dict
 from trueup.state import State
 
 # The distributions that are the library itself (checked against PyPI's latest).
@@ -116,12 +117,16 @@ def other_evidence(dirs: dict[str, list[Path]], scenario: str) -> dict[str, Any]
     return out
 
 
-def run_repro(python: Path, path: Path, timeout: float = 120) -> dict[str, Any]:
+def run_repro(python: Path, path: Path, timeout: float = 120,
+              proposed_dir: Path | None = None) -> dict[str, Any]:
     text = path.read_text()
     rec: dict[str, Any] = {"path": str(path), "lines": repro.line_count(text)}
     with tempfile.TemporaryDirectory(prefix="trueup-repro-") as tmp:
         try:
-            p = subprocess.run([str(python.absolute()), str(path.resolve())], env=child_env(), cwd=tmp, capture_output=True,
+            env = child_env()
+            if proposed_dir is not None:
+                env["TRUEUP_PROPOSED_DIR"] = str(proposed_dir)
+            p = subprocess.run([str(python.absolute()), str(path.resolve())], env=env, cwd=tmp, capture_output=True,
                                text=True, timeout=timeout)
         except subprocess.TimeoutExpired:
             return {**rec, "status": "not_run", "reason": f"timed out after {timeout:.0f} s"}
@@ -135,6 +140,39 @@ def run_repro(python: Path, path: Path, timeout: float = 120) -> dict[str, Any]:
         except (ValueError, KeyError):
             continue
     return {**rec, "status": "ran", "exit": p.returncode, "leads": found}
+
+
+def scenario_for_run(root: Path, scenario_id: str, observation: dict[str, Any]) -> Any:
+    """Resolve built/committed scenarios and temporary v1/v2 proposals retained with their run evidence."""
+    try:
+        return get(scenario_id)
+    except KeyError:
+        expected = observation.get("truth", {}).get("expected")
+        for path in sorted((root / ".trueup").glob(f"**/{scenario_id}.json")):
+            try:
+                data = json.loads(path.read_text())
+            except (OSError, json.JSONDecodeError):
+                continue
+            if data.get("id") == scenario_id and data.get("expected") == expected:
+                return proposed_from_dict(data)
+        raise KeyError(f"unknown scenario {scenario_id!r}; its temporary proposal data is not available") from None
+
+
+def temporary_scenario_dir(root: Path, scenario_id: str, observation: dict[str, Any]) -> Path | None:
+    """The proposed/ directory a comparison-only scenario was loaded from, or None for normal scenarios."""
+    try:
+        get(scenario_id)
+        return None
+    except KeyError:
+        expected = observation.get("truth", {}).get("expected")
+        for path in sorted((root / ".trueup").glob(f"**/{scenario_id}.json")):
+            try:
+                data = json.loads(path.read_text())
+            except (OSError, json.JSONDecodeError):
+                continue
+            if data.get("id") == scenario_id and data.get("expected") == expected:
+                return path.parent.parent
+    return None
 
 
 def gather(root: Path, run_dir: Path, library: str, out: Callable[[str], None] = print,
@@ -171,22 +209,28 @@ def gather(root: Path, run_dir: Path, library: str, out: Callable[[str], None] =
 
     evidence = []
     for sid, (obs, ls) in by_scenario.items():
-        s = get(sid)
+        s = scenario_for_run(root, sid, obs)
+        proposal_dir = temporary_scenario_dir(root, sid, obs)
         t0 = time.monotonic()
         # Per-scenario cache, so an interrupted check resumes. Valid for the same main commit.
         cached = cache_dir / f"{sid}.json"
-        if cached.exists() and json.loads(cached.read_text()).get("commit") == commit:
-            reruns, main, rp = (json.loads(cached.read_text())[k] for k in ("reruns", "main", "repro"))
+        cached_data = json.loads(cached.read_text()) if cached.exists() else {}
+        cache_ok = (cached_data.get("commit") == commit
+                    and all(r.get("status") == RAN for r in cached_data.get("reruns", []))
+                    and cached_data.get("repro", {}).get("status") == RAN)
+        if cache_ok:
+            reruns, main, rp = (cached_data[k] for k in ("reruns", "main", "repro"))
         else:
-            reruns = [_run_record(run(py, library, sid), s.framework, library) for _ in range(2)]
+            reruns = [_run_record(run(py, library, sid, proposed_dir=proposal_dir), s.framework, library)
+                      for _ in range(2)]
             if main_py is None:
                 main = {"status": "could_not_install", "reason": main_error}
             else:
-                m = _run_record(run(main_py, library, sid), s.framework, library)
+                m = _run_record(run(main_py, library, sid, proposed_dir=proposal_dir), s.framework, library)
                 main = {**m, "commit": commit, "reason": m["reason"] and f"main run: {m['reason']}"}
             path = repro_dir / f"{library}-{sid}.py"
             path.write_text(repro.generate(library, sid, s.does))
-            rp = run_repro(py, path)
+            rp = run_repro(py, path, proposed_dir=proposal_dir)
             rp["path"] = str(path.relative_to(root.resolve()))
             cached.write_text(json.dumps({"commit": commit, "reruns": reruns, "main": main, "repro": rp},
                                          default=str))

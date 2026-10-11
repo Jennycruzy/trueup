@@ -97,6 +97,9 @@ def build_parser() -> argparse.ArgumentParser:
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("doctor", help="check the local setup")
     sub.add_parser("bundle", help="write the evidence bundle evidence/ from .trueup/runs, fixes/ and upstream/")
+    ev = sub.add_parser("evidence", help="collect external evidence used by the bundle")
+    evsub = ev.add_subparsers(dest="evidence_command", required=True)
+    evsub.add_parser("pull", help="pull detections, analytics and fix suggestions from Neatlogs (read only)")
     dm = sub.add_parser("demo", help="show one complete before/after proof from verified evidence (offline)")
     dm.add_argument("--evidence", type=Path, default=Path("evidence"), help="bundle dir (default evidence)")
     dm.add_argument("--finding", default=None, help="finding id (default: the featured OpenInference proof)")
@@ -137,6 +140,8 @@ def build_parser() -> argparse.ArgumentParser:
     au.add_argument("--provider", choices=("openai", "anthropic"),
                     help="provider used by the script (required with --record)")
     au.add_argument("--upstream", help="provider origin; defaults to TRUEUP_RECORD_UPSTREAM")
+    au.add_argument("--neatlogs", action="store_true",
+                    help="send mismatch markers to your Neatlogs project with SDK PII redaction enabled")
     fx = sub.add_parser("fix", help="draft a patch and a test for a finding, verify it, write fixes/<id>/")
     fx.add_argument("finding_id", help="a finding id from findings.json")
     fx.add_argument("--tries", type=int, default=3, help="most patch tries (default 3)")
@@ -186,6 +191,16 @@ def dispatch(args: argparse.Namespace) -> int:
             return EXIT_OK
 
         return traced_worker_command("bundle", "evidence", "trueup-reporter", bundle_body)
+    if args.command == "evidence":
+        from trueup.neatlogs_evidence import pull
+        from trueup.neatlogs_read import NeatlogsReadError
+
+        try:
+            pull(Path.cwd())
+        except (NeatlogsReadError, OSError, ValueError, json.JSONDecodeError) as e:
+            print(f"trueup evidence pull: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        return EXIT_OK
     if args.command == "demo":
         from trueup.demo import DEFAULT_FINDING, DemoError, demo
         from trueup.evidence import VerifyFailed
@@ -285,13 +300,14 @@ def dispatch(args: argparse.Namespace) -> int:
             try:
                 _, results = audit(Path.cwd(), args.library, args.script, run_id=run_id,
                                    record_provider=args.provider if args.record else None,
-                                   upstream=args.upstream or os.environ.get("TRUEUP_RECORD_UPSTREAM"), cases=args.cases)
+                                   upstream=args.upstream or os.environ.get("TRUEUP_RECORD_UPSTREAM"), cases=args.cases,
+                                   neatlogs=args.neatlogs)
             except ValueError as error:
                 print(f"trueup audit: {error}", file=sys.stderr)
                 return EXIT_ERROR
             return exit_code(results)
 
-        return tracing.run_traced(run_id, args.library, "audit", audit_body)
+        return tracing.run_traced(run_id, args.library, "audit", audit_body, pii_enabled=args.neatlogs)
     if args.command == "check":
         from trueup import tracing
         from trueup.check import check

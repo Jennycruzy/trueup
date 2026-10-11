@@ -43,6 +43,18 @@ The evidence bundle currently measures planner/fixer model spend; Trueup should 
 cost per audit before offering unlimited checks. Gross margin should be evaluated per paying team at its included
 check allowance.
 
+Measured model cost from Trueup's verified v1/v2 evidence:
+
+| Work | Measured list-price cost | Worker traces opened |
+|---|---:|---:|
+| Planner v1, two runs | $0.21 | 2 (one per run) |
+| Planner v2, two runs | $0.21 | 2 (one per run) |
+| OpenInference fixer v1, one run | $0.53 | 6 |
+| OpenInference fixer v2, one run | $0.22 | 6 |
+
+The model key's total reported spend after the measured build session was **$7.28**. These are observed build
+costs, not proposed customer prices. Compute, storage, support, and repeated team usage still need measurement.
+
 The cfo.ai forecast uses an illustrative **$150,000 starting cash balance**. This is a hypothetical planning input,
 not a statement of Trueup's actual cash.
 

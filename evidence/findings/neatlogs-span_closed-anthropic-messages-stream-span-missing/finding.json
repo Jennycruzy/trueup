@@ -1,0 +1,82 @@
+{
+ "check": "span_closed",
+ "code_path": "anthropic messages stream",
+ "dedupe": {
+  "links": [
+   "https://github.com/neatlogs/neatlogs/issues/174"
+  ],
+  "matched": [
+   {
+    "state": "open",
+    "title": "anthropic messages.stream() that fails at open never ends its span (no span exported)",
+    "url": "https://github.com/neatlogs/neatlogs/issues/174"
+   }
+  ],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-11T19:14:29+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "anthropic span not ended stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-11T19:14:32+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "span not ended stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   }
+  ],
+  "status": "already known"
+ },
+ "example": {
+  "check": "span_closed",
+  "field": "call 1 span",
+  "kind": "lead",
+  "library": "neatlogs",
+  "scenario": "p-an-529-stream",
+  "severity": "high",
+  "trace": "no span",
+  "truth": "ended and exported (http_error)"
+ },
+ "example_run": "20261011T013836Z-neatlogs-proposed",
+ "field": "span",
+ "fixed": false,
+ "found_in": [
+  "20261011T013836Z-neatlogs-proposed"
+ ],
+ "id": "neatlogs-span_closed-anthropic-messages-stream-span-missing",
+ "leads": [
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "p-an-529-stream",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (http_error)"
+  }
+ ],
+ "library": "neatlogs",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main 202f8776ea",
+  "recommended_setup": "neatlogs.init(instrumentations=<README keys>); framework none",
+  "reference": "OTel trace API: every started span must be ended (Span.End) to be exported",
+  "repro": ".trueup/runs/20261011T013836Z-neatlogs-proposed/repros/neatlogs-p-an-529-stream.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "p-an-529-stream"
+ ],
+ "severity": "high",
+ "title": "neatlogs, anthropic messages stream: span not recorded",
+ "trace": "missing",
+ "upstream": null
+}

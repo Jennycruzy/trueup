@@ -39,15 +39,34 @@ def _last_line(text: str) -> str:
     return lines[-1].strip() if lines else "no output"
 
 
-def run_scenario(python: Path, library: str, scenario_id: str, timeout: float = 90) -> dict[str, Any]:
+def run_scenario(python: Path, library: str, scenario_id: str, timeout: float = 90,
+                 proposed_dir: Path | None = None) -> dict[str, Any]:
     """Returns {scenario, library, status, reason, seconds, observation}."""
     try:
-        scenario = get(scenario_id)
+        if proposed_dir is None:
+            scenario = get(scenario_id)
+        else:
+            from trueup.scenarios.proposed import find
+
+            old = os.environ.get("TRUEUP_PROPOSED_DIR")
+            os.environ["TRUEUP_PROPOSED_DIR"] = str(proposed_dir)
+            try:
+                scenario = find(scenario_id)
+            finally:
+                if old is None:
+                    os.environ.pop("TRUEUP_PROPOSED_DIR", None)
+                else:
+                    os.environ["TRUEUP_PROPOSED_DIR"] = old
+            if scenario is None:
+                raise KeyError(f"unknown scenario {scenario_id!r}")
     except KeyError as e:
         return not_run(scenario_id, library, str(e))
     if scenario.status != BUILT:
         return not_run(scenario_id, library, f"scenario is {scenario.status}")
-    return _run_child(python, library, scenario_id, [library, scenario_id], timeout)
+    env = child_env()
+    if proposed_dir is not None:
+        env["TRUEUP_PROPOSED_DIR"] = str(proposed_dir)
+    return _run_child(python, library, scenario_id, [library, scenario_id], timeout, env)
 
 
 def run_audit(python: Path, library: str, script: Path, label: str, overrides: dict[str, str],

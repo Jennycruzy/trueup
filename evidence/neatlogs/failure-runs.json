@@ -1,0 +1,16 @@
+{
+ "source": "Neatlogs MCP read-back",
+ "runs": [
+  {
+   "story": "v2 fixer try 1 failed verification and try 2 passed",
+   "session_id": "20261011T014344Z-fix-openinference",
+   "failed_try_verifier_trace_id": "c039eb266bd9aa8f3c0d856b32cbc33a",
+   "passed_try_verifier_trace_id": "2268109cee7503a2a3b56b546ea7a47a"
+  },
+  {
+   "story": "checker withdrew two leads on latest-and-main",
+   "session_id": "20261011T184318Z-check-openllmetry",
+   "checker_trace_id": "839ae73860ddabecafd0b45e3b0b3334"
+  }
+ ]
+}

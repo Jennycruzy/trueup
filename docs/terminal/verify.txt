@@ -1,0 +1,9 @@
+$ uv run trueup verify
+sha256: 179 files checked, 0 problem(s)
+comparer re-run: 32 findings
+findings: 32 (high 15, medium 17, low 0)
+  neatlogs: 17 (high 6, medium 11, low 0)
+  openinference: 6 (high 3, medium 3, low 0)
+  openllmetry: 9 (high 6, medium 3, low 0)
+fixes proven: 3 of 3
+verify: OK (every sha256 matches; every number recomputed)

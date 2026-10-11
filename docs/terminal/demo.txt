@@ -1,0 +1,9 @@
+$ uv run trueup demo
+Trueup demo (offline, verified evidence)
+finding: openinference, openai-agents: top-level span status is OK [high]
+1. Reality: ERROR (app raised InternalServerError)
+2. Recorded trace: OK
+3. Confirmed: the mismatch reproduced across 5 scenarios
+4. Repaired: verified patch c364180e5be5
+5. Proven: 19 leads before -> 14 after; 0 new mismatches
+result: PASS

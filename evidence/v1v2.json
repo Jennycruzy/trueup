@@ -84,6 +84,24 @@
     "span status",
     "anthropic messages stream",
     "OK, no exception event"
+   ],
+   [
+    "run_status",
+    "top-level span status",
+    "openai responses stream",
+    "OK"
+   ],
+   [
+    "span_closed",
+    "span",
+    "anthropic messages stream",
+    "missing"
+   ],
+   [
+    "error_recorded",
+    "any span",
+    "openai responses stream",
+    "missing"
    ]
   ],
   "openinference": [

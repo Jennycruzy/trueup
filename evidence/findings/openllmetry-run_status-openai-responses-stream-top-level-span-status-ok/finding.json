@@ -39,10 +39,21 @@
  "field": "top-level span status",
  "fixed": false,
  "found_in": [
-  "20261010T203755Z-openllmetry"
+  "20261010T203755Z-openllmetry",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-run_status-openai-responses-stream-top-level-span-status-ok",
  "leads": [
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "oa-resp-stream-error-event",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised RuntimeError)"
+  },
   {
    "check": "run_status",
    "field": "top-level span status",

@@ -54,6 +54,18 @@ def test_a_lead_exits_1(tmp_path):
     assert exit_code(results) == EXIT_MISMATCH
 
 
+def test_neatlogs_audit_emits_one_redacted_marker_per_mismatch(tmp_path, monkeypatch):
+    marks = []
+    monkeypatch.setattr("trueup.audit.tracing.mark", lambda name, **attrs: marks.append((name, attrs)))
+    script = tmp_path / "agent.py"
+    script.write_text("def main(): pass\n")
+    audit(tmp_path, "openinference", script, ensure=lambda *_: Path("/py"),
+          run=stub([], bad="chat-tools"), out=lambda _: None, neatlogs=True)
+    assert marks
+    assert all(name == "Trueup mismatch" for name, _ in marks)
+    assert all(set(attrs) == {"scenario", "check", "field", "severity"} for _, attrs in marks)
+
+
 def test_no_provider_call_could_not_run(tmp_path):
     _, results = go(tmp_path, stub([], calls=0))
     assert [r["status"] for r in results] == [NOT_RUN] and "no provider call" in results[0]["reason"]

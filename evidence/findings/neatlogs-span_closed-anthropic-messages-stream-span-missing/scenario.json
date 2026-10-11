@@ -1,0 +1,18 @@
+{
+ "api": "messages",
+ "app": "an_stream_helper",
+ "does": "streams a reply using messages.stream helper",
+ "expected": {
+  "calls": 1,
+  "exception": "OverloadedError",
+  "fake": [
+   "http_error"
+  ],
+  "outcome": "exception"
+ },
+ "framework": "none",
+ "id": "p-an-529-stream",
+ "model": "anth-529",
+ "provider": "anthropic",
+ "status": "built"
+}

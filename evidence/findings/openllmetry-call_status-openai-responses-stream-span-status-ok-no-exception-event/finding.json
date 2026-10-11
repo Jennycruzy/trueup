@@ -39,10 +39,21 @@
  "field": "span status",
  "fixed": false,
  "found_in": [
-  "20261010T203755Z-openllmetry"
+  "20261010T203755Z-openllmetry",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-call_status-openai-responses-stream-span-status-ok-no-exception-event",
  "leads": [
+  {
+   "check": "call_status",
+   "field": "call 1 span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "oa-resp-stream-error-event",
+   "severity": "medium",
+   "trace": "OK, no exception event",
+   "truth": "ERROR with exception event (error_event)"
+  },
   {
    "check": "call_status",
    "field": "call 1 span status",

@@ -39,10 +39,21 @@
  "field": "output text",
  "fixed": false,
  "found_in": [
-  "20261010T203332Z-neatlogs"
+  "20261010T203332Z-neatlogs",
+  "20261011T174813Z-neatlogs"
  ],
  "id": "neatlogs-output-openai-chat-create-output-text-missing",
  "leads": [
+  {
+   "check": "output",
+   "field": "call 1 output text",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-chat-refusal",
+   "severity": "medium",
+   "trace": null,
+   "truth": "I can't help with that."
+  },
   {
    "check": "output",
    "field": "call 1 output text",

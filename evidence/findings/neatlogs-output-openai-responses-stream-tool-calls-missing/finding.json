@@ -58,10 +58,26 @@
  "field": "tool calls",
  "fixed": false,
  "found_in": [
-  "20261010T203332Z-neatlogs"
+  "20261010T203332Z-neatlogs",
+  "20261011T174813Z-neatlogs"
  ],
  "id": "neatlogs-output-openai-responses-stream-tool-calls-missing",
  "leads": [
+  {
+   "check": "output",
+   "field": "call 1 tool calls",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-stream-tool",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    [
+     "get_weather",
+     "{\"city\":\"Lagos\"}"
+    ]
+   ]
+  },
   {
    "check": "output",
    "field": "call 1 tool calls",

@@ -1,0 +1,8 @@
+$ uv run trueup sweep openllmetry --case ag-run
+preparing venv for openllmetry
+ag-run  ran  app ok; fake calls 2; spans 7
+
+scenario  check       expected               actual  severity
+--------  ----------  ---------------------  ------  --------
+ag-run    call_count  2 (provider requests)  4       HIGH
+leads: 1 (high 1, medium 0, low 0)  notes: 0

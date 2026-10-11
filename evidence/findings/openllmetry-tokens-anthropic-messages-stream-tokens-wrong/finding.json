@@ -71,10 +71,75 @@
  "field": "tokens",
  "fixed": false,
  "found_in": [
-  "20261010T203755Z-openllmetry"
+  "20261010T203755Z-openllmetry",
+  "20261011T180637Z-openllmetry"
  ],
  "id": "openllmetry-tokens-anthropic-messages-stream-tokens-wrong",
  "leads": [
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-helper",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-thinking",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-tools",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-create-stream",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
   {
    "check": "tokens",
    "field": "call 1 tokens",

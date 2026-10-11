@@ -1,0 +1,60 @@
+{
+ "app": {
+  "exception_module": "anthropic",
+  "exception_type": "OverloadedError",
+  "message": "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}",
+  "outcome": "exception",
+  "seconds": 0.062
+ },
+ "calls": 1,
+ "exception": "OverloadedError",
+ "expected": {
+  "calls": 1,
+  "exception": "OverloadedError",
+  "fake": [
+   "http_error"
+  ],
+  "outcome": "exception"
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "http_error"
+ ],
+ "fake_log": [
+  {
+   "api": "anthropic.messages",
+   "finish": [],
+   "include_usage": false,
+   "n": null,
+   "outcome": "http_error",
+   "path": "/v1/messages",
+   "response_id": null,
+   "scenario": "anth-529",
+   "seq": 1,
+   "status_code": 529,
+   "stream": true,
+   "text": [],
+   "tool_calls": [],
+   "usage": null,
+   "usage_sent": false
+  }
+ ],
+ "finish": [
+  []
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "exception",
+ "response_ids": [
+  null
+ ],
+ "scenario": "p-an-529-stream",
+ "tokens": [
+  null
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

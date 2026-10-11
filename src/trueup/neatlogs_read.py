@@ -17,7 +17,12 @@ from typing import Any
 import httpx
 
 MCP_URL = "https://ingest.neatlogs.com/mcp"
-READ_TOOLS = ("ping", "whoami", "search_traces", "get_trace_context")
+READ_TOOLS = (
+    "ping", "whoami", "search_traces", "get_trace_context", "get_trace_evaluations",
+    "list_detections", "get_detection_trend", "get_project_analytics", "get_detection_capabilities",
+    "get_detection_status", "list_detection_groups", "preview_detection", "triage_list", "triage_get",
+    "triage_get_investigation", "triage_list_steps", "triage_list_versions", "triage_get_version",
+)
 
 
 class NeatlogsReadError(RuntimeError):
@@ -76,6 +81,10 @@ class Reader:
             return json.loads(texts[0]) if len(texts) == 1 else [json.loads(t) for t in texts]
         except (json.JSONDecodeError, IndexError):
             return texts
+
+    def tools(self) -> list[dict[str, Any]]:
+        """Return the server's live tool catalogue; useful when Neatlogs adds read APIs."""
+        return self._post("tools/list", {}).get("tools", [])
 
 
 # Field projection on search_traces and get_trace_context answered "not_enabled" (NL-1923, NL-1924

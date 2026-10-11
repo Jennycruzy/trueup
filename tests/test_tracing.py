@@ -20,6 +20,8 @@ FAKE_NEATLOGS = textwrap.dedent('''
     def flush(*a, **k):
         _w("flush")
         return True
+    def shutdown(*a, **k):
+        _w("shutdown")
     @contextlib.contextmanager
     def trace(name, **kw):
         _w("trace " + name + " session=" + kw["session_id"] + " lib=" + kw["trueup.library"])
@@ -36,7 +38,7 @@ def fake_neatlogs(tmp_path, monkeypatch):
     monkeypatch.delitem(sys.modules, "neatlogs", raising=False)
     monkeypatch.setenv("NEATLOGS_API_KEY", "nl-secret")
     yield log
-    tracing._state.update(active=False, flushed=True)
+    tracing._state.update(active=False, flushed=True, closed=True)
 
 
 def test_without_key_runs_untraced_and_says_so_once(monkeypatch):
@@ -62,6 +64,7 @@ def test_one_session_tags_and_worker_names(fake_neatlogs):
     tracing.flush()
     log = fake_neatlogs.read_text().splitlines()
     assert log[0].startswith("init api_key,") and "run_id:r1 library:openllmetry trueup:" in log[0]
+    assert "pii_enabled" in log[0]
     assert log[0].endswith(" openai")
     assert log[1:] == ["trace trueup-planner session=r1 lib=openllmetry",
                        "trace trueup-runner session=r1 lib=openllmetry",
@@ -77,7 +80,7 @@ def test_flush_on_crash_in_process(fake_neatlogs):
         raise RuntimeError("worker crashed")
     with pytest.raises(RuntimeError):
         tracing.run_traced("r2", "neatlogs", "plan", body, out=lambda s: None)
-    assert fake_neatlogs.read_text().splitlines()[-1] == "flush"
+    assert fake_neatlogs.read_text().splitlines()[-2:] == ["flush", "shutdown"]
 
 
 def test_flush_records_failed_delivery(fake_neatlogs, monkeypatch, capsys):
@@ -100,7 +103,7 @@ def test_flush_on_uncaught_crash_in_subprocess(tmp_path):
            "NEATLOGS_API_KEY": "nl-secret"}
     p = subprocess.run([sys.executable, "-c", code], env=env, capture_output=True, text=True)
     assert p.returncode == 1 and "ZeroDivisionError" in p.stderr
-    assert log.read_text().splitlines()[-1] == "flush"  # atexit flushed after the crash
+    assert log.read_text().splitlines()[-2:] == ["flush", "shutdown"]  # atexit finalized after the crash
     assert "nl-secret" not in p.stdout + p.stderr
 
 
