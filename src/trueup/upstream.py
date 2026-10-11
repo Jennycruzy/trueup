@@ -226,10 +226,10 @@ def upstream(root: Path, finding_id: str, out: Any = print) -> Path:
     data = {"finding": finding_id, "repro_lines": n, "before": before, "after": after, "after_note": why,
             "environment": env, "boundary": boundary(finding, fix_dir), "fixed": bool(fix and fix.get("fixed")),
             "posted": False}
-    (up_dir / "repro.py").write_text(script)
-    (up_dir / "repro-output.json").write_text(json.dumps(data, indent=1))
-    (up_dir / "issue.md").write_text(issue_text(root, finding, target, data, fix_dir))
-    (up_dir / "pr.md").write_text(pr_text(finding, target, data, fix_dir, fix))
+    loc.save((up_dir / "repro.py"), script)
+    loc.save((up_dir / "repro-output.json"), json.dumps(data, indent=1))
+    loc.save((up_dir / "issue.md"), issue_text(root, finding, target, data, fix_dir))
+    loc.save((up_dir / "pr.md"), pr_text(finding, target, data, fix_dir, fix))
     out(f"repro ({n} lines) before: {before['stdout'] or before['stderr'][-200:]}")
     if after:
         out(f"repro after the patch: {after['stdout'] or after['stderr'][-200:]}")

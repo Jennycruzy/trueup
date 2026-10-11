@@ -4,423 +4,3343 @@
  "clone": ".trueup/clones/openllmetry",
  "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
  "graph": {
-  "used": false,
+  "used": true,
   "commands": [
    {
-    "cmd": "entire agent-help",
+    "cmd": "entire graph capabilities --json",
     "exit": 0,
-    "output": "Entire's CLI is the source of truth for its own usage. Do not guess flags or\nsubcommands \u2014 read them from this command. You are already inside the repo:\nentire auto-detects it from the git origin remote, so never ask the user for the\nrepo name. Pass --repo only to target a DIFFERENT repo.\n\nCurrent repo: gh/traceloop/openllmetry  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nWhen to use entire \u2014 the commands that bear on the work:\n  checkpoint  Inspect and search checkpoints\n                read-only except: explain\n  search      Search checkpoints, commits, and sessions using semantic and keyword matching\n                read-only\n  session     Manage agent sessions tracked by Entire\n                read-only except: adopt, attach, resume, stop\n  status      Show Entire status\n                read-only\n  why         Show why a line exists\n                read-only\n\nAlso available (entire agent-help <command> for any of these):\n  read-only, safe to run:\n    activity \u00b7 labs \u00b7 recap \u00b7 version\n  when the task needs them:\n    api \u00b7 dispatch \u00b7 doctor\n  the user's \u2014 suggest, don't run:\n    agent \u00b7 auth \u00b7 clean \u00b7 cluster \u00b7 configure \u00b7 disable \u00b7 enable\n    login \u00b7 logout \u00b7 org \u00b7 plugin \u00b7 project \u00b7 repo\n\nDrill in for exact, currently-installed flags:  entire agent-help <command>  (e.g. entire agent-help checkpoint)\nAdd --json for structured output."
+    "output": {
+     "schema_version": "1.1",
+     "python_semantic": true,
+     "python_relations": [
+      "ASYNC_CALLS",
+      "CALLS",
+      "CONSTRUCTS",
+      "CONTAINS",
+      "DATA_FLOWS",
+      "DEFINES",
+      "EXTENDS",
+      "HANDLES_GRAPHQL",
+      "IMPORTS",
+      "INHERITS",
+      "OVERRIDES",
+      "PARAM_TYPE",
+      "RETURNS_TYPE",
+      "USES_TYPE"
+     ],
+     "network": {
+      "grammar_download": false,
+      "hosted_models": false,
+      "network_discovery": false,
+      "remote_code_fetch": false,
+      "remote_embeddings": false,
+      "telemetry_upload": false
+     }
+    }
    },
    {
-    "cmd": "entire agent-help labs",
+    "cmd": "entire graph search --repo packages/opentelemetry-instrumentation-openai-agents --profile full --format json --top-k 8 --query openai-agents tracing: LLM spans is 4 in the span but really 2 (provider requests) (openllmetry, openai-agents: LLM spans recorded wrong)",
     "exit": 0,
-    "output": "entire labs \u2014 Explore experimental Entire workflows\nLabs\n\nThese are newer Entire workflows we are actively refining. They are available\nto try now, but details may change based on feedback.\n\nAvailable experimental commands:\n  entire review             Run a multi-agent review against the current branch\n  entire import claude-code Import existing Claude Code transcripts as local, read-only history\n  entire tokens             Analyze experimental token usage diagnostics\n  entire tokens profile     Aggregate token usage across committed checkpoints\n  entire session tokens     Show token usage and recommendations for a session\n  entire blame              Show which lines came from Entire checkpoints\n  entire why                Show why a line exists (commit, checkpoint, prompt, session)\n  entire experts            Show agent, skill, and tool provenance for files or topics\n\nTry:\n  entire review --help\n  entire tokens --help\n  entire tokens profile --help\n  entire session tokens --help\n  entire blame --help\n  entire why --help\n  entire experts --help\n\nCurrent repo: gh/traceloop/openllmetry  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nInherited flags:\n      --context name   Act as this saved login name for this command only \u2014 including the git and agent processes it spawns \u2014 instead of the active context (entire auth contexts lists them)"
+    "output": {
+     "query": "openai-agents tracing: LLM spans is 4 in the span but really 2 (provider requests) (openllmetry, openai-agents: LLM spans recorded wrong)",
+     "repo_root": "packages/opentelemetry-instrumentation-openai-agents",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "results": [
+      {
+       "rank": 1,
+       "score": 38.5272,
+       "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+       "start_line": 335,
+       "end_line": 424,
+       "focus_line": 335,
+       "snippet_start_line": 335,
+       "snippet_end_line": 424,
+       "symbol_start_line": 335,
+       "symbol_end_line": 424,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_llm_span",
+       "symbol_name": "create_llm_span",
+       "qualified_name": "RealtimeTracingState.create_llm_span",
+       "signature": "def create_llm_span(self, completion_content: str)",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "    def create_llm_span(self, completion_content: str):\n        \"\"\"Create an LLM span pairing the first pending prompt with a completion.\"\"\"\n        prompt_data = self.pending_prompts.pop(0) if self.pending_prompts else None\n        prompt_role, prompt_content = prompt_data if prompt_data else (None, None)\n        prompt_time = self.prompt_start_time\n        self.prompt_start_time = time.time_ns() if self.pending_prompts else None\n        agent_name = self.prompt_agent_name\n        if not self.pending_prompts:\n            self.prompt_agent_name = None\n\n        parent_context = self._get_parent_context(agent_name)\n\n        agent_start = self.agent_start_times.get(agent_name) if agent_name else None\n        if agent_start and prompt_time:\n            start_time = max(agent_start, prompt_time)\n        elif agent_start:\n            start_time = agent_start\n        elif prompt_time:\n            start_time = prompt_time\n        else:\n            start_time = time.time_ns()\n\n        model_name_str = (\n            str(self.model_name) if self.model_name else \"gpt-4o-realtime-preview\"\n        )\n\n        span = self.tracer.start_span(\n            \"openai.realtime\",\n            kind=SpanKind.CLIENT,\n            context=parent_context,\n            start_time=start_time,\n            attributes={\n                GenAIAttributes.GEN_AI_OPERATION_NAME: \"realtime\",\n                GenAIAttributes.GEN_AI_PROVIDER_NAME: \"openai\",\n                GenAIAttributes.GEN_AI_REQUEST_MODEL: model_name_str,\n            },\n        )\n\n        span.set_attribute(\n            GenAIAttributes.GEN_AI_RESPONSE_MODEL, model_name_str,\n        )\n\n        if self.pending_usage:\n            if self.pending_usage.get(\"input_tokens\"):\n                span.set_attribute(\n                    GenAIAttributes.GEN_AI_USAGE_INPUT_TOKENS,\n                    self.pending_usage[\"input_tokens\"],\n                )\n            if self.pending_usage.get(\"output_tokens\"):\n                span.set_attribute(\n                    GenAIAttributes.GEN_AI_USAGE_OUTPUT_TOKENS,\n                    self.pending_usage[\"output_tokens\"],\n                )\n            if self.pending_usage.get(\"total_tokens\"):\n                span.set_attribute(\n                    SpanAttributes.GEN_AI_USAGE_TOTAL_TOKENS,\n                    self.pending_usage[\"total_tokens\"],\n                )\n            self.pending_usage = None\n\n        if should_send_prompts():\n            if prompt_content:\n                input_msg = {\n                    \"role\": prompt_role or \"user\",\n                    \"parts\": [{\"type\": \"text\", \"content\": prompt_content}],\n                }\n                span.set_attribute(\n                    GenAIAttributes.GEN_AI_INPUT_MESSAGES,\n                    json.dumps([input_msg]),\n                )\n\n            out_msg = {\n                \"role\": \"assistant\",\n                \"parts\": [{\"type\": \"text\", \"content\": completion_content}],\n                \"finish_reason\": \"\",\n            }\n            span.set_attribute(\n                GenAIAttributes.GEN_AI_OUTPUT_MESSAGES,\n                json.dumps([out_msg]),\n            )\n\n        # Realtime API does not provide finish reasons; set top-level\n        # attribute only when a meaningful value is available (consistent\n        # with _hooks.py which omits the attribute when mapped value is None).\n\n        span.set_status(Status(StatusCode.OK))\n        span.end()\n\n        self.llm_call_index += 1\n        return span"
+      },
+      {
+       "rank": 2,
+       "score": 36.1663,
+       "file_path": "tests/test_realtime_session.py",
+       "start_line": 107,
+       "end_line": 210,
+       "focus_line": 182,
+       "snippet_start_line": 182,
+       "snippet_end_line": 210,
+       "symbol_start_line": 182,
+       "symbol_end_line": 210,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:tests/test_realtime_session.py:method:TestRealtimeTracingState.test_record_completion_creates_llm_span",
+       "symbol_name": "test_record_completion_creates_llm_span",
+       "qualified_name": "TestRealtimeTracingState.test_record_completion_creates_llm_span",
+       "signature": "def test_record_completion_creates_llm_span(self, tracer, tracer_provider)",
+       "signals": [
+        "body",
+        "symbol-name",
+        "signature",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "complete-symbol"
+       ],
+       "snippet": "    def test_record_completion_creates_llm_span(self, tracer, tracer_provider):\n        \"\"\"Test that recording a completion creates a dedicated LLM span.\"\"\"\n        _, exporter = tracer_provider\n        state = RealtimeTracingState(tracer)\n        state.start_workflow_span(\"Test Agent\")\n        state.start_agent_span(\"Voice Assistant\")\n\n        # Record a prompt first, then completion\n        state.record_prompt(\"user\", \"What is the weather?\")\n        state.record_completion(\"assistant\", \"The weather is sunny.\")\n\n        # End spans to export them\n        state.end_agent_span(\"Voice Assistant\")\n        state.end_workflow_span()\n\n        # Check that an LLM span was created\n        spans = exporter.get_finished_spans()\n        llm_spans = [s for s in spans if s.name == \"openai.realtime\"]\n        assert len(llm_spans) == 1\n\n        llm_span = llm_spans[0]\n        input_msgs = json.loads(llm_span.attributes.get(\"gen_ai.input.messages\"))\n        assert input_msgs[0][\"role\"] == \"user\"\n        assert input_msgs[0][\"parts\"][0][\"type\"] == \"text\"\n        assert input_msgs[0][\"parts\"][0][\"content\"] == \"What is the weather?\"\n        output_msgs = json.loads(llm_span.attributes.get(\"gen_ai.output.messages\"))\n        assert output_msgs[0][\"role\"] == \"assistant\"\n        assert output_msgs[0][\"parts\"][0][\"type\"] == \"text\"\n        assert output_msgs[0][\"parts\"][0][\"content\"] == \"The weather is sunny.\""
+      },
+      {
+       "rank": 3,
+       "score": 38.5172,
+       "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+       "start_line": 141,
+       "end_line": 158,
+       "focus_line": 141,
+       "snippet_start_line": 141,
+       "snippet_end_line": 158,
+       "symbol_start_line": 141,
+       "symbol_end_line": 158,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState._get_parent_context",
+       "symbol_name": "_get_parent_context",
+       "qualified_name": "RealtimeTracingState._get_parent_context",
+       "signature": "def _get_parent_context(self, agent_name: Optional[str] = None)",
+       "signals": [
+        "graph:calls",
+        "graph:outgoing",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "    def _get_parent_context(self, agent_name: Optional[str] = None):\n        \"\"\"Get parent context from agent spans or workflow span.\n\n        Looks up the parent context in this order:\n        1. Specified agent_name in active agent_spans\n        2. Specified agent_name in agent_span_contexts\n        3. Current agent in agent_span_contexts\n        4. Workflow span\n        \"\"\"\n        target = agent_name or self.current_agent_name\n        if target:\n            if target in self.agent_spans:\n                return set_span_in_context(self.agent_spans[target])\n            if target in self.agent_span_contexts:\n                return self.agent_span_contexts[target]\n        if self.workflow_span:\n            return set_span_in_context(self.workflow_span)\n        return None"
+      },
+      {
+       "rank": 4,
+       "score": 34.5413,
+       "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+       "start_line": 846,
+       "end_line": 905,
+       "focus_line": 846,
+       "snippet_start_line": 846,
+       "snippet_end_line": 905,
+       "symbol_start_line": 846,
+       "symbol_end_line": 905,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._start_agent_span",
+       "symbol_name": "_start_agent_span",
+       "qualified_name": "OpenTelemetryTracingProcessor._start_agent_span",
+       "signature": "def _start_agent_span(self, span_data, parent_context, trace_id)",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "signature",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "    def _start_agent_span(self, span_data, parent_context, trace_id):\n        \"\"\"Create an OTel span for an AgentSpanData.\n\n        Returns ``(span, name_token)``. ``name_token`` is the detach token from\n        ``set_agent_name`` (None if the SDK isn't installed); ``on_span_start``\n        keys it to the SDK span so ``on_span_end`` can detach it. Without that\n        detach the agent name sticks on the context and leaks onto later spans.\n\n        The token is returned rather than stashed on ``self`` so two agent spans\n        starting concurrently cannot clobber each other's token.\n        \"\"\"\n        agent_name = getattr(span_data, \"name\", None) or \"unknown_agent\"\n\n        name_token = set_agent_name(agent_name) if set_agent_name is not None else None\n\n        # Everything after the attach can raise (json.dumps, should_send_prompts,\n        # start_span). If it does, detach the name we just attached before letting\n        # the error propagate \u2014 otherwise @dont_throw swallows it at on_span_start\n        # and the name is stranded on the context, leaking onto later spans.\n        try:\n            handoff_parent = None\n            if trace_id:\n                handoff_key = f\"{agent_name}:{trace_id}\"\n                if parent_agent_name := self._reverse_handoffs_dict.pop(\n                    handoff_key, None\n                ):\n                    handoff_parent = parent_agent_name\n\n            attributes = {\n                SpanAttributes.TRACELOOP_SPAN_KIND: TraceloopSpanKindValues.AGENT.value,\n                GenAIAttributes.GEN_AI_AGENT_NAME: agent_name,\n                GenAIAttributes.GEN_AI_PROVIDER_NAME: \"openai\",\n                GenAIAttributes.GEN_AI_OPERATION_NAME: \"invoke_agent\",\n            }\n\n            if handoff_parent:\n                attributes[GEN_AI_HANDOFF_PARENT_AGENT] = handoff_parent\n\n            if hasattr(span_data, \"handoffs\") and span_data.handoffs:\n                handoffs_list = []\n                trace_content = should_send_prompts()\n                for handoff_agent in span_data.handoffs:\n                    handoff = {\"name\": getattr(handoff_agent, \"name\", \"unknown\")}\n                    if trace_content:\n                        handoff[\"instructions\"] = getattr(\n                            handoff_agent, \"instructions\", \"No instructions\"\n                        )\n                    handoffs_list.append(handoff)\n                attributes[OPENAI_AGENT_HANDOFFS] = json.dumps(handoffs_list)\n\n            span = self.tracer.start_span(\n                f\"{agent_name}.agent\",\n                kind=SpanKind.INTERNAL,\n                context=parent_context,\n                attributes=attributes,\n            )\n        except Exception:\n            _safe_detach(name_token)\n            raise\n        return span, name_token"
+      },
+      {
+       "rank": 5,
+       "score": 33.0033,
+       "file_path": "opentelemetry/instrumentation/openai_agents/__init__.py",
+       "start_line": 36,
+       "end_line": 77,
+       "focus_line": 39,
+       "snippet_start_line": 36,
+       "snippet_end_line": 77,
+       "symbol_start_line": 36,
+       "symbol_end_line": 77,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/__init__.py:method:OpenAIAgentsInstrumentor._instrument",
+       "symbol_name": "_instrument",
+       "qualified_name": "OpenAIAgentsInstrumentor._instrument",
+       "signature": "def _instrument(self, **kwargs) -> None",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "complete-symbol"
+       ],
+       "snippet": "    def _instrument(self, **kwargs) -> None:\n        \"\"\"Override the abstract base method and instrument openai-agents.\n\n        Args:\n            tracer_provider: An optional TracerProvider to use\n                when creating a Tracer.\n            meter_provider: An optional MeterProvider to use\n                when creating a Meter.\n\n            Additional kwargs are ignored.\n        \"\"\"\n        tracer_provider = kwargs.get(\"tracer_provider\")\n        tracer = get_tracer(__name__, __version__, tracer_provider)\n\n        meter_provider = kwargs.get(\"meter_provider\")\n        meter = get_meter(__name__, __version__, meter_provider)\n\n        if is_metrics_enabled():\n            _create_metrics(meter)\n\n        # Use hook-based approach with OpenAI Agents SDK callbacks\n        try:\n            from agents import add_trace_processor, set_trace_processors\n            from ._hooks import OpenTelemetryTracingProcessor\n\n            # Create and add our OpenTelemetry processor\n            otel_processor = OpenTelemetryTracingProcessor(tracer)\n            if self._replace_existing_processors:\n                set_trace_processors([otel_processor])\n            else:\n                add_trace_processor(otel_processor)\n\n        except Exception:\n            # Silently handle import errors - OpenAI Agents SDK may not be available\n            pass\n\n        try:\n            from ._realtime_wrappers import wrap_realtime_session\n\n            wrap_realtime_session(tracer)\n        except Exception:\n            pass",
+       "comment_focus_line": 37,
+       "body_from_reanchor": true
+      },
+      {
+       "rank": 6,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai_agents/__init__.py",
+       "start_line": 79,
+       "end_line": 85,
+       "focus_line": 79,
+       "snippet_start_line": 79,
+       "snippet_end_line": 79,
+       "kind": "method",
+       "qualified_name": "OpenAIAgentsInstrumentor._uninstrument",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def _uninstrument(self, **kwargs):"
+      },
+      {
+       "rank": 7,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+       "start_line": 197,
+       "end_line": 214,
+       "focus_line": 197,
+       "snippet_start_line": 197,
+       "snippet_end_line": 197,
+       "kind": "method",
+       "qualified_name": "RealtimeTracingState.start_tool_span",
+       "signals": [
+        "related:caller"
+       ],
+       "section": "related",
+       "snippet": "    def start_tool_span(self, tool_name: str, agent_name: Optional[str] = None):"
+      },
+      {
+       "rank": 8,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai_agents/__init__.py",
+       "start_line": 18,
+       "end_line": 31,
+       "focus_line": 18,
+       "snippet_start_line": 18,
+       "snippet_end_line": 18,
+       "kind": "method",
+       "qualified_name": "OpenAIAgentsInstrumentor.__init__",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def __init__(self, *, replace_existing_processors: bool = False) -> None:"
+      },
+      {
+       "rank": 9,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+       "start_line": 232,
+       "end_line": 256,
+       "focus_line": 232,
+       "snippet_start_line": 232,
+       "snippet_end_line": 232,
+       "kind": "method",
+       "qualified_name": "RealtimeTracingState.create_handoff_span",
+       "signals": [
+        "related:caller"
+       ],
+       "section": "related",
+       "snippet": "    def create_handoff_span(self, from_agent: str, to_agent: str):"
+      },
+      {
+       "rank": 10,
+       "score": 0,
+       "file_path": "tests/test_semconv_messages.py",
+       "start_line": 2778,
+       "end_line": 2803,
+       "focus_line": 2802,
+       "snippet_start_line": 2802,
+       "snippet_end_line": 2803,
+       "kind": "method",
+       "qualified_name": "TestRealtimeResponseMetadata.test_realtime_span_sets_response_model",
+       "signals": [
+        "related:covering-test"
+       ],
+       "section": "covering-test",
+       "snippet": "            \"Realtime LLM span should set gen_ai.response.model\"\n        )"
+      }
+     ],
+     "literal_cluster": {
+      "literal": "GEN_AI_PROVIDER_NAME",
+      "hits": [
+       {
+        "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+        "line": 684,
+        "symbol": "OpenTelemetryTracingProcessor.on_trace_start",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+        "line": 125,
+        "symbol": "RealtimeTracingState.start_workflow_span",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+        "line": 181,
+        "symbol": "RealtimeTracingState.start_agent_span",
+        "role": "CONSUMER"
+       }
+      ],
+      "hits_total": 34,
+      "files_total": 5
+     },
+     "verify_command": {
+      "command": "python -m pytest tests/test_semconv_messages.py -k test_realtime_span_sets_response_model",
+      "targets": "tests/test_semconv_messages.py",
+      "derived_from": "pyproject.toml pytest config + covering test path",
+      "tier": "narrow"
+     },
+     "coverage_note": {
+      "symbol": "create_llm_span",
+      "total": 6,
+      "peers": [
+       "test_realtime_llm_span_input_uses_parts",
+       "test_realtime_llm_span_output_uses_parts",
+       "test_realtime_does_not_fabricate_stop",
+       "test_realtime_llm_span_operation_name",
+       "test_realtime_span_sets_finish_reason_empty"
+      ],
+      "file_path": "tests/test_semconv_messages.py"
+     },
+     "stats": {
+      "query_constraints_truncated": true,
+      "files_scanned": 38,
+      "preselection_backend": "inventory",
+      "preselection_passes": 1,
+      "preselection_files_examined": 38,
+      "files_content_read_during_preselection": 0,
+      "files_content_read_during_query": 38,
+      "bytes_content_read_during_query": 1623736,
+      "files_indexed": 38,
+      "symbols_considered": 644,
+      "lexical_candidates": 779,
+      "graph_candidates": 20,
+      "caller_boosted_candidates": 82,
+      "identifier_usage_candidates": 32,
+      "same_container_neighbor_candidates": 16,
+      "same_file_bridge_candidates": 14,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 10,
+      "result_bytes": 15930,
+      "context_budget_bytes": 24576,
+      "snippets_truncated_by_budget": 4,
+      "complete_symbol_snippets": 5,
+      "locator_snippets": 3,
+      "doc_reanchored_hits": 1,
+      "related_sites": 4,
+      "covering_tests": 1,
+      "literal_cluster_bytes": 553,
+      "literal_cluster_hits": 3,
+      "verify_command_bytes": 412,
+      "verify_tier": "narrow",
+      "context_block_bytes": 965,
+      "index_cache_hit": true,
+      "index_latency_ms": 88,
+      "query_latency_ms": 385,
+      "total_latency_ms": 501,
+      "search_latency_ms": 501,
+      "preselect_latency_ms": 27
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 18,
+        "symbols": 545
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 37
+       },
+       "YAML": {
+        "files": 14,
+        "symbols": 28
+       }
+      },
+      "relations": {
+       "CALLS": 933,
+       "CONFIGURES": 61,
+       "CONSTRUCTS": 176,
+       "CONTAINS": 366,
+       "DATA_FLOWS": 88,
+       "DEFINES": 644,
+       "EXTENDS": 13,
+       "HANDLES_TOOL": 10,
+       "IMPORTS": 185,
+       "INHERITS": 13,
+       "OVERRIDES": 3,
+       "PARAM_TYPE": 4,
+       "RETURNS_TYPE": 4,
+       "SIMILAR_TO": 34,
+       "TESTS": 9,
+       "USES_TYPE": 8
+      }
+     }
+    }
    },
    {
-    "cmd": "entire graph --help",
-    "exit": 1,
-    "output": "the entire-graph plugin is not installed; run 'entire plugin install graph' and retry"
+    "cmd": "entire graph search --repo packages/opentelemetry-instrumentation-openai --profile full --format json --top-k 8 --query openai-agents tracing: LLM spans is 4 in the span but really 2 (provider requests) (openllmetry, openai-agents: LLM spans recorded wrong)",
+    "exit": 0,
+    "output": {
+     "query": "openai-agents tracing: LLM spans is 4 in the span but really 2 (provider requests) (openllmetry, openai-agents: LLM spans recorded wrong)",
+     "repo_root": "packages/opentelemetry-instrumentation-openai",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "results": [
+      {
+       "rank": 1,
+       "score": 31.3923,
+       "file_path": "opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+       "start_line": 221,
+       "end_line": 237,
+       "focus_line": 221,
+       "snippet_start_line": 221,
+       "snippet_end_line": 237,
+       "symbol_start_line": 221,
+       "symbol_end_line": 237,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai/v1/responses_wrappers.py:function:_record_traced_data",
+       "symbol_name": "_record_traced_data",
+       "qualified_name": "_record_traced_data",
+       "signature": "def _record_traced_data(response_id: str, traced_data: TracedData, finished: bool) -> bool",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "def _record_traced_data(response_id: str, traced_data: TracedData, finished: bool) -> bool:\n    \"\"\"Store an unfinished response, or mark it finished and drop its entry, in one locked step.\n\n    Returns True only for the first caller finishing response_id, which then emits its span.\n    Doing the write under the same lock stops a slower poll restoring stale data after completion.\n    \"\"\"\n    with _completed_response_ids_lock:\n        if response_id in _completed_response_ids:\n            _completed_response_ids.move_to_end(response_id)\n            responses.pop(response_id, None)\n            return False\n        if not finished:\n            responses[response_id] = traced_data\n            return False\n        _mark_response_completed(response_id)\n        responses.pop(response_id, None)\n        return True"
+      },
+      {
+       "rank": 2,
+       "score": 28.0113,
+       "file_path": "opentelemetry/instrumentation/openai/shared/__init__.py",
+       "start_line": 35,
+       "end_line": 42,
+       "focus_line": 35,
+       "snippet_start_line": 35,
+       "snippet_end_line": 42,
+       "symbol_start_line": 35,
+       "symbol_end_line": 42,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai/shared/__init__.py:function:_set_span_attribute",
+       "symbol_name": "_set_span_attribute",
+       "qualified_name": "_set_span_attribute",
+       "signature": "def _set_span_attribute(span, name, value)",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "def _set_span_attribute(span, name, value):\n    if value is None or value == \"\":\n        return\n\n    if hasattr(openai, \"NOT_GIVEN\") and value == openai.NOT_GIVEN:\n        return\n\n    span.set_attribute(name, value)"
+      },
+      {
+       "rank": 3,
+       "score": 26.9869,
+       "file_path": "opentelemetry/instrumentation/openai/v1/realtime_wrappers.py",
+       "start_line": 221,
+       "end_line": 308,
+       "focus_line": 274,
+       "snippet_start_line": 259,
+       "snippet_end_line": 308,
+       "symbol_start_line": 259,
+       "symbol_end_line": 308,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai/v1/realtime_wrappers.py:method:RealtimeEventProcessor.start_response_span",
+       "symbol_name": "start_response_span",
+       "qualified_name": "RealtimeEventProcessor.start_response_span",
+       "signature": "def start_response_span(self, end_existing: bool = False, set_input: bool = False)",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "    def start_response_span(self, end_existing: bool = False, set_input: bool = False):\n        \"\"\"Start a new response span.\"\"\"\n        if self._state.response_span is not None:\n            if end_existing:\n                # End any existing response span with OK status\n                self._state.response_span.set_status(Status(StatusCode.OK))\n                self._state.response_span.end()\n                self.reset_response_state()\n            else:\n                return  # Don't start a new span if one exists and end_existing=False\n\n        self._state.response_start_time = time.time_ns()\n\n        ctx = self._state.trace_context or context_api.get_current()\n\n        self._state.response_span = self._state.tracer.start_span(\n            SPAN_NAME_RESPONSE,\n            kind=SpanKind.CLIENT,\n            start_time=self._state.response_start_time,\n            context=ctx,\n        )\n\n        if self._state.response_span.is_recording():\n            _set_span_attribute(\n                self._state.response_span,\n                GenAIAttributes.GEN_AI_PROVIDER_NAME,\n                \"openai\",\n            )\n            _set_span_attribute(\n                self._state.response_span,\n                GenAIAttributes.GEN_AI_REQUEST_MODEL,\n                self._state.model,\n            )\n            _set_span_attribute(\n                self._state.response_span,\n                GenAIAttributes.GEN_AI_OPERATION_NAME,\n                GenAiOperationNameValues.CHAT.value,\n            )\n\n            # Set input if available and requested\n            if set_input and should_send_prompts() and self._state.input_text:\n                input_messages = [{\n                    \"role\": \"user\",\n                    \"parts\": [{\"type\": \"text\", \"content\": self._state.input_text}],\n                }]\n                _set_span_attribute(\n                    self._state.response_span,\n                    GenAIAttributes.GEN_AI_INPUT_MESSAGES,\n                    json.dumps(input_messages),\n                )"
+      },
+      {
+       "rank": 4,
+       "score": 28.2531,
+       "file_path": "opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+       "start_line": 697,
+       "end_line": 701,
+       "focus_line": 699,
+       "snippet_start_line": 697,
+       "snippet_end_line": 701,
+       "symbol_start_line": 539,
+       "symbol_end_line": 712,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai/v1/responses_wrappers.py:function:responses_get_or_create_wrapper",
+       "symbol_name": "responses_get_or_create_wrapper",
+       "qualified_name": "responses_get_or_create_wrapper",
+       "signature": "def responses_get_or_create_wrapper(tracer: Tracer, wrapped, instance, args, kwargs)",
+       "signals": [
+        "path",
+        "body",
+        "signature",
+        "symbol-usage"
+       ],
+       "snippet": "        return response\n\n    if _record_traced_data(parsed_response.id, traced_data, parsed_response.status in _TERMINAL_STATUSES):\n        # Restore the original trace context to maintain trace continuity\n        ctx = traced_data.trace_context if traced_data.trace_context else context_api.get_current()"
+      },
+      {
+       "rank": 5,
+       "score": 24.6351,
+       "file_path": "opentelemetry/instrumentation/openai/shared/chat_wrappers.py",
+       "start_line": 272,
+       "end_line": 301,
+       "focus_line": 293,
+       "snippet_start_line": 272,
+       "snippet_end_line": 301,
+       "symbol_start_line": 272,
+       "symbol_end_line": 301,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai/shared/chat_wrappers.py:function:_handle_request",
+       "symbol_name": "_handle_request",
+       "qualified_name": "_handle_request",
+       "signature": "async def _handle_request(span, kwargs, instance)",
+       "signals": [
+        "path",
+        "body",
+        "signature",
+        "symbol-name",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "async def _handle_request(span, kwargs, instance):\n    _set_request_attributes(span, kwargs, instance)\n    _set_client_attributes(span, instance)\n    if should_emit_events():\n        for message in kwargs.get(\"messages\", []):\n            emit_event(\n                MessageEvent(\n                    content=message.get(\"content\"),\n                    role=message.get(\"role\"),\n                    tool_calls=_parse_tool_calls(\n                        message.get(\"tool_calls\", None)),\n                )\n            )\n    else:\n        if should_send_prompts():\n            await _set_prompts(span, kwargs.get(\"messages\"))\n            if kwargs.get(\"functions\"):\n                _set_functions_attributes(span, kwargs.get(\"functions\"))\n            elif kwargs.get(\"tools\"):\n                set_tools_attributes(span, kwargs.get(\"tools\"))\n    if Config.enable_trace_context_propagation:\n        propagate_trace_context(span, kwargs)\n\n    # Reasoning request attributes\n    reasoning_effort = kwargs.get(\"reasoning_effort\")\n    _set_span_attribute(\n        span,\n        SpanAttributes.GEN_AI_REQUEST_REASONING_EFFORT,\n        reasoning_effort,\n    )"
+      },
+      {
+       "rank": 6,
+       "score": 23.2503,
+       "file_path": "opentelemetry/instrumentation/openai/shared/completion_wrappers.py",
+       "start_line": 7,
+       "end_line": 11,
+       "focus_line": 9,
+       "snippet_start_line": 8,
+       "snippet_end_line": 9,
+       "language": "Python",
+       "signals": [
+        "path",
+        "body",
+        "symbol-usage"
+       ],
+       "snippet": "    _set_functions_attributes,\n    _set_request_attributes,"
+      },
+      {
+       "rank": 7,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai/v1/realtime_wrappers.py",
+       "start_line": 171,
+       "end_line": 246,
+       "focus_line": 171,
+       "snippet_start_line": 171,
+       "snippet_end_line": 171,
+       "kind": "method",
+       "qualified_name": "RealtimeEventProcessor.handle_response_done",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def handle_response_done(self, event):"
+      },
+      {
+       "rank": 8,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+       "start_line": 1113,
+       "end_line": 1158,
+       "focus_line": 1113,
+       "snippet_start_line": 1113,
+       "snippet_end_line": 1113,
+       "kind": "method",
+       "qualified_name": "ResponseStream._process_complete_response",
+       "signals": [
+        "related:caller"
+       ],
+       "section": "related",
+       "snippet": "    def _process_complete_response(self):"
+      },
+      {
+       "rank": 9,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai/v1/realtime_wrappers.py",
+       "start_line": 140,
+       "end_line": 147,
+       "focus_line": 140,
+       "snippet_start_line": 140,
+       "snippet_end_line": 140,
+       "kind": "method",
+       "qualified_name": "RealtimeEventProcessor.handle_response_created",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def handle_response_created(self, event, start_span_if_none: bool = False):"
+      },
+      {
+       "rank": 10,
+       "score": 0,
+       "file_path": "opentelemetry/instrumentation/openai/shared/__init__.py",
+       "start_line": 45,
+       "end_line": 60,
+       "focus_line": 45,
+       "snippet_start_line": 45,
+       "snippet_end_line": 45,
+       "kind": "function",
+       "qualified_name": "_set_client_attributes",
+       "signals": [
+        "related:caller"
+       ],
+       "section": "related",
+       "snippet": "def _set_client_attributes(span, instance):"
+      },
+      {
+       "rank": 11,
+       "score": 0,
+       "file_path": "tests/traces/test_responses.py",
+       "start_line": 1347,
+       "end_line": 1350,
+       "focus_line": 1347,
+       "snippet_start_line": 1347,
+       "snippet_end_line": 1348,
+       "kind": "function",
+       "qualified_name": "retrieve",
+       "signals": [
+        "related:covering-test"
+       ],
+       "section": "covering-test",
+       "snippet": "    def retrieve():\n        responses_get_or_create_wrapper(tracer)("
+      }
+     ],
+     "verify_command": {
+      "command": "python -m pytest tests/traces/test_responses.py -k retrieve",
+      "targets": "tests/traces/test_responses.py",
+      "derived_from": "pytest.ini pytest config + covering test path",
+      "tier": "narrow"
+     },
+     "coverage_note": {
+      "symbol": "responses_get_or_create_wrapper",
+      "total": 11,
+      "peers": [
+       "test_completed_sync_response_is_removed_from_responses_dict",
+       "test_duplicate_retrieve_after_completion_does_not_emit_second_span",
+       "test_retrieve_after_completed_stream_does_not_emit_second_span"
+      ],
+      "more": 7,
+      "file_path": "tests/traces/test_responses.py"
+     },
+     "stats": {
+      "query_constraints_truncated": true,
+      "files_scanned": 245,
+      "preselection_backend": "go-content",
+      "preselection_passes": 3,
+      "preselection_files_examined": 245,
+      "preselection_confidence": 1,
+      "preselection_coverage": 1,
+      "preselection_diversity": 1,
+      "preselection_widened": true,
+      "files_content_read_during_preselection": 245,
+      "files_content_read_during_query": 239,
+      "bytes_content_read_during_query": 14544509,
+      "files_content_read_for_identifier_usage": 3,
+      "bytes_content_read_for_identifier_usage": 9043377,
+      "files_content_read_for_context_blocks": 1,
+      "bytes_content_read_for_context_blocks": 27,
+      "files_indexed": 239,
+      "symbols_considered": 1121,
+      "lexical_candidates": 2075,
+      "graph_candidates": 20,
+      "caller_boosted_candidates": 140,
+      "identifier_usage_candidates": 32,
+      "same_container_neighbor_candidates": 24,
+      "same_file_bridge_candidates": 7,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 11,
+      "result_bytes": 10244,
+      "context_budget_bytes": 24576,
+      "snippets_truncated_by_budget": 3,
+      "complete_symbol_snippets": 4,
+      "locator_snippets": 3,
+      "related_sites": 4,
+      "covering_tests": 1,
+      "verify_command_bytes": 378,
+      "verify_tier": "narrow",
+      "context_block_bytes": 378,
+      "index_cache_hit": true,
+      "index_latency_ms": 77,
+      "query_latency_ms": 3068,
+      "total_latency_ms": 11223,
+      "search_latency_ms": 11223,
+      "preselect_latency_ms": 8077
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_async_embeddings_context_propagation.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_async_embeddings_context_propagation_with_events_with_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_async_embeddings_context_propagation_with_events_with_no_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_azure_openai_embeddings.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_azure_openai_embeddings_with_events_with_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_azure_openai_embeddings_with_events_with_no_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_embeddings_context_propagation.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_embeddings_context_propagation_with_events_with_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "tests/traces/cassettes/test_embeddings/test_embeddings_context_propagation_with_events_with_no_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      }
+     ],
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 42,
+        "symbols": 686
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 35
+       },
+       "YAML": {
+        "files": 192,
+        "symbols": 366
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 10,
+       "CALLS": 1044,
+       "CONFIGURES": 59,
+       "CONSTRUCTS": 136,
+       "CONTAINS": 254,
+       "DATA_FLOWS": 104,
+       "DEFINES": 1121,
+       "EXTENDS": 22,
+       "IMPORTS": 454,
+       "INHERITS": 22,
+       "PARAM_TYPE": 17,
+       "RETURNS_TYPE": 8,
+       "SIMILAR_TO": 183,
+       "USES_TYPE": 25
+      }
+     }
+    }
+   },
+   {
+    "cmd": "entire graph neighbors --repo packages/opentelemetry-instrumentation-openai-agents --symbol create_llm_span --file opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "packages/opentelemetry-instrumentation-openai-agents",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "create_llm_span",
+     "file": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 69,
+     "query_latency_ms": 0,
+     "total_latency_ms": 70,
+     "truncated": false,
+     "focus_matches_total": 1,
+     "focus_matches_truncated": false,
+     "disambiguation_required": false,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_llm_span",
+        "name": "create_llm_span",
+        "qualified_name": "RealtimeTracingState.create_llm_span",
+        "kind": "method",
+        "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+        "start_line": 335,
+        "end_line": 424,
+        "language": "Python"
+       },
+       "incoming": [
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_completion",
+          "name": "record_completion",
+          "qualified_name": "RealtimeTracingState.record_completion",
+          "kind": "method",
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "start_line": 323,
+          "end_line": 333,
+          "language": "Python"
+         },
+         "confidence": 0.9,
+         "resolution": "type_inferred",
+         "reason": "method call on this/self resolved to the enclosing type",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+           "start_line": 323,
+           "end_line": 333,
+           "detail": "self.create_llm_span"
+          }
+         ],
+         "call_site": {
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "line": 333
+         }
+        }
+       ],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 36,
+      "parsed_files": 36,
+      "symbols": 644,
+      "relations": 2551,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 18,
+        "symbols": 545
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 37
+       },
+       "YAML": {
+        "files": 14,
+        "symbols": 28
+       }
+      },
+      "relations": {
+       "CALLS": 933,
+       "CONFIGURES": 61,
+       "CONSTRUCTS": 176,
+       "CONTAINS": 366,
+       "DATA_FLOWS": 88,
+       "DEFINES": 644,
+       "EXTENDS": 13,
+       "HANDLES_TOOL": 10,
+       "IMPORTS": 185,
+       "INHERITS": 13,
+       "OVERRIDES": 3,
+       "PARAM_TYPE": 4,
+       "RETURNS_TYPE": 4,
+       "SIMILAR_TO": 34,
+       "TESTS": 9,
+       "USES_TYPE": 8
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 18,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo packages/opentelemetry-instrumentation-openai-agents --symbol create_llm_span --file opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "packages/opentelemetry-instrumentation-openai-agents",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "query": "create_llm_span",
+     "file": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 82,
+     "query_latency_ms": 0,
+     "total_latency_ms": 83,
+     "focus_matches_total": 1,
+     "disambiguation_required": false,
+     "focus": {
+      "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_llm_span",
+      "name": "create_llm_span",
+      "qualified_name": "RealtimeTracingState.create_llm_span",
+      "kind": "method",
+      "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+      "start_line": 335,
+      "end_line": 424,
+      "language": "Python"
+     },
+     "container": {
+      "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:class:RealtimeTracingState",
+      "name": "RealtimeTracingState",
+      "qualified_name": "RealtimeTracingState",
+      "kind": "class",
+      "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+      "start_line": 93,
+      "end_line": 447,
+      "language": "Python"
+     },
+     "callers": {
+      "total": 2,
+      "direct": 1,
+      "transitive": 1,
+      "in": 1,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_completion",
+         "name": "record_completion",
+         "qualified_name": "RealtimeTracingState.record_completion",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 323,
+         "end_line": 333,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 333
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:function:wrap_realtime_session",
+         "name": "wrap_realtime_session",
+         "qualified_name": "wrap_realtime_session",
+         "kind": "function",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 450,
+         "end_line": 707,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "RealtimeTracingState.record_completion",
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 613,
+         "additional_sites": 3
+        }
+       }
+      ]
+     },
+     "callees": {
+      "total": 5,
+      "out": 5,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "external:symbol:json.dumps",
+         "name": "dumps",
+         "qualified_name": "json.dumps",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:opentelemetry.trace.Status",
+         "name": "Status",
+         "qualified_name": "opentelemetry.trace.Status",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:time.time_ns",
+         "name": "time_ns",
+         "qualified_name": "time.time_ns",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState._get_parent_context",
+         "name": "_get_parent_context",
+         "qualified_name": "RealtimeTracingState._get_parent_context",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 141,
+         "end_line": 158,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/utils.py:function:should_send_prompts",
+         "name": "should_send_prompts",
+         "qualified_name": "should_send_prompts",
+         "kind": "function",
+         "file_path": "opentelemetry/instrumentation/openai_agents/utils.py",
+         "start_line": 30,
+         "end_line": 37,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       }
+      ]
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": []
+     },
+     "data_flows": {
+      "total": 1,
+      "direct": 1,
+      "in": 1,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_completion",
+         "name": "record_completion",
+         "qualified_name": "RealtimeTracingState.record_completion",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 323,
+         "end_line": 333,
+         "language": "Python"
+        },
+        "relation": "DATA_FLOWS",
+        "direction": "in",
+        "depth": 1
+       }
+      ]
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": []
+     },
+     "siblings": {
+      "total": 17,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.__init__",
+         "name": "__init__",
+         "qualified_name": "RealtimeTracingState.__init__",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 96,
+         "end_line": 115,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_workflow_span",
+         "name": "start_workflow_span",
+         "qualified_name": "RealtimeTracingState.start_workflow_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 117,
+         "end_line": 129,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_workflow_span",
+         "name": "end_workflow_span",
+         "qualified_name": "RealtimeTracingState.end_workflow_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 131,
+         "end_line": 139,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState._get_parent_context",
+         "name": "_get_parent_context",
+         "qualified_name": "RealtimeTracingState._get_parent_context",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 141,
+         "end_line": 158,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_agent_span",
+         "name": "start_agent_span",
+         "qualified_name": "RealtimeTracingState.start_agent_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 160,
+         "end_line": 189,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_agent_span",
+         "name": "end_agent_span",
+         "qualified_name": "RealtimeTracingState.end_agent_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 191,
+         "end_line": 195,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_tool_span",
+         "name": "start_tool_span",
+         "qualified_name": "RealtimeTracingState.start_tool_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 197,
+         "end_line": 214,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_tool_span",
+         "name": "end_tool_span",
+         "qualified_name": "RealtimeTracingState.end_tool_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 216,
+         "end_line": 230,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_handoff_span",
+         "name": "create_handoff_span",
+         "qualified_name": "RealtimeTracingState.create_handoff_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 232,
+         "end_line": 256,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_audio_span",
+         "name": "start_audio_span",
+         "qualified_name": "RealtimeTracingState.start_audio_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 258,
+         "end_line": 273,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_audio_span",
+         "name": "end_audio_span",
+         "qualified_name": "RealtimeTracingState.end_audio_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 275,
+         "end_line": 282,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_error",
+         "name": "record_error",
+         "qualified_name": "RealtimeTracingState.record_error",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 284,
+         "end_line": 291,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_prompt",
+         "name": "record_prompt",
+         "qualified_name": "RealtimeTracingState.record_prompt",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 293,
+         "end_line": 300,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_usage",
+         "name": "record_usage",
+         "qualified_name": "RealtimeTracingState.record_usage",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 302,
+         "end_line": 317,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.seen_completions",
+         "name": "seen_completions",
+         "qualified_name": "RealtimeTracingState.seen_completions",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 320,
+         "end_line": 321,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       }
+      ]
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 36,
+      "parsed_files": 36,
+      "symbols": 644,
+      "relations": 2551,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 18,
+        "symbols": 545
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 37
+       },
+       "YAML": {
+        "files": 14,
+        "symbols": 28
+       }
+      },
+      "relations": {
+       "CALLS": 933,
+       "CONFIGURES": 61,
+       "CONSTRUCTS": 176,
+       "CONTAINS": 366,
+       "DATA_FLOWS": 88,
+       "DEFINES": 644,
+       "EXTENDS": 13,
+       "HANDLES_TOOL": 10,
+       "IMPORTS": 185,
+       "INHERITS": 13,
+       "OVERRIDES": 3,
+       "PARAM_TYPE": 4,
+       "RETURNS_TYPE": 4,
+       "SIMILAR_TO": 34,
+       "TESTS": 9,
+       "USES_TYPE": 8
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 18,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph neighbors --repo packages/opentelemetry-instrumentation-openai-agents --symbol _get_parent_context --file opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "packages/opentelemetry-instrumentation-openai-agents",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "_get_parent_context",
+     "file": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 64,
+     "query_latency_ms": 1,
+     "total_latency_ms": 66,
+     "truncated": false,
+     "focus_matches_total": 1,
+     "focus_matches_truncated": false,
+     "disambiguation_required": false,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState._get_parent_context",
+        "name": "_get_parent_context",
+        "qualified_name": "RealtimeTracingState._get_parent_context",
+        "kind": "method",
+        "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+        "start_line": 141,
+        "end_line": 158,
+        "language": "Python"
+       },
+       "incoming": [
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_tool_span",
+          "name": "start_tool_span",
+          "qualified_name": "RealtimeTracingState.start_tool_span",
+          "kind": "method",
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "start_line": 197,
+          "end_line": 214,
+          "language": "Python"
+         },
+         "confidence": 0.9,
+         "resolution": "type_inferred",
+         "reason": "method call on this/self resolved to the enclosing type",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+           "start_line": 197,
+           "end_line": 214,
+           "detail": "self._get_parent_context"
+          }
+         ],
+         "call_site": {
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "line": 199
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_handoff_span",
+          "name": "create_handoff_span",
+          "qualified_name": "RealtimeTracingState.create_handoff_span",
+          "kind": "method",
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "start_line": 232,
+          "end_line": 256,
+          "language": "Python"
+         },
+         "confidence": 0.9,
+         "resolution": "type_inferred",
+         "reason": "method call on this/self resolved to the enclosing type",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+           "start_line": 232,
+           "end_line": 256,
+           "detail": "self._get_parent_context"
+          }
+         ],
+         "call_site": {
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "line": 234
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_audio_span",
+          "name": "start_audio_span",
+          "qualified_name": "RealtimeTracingState.start_audio_span",
+          "kind": "method",
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "start_line": 258,
+          "end_line": 273,
+          "language": "Python"
+         },
+         "confidence": 0.9,
+         "resolution": "type_inferred",
+         "reason": "method call on this/self resolved to the enclosing type",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+           "start_line": 258,
+           "end_line": 273,
+           "detail": "self._get_parent_context"
+          }
+         ],
+         "call_site": {
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "line": 260
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_llm_span",
+          "name": "create_llm_span",
+          "qualified_name": "RealtimeTracingState.create_llm_span",
+          "kind": "method",
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "start_line": 335,
+          "end_line": 424,
+          "language": "Python"
+         },
+         "confidence": 0.9,
+         "resolution": "type_inferred",
+         "reason": "method call on this/self resolved to the enclosing type",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+           "start_line": 335,
+           "end_line": 424,
+           "detail": "self._get_parent_context"
+          }
+         ],
+         "call_site": {
+          "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+          "line": 345
+         }
+        }
+       ],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 36,
+      "parsed_files": 36,
+      "symbols": 644,
+      "relations": 2551,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 18,
+        "symbols": 545
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 37
+       },
+       "YAML": {
+        "files": 14,
+        "symbols": 28
+       }
+      },
+      "relations": {
+       "CALLS": 933,
+       "CONFIGURES": 61,
+       "CONSTRUCTS": 176,
+       "CONTAINS": 366,
+       "DATA_FLOWS": 88,
+       "DEFINES": 644,
+       "EXTENDS": 13,
+       "HANDLES_TOOL": 10,
+       "IMPORTS": 185,
+       "INHERITS": 13,
+       "OVERRIDES": 3,
+       "PARAM_TYPE": 4,
+       "RETURNS_TYPE": 4,
+       "SIMILAR_TO": 34,
+       "TESTS": 9,
+       "USES_TYPE": 8
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 18,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo packages/opentelemetry-instrumentation-openai-agents --symbol _get_parent_context --file opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "packages/opentelemetry-instrumentation-openai-agents",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "query": "_get_parent_context",
+     "file": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 79,
+     "query_latency_ms": 3,
+     "total_latency_ms": 83,
+     "focus_matches_total": 1,
+     "disambiguation_required": false,
+     "focus": {
+      "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState._get_parent_context",
+      "name": "_get_parent_context",
+      "qualified_name": "RealtimeTracingState._get_parent_context",
+      "kind": "method",
+      "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+      "start_line": 141,
+      "end_line": 158,
+      "language": "Python"
+     },
+     "container": {
+      "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:class:RealtimeTracingState",
+      "name": "RealtimeTracingState",
+      "qualified_name": "RealtimeTracingState",
+      "kind": "class",
+      "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+      "start_line": 93,
+      "end_line": 447,
+      "language": "Python"
+     },
+     "callers": {
+      "total": 6,
+      "direct": 4,
+      "transitive": 2,
+      "in": 4,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_tool_span",
+         "name": "start_tool_span",
+         "qualified_name": "RealtimeTracingState.start_tool_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 197,
+         "end_line": 214,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 199
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_handoff_span",
+         "name": "create_handoff_span",
+         "qualified_name": "RealtimeTracingState.create_handoff_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 232,
+         "end_line": 256,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 234
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_audio_span",
+         "name": "start_audio_span",
+         "qualified_name": "RealtimeTracingState.start_audio_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 258,
+         "end_line": 273,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 260
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_llm_span",
+         "name": "create_llm_span",
+         "qualified_name": "RealtimeTracingState.create_llm_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 335,
+         "end_line": 424,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 345
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_completion",
+         "name": "record_completion",
+         "qualified_name": "RealtimeTracingState.record_completion",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 323,
+         "end_line": 333,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "RealtimeTracingState.create_llm_span",
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 333
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:function:wrap_realtime_session",
+         "name": "wrap_realtime_session",
+         "qualified_name": "wrap_realtime_session",
+         "kind": "function",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 450,
+         "end_line": 707,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "RealtimeTracingState.create_handoff_span",
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "line": 582
+        }
+       }
+      ]
+     },
+     "callees": {
+      "total": 1,
+      "out": 1,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "external:symbol:opentelemetry.trace.set_span_in_context",
+         "name": "set_span_in_context",
+         "qualified_name": "opentelemetry.trace.set_span_in_context",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       }
+      ]
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": []
+     },
+     "data_flows": {
+      "total": 2,
+      "direct": 2,
+      "in": 2,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_tool_span",
+         "name": "start_tool_span",
+         "qualified_name": "RealtimeTracingState.start_tool_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 197,
+         "end_line": 214,
+         "language": "Python"
+        },
+        "relation": "DATA_FLOWS",
+        "direction": "in",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_handoff_span",
+         "name": "create_handoff_span",
+         "qualified_name": "RealtimeTracingState.create_handoff_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 232,
+         "end_line": 256,
+         "language": "Python"
+        },
+        "relation": "DATA_FLOWS",
+        "direction": "in",
+        "depth": 1
+       }
+      ]
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": []
+     },
+     "siblings": {
+      "total": 17,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.__init__",
+         "name": "__init__",
+         "qualified_name": "RealtimeTracingState.__init__",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 96,
+         "end_line": 115,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_workflow_span",
+         "name": "start_workflow_span",
+         "qualified_name": "RealtimeTracingState.start_workflow_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 117,
+         "end_line": 129,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_workflow_span",
+         "name": "end_workflow_span",
+         "qualified_name": "RealtimeTracingState.end_workflow_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 131,
+         "end_line": 139,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_agent_span",
+         "name": "start_agent_span",
+         "qualified_name": "RealtimeTracingState.start_agent_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 160,
+         "end_line": 189,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_agent_span",
+         "name": "end_agent_span",
+         "qualified_name": "RealtimeTracingState.end_agent_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 191,
+         "end_line": 195,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_tool_span",
+         "name": "start_tool_span",
+         "qualified_name": "RealtimeTracingState.start_tool_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 197,
+         "end_line": 214,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_tool_span",
+         "name": "end_tool_span",
+         "qualified_name": "RealtimeTracingState.end_tool_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 216,
+         "end_line": 230,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.create_handoff_span",
+         "name": "create_handoff_span",
+         "qualified_name": "RealtimeTracingState.create_handoff_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 232,
+         "end_line": 256,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.start_audio_span",
+         "name": "start_audio_span",
+         "qualified_name": "RealtimeTracingState.start_audio_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 258,
+         "end_line": 273,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.end_audio_span",
+         "name": "end_audio_span",
+         "qualified_name": "RealtimeTracingState.end_audio_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 275,
+         "end_line": 282,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_error",
+         "name": "record_error",
+         "qualified_name": "RealtimeTracingState.record_error",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 284,
+         "end_line": 291,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_prompt",
+         "name": "record_prompt",
+         "qualified_name": "RealtimeTracingState.record_prompt",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 293,
+         "end_line": 300,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_usage",
+         "name": "record_usage",
+         "qualified_name": "RealtimeTracingState.record_usage",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 302,
+         "end_line": 317,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.seen_completions",
+         "name": "seen_completions",
+         "qualified_name": "RealtimeTracingState.seen_completions",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 320,
+         "end_line": 321,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py:method:RealtimeTracingState.record_completion",
+         "name": "record_completion",
+         "qualified_name": "RealtimeTracingState.record_completion",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+         "start_line": 323,
+         "end_line": 333,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       }
+      ]
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 36,
+      "parsed_files": 36,
+      "symbols": 644,
+      "relations": 2551,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 18,
+        "symbols": 545
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 37
+       },
+       "YAML": {
+        "files": 14,
+        "symbols": 28
+       }
+      },
+      "relations": {
+       "CALLS": 933,
+       "CONFIGURES": 61,
+       "CONSTRUCTS": 176,
+       "CONTAINS": 366,
+       "DATA_FLOWS": 88,
+       "DEFINES": 644,
+       "EXTENDS": 13,
+       "HANDLES_TOOL": 10,
+       "IMPORTS": 185,
+       "INHERITS": 13,
+       "OVERRIDES": 3,
+       "PARAM_TYPE": 4,
+       "RETURNS_TYPE": 4,
+       "SIMILAR_TO": 34,
+       "TESTS": 9,
+       "USES_TYPE": 8
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 18,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph neighbors --repo packages/opentelemetry-instrumentation-openai-agents --symbol _start_agent_span --file opentelemetry/instrumentation/openai_agents/_hooks.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "packages/opentelemetry-instrumentation-openai-agents",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "_start_agent_span",
+     "file": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 63,
+     "query_latency_ms": 1,
+     "total_latency_ms": 64,
+     "truncated": false,
+     "focus_matches_total": 1,
+     "focus_matches_truncated": false,
+     "disambiguation_required": false,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._start_agent_span",
+        "name": "_start_agent_span",
+        "qualified_name": "OpenTelemetryTracingProcessor._start_agent_span",
+        "kind": "method",
+        "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+        "start_line": 846,
+        "end_line": 905,
+        "language": "Python"
+       },
+       "incoming": [
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor.on_span_start",
+          "name": "on_span_start",
+          "qualified_name": "OpenTelemetryTracingProcessor.on_span_start",
+          "kind": "method",
+          "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+          "start_line": 700,
+          "end_line": 785,
+          "language": "Python"
+         },
+         "confidence": 0.9,
+         "resolution": "type_inferred",
+         "reason": "method call on this/self resolved to the enclosing type",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+           "start_line": 700,
+           "end_line": 785,
+           "detail": "self._start_agent_span"
+          }
+         ],
+         "call_site": {
+          "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+          "line": 726,
+          "guards": [
+           {
+            "line": 725,
+            "text": "        if isinstance(span_data, AgentSpanData):"
+           }
+          ]
+         }
+        }
+       ],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 36,
+      "parsed_files": 36,
+      "symbols": 644,
+      "relations": 2551,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 18,
+        "symbols": 545
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 37
+       },
+       "YAML": {
+        "files": 14,
+        "symbols": 28
+       }
+      },
+      "relations": {
+       "CALLS": 933,
+       "CONFIGURES": 61,
+       "CONSTRUCTS": 176,
+       "CONTAINS": 366,
+       "DATA_FLOWS": 88,
+       "DEFINES": 644,
+       "EXTENDS": 13,
+       "HANDLES_TOOL": 10,
+       "IMPORTS": 185,
+       "INHERITS": 13,
+       "OVERRIDES": 3,
+       "PARAM_TYPE": 4,
+       "RETURNS_TYPE": 4,
+       "SIMILAR_TO": 34,
+       "TESTS": 9,
+       "USES_TYPE": 8
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 18,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo packages/opentelemetry-instrumentation-openai-agents --symbol _start_agent_span --file opentelemetry/instrumentation/openai_agents/_hooks.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "packages/opentelemetry-instrumentation-openai-agents",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "full",
+     "query": "_start_agent_span",
+     "file": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 68,
+     "query_latency_ms": 1,
+     "total_latency_ms": 69,
+     "focus_matches_total": 1,
+     "disambiguation_required": false,
+     "focus": {
+      "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._start_agent_span",
+      "name": "_start_agent_span",
+      "qualified_name": "OpenTelemetryTracingProcessor._start_agent_span",
+      "kind": "method",
+      "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+      "start_line": 846,
+      "end_line": 905,
+      "language": "Python"
+     },
+     "container": {
+      "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:class:OpenTelemetryTracingProcessor",
+      "name": "OpenTelemetryTracingProcessor",
+      "qualified_name": "OpenTelemetryTracingProcessor",
+      "kind": "class",
+      "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+      "start_line": 657,
+      "end_line": 1126,
+      "language": "Python"
+     },
+     "callers": {
+      "total": 1,
+      "direct": 1,
+      "in": 1,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor.on_span_start",
+         "name": "on_span_start",
+         "qualified_name": "OpenTelemetryTracingProcessor.on_span_start",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 700,
+         "end_line": 785,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "line": 726
+        }
+       }
+      ]
+     },
+     "callees": {
+      "total": 4,
+      "out": 4,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "external:symbol:json.dumps",
+         "name": "dumps",
+         "qualified_name": "json.dumps",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:traceloop.sdk.tracing.set_agent_name",
+         "name": "set_agent_name",
+         "qualified_name": "traceloop.sdk.tracing.set_agent_name",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:function:_safe_detach",
+         "name": "_safe_detach",
+         "qualified_name": "_safe_detach",
+         "kind": "function",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 50,
+         "end_line": 63,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/utils.py:function:should_send_prompts",
+         "name": "should_send_prompts",
+         "qualified_name": "should_send_prompts",
+         "kind": "function",
+         "file_path": "opentelemetry/instrumentation/openai_agents/utils.py",
+         "start_line": 30,
+         "end_line": 37,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       }
+      ]
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": []
+     },
+     "data_flows": {
+      "total": 0,
+      "entries": []
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": []
+     },
+     "siblings": {
+      "total": 17,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor.__init__",
+         "name": "__init__",
+         "qualified_name": "OpenTelemetryTracingProcessor.__init__",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 665,
+         "end_line": 673,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor.on_trace_start",
+         "name": "on_trace_start",
+         "qualified_name": "OpenTelemetryTracingProcessor.on_trace_start",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 676,
+         "end_line": 688,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor.on_trace_end",
+         "name": "on_trace_end",
+         "qualified_name": "OpenTelemetryTracingProcessor.on_trace_end",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 691,
+         "end_line": 697,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor.on_span_start",
+         "name": "on_span_start",
+         "qualified_name": "OpenTelemetryTracingProcessor.on_span_start",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 700,
+         "end_line": 785,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor.on_span_end",
+         "name": "on_span_end",
+         "qualified_name": "OpenTelemetryTracingProcessor.on_span_end",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 788,
+         "end_line": 833,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._resolve_agent_parent",
+         "name": "_resolve_agent_parent",
+         "qualified_name": "OpenTelemetryTracingProcessor._resolve_agent_parent",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 839,
+         "end_line": 844,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._start_handoff_span",
+         "name": "_start_handoff_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._start_handoff_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 907,
+         "end_line": 940,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._start_function_span",
+         "name": "_start_function_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._start_function_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 942,
+         "end_line": 965,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._start_generation_span",
+         "name": "_start_generation_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._start_generation_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 967,
+         "end_line": 982,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._start_realtime_span",
+         "name": "_start_realtime_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._start_realtime_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 984,
+         "end_line": 1006,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._end_generation_span",
+         "name": "_end_generation_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._end_generation_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 1012,
+         "end_line": 1032,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._end_function_span",
+         "name": "_end_function_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._end_function_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 1034,
+         "end_line": 1056,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._set_realtime_io_attributes",
+         "name": "_set_realtime_io_attributes",
+         "qualified_name": "OpenTelemetryTracingProcessor._set_realtime_io_attributes",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 1058,
+         "end_line": 1080,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._find_agent_span",
+         "name": "_find_agent_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._find_agent_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 1086,
+         "end_line": 1092,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/traceloop/openllmetry:Python:opentelemetry/instrumentation/openai_agents/_hooks.py:method:OpenTelemetryTracingProcessor._find_current_agent_span",
+         "name": "_find_current_agent_span",
+         "qualified_name": "OpenTelemetryTracingProcessor._find_current_agent_span",
+         "kind": "method",
+         "file_path": "opentelemetry/instrumentation/openai_agents/_hooks.py",
+         "start_line": 1094,
+         "end_line": 1109,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       }
+      ]
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 36,
+      "parsed_files": 36,
+      "symbols": 644,
+      "relations": 2551,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "JSON": {
+        "files": 1,
+        "symbols": 24
+       },
+       "Markdown": {
+        "files": 1,
+        "symbols": 10
+       },
+       "Python": {
+        "files": 18,
+        "symbols": 545
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 37
+       },
+       "YAML": {
+        "files": 14,
+        "symbols": 28
+       }
+      },
+      "relations": {
+       "CALLS": 933,
+       "CONFIGURES": 61,
+       "CONSTRUCTS": 176,
+       "CONTAINS": 366,
+       "DATA_FLOWS": 88,
+       "DEFINES": 644,
+       "EXTENDS": 13,
+       "HANDLES_TOOL": 10,
+       "IMPORTS": 185,
+       "INHERITS": 13,
+       "OVERRIDES": 3,
+       "PARAM_TYPE": 4,
+       "RETURNS_TYPE": 4,
+       "SIMILAR_TO": 34,
+       "TESTS": 9,
+       "USES_TYPE": 8
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 18,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph search --repo packages --profile fast --format json --top-k 8 --query where SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY is used to record the right span",
+    "exit": 0,
+    "output": {
+     "query": "where SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY is used to record the right span",
+     "repo_root": "packages",
+     "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+     "tree": "650bffe094043b2678066a757df7a873c501834d",
+     "profile": "fast",
+     "results": [
+      {
+       "rank": 1,
+       "score": 58.4514,
+       "file_path": "opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
+       "start_line": 658,
+       "end_line": 661,
+       "focus_line": 660,
+       "snippet_start_line": 658,
+       "snippet_end_line": 661,
+       "symbol_start_line": 658,
+       "symbol_end_line": 661,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py:function:_is_suppressed",
+       "symbol_name": "_is_suppressed",
+       "qualified_name": "_is_suppressed",
+       "signature": "def _is_suppressed()",
+       "signals": [
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "exact-code-token",
+        "graph:callers"
+       ],
+       "snippet": "def _is_suppressed():\n    return context_api.get_value(_SUPPRESS_INSTRUMENTATION_KEY) or context_api.get_value(\n        SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY\n    )"
+      },
+      {
+       "rank": 2,
+       "score": 59.8574,
+       "file_path": "opentelemetry-instrumentation-bedrock/tests/traces/test_aioboto3.py",
+       "start_line": 691,
+       "end_line": 714,
+       "focus_line": 695,
+       "snippet_start_line": 691,
+       "snippet_end_line": 714,
+       "symbol_start_line": 691,
+       "symbol_end_line": 714,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry-instrumentation-bedrock/tests/traces/test_aioboto3.py:function:test_aioboto3_suppress_language_model_instrumentation",
+       "symbol_name": "test_aioboto3_suppress_language_model_instrumentation",
+       "qualified_name": "test_aioboto3_suppress_language_model_instrumentation",
+       "signature": "async def test_aioboto3_suppress_language_model_instrumentation( instrument_legacy, async_session, span_exporter, log_exporter )",
+       "signals": [
+        "body",
+        "symbol-name",
+        "signature",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "exact-code-token",
+        "complete-symbol"
+       ],
+       "snippet": "async def test_aioboto3_suppress_language_model_instrumentation(\n    instrument_legacy, async_session, span_exporter, log_exporter\n):\n    \"\"\"SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY set \u2192 no LLM span produced.\"\"\"\n    client, ctx = await _patch_make_api_call(async_session, _fake_converse_response)\n\n    token = context_api.attach(\n        context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)\n    )\n    try:\n        await client.converse(\n            modelId=MODEL_ID,\n            messages=MESSAGE_LIST,\n            system=SYSTEM_LIST,\n            inferenceConfig=CONVERSE_INF,\n        )\n    finally:\n        context_api.detach(token)\n        await ctx.__aexit__(None, None, None)\n\n    spans = span_exporter.get_finished_spans()\n    assert len(spans) == 0, \"instrumentation must short-circuit when suppressed\"\n    logs = log_exporter.get_finished_logs()\n    assert len(logs) == 0",
+       "comment_focus_line": 694
+      },
+      {
+       "rank": 3,
+       "score": 52.2885,
+       "file_path": "opentelemetry-instrumentation-groq/tests/traces/test_init.py",
+       "start_line": 344,
+       "end_line": 356,
+       "focus_line": 349,
+       "snippet_start_line": 344,
+       "snippet_end_line": 356,
+       "symbol_start_line": 344,
+       "symbol_end_line": 356,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry-instrumentation-groq/tests/traces/test_init.py:method:TestAwrap.test_suppression_key_skips_span",
+       "symbol_name": "test_suppression_key_skips_span",
+       "qualified_name": "TestAwrap.test_suppression_key_skips_span",
+       "signature": "async def test_suppression_key_skips_span(self)",
+       "signals": [
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "exact-code-token",
+        "complete-symbol"
+       ],
+       "snippet": "    async def test_suppression_key_skips_span(self):\n        tracer = MagicMock()\n        wrapped = AsyncMock(return_value=\"async_result\")\n        wrapper = _awrap(tracer, None, None, None, None, {})\n\n        token = context_api.attach(context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True))\n        try:\n            result = await wrapper(wrapped, None, [], {\"model\": \"m\"})\n        finally:\n            context_api.detach(token)\n\n        assert result == \"async_result\"\n        tracer.start_span.assert_not_called()"
+      },
+      {
+       "rank": 4,
+       "score": 52.9255,
+       "file_path": "opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+       "start_line": 221,
+       "end_line": 248,
+       "focus_line": 224,
+       "snippet_start_line": 221,
+       "snippet_end_line": 248,
+       "symbol_start_line": 221,
+       "symbol_end_line": 248,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py:function:_instrumented_model_invoke",
+       "symbol_name": "_instrumented_model_invoke",
+       "qualified_name": "_instrumented_model_invoke",
+       "signature": "def _instrumented_model_invoke(fn, tracer, metric_params, event_logger)",
+       "signals": [
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "exact-code-token",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "def _instrumented_model_invoke(fn, tracer, metric_params, event_logger):\n    @wraps(fn)\n    def with_instrumentation(*args, **kwargs):\n        if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):\n            return fn(*args, **kwargs)\n\n        (provider, _model_vendor, _model) = _get_vendor_model(kwargs.get(\"modelId\"))\n        operation_name = _derive_operation_name(kwargs)\n        span_attributes = {\n            GenAIAttributes.GEN_AI_PROVIDER_NAME: provider,\n            GenAIAttributes.GEN_AI_OPERATION_NAME: operation_name,\n            GenAIAttributes.GEN_AI_REQUEST_MODEL: _model,\n        }\n        with tracer.start_as_current_span(\n            _span_name(operation_name, _model), kind=SpanKind.CLIENT, attributes=span_attributes,\n            record_exception=False, set_status_on_exception=False,\n        ) as span:\n            try:\n                response = fn(*args, **kwargs)\n            except Exception as e:\n                span.set_attribute(ERROR_TYPE, e.__class__.__name__)\n                span.record_exception(e)\n                span.set_status(Status(StatusCode.ERROR, str(e)))\n                raise\n            _handle_call(span, kwargs, response, metric_params, event_logger)\n            return response\n\n    return with_instrumentation"
+      },
+      {
+       "rank": 5,
+       "score": 49.4101,
+       "file_path": "opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
+       "start_line": 173,
+       "end_line": 253,
+       "focus_line": 194,
+       "snippet_start_line": 173,
+       "snippet_end_line": 253,
+       "symbol_start_line": 173,
+       "symbol_end_line": 253,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py:method:OpenLLMetrySpanHandler.new_span",
+       "symbol_name": "new_span",
+       "qualified_name": "OpenLLMetrySpanHandler.new_span",
+       "signature": "def new_span( self, id_: str, bound_args: inspect.BoundArguments, instance: Optional[Any] = None, parent_span_id: Optional[str] = None, tags: Optional[Dict[str, Any]] = None, **kwargs: Any, ) -> Optional[SpanHolder]",
+       "signals": [
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "exact-code-token",
+        "complete-symbol"
+       ],
+       "snippet": "    def new_span(\n        self,\n        id_: str,\n        bound_args: inspect.BoundArguments,\n        instance: Optional[Any] = None,\n        parent_span_id: Optional[str] = None,\n        tags: Optional[Dict[str, Any]] = None,\n        **kwargs: Any,\n    ) -> Optional[SpanHolder]:\n        \"\"\"Create a span.\"\"\"\n        # Take the class name and method name from id_ where id_ is e.g.\n        # 'SentenceSplitter.split_text_metadata_aware-a2f2a780-2fa6-4682-a88e-80dc1f1ebe6a'\n        matches = CLASS_ANDMETHOD_NAME_FROM_ID_REGEX.match(id_)\n        class_name = matches.groups()[0]\n        method_name = matches.groups()[1]\n\n        parent = self.open_spans.get(parent_span_id)\n\n        if class_name in AVAILABLE_OPENLLMETRY_INSTRUMENTATIONS:\n            token = context_api.attach(\n                context_api.set_value(\n                    SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, False\n                )\n            )\n            return SpanHolder(id_, parent, token=token)\n\n        kind = (\n            TraceloopSpanKindValues.TASK.value\n            if parent\n            else TraceloopSpanKindValues.WORKFLOW.value\n        )\n\n        if isinstance(instance, Workflow):\n            span_name = (\n                f\"{instance.__class__.__name__}.{kind}\"\n                if not parent_span_id\n                else f\"{method_name}.{kind}\"\n            )\n        else:\n            span_name = f\"{class_name}.{kind}\"\n\n        span = self._tracer.start_span(\n            span_name,\n            context=parent.context if parent else None,\n        )\n        current_context = set_span_in_context(\n            span, context=parent.context if parent else None\n        )\n        current_context = context_api.set_value(\n            SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,\n            True,\n            current_context,\n        )\n        token = context_api.attach(current_context)\n\n        span.set_attribute(SpanAttributes.TRACELOOP_SPAN_KIND, kind)\n        span.set_attribute(SpanAttributes.TRACELOOP_ENTITY_NAME, span_name)\n        try:\n            if should_send_prompts():\n                span.set_attribute(\n                    SpanAttributes.TRACELOOP_ENTITY_INPUT,\n                    json.dumps(bound_args.arguments, cls=JSONEncoder),\n                )\n        except Exception:\n            pass\n\n        # Extract tool information for call_tool spans (workflow-based agents)\n        if method_name == \"call_tool\":\n            try:\n                # The 'ev' argument is a WorkflowToolCall event\n                ev = bound_args.arguments.get(\"ev\")\n                if ev and isinstance(ev, WorkflowToolCall):\n                    span.set_attribute(\"tool.name\", ev.tool_name)\n                    span.set_attribute(\n                        \"tool.arguments\",\n                        json.dumps(ev.tool_kwargs, cls=JSONEncoder)\n                    )\n            except Exception:\n                pass\n\n        return SpanHolder(id_, parent, span, token, current_context)"
+      },
+      {
+       "rank": 6,
+       "score": 48.17,
+       "file_path": "opentelemetry-instrumentation-litellm/tests/test_custom_provider.py",
+       "start_line": 53,
+       "end_line": 56,
+       "focus_line": 55,
+       "snippet_start_line": 54,
+       "snippet_end_line": 55,
+       "symbol_start_line": 53,
+       "symbol_end_line": 56,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry-instrumentation-litellm/tests/test_custom_provider.py:method:_MockCustomLLM._record_suppression",
+       "symbol_name": "_record_suppression",
+       "qualified_name": "_MockCustomLLM._record_suppression",
+       "signature": "def _record_suppression(self)",
+       "signals": [
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "exact-code-token"
+       ],
+       "snippet": "        self.suppress_during_call = context_api.get_value(\n            SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+      },
+      {
+       "rank": 7,
+       "score": 52.1509,
+       "file_path": "opentelemetry-instrumentation-sagemaker/opentelemetry/instrumentation/sagemaker/__init__.py",
+       "start_line": 95,
+       "end_line": 112,
+       "focus_line": 96,
+       "snippet_start_line": 95,
+       "snippet_end_line": 96,
+       "symbol_start_line": 95,
+       "symbol_end_line": 112,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/traceloop/openllmetry:Python:opentelemetry-instrumentation-sagemaker/opentelemetry/instrumentation/sagemaker/__init__.py:function:with_instrumentation#sig:eeda339dc2fed496",
+       "symbol_name": "with_instrumentation",
+       "qualified_name": "with_instrumentation",
+       "signature": "def with_instrumentation(*args, **kwargs)",
+       "signals": [
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "constraint:phrase",
+        "constraint:relationship",
+        "exact-code-token"
+       ],
+       "snippet": "    def with_instrumentation(*args, **kwargs):\n        if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+      },
+      {
+       "rank": 8,
+       "score": 0,
+       "file_path": "opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+       "start_line": 292,
+       "end_line": 317,
+       "focus_line": 292,
+       "snippet_start_line": 292,
+       "snippet_end_line": 292,
+       "kind": "function",
+       "qualified_name": "with_instrumentation",
+       "signals": [
+        "related:near-dupe"
+       ],
+       "section": "related",
+       "snippet": "    def with_instrumentation(*args, **kwargs):"
+      },
+      {
+       "rank": 9,
+       "score": 0,
+       "file_path": "opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
+       "start_line": 255,
+       "end_line": 289,
+       "focus_line": 255,
+       "snippet_start_line": 255,
+       "snippet_end_line": 255,
+       "kind": "method",
+       "qualified_name": "OpenLLMetrySpanHandler.prepare_to_exit_span",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def prepare_to_exit_span("
+      }
+     ],
+     "verify_command": {
+      "command": "cd opentelemetry-instrumentation-litellm && python -m pytest",
+      "targets": "whole test suite (no covering test identified)",
+      "derived_from": "opentelemetry-instrumentation-litellm/pytest.ini pytest config (whole suite)",
+      "tier": "suite"
+     },
+     "stats": {
+      "files_scanned": 1695,
+      "preselection_backend": "go-content",
+      "preselection_passes": 3,
+      "preselection_files_examined": 1695,
+      "preselection_confidence": 0.0023474178403755097,
+      "preselection_coverage": 1,
+      "preselection_diversity": 1,
+      "preselection_widened": true,
+      "preselection_bounded": true,
+      "files_content_read_during_preselection": 1694,
+      "files_content_read_during_query": 384,
+      "bytes_content_read_during_query": 21964869,
+      "files_content_read_for_identifier_usage": 3,
+      "bytes_content_read_for_identifier_usage": 9043377,
+      "files_content_read_for_context_blocks": 1,
+      "bytes_content_read_for_context_blocks": 27,
+      "files_indexed": 384,
+      "symbols_considered": 5142,
+      "lexical_candidates": 4996,
+      "graph_candidates": 16,
+      "caller_boosted_candidates": 586,
+      "identifier_usage_candidates": 32,
+      "same_container_neighbor_candidates": 22,
+      "same_file_bridge_candidates": 6,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 9,
+      "result_bytes": 12752,
+      "context_budget_bytes": 24576,
+      "snippets_truncated_by_budget": 3,
+      "complete_symbol_snippets": 4,
+      "locator_snippets": 3,
+      "doc_reanchored_hits": 1,
+      "related_sites": 2,
+      "verify_command_bytes": 425,
+      "verify_tier": "suite",
+      "context_block_bytes": 425,
+      "index_cache_hit": false,
+      "index_latency_ms": 15632,
+      "query_latency_ms": 4051,
+      "total_latency_ms": 42459,
+      "search_latency_ms": 42459,
+      "preselect_latency_ms": 22775
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-anthropic/tests/cassettes/test_messages/test_anthropic_async_multi_modal_legacy.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-anthropic/tests/cassettes/test_messages/test_anthropic_async_multi_modal_with_events_with_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-anthropic/tests/cassettes/test_messages/test_anthropic_async_multi_modal_with_events_with_no_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-anthropic/tests/cassettes/test_messages/test_anthropic_image_with_history.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-anthropic/tests/cassettes/test_messages/test_anthropic_multi_modal_legacy.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-anthropic/tests/cassettes/test_messages/test_anthropic_multi_modal_with_events_with_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_MINIFIED",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-anthropic/tests/cassettes/test_messages/test_anthropic_multi_modal_with_events_with_no_content.yaml",
+       "effect_on_semantic_completeness": "file record emitted but symbol parsing skipped",
+       "detail": "file appears minified/bundled (very long lines); not analyzed as source"
+      },
+      {
+       "code": "E_PARSE_ERROR",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-llamaindex/tests/cassettes/test_agents/test_agents_and_tools.yaml",
+       "effect_on_semantic_completeness": "file parsed with syntax errors; semantic facts may be incomplete",
+       "detail": "tree-sitter syntax error nodes present: error ERROR at line 1 column 1 near \"interactions:\\n- request:\\n    body: '{\\\"messages\\\": [{\\\"role\\\": \\\"system\\\", \\\"content\\\": ...\""
+      },
+      {
+       "code": "E_PARSE_ERROR",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-llamaindex/tests/cassettes/test_agents/test_agents_and_tools_with_events_with_content.yaml",
+       "effect_on_semantic_completeness": "file parsed with syntax errors; semantic facts may be incomplete",
+       "detail": "tree-sitter syntax error nodes present: error ERROR at line 1 column 1 near \"interactions:\\n- request:\\n    body: '{\\\"messages\\\": [{\\\"role\\\": \\\"system\\\", \\\"content\\\": ...\""
+      },
+      {
+       "code": "E_PARSE_ERROR",
+       "severity": "warning",
+       "file_path": "opentelemetry-instrumentation-llamaindex/tests/cassettes/test_agents/test_agents_and_tools_with_events_with_no_content.yaml",
+       "effect_on_semantic_completeness": "file parsed with syntax errors; semantic facts may be incomplete",
+       "detail": "tree-sitter syntax error nodes present: error ERROR at line 1 column 1 near \"interactions:\\n- request:\\n    body: '{\\\"messages\\\": [{\\\"role\\\": \\\"system\\\", \\\"content\\\": ...\""
+      }
+     ],
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 4,
+        "symbols": 39
+       },
+       "Python": {
+        "files": 278,
+        "symbols": 4840
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 90
+       },
+       "YAML": {
+        "files": 92,
+        "symbols": 173
+       }
+      },
+      "relations": {
+       "CALLS": 2644,
+       "CONFIGURES": 90,
+       "CONSTRUCTS": 321,
+       "CONTAINS": 2087,
+       "DEFINES": 5142,
+       "HANDLES_ROUTE": 15,
+       "HANDLES_TOOL": 31,
+       "IMPORTS": 3065
+      }
+     }
+    }
    }
   ],
-  "reason": "entire graph is not available here: the entire-graph plugin is not installed; run 'entire plugin install graph' and retry. agent-help lists `entire plugin` as the user's command, so Trueup did not install it."
+  "available": true,
+  "query": "openai-agents tracing: LLM spans is 4 in the span but really 2 (provider requests) (openllmetry, openai-agents: LLM spans recorded wrong)",
+  "reason": "entire graph search, neighbors and impact"
  },
- "method": "ripgrep + ast (fallback)",
+ "method": "entire graph",
  "definitions": [
   {
-   "symbol": "OpenTelemetryTracingProcessor",
-   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
-   "line": 657,
-   "qualname": "OpenTelemetryTracingProcessor",
-   "end": 1126
+   "symbol": "create_llm_span",
+   "qualname": "RealtimeTracingState.create_llm_span",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 335,
+   "end": 424,
+   "score": 38.5272,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 1
   },
   {
-   "symbol": "on_span_start",
-   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
-   "line": 700,
-   "qualname": "OpenTelemetryTracingProcessor.on_span_start",
-   "end": 785
+   "symbol": "_get_parent_context",
+   "qualname": "RealtimeTracingState._get_parent_context",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 141,
+   "end": 158,
+   "score": 38.5172,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 2
   },
   {
-   "symbol": "on_span_end",
+   "symbol": "_start_agent_span",
+   "qualname": "OpenTelemetryTracingProcessor._start_agent_span",
    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
-   "line": 788,
-   "qualname": "OpenTelemetryTracingProcessor.on_span_end",
-   "end": 833
+   "line": 846,
+   "end": 905,
+   "score": 34.5413,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 3
+  },
+  {
+   "symbol": "_instrument",
+   "qualname": "OpenAIAgentsInstrumentor._instrument",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/__init__.py",
+   "line": 36,
+   "end": 77,
+   "score": 33.0033,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 4
+  },
+  {
+   "symbol": "_record_traced_data",
+   "qualname": "_record_traced_data",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+   "line": 221,
+   "end": 237,
+   "score": 31.3923,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 5
   },
   {
    "symbol": "responses_get_or_create_wrapper",
+   "qualname": "responses_get_or_create_wrapper",
    "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
    "line": 539,
-   "qualname": "responses_get_or_create_wrapper",
-   "end": 712
+   "end": 712,
+   "score": 28.2531,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 6
   },
   {
-   "symbol": "async_responses_get_or_create_wrapper",
+   "symbol": "_set_span_attribute",
+   "qualname": "_set_span_attribute",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/shared/__init__.py",
+   "line": 35,
+   "end": 42,
+   "score": 28.0113,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 7
+  },
+  {
+   "symbol": "start_response_span",
+   "qualname": "RealtimeEventProcessor.start_response_span",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/realtime_wrappers.py",
+   "line": 259,
+   "end": 308,
+   "score": 26.9869,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 8
+  },
+  {
+   "symbol": "_handle_request",
+   "qualname": "_handle_request",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/shared/chat_wrappers.py",
+   "line": 272,
+   "end": 301,
+   "score": 24.6351,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 9
+  },
+  {
+   "symbol": null,
+   "qualname": "OpenAIAgentsInstrumentor._uninstrument",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/__init__.py",
+   "line": 79,
+   "end": 85,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 10
+  },
+  {
+   "symbol": null,
+   "qualname": "RealtimeTracingState.start_tool_span",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 197,
+   "end": 214,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 11
+  },
+  {
+   "symbol": null,
+   "qualname": "OpenAIAgentsInstrumentor.__init__",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/__init__.py",
+   "line": 18,
+   "end": 31,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 12
+  },
+  {
+   "symbol": null,
+   "qualname": "RealtimeTracingState.create_handoff_span",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 232,
+   "end": 256,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai-agents",
+   "rank": 13
+  },
+  {
+   "symbol": null,
+   "qualname": "RealtimeEventProcessor.handle_response_done",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/realtime_wrappers.py",
+   "line": 171,
+   "end": 246,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 14
+  },
+  {
+   "symbol": null,
+   "qualname": "ResponseStream._process_complete_response",
    "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
-   "line": 717,
-   "qualname": "async_responses_get_or_create_wrapper",
-   "end": 890
+   "line": 1113,
+   "end": 1158,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 15
+  },
+  {
+   "symbol": null,
+   "qualname": "RealtimeEventProcessor.handle_response_created",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/realtime_wrappers.py",
+   "line": 140,
+   "end": 147,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 16
+  },
+  {
+   "symbol": null,
+   "qualname": "_set_client_attributes",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/shared/__init__.py",
+   "line": 45,
+   "end": 60,
+   "score": 0,
+   "package": "packages/opentelemetry-instrumentation-openai",
+   "rank": 17
   }
  ],
  "callers": [
   {
-   "symbol": "OpenTelemetryTracingProcessor",
-   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/__init__.py",
-   "line": 62,
-   "in": "OpenAIAgentsInstrumentor._instrument",
-   "text": "otel_processor = OpenTelemetryTracingProcessor(tracer)"
+   "symbol": "RealtimeTracingState.create_llm_span",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 323,
+   "in": "RealtimeTracingState.record_completion",
+   "text": "self.create_llm_span",
+   "confidence": 0.9
   },
   {
-   "symbol": "on_span_start",
+   "symbol": "RealtimeTracingState._get_parent_context",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 197,
+   "in": "RealtimeTracingState.start_tool_span",
+   "text": "self._get_parent_context",
+   "confidence": 0.9
+  },
+  {
+   "symbol": "RealtimeTracingState._get_parent_context",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 232,
+   "in": "RealtimeTracingState.create_handoff_span",
+   "text": "self._get_parent_context",
+   "confidence": 0.9
+  },
+  {
+   "symbol": "RealtimeTracingState._get_parent_context",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 258,
+   "in": "RealtimeTracingState.start_audio_span",
+   "text": "self._get_parent_context",
+   "confidence": 0.9
+  },
+  {
+   "symbol": "RealtimeTracingState._get_parent_context",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "line": 335,
+   "in": "RealtimeTracingState.create_llm_span",
+   "text": "self._get_parent_context",
+   "confidence": 0.9
+  },
+  {
+   "symbol": "OpenTelemetryTracingProcessor._start_agent_span",
    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
-   "line": 850,
-   "in": "OpenTelemetryTracingProcessor._start_agent_span",
-   "text": "``set_agent_name`` (None if the SDK isn't installed); ``on_span_start``"
-  },
-  {
-   "symbol": "on_span_end",
-   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
-   "line": 851,
-   "in": "OpenTelemetryTracingProcessor._start_agent_span",
-   "text": "keys it to the SDK span so ``on_span_end`` can detach it. Without that"
-  },
-  {
-   "symbol": "on_span_end",
-   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
-   "line": 1013,
-   "in": "OpenTelemetryTracingProcessor._end_generation_span",
-   "text": "\"\"\"Handle on_span_end logic for generation/response spans.\"\"\""
-  },
-  {
-   "symbol": "on_span_end",
-   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
-   "line": 1035,
-   "in": "OpenTelemetryTracingProcessor._end_function_span",
-   "text": "\"\"\"Handle on_span_end logic for function/tool spans."
-  },
-  {
-   "symbol": "responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 34,
-   "in": null,
-   "text": "responses_get_or_create_wrapper,"
-  },
-  {
-   "symbol": "responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 308,
-   "in": "OpenAIV1Instrumentor._instrument",
-   "text": "responses_get_or_create_wrapper(tracer),"
-  },
-  {
-   "symbol": "responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 313,
-   "in": "OpenAIV1Instrumentor._instrument",
-   "text": "responses_get_or_create_wrapper(tracer),"
-  },
-  {
-   "symbol": "responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 318,
-   "in": "OpenAIV1Instrumentor._instrument",
-   "text": "responses_get_or_create_wrapper(tracer),"
-  },
-  {
-   "symbol": "async_responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 32,
-   "in": null,
-   "text": "async_responses_get_or_create_wrapper,"
-  },
-  {
-   "symbol": "async_responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 328,
-   "in": "OpenAIV1Instrumentor._instrument",
-   "text": "async_responses_get_or_create_wrapper(tracer),"
-  },
-  {
-   "symbol": "async_responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 333,
-   "in": "OpenAIV1Instrumentor._instrument",
-   "text": "async_responses_get_or_create_wrapper(tracer),"
-  },
-  {
-   "symbol": "async_responses_get_or_create_wrapper",
-   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
-   "line": 338,
-   "in": "OpenAIV1Instrumentor._instrument",
-   "text": "async_responses_get_or_create_wrapper(tracer),"
+   "line": 700,
+   "in": "OpenTelemetryTracingProcessor.on_span_start",
+   "text": "self._start_agent_span",
+   "confidence": 0.9
   }
  ],
  "reference": [
   {
    "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-langchain/opentelemetry/instrumentation/langchain/__init__.py",
-   "line": 449,
-   "in": "_OpenAITracingWrapper.__call__",
-   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-langchain/opentelemetry/instrumentation/langchain/callback_handler.py",
-   "line": 567,
-   "in": "TraceloopCallbackHandler._create_llm_span",
-   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
    "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
-   "line": 677,
-   "in": "_wrap_factory.wrapper",
-   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
-   "line": 713,
-   "in": "_awrap_factory.wrapper",
-   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-alephalpha/opentelemetry/instrumentation/alephalpha/__init__.py",
-   "line": 30,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-alephalpha/opentelemetry/instrumentation/alephalpha/__init__.py",
-   "line": 153,
-   "in": "_wrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-anthropic/opentelemetry/instrumentation/anthropic/__init__.py",
-   "line": 50,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-anthropic/opentelemetry/instrumentation/anthropic/__init__.py",
-   "line": 545,
-   "in": "_wrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-anthropic/opentelemetry/instrumentation/anthropic/__init__.py",
-   "line": 678,
-   "in": "_awrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 68,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+   "line": 660,
+   "in": "_is_suppressed",
+   "text": "def _is_suppressed()"
   },
   {
    "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
    "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
    "line": 224,
-   "in": "_instrumented_model_invoke.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 256,
-   "in": "_instrumented_model_invoke_with_response_stream.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 293,
-   "in": "_instrumented_converse.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 325,
-   "in": "_instrumented_converse_stream.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 358,
-   "in": "_instrumented_async_model_invoke.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 383,
-   "in": "_instrumented_async_model_invoke_with_response_stream.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 410,
-   "in": "_instrumented_async_converse.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
-   "line": 435,
-   "in": "_instrumented_async_converse_stream.with_instrumentation",
-   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-cohere/opentelemetry/instrumentation/cohere/__init__.py",
-   "line": 36,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-cohere/opentelemetry/instrumentation/cohere/__init__.py",
-   "line": 218,
-   "in": "_wrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-cohere/opentelemetry/instrumentation/cohere/__init__.py",
-   "line": 267,
-   "in": "_awrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-google-generativeai/opentelemetry/instrumentation/google_generativeai/__init__.py",
-   "line": 36,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-google-generativeai/opentelemetry/instrumentation/google_generativeai/__init__.py",
-   "line": 232,
-   "in": "_awrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-google-generativeai/opentelemetry/instrumentation/google_generativeai/__init__.py",
-   "line": 310,
-   "in": "_wrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-groq/opentelemetry/instrumentation/groq/__init__.py",
-   "line": 40,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-groq/opentelemetry/instrumentation/groq/__init__.py",
-   "line": 400,
-   "in": "_wrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-groq/opentelemetry/instrumentation/groq/__init__.py",
-   "line": 487,
-   "in": "_awrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-langchain/opentelemetry/instrumentation/langchain/callback_handler.py",
-   "line": 70,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
-   "line": 38,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
-   "line": 660,
-   "in": "_is_suppressed",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
-   "line": 58,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+   "in": "_instrumented_model_invoke",
+   "text": "def _instrumented_model_invoke(fn, tracer, metric_params, event_logger)"
   },
   {
    "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
    "file": "packages/opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
    "line": 194,
    "in": "OpenLLMetrySpanHandler.new_span",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, False"
+   "text": "def new_span( self, id_: str, bound_args: inspect.BoundArguments, instance: Optional[Any] = None, parent_span_id: Optional[str] = None, tags: Optional[Dict[str, Any]] = None, **kwargs: Any, ) -> Optio"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-sagemaker/opentelemetry/instrumentation/sagemaker/__init__.py",
+   "line": 96,
+   "in": "with_instrumentation",
+   "text": "def with_instrumentation(*args, **kwargs)"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 292,
+   "in": "with_instrumentation",
+   "text": ""
   },
   {
    "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
    "file": "packages/opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
-   "line": 222,
-   "in": "OpenLLMetrySpanHandler.new_span",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-marqo/opentelemetry/instrumentation/marqo/wrapper.py",
-   "line": 35,
-   "in": "_wrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-mistralai/opentelemetry/instrumentation/mistralai/__init__.py",
-   "line": 30,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-mistralai/opentelemetry/instrumentation/mistralai/__init__.py",
-   "line": 483,
-   "in": "_wrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-mistralai/opentelemetry/instrumentation/mistralai/__init__.py",
-   "line": 536,
-   "in": "_awrap",
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
-  },
-  {
-   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
-   "file": "packages/opentelemetry-instrumentation-ollama/opentelemetry/instrumentation/ollama/__init__.py",
-   "line": 38,
-   "in": null,
-   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+   "line": 255,
+   "in": "OpenLLMetrySpanHandler.prepare_to_exit_span",
+   "text": ""
   }
  ]
 }

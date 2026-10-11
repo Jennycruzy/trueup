@@ -94,7 +94,7 @@ def baseline(root: Path, clone: Path, commit: str, target: tg.Target, fix_dir: P
     out("baseline: full scenario library")
     sweep = vf.sweep_scenarios(fpy, target.library, all_scenarios(), out=out)
     b = {"commit": commit, "suites": suites, "sweep": sweep}
-    cache.write_text(json.dumps(b, indent=1, default=str))
+    loc.save(cache, json.dumps(b, indent=1, default=str))
     return b
 
 
@@ -178,10 +178,10 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
     clone = None
     try:
         with tracing.worker("trueup-fixer", step="locate") as span:
-            located = loc.locate(root, target, run_dir)
+            located = loc.locate(root, target, run_dir, finding=finding)
             clone = Path(located["clone"])
             loc.reset_clone(clone)
-            (fix_dir / "locate.json").write_text((run_dir / "locate.json").read_text())
+            loc.save((fix_dir / "locate.json"), (run_dir / "locate.json").read_text())
             result["commit"], result["locate_method"] = located["commit"], located["method"]
             out(f"located with {located['method']}: {len(located['definitions'])} definitions, "
                 f"{len(located['callers'])} callers ({located['graph'].get('reason', '')[:160]})")
@@ -237,16 +237,75 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
     return result
 
 
+def locate_only(root: Path, finding_id: str, out: Callable[[str], None] = print) -> dict[str, Any]:
+    """Re-run only the locate step (no model call, no patch). Writes fixes/<id>/locate.json and
+    graph-compare.json/.md: where the functions the verified patch.diff changed rank among what the
+    graph found, next to the ripgrep + ast fallback."""
+    finding, _ = find_finding(root, finding_id)
+    target = tg.get(finding["library"], finding["details"]["code_path"])
+    fix_dir = root / "fixes" / finding_id
+    fix_dir.mkdir(parents=True, exist_ok=True)
+    old = fix_dir / "locate.json"
+    if old.exists() and not (fix_dir / "locate-fix-run.json").exists():
+        # The locate output the fix runs used (ripgrep + ast); this re-run replaces locate.json.
+        loc.save(fix_dir / "locate-fix-run.json", old.read_text())
+    with tracing.worker("trueup-fixer", step="locate only") as span:
+        located = loc.locate(root, target, fix_dir, finding=finding)
+        clone = Path(located["clone"])
+        loc.reset_clone(clone)
+        fallback = loc.locate_symbols(clone, target)
+        tracing.set_verdict(span, located["method"])
+    diff = fix_dir / "patch.diff"
+    patched = loc.patched_functions(clone, diff.read_text()) if diff.exists() else []
+    res = {"finding": finding_id, "commit": located["commit"], "method": located["method"],
+           "graph_reason": located["graph"].get("reason"), "query": located["graph"].get("query"),
+           "patched_functions": patched,
+           "graph": loc.compare_with_patch(located, patched) if located["graph"]["used"] else None,
+           "fallback": loc.compare_with_patch({**fallback, "definitions": [
+               {**d, "rank": i} for i, d in enumerate(fallback["definitions"], 1)]}, patched),
+           "graph_top": [{"rank": d["rank"], "qualname": d["qualname"], "file": d["file"], "score": d["score"]}
+                         for d in located["definitions"][:8]] if located["graph"]["used"] else []}
+    loc.save(fix_dir / "graph-compare.json", json.dumps(res, indent=1))
+    loc.save(fix_dir / "graph-compare.md", compare_md(res))
+    out(compare_md(res))
+    return res
+
+
+def compare_md(res: dict[str, Any]) -> str:
+    lines = [f"# Locate re-run: {res['finding']}", "",
+             f"Method: {res['method']} ({res['graph_reason']}). Clone commit {res['commit'][:10]}.",
+             f"Query: {res['query']}" if res["query"] else "", "",
+             "| patched function | file | graph rank | ripgrep + ast rank | among graph callers |", "|---|---|---|---|---|"]
+    fb = {(r["file"], r["qualname"]): r for r in res["fallback"]["patched"]}
+
+    def rank(r: dict[str, Any]) -> str:
+        if r["rank"] is not None:
+            return str(r["rank"])
+        return f"only its class, at {r['class_rank']}" if r.get("class_rank") else "not found"
+
+    for r in (res["graph"] or res["fallback"])["patched"]:
+        lines.append(f"| {r['qualname']} | {r['file']} | {rank(r) if res['graph'] else '-'} | "
+                     f"{rank(fb[(r['file'], r['qualname'])])} | "
+                     f"{'yes' if res['graph'] and r['among_callers'] else 'no'} |")
+    if res["graph"]:
+        g = res["graph"]
+        lines += ["", f"Graph found {g['found']} of {len(g['patched'])} patched functions, {g['in_top']} in its top "
+                      f"{g['top']} (the ones followed up with neighbors and impact). Ranked first: "
+                      f"{'yes' if g['same_function_first'] else 'no'}.", "", "Graph top hits:", ""]
+        lines += [f"{d['rank']}. {d['qualname']} ({d['file']}, score {d['score']})" for d in res["graph_top"]]
+    return "\n".join(lines) + "\n"
+
+
 def write_fix(fix_dir: Path, finding: dict[str, Any], target: tg.Target, base: dict[str, Any],
               rec: dict[str, Any]) -> None:
-    (fix_dir / "patch.diff").write_text(rec["diff"])
+    loc.save((fix_dir / "patch.diff"), rec["diff"])
     test = rec["draft"]["test"]
-    (fix_dir / Path(test["file"]).name).write_text(test["content"])
+    loc.save((fix_dir / Path(test["file"]).name), test["content"])
     rows = vf.before_after(finding, base["sweep"], rec["sweep_after"])
     tb, ta = vf.totals(base["sweep"]), vf.totals(rec["sweep_after"])
-    (fix_dir / "before-after.json").write_text(json.dumps({"rows": rows, "before": tb, "after": ta}, indent=1,
+    loc.save((fix_dir / "before-after.json"), json.dumps({"rows": rows, "before": tb, "after": ta}, indent=1,
                                                           default=str))
-    (fix_dir / "before-after.md").write_text(vf.table_md(rows, tb, ta))
+    loc.save((fix_dir / "before-after.md"), vf.table_md(rows, tb, ta))
 
 
 def write_log(fix_dir: Path, run_dir: Path, result: dict[str, Any]) -> None:
@@ -255,17 +314,17 @@ def write_log(fix_dir: Path, run_dir: Path, result: dict[str, Any]) -> None:
         t = {k: v for k, v in t.items() if k != "sweep_after"}
         tries.append(t)
     log = {**result, "tries": tries}
-    (fix_dir / "tries.json").write_text(json.dumps(log, indent=1, default=str))
-    (run_dir / "fix.json").write_text(json.dumps(log, indent=1, default=str))
+    loc.save((fix_dir / "tries.json"), json.dumps(log, indent=1, default=str))
+    loc.save((run_dir / "fix.json"), json.dumps(log, indent=1, default=str))
     # Every run's tries are kept, also the runs that did not fix it.
     (fix_dir / "runs").mkdir(exist_ok=True)
-    (fix_dir / "runs" / f"{result['run_id']}.json").write_text(json.dumps(log, indent=1, default=str))
+    loc.save((fix_dir / "runs" / f"{result['run_id']}.json"), json.dumps(log, indent=1, default=str))
     suites = {"before": result.get("suites_before", {}),
               "after": {n: {p: {x: s["after"].get(x) for x in ("total", "passed", "failed", "errors", "skipped",
                                                                   "failing", "exit")} | {"verdict": s["reason"]}
                             for p, s in t.get("suites", {}).items()} for n, t in
                         ((t["try"], t) for t in result["tries"])}}
-    (fix_dir / "suites.json").write_text(json.dumps(suites, indent=1, default=str))
+    loc.save((fix_dir / "suites.json"), json.dumps(suites, indent=1, default=str))
     lines = [f"# {result['finding']}", "", result["title"], "",
              f"Library commit: {result.get('commit', '?')}. Located with {result.get('locate_method', '?')}.",
              f"Model: {result['model']}; cost ${result['cost_usd']} (key spend delta); run {result['run_id']}.", "",
@@ -279,4 +338,4 @@ def write_log(fix_dir: Path, run_dir: Path, result: dict[str, Any]) -> None:
             lines.append(f"   Model's explanation: {_short(t['explanation'], 500)}")
     if (fix_dir / "before-after.md").exists() and result["fixed"]:
         lines += ["", "## Before and after", "", (fix_dir / "before-after.md").read_text()]
-    (fix_dir / "summary.md").write_text("\n".join(lines) + "\n")
+    loc.save((fix_dir / "summary.md"), "\n".join(lines) + "\n")

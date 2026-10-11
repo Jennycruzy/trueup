@@ -1,0 +1,650 @@
+{
+ "library": "neatlogs",
+ "code_path": "anthropic messages stream",
+ "clone": ".trueup/clones/neatlogs",
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "graph": {
+  "used": false,
+  "commands": [
+   {
+    "cmd": "entire agent-help",
+    "exit": 0,
+    "output": "Entire's CLI is the source of truth for its own usage. Do not guess flags or\nsubcommands \u2014 read them from this command. You are already inside the repo:\nentire auto-detects it from the git origin remote, so never ask the user for the\nrepo name. Pass --repo only to target a DIFFERENT repo.\n\nCurrent repo: gh/neatlogs/neatlogs  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nWhen to use entire \u2014 the commands that bear on the work:\n  checkpoint  Inspect and search checkpoints\n                read-only except: explain\n  search      Search checkpoints, commits, and sessions using semantic and keyword matching\n                read-only\n  session     Manage agent sessions tracked by Entire\n                read-only except: adopt, attach, resume, stop\n  status      Show Entire status\n                read-only\n  why         Show why a line exists\n                read-only\n\nAlso available (entire agent-help <command> for any of these):\n  read-only, safe to run:\n    activity \u00b7 labs \u00b7 recap \u00b7 version\n  when the task needs them:\n    api \u00b7 dispatch \u00b7 doctor\n  the user's \u2014 suggest, don't run:\n    agent \u00b7 auth \u00b7 clean \u00b7 cluster \u00b7 configure \u00b7 disable \u00b7 enable\n    login \u00b7 logout \u00b7 org \u00b7 plugin \u00b7 project \u00b7 repo\n\nDrill in for exact, currently-installed flags:  entire agent-help <command>  (e.g. entire agent-help checkpoint)\nAdd --json for structured output."
+   },
+   {
+    "cmd": "entire agent-help labs",
+    "exit": 0,
+    "output": "entire labs \u2014 Explore experimental Entire workflows\nLabs\n\nThese are newer Entire workflows we are actively refining. They are available\nto try now, but details may change based on feedback.\n\nAvailable experimental commands:\n  entire review             Run a multi-agent review against the current branch\n  entire import claude-code Import existing Claude Code transcripts as local, read-only history\n  entire tokens             Analyze experimental token usage diagnostics\n  entire tokens profile     Aggregate token usage across committed checkpoints\n  entire session tokens     Show token usage and recommendations for a session\n  entire blame              Show which lines came from Entire checkpoints\n  entire why                Show why a line exists (commit, checkpoint, prompt, session)\n  entire experts            Show agent, skill, and tool provenance for files or topics\n\nTry:\n  entire review --help\n  entire tokens --help\n  entire tokens profile --help\n  entire session tokens --help\n  entire blame --help\n  entire why --help\n  entire experts --help\n\nCurrent repo: gh/neatlogs/neatlogs  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nInherited flags:\n      --context name   Act as this saved login name for this command only \u2014 including the git and agent processes it spawns \u2014 instead of the active context (entire auth contexts lists them)"
+   },
+   {
+    "cmd": "entire graph --help",
+    "exit": 1,
+    "output": "the entire-graph plugin is not installed; run 'entire plugin install graph' and retry"
+   }
+  ],
+  "reason": "entire graph is not available here: the entire-graph plugin is not installed; run 'entire plugin install graph' and retry. agent-help lists `entire plugin` as the user's command, so Trueup did not install it."
+ },
+ "method": "ripgrep + ast (fallback)",
+ "definitions": [
+  {
+   "symbol": "patched_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 124,
+   "qualname": "_patch_messages.patched_stream",
+   "end": 147
+  },
+  {
+   "symbol": "patched_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 205,
+   "qualname": "_patch_async_messages.patched_stream",
+   "end": 228
+  },
+  {
+   "symbol": "patched_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 124,
+   "qualname": "_patch_messages.patched_stream",
+   "end": 147
+  },
+  {
+   "symbol": "patched_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 205,
+   "qualname": "_patch_async_messages.patched_stream",
+   "end": 228
+  },
+  {
+   "symbol": "_SyncStreamManagerWrapper",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 461,
+   "qualname": "_SyncStreamManagerWrapper",
+   "end": 497
+  },
+  {
+   "symbol": "_SyncStreamManagerWrapper",
+   "file": "neatlogs/anthropic.py",
+   "line": 461,
+   "qualname": "_SyncStreamManagerWrapper",
+   "end": 493
+  },
+  {
+   "symbol": "_SyncStreamIterator",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 500,
+   "qualname": "_SyncStreamIterator",
+   "end": 514
+  },
+  {
+   "symbol": "_SyncStreamIterator",
+   "file": "neatlogs/anthropic.py",
+   "line": 496,
+   "qualname": "_SyncStreamIterator",
+   "end": 510
+  },
+  {
+   "symbol": "_AsyncStreamManagerWrapper",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 517,
+   "qualname": "_AsyncStreamManagerWrapper",
+   "end": 553
+  },
+  {
+   "symbol": "_AsyncStreamManagerWrapper",
+   "file": "neatlogs/anthropic.py",
+   "line": 513,
+   "qualname": "_AsyncStreamManagerWrapper",
+   "end": 545
+  },
+  {
+   "symbol": "_AsyncStreamIterator",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 556,
+   "qualname": "_AsyncStreamIterator",
+   "end": 577
+  },
+  {
+   "symbol": "_AsyncStreamIterator",
+   "file": "neatlogs/anthropic.py",
+   "line": 548,
+   "qualname": "_AsyncStreamIterator",
+   "end": 569
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 350,
+   "qualname": "_finalize_stream",
+   "end": 458
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 385,
+   "qualname": "_finalize_stream",
+   "end": 461
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/google_genai.py",
+   "line": 408,
+   "qualname": "_finalize_stream",
+   "end": 482
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/vertex_ai.py",
+   "line": 347,
+   "qualname": "_finalize_stream",
+   "end": 421
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 350,
+   "qualname": "_finalize_stream",
+   "end": 458
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/azure_openai.py",
+   "line": 385,
+   "qualname": "_finalize_stream",
+   "end": 461
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/google_genai.py",
+   "line": 408,
+   "qualname": "_finalize_stream",
+   "end": 482
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/vertex_ai.py",
+   "line": 347,
+   "qualname": "_finalize_stream",
+   "end": 421
+  }
+ ],
+ "callers": [
+  {
+   "symbol": "patched_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 149,
+   "in": "_patch_messages",
+   "text": "messages.stream = patched_stream"
+  },
+  {
+   "symbol": "patched_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 230,
+   "in": "_patch_async_messages",
+   "text": "messages.stream = patched_stream"
+  },
+  {
+   "symbol": "patched_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 149,
+   "in": "_patch_messages",
+   "text": "messages.stream = patched_stream"
+  },
+  {
+   "symbol": "patched_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 230,
+   "in": "_patch_async_messages",
+   "text": "messages.stream = patched_stream"
+  },
+  {
+   "symbol": "_SyncStreamManagerWrapper",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 147,
+   "in": "_patch_messages.patched_stream",
+   "text": "return _SyncStreamManagerWrapper(stream_mgr, span)"
+  },
+  {
+   "symbol": "_SyncStreamManagerWrapper",
+   "file": "neatlogs/anthropic.py",
+   "line": 147,
+   "in": "_patch_messages.patched_stream",
+   "text": "return _SyncStreamManagerWrapper(stream_mgr, span)"
+  },
+  {
+   "symbol": "_SyncStreamIterator",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 474,
+   "in": "_SyncStreamManagerWrapper.__enter__",
+   "text": "return _SyncStreamIterator(self)"
+  },
+  {
+   "symbol": "_SyncStreamIterator",
+   "file": "neatlogs/anthropic.py",
+   "line": 474,
+   "in": "_SyncStreamManagerWrapper.__enter__",
+   "text": "return _SyncStreamIterator(self)"
+  },
+  {
+   "symbol": "_AsyncStreamManagerWrapper",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 228,
+   "in": "_patch_async_messages.patched_stream",
+   "text": "return _AsyncStreamManagerWrapper(stream_mgr, span)"
+  },
+  {
+   "symbol": "_AsyncStreamManagerWrapper",
+   "file": "neatlogs/anthropic.py",
+   "line": 228,
+   "in": "_patch_async_messages.patched_stream",
+   "text": "return _AsyncStreamManagerWrapper(stream_mgr, span)"
+  },
+  {
+   "symbol": "_AsyncStreamIterator",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 530,
+   "in": "_AsyncStreamManagerWrapper.__aenter__",
+   "text": "return _AsyncStreamIterator(self)"
+  },
+  {
+   "symbol": "_AsyncStreamIterator",
+   "file": "neatlogs/anthropic.py",
+   "line": 526,
+   "in": "_AsyncStreamManagerWrapper.__aenter__",
+   "text": "return _AsyncStreamIterator(self)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 114,
+   "in": "_patch_messages.patched_create",
+   "text": "return SyncStreamWrapper(response, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 195,
+   "in": "_patch_async_messages.patched_create",
+   "text": "return AsyncStreamWrapper(response, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 494,
+   "in": "_SyncStreamManagerWrapper._finalize",
+   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 550,
+   "in": "_AsyncStreamManagerWrapper._finalize",
+   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/vertex_ai.py",
+   "line": 141,
+   "in": "_patch_models.patched_generate_content_stream",
+   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/vertex_ai.py",
+   "line": 197,
+   "in": "_patch_async_models.patched_generate_content_stream",
+   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/vertex_ai.py",
+   "line": 599,
+   "in": "_patch_chat_classes.patched_send_stream",
+   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "build/lib/neatlogs/vertex_ai.py",
+   "line": 639,
+   "in": "_patch_chat_classes.patched_asend_stream",
+   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 114,
+   "in": "_patch_messages.patched_create",
+   "text": "return SyncStreamWrapper(response, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 195,
+   "in": "_patch_async_messages.patched_create",
+   "text": "return AsyncStreamWrapper(response, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 490,
+   "in": "_SyncStreamManagerWrapper._finalize",
+   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/anthropic.py",
+   "line": 542,
+   "in": "_AsyncStreamManagerWrapper._finalize",
+   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/vertex_ai.py",
+   "line": 141,
+   "in": "_patch_models.patched_generate_content_stream",
+   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/vertex_ai.py",
+   "line": 197,
+   "in": "_patch_async_models.patched_generate_content_stream",
+   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/vertex_ai.py",
+   "line": 599,
+   "in": "_patch_chat_classes.patched_send_stream",
+   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
+  },
+  {
+   "symbol": "_finalize_stream",
+   "file": "neatlogs/vertex_ai.py",
+   "line": 639,
+   "in": "_patch_chat_classes.patched_asend_stream",
+   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
+  }
+ ],
+ "reference": [
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 244,
+   "in": "_patch_agent.patched_run",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 252,
+   "in": "_patch_agent.patched_run",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 282,
+   "in": "_patch_agent.patched_arun",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 290,
+   "in": "_patch_agent.patched_arun",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 330,
+   "in": "_patch_workflow.patched_run",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 337,
+   "in": "_patch_workflow.patched_run",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 363,
+   "in": "_patch_workflow.patched_arun",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 370,
+   "in": "_patch_workflow.patched_arun",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 539,
+   "in": "_patch_function_call_class.patched_execute",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 559,
+   "in": "_patch_function_call_class.patched_aexecute",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 676,
+   "in": "_patch_model_class.make.wrapper",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 698,
+   "in": "_patch_model_class.make.wrapper",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 724,
+   "in": "_patch_model_class.make.wrapper",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 746,
+   "in": "_patch_model_class.make.wrapper",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/agno.py",
+   "line": 882,
+   "in": "_err",
+   "text": "def _err(span: Any, e: Exception) -> None:"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 482,
+   "in": "_SyncStreamManagerWrapper.__exit__",
+   "text": "_err(self._span, exc_val)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 538,
+   "in": "_AsyncStreamManagerWrapper.__aexit__",
+   "text": "_err(self._span, exc_val)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 600,
+   "in": "_extra_message_methods.patched_parse",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 615,
+   "in": "_extra_message_methods.patched_parse",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 645,
+   "in": "_extra_message_methods.patched_count",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 667,
+   "in": "_extra_message_methods.patched_count",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 743,
+   "in": "_patch_legacy_completions.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 760,
+   "in": "_patch_legacy_completions.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/anthropic.py",
+   "line": 769,
+   "in": "_err",
+   "text": "def _err(span: Any, e: Exception) -> None:"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 186,
+   "in": "_patch_completions.patched_create",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 225,
+   "in": "_patch_async_completions.patched_create",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 251,
+   "in": "_patch_responses.patched_create",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 275,
+   "in": "_patch_async_responses.patched_create",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 348,
+   "in": "_patch_embeddings.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 365,
+   "in": "_patch_embeddings.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 540,
+   "in": "_err",
+   "text": "def _err(span: Any, e: Exception) -> None:"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 575,
+   "in": "_patch_method.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/azure_openai.py",
+   "line": 596,
+   "in": "_patch_method.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/bedrock.py",
+   "line": 80,
+   "in": "_err",
+   "text": "def _err(span: Any, e: Exception) -> None:"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/bedrock.py",
+   "line": 262,
+   "in": "_patch_converse.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/bedrock.py",
+   "line": 282,
+   "in": "_patch_converse_stream.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/bedrock.py",
+   "line": 324,
+   "in": "_wrap_converse_stream",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/bedrock.py",
+   "line": 538,
+   "in": "_patch_invoke_model.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/bedrock.py",
+   "line": 589,
+   "in": "_patch_invoke_model_stream.patched",
+   "text": "_err(span, e)"
+  },
+  {
+   "symbol": "_err",
+   "file": "build/lib/neatlogs/bedrock.py",
+   "line": 633,
+   "in": "_wrap_invoke_stream",
+   "text": "_err(span, e)"
+  }
+ ]
+}

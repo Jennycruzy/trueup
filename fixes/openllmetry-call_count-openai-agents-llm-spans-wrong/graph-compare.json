@@ -1,0 +1,165 @@
+{
+ "finding": "openllmetry-call_count-openai-agents-llm-spans-wrong",
+ "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+ "method": "entire graph",
+ "graph_reason": "entire graph search, neighbors and impact",
+ "query": "openai-agents tracing: LLM spans is 4 in the span but really 2 (provider requests) (openllmetry, openai-agents: LLM spans recorded wrong)",
+ "patched_functions": [
+  {
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "qualname": "OpenTelemetryTracingProcessor.__init__"
+  },
+  {
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "qualname": "OpenTelemetryTracingProcessor.on_span_start"
+  },
+  {
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "qualname": "OpenTelemetryTracingProcessor.on_span_end"
+  },
+  {
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+   "qualname": "responses_get_or_create_wrapper"
+  },
+  {
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+   "qualname": "async_responses_get_or_create_wrapper"
+  }
+ ],
+ "graph": {
+  "patched": [
+   {
+    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+    "qualname": "OpenTelemetryTracingProcessor.__init__",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+    "qualname": "OpenTelemetryTracingProcessor.on_span_start",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": true
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+    "qualname": "OpenTelemetryTracingProcessor.on_span_end",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+    "qualname": "responses_get_or_create_wrapper",
+    "rank": 6,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+    "qualname": "async_responses_get_or_create_wrapper",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   }
+  ],
+  "found": 1,
+  "in_top": 0,
+  "top": 3,
+  "same_function_first": false
+ },
+ "fallback": {
+  "patched": [
+   {
+    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+    "qualname": "OpenTelemetryTracingProcessor.__init__",
+    "rank": null,
+    "class_rank": 1,
+    "among_callers": false
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+    "qualname": "OpenTelemetryTracingProcessor.on_span_start",
+    "rank": 2,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+    "qualname": "OpenTelemetryTracingProcessor.on_span_end",
+    "rank": 3,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+    "qualname": "responses_get_or_create_wrapper",
+    "rank": 4,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+    "qualname": "async_responses_get_or_create_wrapper",
+    "rank": 5,
+    "class_rank": null,
+    "among_callers": false
+   }
+  ],
+  "found": 4,
+  "in_top": 2,
+  "top": 3,
+  "same_function_first": false
+ },
+ "graph_top": [
+  {
+   "rank": 1,
+   "qualname": "RealtimeTracingState.create_llm_span",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "score": 38.5272
+  },
+  {
+   "rank": 2,
+   "qualname": "RealtimeTracingState._get_parent_context",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_realtime_wrappers.py",
+   "score": 38.5172
+  },
+  {
+   "rank": 3,
+   "qualname": "OpenTelemetryTracingProcessor._start_agent_span",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "score": 34.5413
+  },
+  {
+   "rank": 4,
+   "qualname": "OpenAIAgentsInstrumentor._instrument",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/__init__.py",
+   "score": 33.0033
+  },
+  {
+   "rank": 5,
+   "qualname": "_record_traced_data",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+   "score": 31.3923
+  },
+  {
+   "rank": 6,
+   "qualname": "responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+   "score": 28.2531
+  },
+  {
+   "rank": 7,
+   "qualname": "_set_span_attribute",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/shared/__init__.py",
+   "score": 28.0113
+  },
+  {
+   "rank": 8,
+   "qualname": "RealtimeEventProcessor.start_response_span",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/realtime_wrappers.py",
+   "score": 26.9869
+  }
+ ]
+}

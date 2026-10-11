@@ -88,6 +88,8 @@ def build_parser() -> argparse.ArgumentParser:
     fx = sub.add_parser("fix", help="draft a patch and a test for a finding, verify it, write fixes/<id>/")
     fx.add_argument("finding_id", help="a finding id from findings.json")
     fx.add_argument("--tries", type=int, default=3, help="most patch tries (default 3)")
+    fx.add_argument("--locate-only", action="store_true",
+                    help="only re-run the locate step and compare it with fixes/<id>/patch.diff (no model call)")
     up = sub.add_parser("upstream", help="draft issue and PR text for a finding into upstream/<id>/ (never posts)")
     up.add_argument("finding_id", help="a finding id from findings.json")
     ck = sub.add_parser("check", help="run the checker and dedupe over a sweep's leads")
@@ -127,6 +129,15 @@ def main(argv: Sequence[str] | None = None) -> int:
             return EXIT_ERROR
         return EXIT_MISMATCH if res["counts"]["findings"] else EXIT_OK
     if args.command == "fix":
+        if args.locate_only:
+            from trueup.fix import locate_only
+
+            try:
+                locate_only(Path.cwd(), args.finding_id)
+            except (KeyError, FileNotFoundError, RuntimeError) as e:
+                print(f"trueup fix: {e}", file=sys.stderr)
+                return EXIT_ERROR
+            return EXIT_OK
         return fix_command(args.finding_id, args.tries)
     if args.command == "upstream":
         from trueup.upstream import upstream

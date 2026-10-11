@@ -255,3 +255,20 @@ Limits, read by hand:
 - Three verifier holes were found during these runs and closed (clone not reset between tries; new tests left out of the suite comparison; a suite that does not run read as "same failures"). Two "passes" were withdrawn because of them. Earlier tries in these logs ran under the weaker rules.
 
 Upstream drafts are in `upstream/<id>/` (issue.md, pr.md, repro.py, repro-output.json). None was posted.
+
+## 2026-10-11: locate with Entire's code graph
+
+- The entire-graph plugin is now installed. I read `entire graph agent-guide` and `entire graph capabilities --json` (schema 1.1; Python is a semantic language with CALLS, ASYNC_CALLS, INHERITS, OVERRIDES and type relations; no feature needs the network).
+- Locate now uses the graph first, as the guide says. It checks capabilities, then per target package runs one `entire graph search --profile full` with the finding as a sentence ("openai-agents tracing: LLM spans is 4 in the span but really 2 ..."). For the top 3 hits it runs `entire graph neighbors --relation CALLS --direction in` (callers) and `entire graph impact`. The library's own reference pattern comes from a second search. Test files are dropped from the hits. ripgrep + ast on the hand-written seed symbols is only the fallback: when the graph is missing, has no Python support, fails or finds no function. locate.json says which was used and why.
+- `trueup fix <id> --locate-only` re-runs only this step (no model call, no patch). It writes `locate.json` with every graph command and its JSON output, and keeps the locate output the fix runs used as `locate-fix-run.json`. It also writes `graph-compare.json/.md`: each function the verified `patch.diff` changed (found from the diff's lines with ast) and where it ranks in the graph's hits and in the fallback's.
+- Paths: the graph prints `repo_root` as an absolute path. Every file Trueup writes under `fixes/` and `upstream/` now goes through `locate.save`, which makes this machine's paths relative (clone paths relative to the clone, `~` for home). The committed files had no absolute paths to remove.
+
+Did the graph point at the function that was actually patched? Ranks among the graph's search hits (8 per package):
+
+| finding | patched functions | graph found | in graph top 3 | ranked 1st | notes |
+|---|---|---|---|---|---|
+| OpenInference root span OK | `on_span_end`, `on_trace_end`, `__init__` | 2 of 3 | `on_span_end` at 2 | no (`_get_span_status` was 1st) | `on_trace_end`, which sets the root status, ranked 6; `__init__` only gains a dict |
+| OpenLLMetry double LLM spans | `on_span_start`, `on_span_end`, `__init__` (agents), sync and async `responses_get_or_create_wrapper` (openai) | 1 of 5 | none | no | `responses_get_or_create_wrapper` at 6. The top hits were the realtime span code. `on_span_start` appeared only as a caller (`neighbors`) of hit 3, `_start_agent_span` |
+| neatlogs `messages.stream()` failure OK | `__exit__`/`__aexit__` and `_finalize` of both stream manager wrappers | 0 of 4 | none | no | the top 2 were `_finalize_error` of the shared stream wrappers in `_wrap_utils.py`: the same kind of code (error on a stream), in a different place |
+
+So for the three fixes the graph pointed at the patched function in one case (OpenInference, rank 2), was close in one (OpenLLMetry, the openai half at rank 6) and missed in one (neatlogs). The fallback's "rank" is not a fair comparison. It searches seed symbols that I wrote into `targets.py` after reading the code, and for neatlogs it only returns the classes. The fix runs themselves used the fallback, and the model was given whole files around those definitions. Whether graph-only locate would have led to the same patches was not tested: that needs new model calls.

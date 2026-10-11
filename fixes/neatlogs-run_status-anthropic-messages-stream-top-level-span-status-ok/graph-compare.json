@@ -1,0 +1,135 @@
+{
+ "finding": "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "method": "entire graph",
+ "graph_reason": "entire graph search, neighbors and impact",
+ "query": "anthropic messages stream tracing: top-level span status is OK in the span but really ERROR (app raised RemoteProtocolError) (neatlogs, anthropic messages stream: top-level span status is OK)",
+ "patched_functions": [
+  {
+   "file": "neatlogs/anthropic.py",
+   "qualname": "_SyncStreamManagerWrapper.__exit__"
+  },
+  {
+   "file": "neatlogs/anthropic.py",
+   "qualname": "_SyncStreamManagerWrapper._finalize"
+  },
+  {
+   "file": "neatlogs/anthropic.py",
+   "qualname": "_AsyncStreamManagerWrapper.__aexit__"
+  },
+  {
+   "file": "neatlogs/anthropic.py",
+   "qualname": "_AsyncStreamManagerWrapper._finalize"
+  }
+ ],
+ "graph": {
+  "patched": [
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_SyncStreamManagerWrapper.__exit__",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_SyncStreamManagerWrapper._finalize",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_AsyncStreamManagerWrapper.__aexit__",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_AsyncStreamManagerWrapper._finalize",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   }
+  ],
+  "found": 0,
+  "in_top": 0,
+  "top": 3,
+  "same_function_first": false
+ },
+ "fallback": {
+  "patched": [
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_SyncStreamManagerWrapper.__exit__",
+    "rank": null,
+    "class_rank": 3,
+    "among_callers": false
+   },
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_SyncStreamManagerWrapper._finalize",
+    "rank": null,
+    "class_rank": 3,
+    "among_callers": true
+   },
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_AsyncStreamManagerWrapper.__aexit__",
+    "rank": null,
+    "class_rank": 5,
+    "among_callers": false
+   },
+   {
+    "file": "neatlogs/anthropic.py",
+    "qualname": "_AsyncStreamManagerWrapper._finalize",
+    "rank": null,
+    "class_rank": 5,
+    "among_callers": true
+   }
+  ],
+  "found": 0,
+  "in_top": 0,
+  "top": 3,
+  "same_function_first": false
+ },
+ "graph_top": [
+  {
+   "rank": 1,
+   "qualname": "SyncStreamWrapper._finalize_error",
+   "file": "neatlogs/_wrap_utils.py",
+   "score": 62.2699
+  },
+  {
+   "rank": 2,
+   "qualname": "AsyncStreamWrapper._finalize_error",
+   "file": "neatlogs/_wrap_utils.py",
+   "score": 62.2324
+  },
+  {
+   "rank": 3,
+   "qualname": "NeatlogsConfigurationError",
+   "file": "neatlogs/errors.py",
+   "score": 61.7159
+  },
+  {
+   "rank": 4,
+   "qualname": "_reject_http_span_kind",
+   "file": "neatlogs/core/context.py",
+   "score": 56.9505
+  },
+  {
+   "rank": 5,
+   "qualname": "_trace_sampler",
+   "file": "neatlogs/init.py",
+   "score": 56.9505
+  },
+  {
+   "rank": 6,
+   "qualname": "AsyncStreamWrapper.__anext__",
+   "file": "neatlogs/_wrap_utils.py",
+   "score": 0
+  }
+ ]
+}

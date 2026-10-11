@@ -1,0 +1,426 @@
+{
+ "library": "openllmetry",
+ "code_path": "openai-agents",
+ "clone": ".trueup/clones/openllmetry",
+ "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+ "graph": {
+  "used": false,
+  "commands": [
+   {
+    "cmd": "entire agent-help",
+    "exit": 0,
+    "output": "Entire's CLI is the source of truth for its own usage. Do not guess flags or\nsubcommands \u2014 read them from this command. You are already inside the repo:\nentire auto-detects it from the git origin remote, so never ask the user for the\nrepo name. Pass --repo only to target a DIFFERENT repo.\n\nCurrent repo: gh/traceloop/openllmetry  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nWhen to use entire \u2014 the commands that bear on the work:\n  checkpoint  Inspect and search checkpoints\n                read-only except: explain\n  search      Search checkpoints, commits, and sessions using semantic and keyword matching\n                read-only\n  session     Manage agent sessions tracked by Entire\n                read-only except: adopt, attach, resume, stop\n  status      Show Entire status\n                read-only\n  why         Show why a line exists\n                read-only\n\nAlso available (entire agent-help <command> for any of these):\n  read-only, safe to run:\n    activity \u00b7 labs \u00b7 recap \u00b7 version\n  when the task needs them:\n    api \u00b7 dispatch \u00b7 doctor\n  the user's \u2014 suggest, don't run:\n    agent \u00b7 auth \u00b7 clean \u00b7 cluster \u00b7 configure \u00b7 disable \u00b7 enable\n    login \u00b7 logout \u00b7 org \u00b7 plugin \u00b7 project \u00b7 repo\n\nDrill in for exact, currently-installed flags:  entire agent-help <command>  (e.g. entire agent-help checkpoint)\nAdd --json for structured output."
+   },
+   {
+    "cmd": "entire agent-help labs",
+    "exit": 0,
+    "output": "entire labs \u2014 Explore experimental Entire workflows\nLabs\n\nThese are newer Entire workflows we are actively refining. They are available\nto try now, but details may change based on feedback.\n\nAvailable experimental commands:\n  entire review             Run a multi-agent review against the current branch\n  entire import claude-code Import existing Claude Code transcripts as local, read-only history\n  entire tokens             Analyze experimental token usage diagnostics\n  entire tokens profile     Aggregate token usage across committed checkpoints\n  entire session tokens     Show token usage and recommendations for a session\n  entire blame              Show which lines came from Entire checkpoints\n  entire why                Show why a line exists (commit, checkpoint, prompt, session)\n  entire experts            Show agent, skill, and tool provenance for files or topics\n\nTry:\n  entire review --help\n  entire tokens --help\n  entire tokens profile --help\n  entire session tokens --help\n  entire blame --help\n  entire why --help\n  entire experts --help\n\nCurrent repo: gh/traceloop/openllmetry  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nInherited flags:\n      --context name   Act as this saved login name for this command only \u2014 including the git and agent processes it spawns \u2014 instead of the active context (entire auth contexts lists them)"
+   },
+   {
+    "cmd": "entire graph --help",
+    "exit": 1,
+    "output": "the entire-graph plugin is not installed; run 'entire plugin install graph' and retry"
+   }
+  ],
+  "reason": "entire graph is not available here: the entire-graph plugin is not installed; run 'entire plugin install graph' and retry. agent-help lists `entire plugin` as the user's command, so Trueup did not install it."
+ },
+ "method": "ripgrep + ast (fallback)",
+ "definitions": [
+  {
+   "symbol": "OpenTelemetryTracingProcessor",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "line": 657,
+   "qualname": "OpenTelemetryTracingProcessor",
+   "end": 1126
+  },
+  {
+   "symbol": "on_span_start",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "line": 700,
+   "qualname": "OpenTelemetryTracingProcessor.on_span_start",
+   "end": 785
+  },
+  {
+   "symbol": "on_span_end",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "line": 788,
+   "qualname": "OpenTelemetryTracingProcessor.on_span_end",
+   "end": 833
+  },
+  {
+   "symbol": "responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+   "line": 539,
+   "qualname": "responses_get_or_create_wrapper",
+   "end": 712
+  },
+  {
+   "symbol": "async_responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/responses_wrappers.py",
+   "line": 717,
+   "qualname": "async_responses_get_or_create_wrapper",
+   "end": 890
+  }
+ ],
+ "callers": [
+  {
+   "symbol": "OpenTelemetryTracingProcessor",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/__init__.py",
+   "line": 62,
+   "in": "OpenAIAgentsInstrumentor._instrument",
+   "text": "otel_processor = OpenTelemetryTracingProcessor(tracer)"
+  },
+  {
+   "symbol": "on_span_start",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "line": 850,
+   "in": "OpenTelemetryTracingProcessor._start_agent_span",
+   "text": "``set_agent_name`` (None if the SDK isn't installed); ``on_span_start``"
+  },
+  {
+   "symbol": "on_span_end",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "line": 851,
+   "in": "OpenTelemetryTracingProcessor._start_agent_span",
+   "text": "keys it to the SDK span so ``on_span_end`` can detach it. Without that"
+  },
+  {
+   "symbol": "on_span_end",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "line": 1013,
+   "in": "OpenTelemetryTracingProcessor._end_generation_span",
+   "text": "\"\"\"Handle on_span_end logic for generation/response spans.\"\"\""
+  },
+  {
+   "symbol": "on_span_end",
+   "file": "packages/opentelemetry-instrumentation-openai-agents/opentelemetry/instrumentation/openai_agents/_hooks.py",
+   "line": 1035,
+   "in": "OpenTelemetryTracingProcessor._end_function_span",
+   "text": "\"\"\"Handle on_span_end logic for function/tool spans."
+  },
+  {
+   "symbol": "responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 34,
+   "in": null,
+   "text": "responses_get_or_create_wrapper,"
+  },
+  {
+   "symbol": "responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 308,
+   "in": "OpenAIV1Instrumentor._instrument",
+   "text": "responses_get_or_create_wrapper(tracer),"
+  },
+  {
+   "symbol": "responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 313,
+   "in": "OpenAIV1Instrumentor._instrument",
+   "text": "responses_get_or_create_wrapper(tracer),"
+  },
+  {
+   "symbol": "responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 318,
+   "in": "OpenAIV1Instrumentor._instrument",
+   "text": "responses_get_or_create_wrapper(tracer),"
+  },
+  {
+   "symbol": "async_responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 32,
+   "in": null,
+   "text": "async_responses_get_or_create_wrapper,"
+  },
+  {
+   "symbol": "async_responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 328,
+   "in": "OpenAIV1Instrumentor._instrument",
+   "text": "async_responses_get_or_create_wrapper(tracer),"
+  },
+  {
+   "symbol": "async_responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 333,
+   "in": "OpenAIV1Instrumentor._instrument",
+   "text": "async_responses_get_or_create_wrapper(tracer),"
+  },
+  {
+   "symbol": "async_responses_get_or_create_wrapper",
+   "file": "packages/opentelemetry-instrumentation-openai/opentelemetry/instrumentation/openai/v1/__init__.py",
+   "line": 338,
+   "in": "OpenAIV1Instrumentor._instrument",
+   "text": "async_responses_get_or_create_wrapper(tracer),"
+  }
+ ],
+ "reference": [
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-langchain/opentelemetry/instrumentation/langchain/__init__.py",
+   "line": 449,
+   "in": "_OpenAITracingWrapper.__call__",
+   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-langchain/opentelemetry/instrumentation/langchain/callback_handler.py",
+   "line": 567,
+   "in": "TraceloopCallbackHandler._create_llm_span",
+   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
+   "line": 677,
+   "in": "_wrap_factory.wrapper",
+   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
+   "line": 713,
+   "in": "_awrap_factory.wrapper",
+   "text": "context_api.set_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, True)"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-alephalpha/opentelemetry/instrumentation/alephalpha/__init__.py",
+   "line": 30,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-alephalpha/opentelemetry/instrumentation/alephalpha/__init__.py",
+   "line": 153,
+   "in": "_wrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-anthropic/opentelemetry/instrumentation/anthropic/__init__.py",
+   "line": 50,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-anthropic/opentelemetry/instrumentation/anthropic/__init__.py",
+   "line": 545,
+   "in": "_wrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-anthropic/opentelemetry/instrumentation/anthropic/__init__.py",
+   "line": 678,
+   "in": "_awrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 68,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 224,
+   "in": "_instrumented_model_invoke.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 256,
+   "in": "_instrumented_model_invoke_with_response_stream.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 293,
+   "in": "_instrumented_converse.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 325,
+   "in": "_instrumented_converse_stream.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 358,
+   "in": "_instrumented_async_model_invoke.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 383,
+   "in": "_instrumented_async_model_invoke_with_response_stream.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 410,
+   "in": "_instrumented_async_converse.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-bedrock/opentelemetry/instrumentation/bedrock/__init__.py",
+   "line": 435,
+   "in": "_instrumented_async_converse_stream.with_instrumentation",
+   "text": "if context_api.get_value(SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY):"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-cohere/opentelemetry/instrumentation/cohere/__init__.py",
+   "line": 36,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-cohere/opentelemetry/instrumentation/cohere/__init__.py",
+   "line": 218,
+   "in": "_wrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-cohere/opentelemetry/instrumentation/cohere/__init__.py",
+   "line": 267,
+   "in": "_awrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-google-generativeai/opentelemetry/instrumentation/google_generativeai/__init__.py",
+   "line": 36,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-google-generativeai/opentelemetry/instrumentation/google_generativeai/__init__.py",
+   "line": 232,
+   "in": "_awrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-google-generativeai/opentelemetry/instrumentation/google_generativeai/__init__.py",
+   "line": 310,
+   "in": "_wrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-groq/opentelemetry/instrumentation/groq/__init__.py",
+   "line": 40,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-groq/opentelemetry/instrumentation/groq/__init__.py",
+   "line": 400,
+   "in": "_wrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-groq/opentelemetry/instrumentation/groq/__init__.py",
+   "line": 487,
+   "in": "_awrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-langchain/opentelemetry/instrumentation/langchain/callback_handler.py",
+   "line": 70,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
+   "line": 38,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-litellm/opentelemetry/instrumentation/litellm/__init__.py",
+   "line": 660,
+   "in": "_is_suppressed",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
+   "line": 58,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
+   "line": 194,
+   "in": "OpenLLMetrySpanHandler.new_span",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY, False"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-llamaindex/opentelemetry/instrumentation/llamaindex/dispatcher_wrapper.py",
+   "line": 222,
+   "in": "OpenLLMetrySpanHandler.new_span",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-marqo/opentelemetry/instrumentation/marqo/wrapper.py",
+   "line": 35,
+   "in": "_wrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-mistralai/opentelemetry/instrumentation/mistralai/__init__.py",
+   "line": 30,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-mistralai/opentelemetry/instrumentation/mistralai/__init__.py",
+   "line": 483,
+   "in": "_wrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-mistralai/opentelemetry/instrumentation/mistralai/__init__.py",
+   "line": 536,
+   "in": "_awrap",
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY"
+  },
+  {
+   "symbol": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY",
+   "file": "packages/opentelemetry-instrumentation-ollama/opentelemetry/instrumentation/ollama/__init__.py",
+   "line": 38,
+   "in": null,
+   "text": "SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY,"
+  }
+ ]
+}

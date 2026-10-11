@@ -4,92 +4,1613 @@
  "clone": ".trueup/clones/openinference",
  "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
  "graph": {
-  "used": false,
+  "used": true,
   "commands": [
    {
-    "cmd": "entire agent-help",
+    "cmd": "entire graph capabilities --json",
     "exit": 0,
-    "output": "Entire's CLI is the source of truth for its own usage. Do not guess flags or\nsubcommands \u2014 read them from this command. You are already inside the repo:\nentire auto-detects it from the git origin remote, so never ask the user for the\nrepo name. Pass --repo only to target a DIFFERENT repo.\n\nCurrent repo: gh/Arize-ai/openinference  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nWhen to use entire \u2014 the commands that bear on the work:\n  checkpoint  Inspect and search checkpoints\n                read-only except: explain\n  search      Search checkpoints, commits, and sessions using semantic and keyword matching\n                read-only\n  session     Manage agent sessions tracked by Entire\n                read-only except: adopt, attach, resume, stop\n  status      Show Entire status\n                read-only\n  why         Show why a line exists\n                read-only\n\nAlso available (entire agent-help <command> for any of these):\n  read-only, safe to run:\n    activity \u00b7 labs \u00b7 recap \u00b7 version\n  when the task needs them:\n    api \u00b7 dispatch \u00b7 doctor\n  the user's \u2014 suggest, don't run:\n    agent \u00b7 auth \u00b7 clean \u00b7 cluster \u00b7 configure \u00b7 disable \u00b7 enable\n    login \u00b7 logout \u00b7 org \u00b7 plugin \u00b7 project \u00b7 repo\n\nDrill in for exact, currently-installed flags:  entire agent-help <command>  (e.g. entire agent-help checkpoint)\nAdd --json for structured output."
+    "output": {
+     "schema_version": "1.1",
+     "python_semantic": true,
+     "python_relations": [
+      "ASYNC_CALLS",
+      "CALLS",
+      "CONSTRUCTS",
+      "CONTAINS",
+      "DATA_FLOWS",
+      "DEFINES",
+      "EXTENDS",
+      "HANDLES_GRAPHQL",
+      "IMPORTS",
+      "INHERITS",
+      "OVERRIDES",
+      "PARAM_TYPE",
+      "RETURNS_TYPE",
+      "USES_TYPE"
+     ],
+     "network": {
+      "grammar_download": false,
+      "hosted_models": false,
+      "network_discovery": false,
+      "remote_code_fetch": false,
+      "remote_embeddings": false,
+      "telemetry_upload": false
+     }
+    }
    },
    {
-    "cmd": "entire agent-help labs",
+    "cmd": "entire graph search --repo python/instrumentation/openinference-instrumentation-openai-agents --profile full --format json --top-k 8 --query openai-agents tracing: top-level span status is OK in the span but really ERROR (app raised InternalServerError) (openinference, openai-agents: top-level span status is OK)",
     "exit": 0,
-    "output": "entire labs \u2014 Explore experimental Entire workflows\nLabs\n\nThese are newer Entire workflows we are actively refining. They are available\nto try now, but details may change based on feedback.\n\nAvailable experimental commands:\n  entire review             Run a multi-agent review against the current branch\n  entire import claude-code Import existing Claude Code transcripts as local, read-only history\n  entire tokens             Analyze experimental token usage diagnostics\n  entire tokens profile     Aggregate token usage across committed checkpoints\n  entire session tokens     Show token usage and recommendations for a session\n  entire blame              Show which lines came from Entire checkpoints\n  entire why                Show why a line exists (commit, checkpoint, prompt, session)\n  entire experts            Show agent, skill, and tool provenance for files or topics\n\nTry:\n  entire review --help\n  entire tokens --help\n  entire tokens profile --help\n  entire session tokens --help\n  entire blame --help\n  entire why --help\n  entire experts --help\n\nCurrent repo: gh/Arize-ai/openinference  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nInherited flags:\n      --context name   Act as this saved login name for this command only \u2014 including the git and agent processes it spawns \u2014 instead of the active context (entire auth contexts lists them)"
+    "output": {
+     "query": "openai-agents tracing: top-level span status is OK in the span but really ERROR (app raised InternalServerError) (openinference, openai-agents: top-level span status is OK)",
+     "repo_root": "python/instrumentation/openinference-instrumentation-openai-agents",
+     "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+     "tree": "8d0e7aee8268bd522dc3f49884f3d3957de8efa6",
+     "profile": "full",
+     "results": [
+      {
+       "rank": 1,
+       "score": 59.0535,
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 1152,
+       "end_line": 1158,
+       "focus_line": 1155,
+       "snippet_start_line": 1152,
+       "snippet_end_line": 1158,
+       "symbol_start_line": 1152,
+       "symbol_end_line": 1158,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:function:_get_span_status",
+       "symbol_name": "_get_span_status",
+       "qualified_name": "_get_span_status",
+       "signature": "def _get_span_status(obj: Span[Any]) -> Status",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "exact-code-token",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "def _get_span_status(obj: Span[Any]) -> Status:\n    if error := getattr(obj, \"error\", None):\n        return Status(\n            status_code=StatusCode.ERROR, description=f\"{error.get('message')}: {error.get('data')}\"\n        )\n    else:\n        return Status(StatusCode.OK)"
+      },
+      {
+       "rank": 2,
+       "score": 53.6482,
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 182,
+       "end_line": 266,
+       "focus_line": 264,
+       "snippet_start_line": 182,
+       "snippet_end_line": 265,
+       "symbol_start_line": 182,
+       "symbol_end_line": 265,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:method:OpenInferenceTracingProcessor.on_span_end",
+       "symbol_name": "on_span_end",
+       "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+       "signature": "def on_span_end(self, span: Span[Any]) -> None",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "symbol-usage",
+        "complete-symbol"
+       ],
+       "snippet": "    def on_span_end(self, span: Span[Any]) -> None:\n        \"\"\"Called when a span is finished. Should not block or raise exceptions.\n\n        Args:\n            span: The span that finished.\n        \"\"\"\n        token = self._tokens.pop(span.span_id, None)\n        otel_span = self._otel_spans.pop(span.span_id, None)\n        if token:\n            detach(token)  # type: ignore[arg-type]\n        if otel_span is None:\n            return\n        otel_span.update_name(_get_span_name(span))\n        data = span.span_data\n        if isinstance(data, ResponseSpanData):\n            if isinstance(response := data.response, Response):\n                otel_span.set_attribute(OUTPUT_MIME_TYPE, JSON)\n                otel_span.set_attribute(OUTPUT_VALUE, response.model_dump_json())\n                for k, v in _get_attributes_from_response(response):\n                    otel_span.set_attribute(k, v)\n            if input := data.input:\n                if isinstance(input, str):\n                    otel_span.set_attribute(INPUT_VALUE, input)\n                elif isinstance(input, list):\n                    otel_span.set_attribute(INPUT_MIME_TYPE, JSON)\n                    otel_span.set_attribute(\n                        INPUT_VALUE, safe_json_dumps(_without_computer_screenshot_urls(input))\n                    )\n                    for k, v in _get_attributes_from_input(input):\n                        otel_span.set_attribute(k, v)\n                elif TYPE_CHECKING:\n                    assert_never(input)\n        elif isinstance(data, GenerationSpanData):\n            for k, v in _get_attributes_from_generation_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, FunctionSpanData):\n            for k, v in _get_attributes_from_function_span_data(data):\n                otel_span.set_attribute(k, v)\n            # Function spans carry no schema of their own, so read it off the live tool\n            # object being invoked. See _tool_schemas for how that is made available.\n            if (schema := get_tool_schema(data.name)) is not None:\n                description, parameters = schema\n                if description is not None:\n                    otel_span.set_attribute(TOOL_DESCRIPTION, description)\n                if parameters is not None:\n                    otel_span.set_attribute(TOOL_PARAMETERS, parameters)\n        elif isinstance(data, MCPListToolsSpanData):\n            for k, v in _get_attributes_from_mcp_list_tool_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, HandoffSpanData):\n            # Handoffs surface as TOOL spans but the SDK leaves them without input or\n            # output, so record the agents the handoff moved between. Note that\n            # HandoffSpanData carries only these names -- the name of the tool the model\n            # called is deliberately not reconstructed here, since a handoff created\n            # with tool_name_override would not match a reconstructed value.\n            if data.from_agent is not None:\n                otel_span.set_attribute(INPUT_VALUE, data.from_agent)\n            if data.to_agent is not None:\n                otel_span.set_attribute(OUTPUT_VALUE, data.to_agent)\n            # Set this dict to find the parent node when the agent span starts\n            if data.to_agent and data.from_agent:\n                key = f\"{data.to_agent}:{span.trace_id}\"\n                with self._lock:\n                    self._reverse_handoffs_dict[key] = data.from_agent\n                    # Cap the size of the dict\n                    while len(self._reverse_handoffs_dict) > self._MAX_HANDOFFS_IN_FLIGHT:\n                        self._reverse_handoffs_dict.popitem(last=False)\n        elif isinstance(data, AgentSpanData):\n            otel_span.set_attribute(GRAPH_NODE_ID, data.name)\n            otel_span.set_attribute(AGENT_NAME, data.name)\n            # Lookup the parent node if exists\n            key = f\"{data.name}:{span.trace_id}\"\n            parent_node = self._reverse_handoffs_dict.pop(key, None)\n            if parent_node:\n                otel_span.set_attribute(GRAPH_NODE_PARENT_ID, parent_node)\n\n        end_time: Optional[int] = None\n        if span.ended_at:\n            try:\n                end_time = _as_utc_nano(datetime.fromisoformat(span.ended_at))\n            except ValueError:\n                pass\n        otel_span.set_status(status=_get_span_status(span))\n        otel_span.end(end_time)"
+      },
+      {
+       "rank": 3,
+       "score": 47.9475,
+       "file_path": "src/openinference/instrumentation/openai_agents/__init__.py",
+       "start_line": 75,
+       "end_line": 143,
+       "focus_line": 90,
+       "snippet_start_line": 75,
+       "snippet_end_line": 143,
+       "symbol_start_line": 75,
+       "symbol_end_line": 143,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/__init__.py:method:OpenAIAgentsInstrumentor._instrument",
+       "symbol_name": "_instrument",
+       "qualified_name": "OpenAIAgentsInstrumentor._instrument",
+       "signature": "def _instrument(self, **kwargs: Any) -> None",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "symbol-usage",
+        "complete-symbol"
+       ],
+       "snippet": "    def _instrument(self, **kwargs: Any) -> None:\n        if not (tracer_provider := kwargs.get(\"tracer_provider\")):\n            tracer_provider = trace_api.get_tracer_provider()\n        if (exclusive_processor := kwargs.get(\"exclusive_processor\")) is None:\n            exclusive_processor = True\n        if not (config := kwargs.get(\"config\")):\n            config = TraceConfig()\n        else:\n            assert isinstance(config, TraceConfig)\n        tracer = OITracer(\n            trace_api.get_tracer(__name__, __version__, tracer_provider),\n            config=config,\n        )\n\n        from openinference.instrumentation.openai_agents._processor import (\n            OpenInferenceTracingProcessor,\n        )\n\n        if exclusive_processor:\n            from agents import set_trace_processors\n\n            set_trace_processors([OpenInferenceTracingProcessor(cast(Tracer, tracer))])\n        else:\n            from agents import add_trace_processor\n\n            add_trace_processor(OpenInferenceTracingProcessor(cast(Tracer, tracer)))\n\n        self._original_execute_function_tools = _patch_tool_execution()\n\n        from openinference.instrumentation.openai_agents._realtime import (\n            _load_realtime_events,\n            make_close_wrapper,\n            make_realtime_wrapper,\n            make_send_audio_wrapper,\n        )\n\n        if _load_realtime_events():\n            try:\n                from agents.realtime.session import RealtimeSession\n\n                self._original_put_event = RealtimeSession._put_event\n                wrap_function_wrapper(\n                    _REALTIME_MODULE,\n                    _REALTIME_PUT_EVENT_ATTR,\n                    make_realtime_wrapper(tracer, config),\n                )\n                self._original_send_audio = RealtimeSession.send_audio\n                wrap_function_wrapper(\n                    _REALTIME_MODULE,\n                    _REALTIME_SEND_AUDIO_ATTR,\n                    make_send_audio_wrapper(),\n                )\n                self._original_close = RealtimeSession.close\n                wrap_function_wrapper(\n                    _REALTIME_MODULE,\n                    _REALTIME_CLOSE_ATTR,\n                    make_close_wrapper(),\n                )\n                logger.debug(\n                    \"Realtime tracing enabled: patched _put_event, send_audio, close on %s\",\n                    RealtimeSession.__qualname__,\n                )\n            except Exception:\n                logger.debug(\n                    \"Could not patch RealtimeSession \u2014 realtime tracing disabled\",\n                    exc_info=True,\n                )\n        else:\n            logger.debug(\"agents.realtime.events not importable \u2014 realtime tracing disabled\")"
+      },
+      {
+       "rank": 4,
+       "score": 52.7195,
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 97,
+       "end_line": 176,
+       "focus_line": 97,
+       "snippet_start_line": 97,
+       "snippet_end_line": 102,
+       "symbol_start_line": 97,
+       "symbol_end_line": 275,
+       "language": "Python",
+       "kind": "tool",
+       "symbol_id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:tool:OpenInferenceTracingProcessor",
+       "symbol_name": "OpenInferenceTracingProcessor",
+       "qualified_name": "OpenInferenceTracingProcessor",
+       "signature": "tool OpenInferenceTracingProcessor",
+       "signals": [
+        "graph:calls",
+        "graph:incoming"
+       ],
+       "snippet": "class OpenInferenceTracingProcessor(TracingProcessor):\n    _MAX_HANDOFFS_IN_FLIGHT = 1000\n\n    def __init__(self, tracer: Tracer) -> None:\n        self._tracer = tracer\n        # Guards the capped insert into _reverse_handoffs_dict below, which is the only"
+      },
+      {
+       "rank": 5,
+       "score": 45.0751,
+       "file_path": "src/openinference/instrumentation/openai_agents/_realtime.py",
+       "start_line": 605,
+       "end_line": 615,
+       "focus_line": 609,
+       "snippet_start_line": 605,
+       "snippet_end_line": 615,
+       "symbol_start_line": 605,
+       "symbol_end_line": 615,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_realtime.py:method:_RealtimeSessionState.on_error",
+       "symbol_name": "on_error",
+       "qualified_name": "_RealtimeSessionState.on_error",
+       "signature": "def on_error(self, error_message: str) -> None: # RealtimeError has no response_id field, so errors land on every open turn. # Both _latest_turn and _turn_awaiting_followup may be open (the latter holds the # originating turn of a tool round-trip when a barge-in opened a newer turn).",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "exact-code-token",
+        "complete-symbol"
+       ],
+       "snippet": "    def on_error(self, error_message: str) -> None:\n        # RealtimeError has no response_id field, so errors land on every open turn.\n        # Both _latest_turn and _turn_awaiting_followup may be open (the latter holds the\n        # originating turn of a tool round-trip when a barge-in opened a newer turn).\n        status = Status(StatusCode.ERROR, description=error_message)\n        for turn in self._open_turns():\n            _set_end_reason(turn, _END_REASON_SESSION_CLOSED)\n            _finalize_turn(turn, self._config, status=status)\n            self._release_user_state(turn)\n        self._turn_awaiting_followup = None\n        self._tool_spans_by_call_id.clear()"
+      },
+      {
+       "rank": 6,
+       "score": 44.6948,
+       "file_path": "tests/test_realtime.py",
+       "start_line": 1788,
+       "end_line": 1824,
+       "focus_line": 1823,
+       "snippet_start_line": 1822,
+       "snippet_end_line": 1823,
+       "symbol_start_line": 1788,
+       "symbol_end_line": 1824,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/Arize-ai/openinference:Python:tests/test_realtime.py:function:test_realtime_error_event_finalizes_turn_with_error_status",
+       "symbol_name": "test_realtime_error_event_finalizes_turn_with_error_status",
+       "qualified_name": "test_realtime_error_event_finalizes_turn_with_error_status",
+       "signature": "def test_realtime_error_event_finalizes_turn_with_error_status( tracer_provider: trace_api.TracerProvider, in_memory_span_exporter: InMemorySpanExporter, monkeypatch: Any, ) -> None",
+       "signals": [
+        "body",
+        "symbol-name",
+        "signature",
+        "constraint:entity",
+        "exact-code-token"
+       ],
+       "snippet": "    assert len(llm_spans) == 1\n    assert user_spans[0].status.status_code == trace_api.StatusCode.ERROR"
+      },
+      {
+       "rank": 7,
+       "score": 0,
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 151,
+       "end_line": 180,
+       "focus_line": 151,
+       "snippet_start_line": 151,
+       "snippet_end_line": 151,
+       "kind": "method",
+       "qualified_name": "OpenInferenceTracingProcessor.on_span_start",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def on_span_start(self, span: Span[Any]) -> None:"
+      },
+      {
+       "rank": 8,
+       "score": 0,
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 140,
+       "end_line": 149,
+       "focus_line": 140,
+       "snippet_start_line": 140,
+       "snippet_end_line": 140,
+       "kind": "method",
+       "qualified_name": "OpenInferenceTracingProcessor.on_trace_end",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def on_trace_end(self, trace: Trace) -> None:"
+      },
+      {
+       "rank": 9,
+       "score": 0,
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 126,
+       "end_line": 138,
+       "focus_line": 126,
+       "snippet_start_line": 126,
+       "snippet_end_line": 126,
+       "kind": "method",
+       "qualified_name": "OpenInferenceTracingProcessor.on_trace_start",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def on_trace_start(self, trace: Trace) -> None:"
+      },
+      {
+       "rank": 10,
+       "score": 0,
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 267,
+       "end_line": 270,
+       "focus_line": 267,
+       "snippet_start_line": 267,
+       "snippet_end_line": 267,
+       "kind": "method",
+       "qualified_name": "OpenInferenceTracingProcessor.force_flush",
+       "signals": [
+        "related:sibling"
+       ],
+       "section": "related",
+       "snippet": "    def force_flush(self) -> None:"
+      },
+      {
+       "rank": 11,
+       "score": 0,
+       "file_path": "tests/test_processor_span_attributes.py",
+       "start_line": 153,
+       "end_line": 164,
+       "focus_line": 153,
+       "snippet_start_line": 153,
+       "snippet_end_line": 157,
+       "kind": "function",
+       "qualified_name": "_run",
+       "signals": [
+        "related:covering-test"
+       ],
+       "section": "covering-test",
+       "snippet": "def _run(\n    processor: OpenInferenceTracingProcessor,\n    trace: _FakeTrace,\n    spans: list[_FakeSpan],\n) -> None:"
+      }
+     ],
+     "literal_cluster": {
+      "literal": "ERROR",
+      "hits": [
+       {
+        "file_path": "src/openinference/instrumentation/openai_agents/_realtime.py",
+        "line": 775,
+        "symbol": "_finalize_turn",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "tests/test_realtime.py",
+        "line": 1507,
+        "symbol": "test_session_close_finalizes_awaiting_followup_turn",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "tests/test_realtime.py",
+        "line": 1565,
+        "symbol": "test_session_close_finalizes_awaiting_followup_turn",
+        "role": "CONSUMER"
+       }
+      ],
+      "hits_total": 12,
+      "files_total": 3
+     },
+     "verify_command": {
+      "command": "python -m pytest tests/test_processor_span_attributes.py -k _run",
+      "targets": "tests/test_processor_span_attributes.py",
+      "derived_from": "pyproject.toml pytest config + covering test path",
+      "tier": "narrow"
+     },
+     "stats": {
+      "query_constraints_truncated": true,
+      "files_scanned": 28,
+      "preselection_backend": "inventory",
+      "preselection_passes": 1,
+      "preselection_files_examined": 28,
+      "files_content_read_during_preselection": 0,
+      "files_content_read_during_query": 28,
+      "bytes_content_read_during_query": 462949,
+      "files_indexed": 28,
+      "symbols_considered": 516,
+      "lexical_candidates": 551,
+      "graph_candidates": 20,
+      "caller_boosted_candidates": 98,
+      "identifier_usage_candidates": 32,
+      "same_container_neighbor_candidates": 24,
+      "same_file_bridge_candidates": 7,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 11,
+      "result_bytes": 15115,
+      "context_budget_bytes": 24576,
+      "snippets_truncated_by_budget": 4,
+      "complete_symbol_snippets": 4,
+      "locator_snippets": 3,
+      "related_sites": 4,
+      "covering_tests": 1,
+      "literal_cluster_bytes": 456,
+      "literal_cluster_hits": 3,
+      "verify_command_bytes": 396,
+      "verify_tier": "narrow",
+      "context_block_bytes": 852,
+      "index_cache_hit": true,
+      "index_latency_ms": 63,
+      "query_latency_ms": 203,
+      "total_latency_ms": 293,
+      "search_latency_ms": 293,
+      "preselect_latency_ms": 25
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 2,
+        "symbols": 130
+       },
+       "Pip Requirements": {
+        "files": 1,
+        "symbols": 1
+       },
+       "Python": {
+        "files": 21,
+        "symbols": 339
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 46
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 1,
+       "CALLS": 871,
+       "CONFIGURES": 46,
+       "CONSTRUCTS": 100,
+       "CONTAINS": 101,
+       "DATA_FLOWS": 143,
+       "DEFINES": 516,
+       "EXTENDS": 4,
+       "HANDLES_ROUTE": 1,
+       "HANDLES_TOOL": 9,
+       "IMPORTS": 301,
+       "INHERITS": 4,
+       "PARAM_TYPE": 13,
+       "RETURNS_TYPE": 9,
+       "SIMILAR_TO": 8,
+       "USES_TYPE": 22
+      }
+     }
+    }
    },
    {
-    "cmd": "entire graph --help",
-    "exit": 1,
-    "output": "the entire-graph plugin is not installed; run 'entire plugin install graph' and retry"
+    "cmd": "entire graph neighbors --repo python/instrumentation/openinference-instrumentation-openai-agents --symbol _get_span_status --file src/openinference/instrumentation/openai_agents/_processor.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "python/instrumentation/openinference-instrumentation-openai-agents",
+     "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+     "tree": "8d0e7aee8268bd522dc3f49884f3d3957de8efa6",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "_get_span_status",
+     "file": "src/openinference/instrumentation/openai_agents/_processor.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 74,
+     "query_latency_ms": 5,
+     "total_latency_ms": 79,
+     "truncated": false,
+     "focus_matches_total": 1,
+     "focus_matches_truncated": false,
+     "disambiguation_required": false,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:function:_get_span_status",
+        "name": "_get_span_status",
+        "qualified_name": "_get_span_status",
+        "kind": "function",
+        "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+        "start_line": 1152,
+        "end_line": 1158,
+        "language": "Python"
+       },
+       "incoming": [
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:tool:OpenInferenceTracingProcessor",
+          "name": "OpenInferenceTracingProcessor",
+          "qualified_name": "OpenInferenceTracingProcessor",
+          "kind": "tool",
+          "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+          "start_line": 97,
+          "end_line": 275,
+          "language": "Python"
+         },
+         "confidence": 0.92,
+         "resolution": "exact",
+         "reason": "direct call expression resolved to same-file symbol",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+           "start_line": 97,
+           "end_line": 275,
+           "detail": "_get_span_status"
+          }
+         ],
+         "call_site": {
+          "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+          "line": 264
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:method:OpenInferenceTracingProcessor.on_span_end",
+          "name": "on_span_end",
+          "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+          "kind": "method",
+          "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+          "start_line": 182,
+          "end_line": 265,
+          "language": "Python"
+         },
+         "confidence": 0.92,
+         "resolution": "exact",
+         "reason": "direct call expression resolved to same-file symbol",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+           "start_line": 182,
+           "end_line": 265,
+           "detail": "_get_span_status"
+          }
+         ],
+         "call_site": {
+          "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+          "line": 264
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CALLS",
+         "endpoint": {
+          "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:tool:OpenInferenceTracingProcessor.on_span_end",
+          "name": "on_span_end",
+          "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+          "kind": "tool",
+          "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+          "start_line": 182,
+          "end_line": 265,
+          "language": "Python"
+         },
+         "confidence": 0.92,
+         "resolution": "exact",
+         "reason": "direct call expression resolved to same-file symbol",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+           "start_line": 182,
+           "end_line": 265,
+           "detail": "_get_span_status"
+          }
+         ],
+         "call_site": {
+          "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+          "line": 264
+         }
+        }
+       ],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 25,
+      "parsed_files": 25,
+      "symbols": 516,
+      "relations": 2149,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 2,
+        "symbols": 130
+       },
+       "Pip Requirements": {
+        "files": 1,
+        "symbols": 1
+       },
+       "Python": {
+        "files": 21,
+        "symbols": 339
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 46
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 1,
+       "CALLS": 871,
+       "CONFIGURES": 46,
+       "CONSTRUCTS": 100,
+       "CONTAINS": 101,
+       "DATA_FLOWS": 143,
+       "DEFINES": 516,
+       "EXTENDS": 4,
+       "HANDLES_ROUTE": 1,
+       "HANDLES_TOOL": 9,
+       "IMPORTS": 301,
+       "INHERITS": 4,
+       "PARAM_TYPE": 13,
+       "RETURNS_TYPE": 9,
+       "SIMILAR_TO": 8,
+       "USES_TYPE": 22
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 21,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo python/instrumentation/openinference-instrumentation-openai-agents --symbol _get_span_status --file src/openinference/instrumentation/openai_agents/_processor.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "python/instrumentation/openinference-instrumentation-openai-agents",
+     "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+     "tree": "8d0e7aee8268bd522dc3f49884f3d3957de8efa6",
+     "profile": "full",
+     "query": "_get_span_status",
+     "file": "src/openinference/instrumentation/openai_agents/_processor.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 60,
+     "query_latency_ms": 3,
+     "total_latency_ms": 63,
+     "focus_matches_total": 1,
+     "disambiguation_required": false,
+     "focus": {
+      "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:function:_get_span_status",
+      "name": "_get_span_status",
+      "qualified_name": "_get_span_status",
+      "kind": "function",
+      "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+      "start_line": 1152,
+      "end_line": 1158,
+      "language": "Python"
+     },
+     "callers": {
+      "total": 3,
+      "direct": 3,
+      "in": 3,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:tool:OpenInferenceTracingProcessor",
+         "name": "OpenInferenceTracingProcessor",
+         "qualified_name": "OpenInferenceTracingProcessor",
+         "kind": "tool",
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "start_line": 97,
+         "end_line": 275,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "line": 264
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:method:OpenInferenceTracingProcessor.on_span_end",
+         "name": "on_span_end",
+         "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+         "kind": "method",
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "start_line": 182,
+         "end_line": 265,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "line": 264
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:tool:OpenInferenceTracingProcessor.on_span_end",
+         "name": "on_span_end",
+         "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+         "kind": "tool",
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "start_line": 182,
+         "end_line": 265,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "line": 264
+        }
+       }
+      ]
+     },
+     "callees": {
+      "total": 0,
+      "entries": []
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": []
+     },
+     "data_flows": {
+      "total": 1,
+      "direct": 1,
+      "in": 1,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:method:OpenInferenceTracingProcessor.on_span_end",
+         "name": "on_span_end",
+         "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+         "kind": "method",
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "start_line": 182,
+         "end_line": 265,
+         "language": "Python"
+        },
+        "relation": "DATA_FLOWS",
+        "direction": "in",
+        "depth": 1
+       }
+      ]
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": []
+     },
+     "siblings": {
+      "total": 0,
+      "entries": []
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 25,
+      "parsed_files": 25,
+      "symbols": 516,
+      "relations": 2149,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 2,
+        "symbols": 130
+       },
+       "Pip Requirements": {
+        "files": 1,
+        "symbols": 1
+       },
+       "Python": {
+        "files": 21,
+        "symbols": 339
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 46
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 1,
+       "CALLS": 871,
+       "CONFIGURES": 46,
+       "CONSTRUCTS": 100,
+       "CONTAINS": 101,
+       "DATA_FLOWS": 143,
+       "DEFINES": 516,
+       "EXTENDS": 4,
+       "HANDLES_ROUTE": 1,
+       "HANDLES_TOOL": 9,
+       "IMPORTS": 301,
+       "INHERITS": 4,
+       "PARAM_TYPE": 13,
+       "RETURNS_TYPE": 9,
+       "SIMILAR_TO": 8,
+       "USES_TYPE": 22
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 21,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph neighbors --repo python/instrumentation/openinference-instrumentation-openai-agents --symbol on_span_end --file src/openinference/instrumentation/openai_agents/_processor.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "python/instrumentation/openinference-instrumentation-openai-agents",
+     "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+     "tree": "8d0e7aee8268bd522dc3f49884f3d3957de8efa6",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "on_span_end",
+     "file": "src/openinference/instrumentation/openai_agents/_processor.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 74,
+     "query_latency_ms": 2,
+     "total_latency_ms": 76,
+     "truncated": false,
+     "focus_matches_total": 2,
+     "match_bodies": [
+      {
+       "name": "OpenInferenceTracingProcessor.on_span_end",
+       "kind": "method",
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 182,
+       "end_line": 265,
+       "source": "    def on_span_end(self, span: Span[Any]) -> None:\n        \"\"\"Called when a span is finished. Should not block or raise exceptions.\n\n        Args:\n            span: The span that finished.\n        \"\"\"\n        token = self._tokens.pop(span.span_id, None)\n        otel_span = self._otel_spans.pop(span.span_id, None)\n        if token:\n            detach(token)  # type: ignore[arg-type]\n        if otel_span is None:\n            return\n        otel_span.update_name(_get_span_name(span))\n        data = span.span_data\n        if isinstance(data, ResponseSpanData):\n            if isinstance(response := data.response, Response):\n                otel_span.set_attribute(OUTPUT_MIME_TYPE, JSON)\n                otel_span.set_attribute(OUTPUT_VALUE, response.model_dump_json())\n                for k, v in _get_attributes_from_response(response):\n                    otel_span.set_attribute(k, v)\n            if input := data.input:\n                if isinstance(input, str):\n                    otel_span.set_attribute(INPUT_VALUE, input)\n                elif isinstance(input, list):\n                    otel_span.set_attribute(INPUT_MIME_TYPE, JSON)\n                    otel_span.set_attribute(\n                        INPUT_VALUE, safe_json_dumps(_without_computer_screenshot_urls(input))\n                    )\n                    for k, v in _get_attributes_from_input(input):\n                        otel_span.set_attribute(k, v)\n                elif TYPE_CHECKING:\n                    assert_never(input)\n        elif isinstance(data, GenerationSpanData):\n            for k, v in _get_attributes_from_generation_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, FunctionSpanData):\n            for k, v in _get_attributes_from_function_span_data(data):\n                otel_span.set_attribute(k, v)\n            # Function spans carry no schema of their own, so read it off the live tool\n            # object being invoked. See _tool_schemas for how that is made available.\n            if (schema := get_tool_schema(data.name)) is not None:\n                description, parameters = schema\n                if description is not None:\n                    otel_span.set_attribute(TOOL_DESCRIPTION, description)\n                if parameters is not None:\n                    otel_span.set_attribute(TOOL_PARAMETERS, parameters)\n        elif isinstance(data, MCPListToolsSpanData):\n            for k, v in _get_attributes_from_mcp_list_tool_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, HandoffSpanData):\n            # Handoffs surface as TOOL spans but the SDK leaves them without input or\n            # output, so record the agents the handoff moved between. Note that\n            # HandoffSpanData carries only these names -- the name of the tool the model\n            # called is deliberately not reconstructed here, since a handoff created\n            # with tool_name_override would not match a reconstructed value.\n            if data.from_agent is not None:\n                otel_span.set_attribute(INPUT_VALUE, data.from_agent)\n            if data.to_agent is not None:\n                otel_span.set_attribute(OUTPUT_VALUE, data.to_agent)\n            # Set this dict to find the parent node when the agent span starts\n            if data.to_agent and data.from_agent:\n                key = f\"{data.to_agent}:{span.trace_id}\"\n                with self._lock:\n                    self._reverse_handoffs_dict[key] = data.from_agent\n                    # Cap the size of the dict\n                    while len(self._reverse_handoffs_dict) > self._MAX_HANDOFFS_IN_FLIGHT:\n                        self._reverse_handoffs_dict.popitem(last=False)\n        elif isinstance(data, AgentSpanData):\n            otel_span.set_attribute(GRAPH_NODE_ID, data.name)\n            otel_span.set_attribute(AGENT_NAME, data.name)\n            # Lookup the parent node if exists\n            key = f\"{data.name}:{span.trace_id}\"\n            parent_node = self._reverse_handoffs_dict.pop(key, None)\n            if parent_node:\n                otel_span.set_attribute(GRAPH_NODE_PARENT_ID, parent_node)\n\n        end_time: Optional[int] = None\n        if span.ended_at:\n            try:\n                end_time = _as_utc_nano(datetime.fromisoformat(span.ended_at))\n            except ValueError:\n                pass\n        otel_span.set_status(status=_get_span_status(span))\n        otel_span.end(end_time)"
+      },
+      {
+       "name": "OpenInferenceTracingProcessor.on_span_end",
+       "kind": "tool",
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 182,
+       "end_line": 265,
+       "source": "    def on_span_end(self, span: Span[Any]) -> None:\n        \"\"\"Called when a span is finished. Should not block or raise exceptions.\n\n        Args:\n            span: The span that finished.\n        \"\"\"\n        token = self._tokens.pop(span.span_id, None)\n        otel_span = self._otel_spans.pop(span.span_id, None)\n        if token:\n            detach(token)  # type: ignore[arg-type]\n        if otel_span is None:\n            return\n        otel_span.update_name(_get_span_name(span))\n        data = span.span_data\n        if isinstance(data, ResponseSpanData):\n            if isinstance(response := data.response, Response):\n                otel_span.set_attribute(OUTPUT_MIME_TYPE, JSON)\n                otel_span.set_attribute(OUTPUT_VALUE, response.model_dump_json())\n                for k, v in _get_attributes_from_response(response):\n                    otel_span.set_attribute(k, v)\n            if input := data.input:\n                if isinstance(input, str):\n                    otel_span.set_attribute(INPUT_VALUE, input)\n                elif isinstance(input, list):\n                    otel_span.set_attribute(INPUT_MIME_TYPE, JSON)\n                    otel_span.set_attribute(\n                        INPUT_VALUE, safe_json_dumps(_without_computer_screenshot_urls(input))\n                    )\n                    for k, v in _get_attributes_from_input(input):\n                        otel_span.set_attribute(k, v)\n                elif TYPE_CHECKING:\n                    assert_never(input)\n        elif isinstance(data, GenerationSpanData):\n            for k, v in _get_attributes_from_generation_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, FunctionSpanData):\n            for k, v in _get_attributes_from_function_span_data(data):\n                otel_span.set_attribute(k, v)\n            # Function spans carry no schema of their own, so read it off the live tool\n            # object being invoked. See _tool_schemas for how that is made available.\n            if (schema := get_tool_schema(data.name)) is not None:\n                description, parameters = schema\n                if description is not None:\n                    otel_span.set_attribute(TOOL_DESCRIPTION, description)\n                if parameters is not None:\n                    otel_span.set_attribute(TOOL_PARAMETERS, parameters)\n        elif isinstance(data, MCPListToolsSpanData):\n            for k, v in _get_attributes_from_mcp_list_tool_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, HandoffSpanData):\n            # Handoffs surface as TOOL spans but the SDK leaves them without input or\n            # output, so record the agents the handoff moved between. Note that\n            # HandoffSpanData carries only these names -- the name of the tool the model\n            # called is deliberately not reconstructed here, since a handoff created\n            # with tool_name_override would not match a reconstructed value.\n            if data.from_agent is not None:\n                otel_span.set_attribute(INPUT_VALUE, data.from_agent)\n            if data.to_agent is not None:\n                otel_span.set_attribute(OUTPUT_VALUE, data.to_agent)\n            # Set this dict to find the parent node when the agent span starts\n            if data.to_agent and data.from_agent:\n                key = f\"{data.to_agent}:{span.trace_id}\"\n                with self._lock:\n                    self._reverse_handoffs_dict[key] = data.from_agent\n                    # Cap the size of the dict\n                    while len(self._reverse_handoffs_dict) > self._MAX_HANDOFFS_IN_FLIGHT:\n                        self._reverse_handoffs_dict.popitem(last=False)\n        elif isinstance(data, AgentSpanData):\n            otel_span.set_attribute(GRAPH_NODE_ID, data.name)\n            otel_span.set_attribute(AGENT_NAME, data.name)\n            # Lookup the parent node if exists\n            key = f\"{data.name}:{span.trace_id}\"\n            parent_node = self._reverse_handoffs_dict.pop(key, None)\n            if parent_node:\n                otel_span.set_attribute(GRAPH_NODE_PARENT_ID, parent_node)\n\n        end_time: Optional[int] = None\n        if span.ended_at:\n            try:\n                end_time = _as_utc_nano(datetime.fromisoformat(span.ended_at))\n            except ValueError:\n                pass\n        otel_span.set_status(status=_get_span_status(span))\n        otel_span.end(end_time)"
+      }
+     ],
+     "focus_matches_truncated": false,
+     "disambiguation_required": true,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:method:OpenInferenceTracingProcessor.on_span_end",
+        "name": "on_span_end",
+        "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+        "kind": "method",
+        "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+        "start_line": 182,
+        "end_line": 265,
+        "language": "Python"
+       },
+       "incoming": [],
+       "outgoing": []
+      },
+      {
+       "symbol": {
+        "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:tool:OpenInferenceTracingProcessor.on_span_end",
+        "name": "on_span_end",
+        "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+        "kind": "tool",
+        "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+        "start_line": 182,
+        "end_line": 265,
+        "language": "Python"
+       },
+       "incoming": [],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 25,
+      "parsed_files": 25,
+      "symbols": 516,
+      "relations": 2149,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 2,
+        "symbols": 130
+       },
+       "Pip Requirements": {
+        "files": 1,
+        "symbols": 1
+       },
+       "Python": {
+        "files": 21,
+        "symbols": 339
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 46
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 1,
+       "CALLS": 871,
+       "CONFIGURES": 46,
+       "CONSTRUCTS": 100,
+       "CONTAINS": 101,
+       "DATA_FLOWS": 143,
+       "DEFINES": 516,
+       "EXTENDS": 4,
+       "HANDLES_ROUTE": 1,
+       "HANDLES_TOOL": 9,
+       "IMPORTS": 301,
+       "INHERITS": 4,
+       "PARAM_TYPE": 13,
+       "RETURNS_TYPE": 9,
+       "SIMILAR_TO": 8,
+       "USES_TYPE": 22
+      }
+     },
+     "completeness_scope": {
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo python/instrumentation/openinference-instrumentation-openai-agents --symbol on_span_end --file src/openinference/instrumentation/openai_agents/_processor.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "python/instrumentation/openinference-instrumentation-openai-agents",
+     "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+     "tree": "8d0e7aee8268bd522dc3f49884f3d3957de8efa6",
+     "profile": "full",
+     "query": "on_span_end",
+     "file": "src/openinference/instrumentation/openai_agents/_processor.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 75,
+     "query_latency_ms": 0,
+     "total_latency_ms": 75,
+     "focus_matches_total": 2,
+     "match_bodies": [
+      {
+       "name": "OpenInferenceTracingProcessor.on_span_end",
+       "kind": "method",
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 182,
+       "end_line": 265,
+       "source": "    def on_span_end(self, span: Span[Any]) -> None:\n        \"\"\"Called when a span is finished. Should not block or raise exceptions.\n\n        Args:\n            span: The span that finished.\n        \"\"\"\n        token = self._tokens.pop(span.span_id, None)\n        otel_span = self._otel_spans.pop(span.span_id, None)\n        if token:\n            detach(token)  # type: ignore[arg-type]\n        if otel_span is None:\n            return\n        otel_span.update_name(_get_span_name(span))\n        data = span.span_data\n        if isinstance(data, ResponseSpanData):\n            if isinstance(response := data.response, Response):\n                otel_span.set_attribute(OUTPUT_MIME_TYPE, JSON)\n                otel_span.set_attribute(OUTPUT_VALUE, response.model_dump_json())\n                for k, v in _get_attributes_from_response(response):\n                    otel_span.set_attribute(k, v)\n            if input := data.input:\n                if isinstance(input, str):\n                    otel_span.set_attribute(INPUT_VALUE, input)\n                elif isinstance(input, list):\n                    otel_span.set_attribute(INPUT_MIME_TYPE, JSON)\n                    otel_span.set_attribute(\n                        INPUT_VALUE, safe_json_dumps(_without_computer_screenshot_urls(input))\n                    )\n                    for k, v in _get_attributes_from_input(input):\n                        otel_span.set_attribute(k, v)\n                elif TYPE_CHECKING:\n                    assert_never(input)\n        elif isinstance(data, GenerationSpanData):\n            for k, v in _get_attributes_from_generation_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, FunctionSpanData):\n            for k, v in _get_attributes_from_function_span_data(data):\n                otel_span.set_attribute(k, v)\n            # Function spans carry no schema of their own, so read it off the live tool\n            # object being invoked. See _tool_schemas for how that is made available.\n            if (schema := get_tool_schema(data.name)) is not None:\n                description, parameters = schema\n                if description is not None:\n                    otel_span.set_attribute(TOOL_DESCRIPTION, description)\n                if parameters is not None:\n                    otel_span.set_attribute(TOOL_PARAMETERS, parameters)\n        elif isinstance(data, MCPListToolsSpanData):\n            for k, v in _get_attributes_from_mcp_list_tool_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, HandoffSpanData):\n            # Handoffs surface as TOOL spans but the SDK leaves them without input or\n            # output, so record the agents the handoff moved between. Note that\n            # HandoffSpanData carries only these names -- the name of the tool the model\n            # called is deliberately not reconstructed here, since a handoff created\n            # with tool_name_override would not match a reconstructed value.\n            if data.from_agent is not None:\n                otel_span.set_attribute(INPUT_VALUE, data.from_agent)\n            if data.to_agent is not None:\n                otel_span.set_attribute(OUTPUT_VALUE, data.to_agent)\n            # Set this dict to find the parent node when the agent span starts\n            if data.to_agent and data.from_agent:\n                key = f\"{data.to_agent}:{span.trace_id}\"\n                with self._lock:\n                    self._reverse_handoffs_dict[key] = data.from_agent\n                    # Cap the size of the dict\n                    while len(self._reverse_handoffs_dict) > self._MAX_HANDOFFS_IN_FLIGHT:\n                        self._reverse_handoffs_dict.popitem(last=False)\n        elif isinstance(data, AgentSpanData):\n            otel_span.set_attribute(GRAPH_NODE_ID, data.name)\n            otel_span.set_attribute(AGENT_NAME, data.name)\n            # Lookup the parent node if exists\n            key = f\"{data.name}:{span.trace_id}\"\n            parent_node = self._reverse_handoffs_dict.pop(key, None)\n            if parent_node:\n                otel_span.set_attribute(GRAPH_NODE_PARENT_ID, parent_node)\n\n        end_time: Optional[int] = None\n        if span.ended_at:\n            try:\n                end_time = _as_utc_nano(datetime.fromisoformat(span.ended_at))\n            except ValueError:\n                pass\n        otel_span.set_status(status=_get_span_status(span))\n        otel_span.end(end_time)"
+      },
+      {
+       "name": "OpenInferenceTracingProcessor.on_span_end",
+       "kind": "tool",
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 182,
+       "end_line": 265,
+       "source": "    def on_span_end(self, span: Span[Any]) -> None:\n        \"\"\"Called when a span is finished. Should not block or raise exceptions.\n\n        Args:\n            span: The span that finished.\n        \"\"\"\n        token = self._tokens.pop(span.span_id, None)\n        otel_span = self._otel_spans.pop(span.span_id, None)\n        if token:\n            detach(token)  # type: ignore[arg-type]\n        if otel_span is None:\n            return\n        otel_span.update_name(_get_span_name(span))\n        data = span.span_data\n        if isinstance(data, ResponseSpanData):\n            if isinstance(response := data.response, Response):\n                otel_span.set_attribute(OUTPUT_MIME_TYPE, JSON)\n                otel_span.set_attribute(OUTPUT_VALUE, response.model_dump_json())\n                for k, v in _get_attributes_from_response(response):\n                    otel_span.set_attribute(k, v)\n            if input := data.input:\n                if isinstance(input, str):\n                    otel_span.set_attribute(INPUT_VALUE, input)\n                elif isinstance(input, list):\n                    otel_span.set_attribute(INPUT_MIME_TYPE, JSON)\n                    otel_span.set_attribute(\n                        INPUT_VALUE, safe_json_dumps(_without_computer_screenshot_urls(input))\n                    )\n                    for k, v in _get_attributes_from_input(input):\n                        otel_span.set_attribute(k, v)\n                elif TYPE_CHECKING:\n                    assert_never(input)\n        elif isinstance(data, GenerationSpanData):\n            for k, v in _get_attributes_from_generation_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, FunctionSpanData):\n            for k, v in _get_attributes_from_function_span_data(data):\n                otel_span.set_attribute(k, v)\n            # Function spans carry no schema of their own, so read it off the live tool\n            # object being invoked. See _tool_schemas for how that is made available.\n            if (schema := get_tool_schema(data.name)) is not None:\n                description, parameters = schema\n                if description is not None:\n                    otel_span.set_attribute(TOOL_DESCRIPTION, description)\n                if parameters is not None:\n                    otel_span.set_attribute(TOOL_PARAMETERS, parameters)\n        elif isinstance(data, MCPListToolsSpanData):\n            for k, v in _get_attributes_from_mcp_list_tool_span_data(data):\n                otel_span.set_attribute(k, v)\n        elif isinstance(data, HandoffSpanData):\n            # Handoffs surface as TOOL spans but the SDK leaves them without input or\n            # output, so record the agents the handoff moved between. Note that\n            # HandoffSpanData carries only these names -- the name of the tool the model\n            # called is deliberately not reconstructed here, since a handoff created\n            # with tool_name_override would not match a reconstructed value.\n            if data.from_agent is not None:\n                otel_span.set_attribute(INPUT_VALUE, data.from_agent)\n            if data.to_agent is not None:\n                otel_span.set_attribute(OUTPUT_VALUE, data.to_agent)\n            # Set this dict to find the parent node when the agent span starts\n            if data.to_agent and data.from_agent:\n                key = f\"{data.to_agent}:{span.trace_id}\"\n                with self._lock:\n                    self._reverse_handoffs_dict[key] = data.from_agent\n                    # Cap the size of the dict\n                    while len(self._reverse_handoffs_dict) > self._MAX_HANDOFFS_IN_FLIGHT:\n                        self._reverse_handoffs_dict.popitem(last=False)\n        elif isinstance(data, AgentSpanData):\n            otel_span.set_attribute(GRAPH_NODE_ID, data.name)\n            otel_span.set_attribute(AGENT_NAME, data.name)\n            # Lookup the parent node if exists\n            key = f\"{data.name}:{span.trace_id}\"\n            parent_node = self._reverse_handoffs_dict.pop(key, None)\n            if parent_node:\n                otel_span.set_attribute(GRAPH_NODE_PARENT_ID, parent_node)\n\n        end_time: Optional[int] = None\n        if span.ended_at:\n            try:\n                end_time = _as_utc_nano(datetime.fromisoformat(span.ended_at))\n            except ValueError:\n                pass\n        otel_span.set_status(status=_get_span_status(span))\n        otel_span.end(end_time)"
+      }
+     ],
+     "disambiguation_required": true,
+     "definitions": [
+      {
+       "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:method:OpenInferenceTracingProcessor.on_span_end",
+       "name": "on_span_end",
+       "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+       "kind": "method",
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 182,
+       "end_line": 265,
+       "language": "Python"
+      },
+      {
+       "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:tool:OpenInferenceTracingProcessor.on_span_end",
+       "name": "on_span_end",
+       "qualified_name": "OpenInferenceTracingProcessor.on_span_end",
+       "kind": "tool",
+       "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+       "start_line": 182,
+       "end_line": 265,
+       "language": "Python"
+      }
+     ],
+     "callers": {
+      "total": 0,
+      "entries": null
+     },
+     "callees": {
+      "total": 0,
+      "entries": null
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": null
+     },
+     "data_flows": {
+      "total": 0,
+      "entries": null
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": null
+     },
+     "siblings": {
+      "total": 0,
+      "entries": null
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 25,
+      "parsed_files": 25,
+      "symbols": 516,
+      "relations": 2149,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 2,
+        "symbols": 130
+       },
+       "Pip Requirements": {
+        "files": 1,
+        "symbols": 1
+       },
+       "Python": {
+        "files": 21,
+        "symbols": 339
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 46
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 1,
+       "CALLS": 871,
+       "CONFIGURES": 46,
+       "CONSTRUCTS": 100,
+       "CONTAINS": 101,
+       "DATA_FLOWS": 143,
+       "DEFINES": 516,
+       "EXTENDS": 4,
+       "HANDLES_ROUTE": 1,
+       "HANDLES_TOOL": 9,
+       "IMPORTS": 301,
+       "INHERITS": 4,
+       "PARAM_TYPE": 13,
+       "RETURNS_TYPE": 9,
+       "SIMILAR_TO": 8,
+       "USES_TYPE": 22
+      }
+     },
+     "completeness_scope": {
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph neighbors --repo python/instrumentation/openinference-instrumentation-openai-agents --symbol _instrument --file src/openinference/instrumentation/openai_agents/__init__.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "python/instrumentation/openinference-instrumentation-openai-agents",
+     "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+     "tree": "8d0e7aee8268bd522dc3f49884f3d3957de8efa6",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "_instrument",
+     "file": "src/openinference/instrumentation/openai_agents/__init__.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 83,
+     "query_latency_ms": 0,
+     "total_latency_ms": 84,
+     "truncated": false,
+     "focus_matches_total": 1,
+     "focus_matches_truncated": false,
+     "disambiguation_required": false,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/__init__.py:method:OpenAIAgentsInstrumentor._instrument",
+        "name": "_instrument",
+        "qualified_name": "OpenAIAgentsInstrumentor._instrument",
+        "kind": "method",
+        "file_path": "src/openinference/instrumentation/openai_agents/__init__.py",
+        "start_line": 75,
+        "end_line": 143,
+        "language": "Python"
+       },
+       "incoming": [],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 25,
+      "parsed_files": 25,
+      "symbols": 516,
+      "relations": 2149,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 2,
+        "symbols": 130
+       },
+       "Pip Requirements": {
+        "files": 1,
+        "symbols": 1
+       },
+       "Python": {
+        "files": 21,
+        "symbols": 339
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 46
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 1,
+       "CALLS": 871,
+       "CONFIGURES": 46,
+       "CONSTRUCTS": 100,
+       "CONTAINS": 101,
+       "DATA_FLOWS": 143,
+       "DEFINES": 516,
+       "EXTENDS": 4,
+       "HANDLES_ROUTE": 1,
+       "HANDLES_TOOL": 9,
+       "IMPORTS": 301,
+       "INHERITS": 4,
+       "PARAM_TYPE": 13,
+       "RETURNS_TYPE": 9,
+       "SIMILAR_TO": 8,
+       "USES_TYPE": 22
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 21,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo python/instrumentation/openinference-instrumentation-openai-agents --symbol _instrument --file src/openinference/instrumentation/openai_agents/__init__.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": "python/instrumentation/openinference-instrumentation-openai-agents",
+     "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+     "tree": "8d0e7aee8268bd522dc3f49884f3d3957de8efa6",
+     "profile": "full",
+     "query": "_instrument",
+     "file": "src/openinference/instrumentation/openai_agents/__init__.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 72,
+     "query_latency_ms": 8,
+     "total_latency_ms": 80,
+     "focus_matches_total": 1,
+     "disambiguation_required": false,
+     "focus": {
+      "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/__init__.py:method:OpenAIAgentsInstrumentor._instrument",
+      "name": "_instrument",
+      "qualified_name": "OpenAIAgentsInstrumentor._instrument",
+      "kind": "method",
+      "file_path": "src/openinference/instrumentation/openai_agents/__init__.py",
+      "start_line": 75,
+      "end_line": 143,
+      "language": "Python"
+     },
+     "container": {
+      "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/__init__.py:class:OpenAIAgentsInstrumentor",
+      "name": "OpenAIAgentsInstrumentor",
+      "qualified_name": "OpenAIAgentsInstrumentor",
+      "kind": "class",
+      "file_path": "src/openinference/instrumentation/openai_agents/__init__.py",
+      "start_line": 60,
+      "end_line": 170,
+      "language": "Python"
+     },
+     "callers": {
+      "total": 0,
+      "entries": []
+     },
+     "callees": {
+      "total": 14,
+      "out": 14,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "external:symbol:agents.add_trace_processor",
+         "name": "add_trace_processor",
+         "qualified_name": "agents.add_trace_processor",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:agents.set_trace_processors",
+         "name": "set_trace_processors",
+         "qualified_name": "agents.set_trace_processors",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:openinference.instrumentation.OITracer",
+         "name": "OITracer",
+         "qualified_name": "openinference.instrumentation.OITracer",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:openinference.instrumentation.TraceConfig",
+         "name": "TraceConfig",
+         "qualified_name": "openinference.instrumentation.TraceConfig",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:opentelemetry.get_tracer",
+         "name": "get_tracer",
+         "qualified_name": "opentelemetry.get_tracer",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:opentelemetry.get_tracer_provider",
+         "name": "get_tracer_provider",
+         "qualified_name": "opentelemetry.get_tracer_provider",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:typing.cast",
+         "name": "cast",
+         "qualified_name": "typing.cast",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "external:symbol:wrapt.wrap_function_wrapper",
+         "name": "wrap_function_wrapper",
+         "qualified_name": "wrapt.wrap_function_wrapper",
+         "kind": "symbol",
+         "external": true
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/__init__.py:function:_patch_tool_execution",
+         "name": "_patch_tool_execution",
+         "qualified_name": "_patch_tool_execution",
+         "kind": "function",
+         "file_path": "src/openinference/instrumentation/openai_agents/__init__.py",
+         "start_line": 22,
+         "end_line": 57,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_processor.py:class:OpenInferenceTracingProcessor",
+         "name": "OpenInferenceTracingProcessor",
+         "qualified_name": "OpenInferenceTracingProcessor",
+         "kind": "class",
+         "file_path": "src/openinference/instrumentation/openai_agents/_processor.py",
+         "start_line": 97,
+         "end_line": 275,
+         "language": "Python"
+        },
+        "relation": "CONSTRUCTS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_realtime.py:function:_load_realtime_events",
+         "name": "_load_realtime_events",
+         "qualified_name": "_load_realtime_events",
+         "kind": "function",
+         "file_path": "src/openinference/instrumentation/openai_agents/_realtime.py",
+         "start_line": 153,
+         "end_line": 182,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_realtime.py:function:make_realtime_wrapper",
+         "name": "make_realtime_wrapper",
+         "qualified_name": "make_realtime_wrapper",
+         "kind": "function",
+         "file_path": "src/openinference/instrumentation/openai_agents/_realtime.py",
+         "start_line": 1106,
+         "end_line": 1135,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_realtime.py:function:make_send_audio_wrapper",
+         "name": "make_send_audio_wrapper",
+         "qualified_name": "make_send_audio_wrapper",
+         "kind": "function",
+         "file_path": "src/openinference/instrumentation/openai_agents/_realtime.py",
+         "start_line": 1138,
+         "end_line": 1155,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/_realtime.py:function:make_close_wrapper",
+         "name": "make_close_wrapper",
+         "qualified_name": "make_close_wrapper",
+         "kind": "function",
+         "file_path": "src/openinference/instrumentation/openai_agents/_realtime.py",
+         "start_line": 1158,
+         "end_line": 1182,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "out",
+        "depth": 1
+       }
+      ]
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": []
+     },
+     "data_flows": {
+      "total": 0,
+      "entries": []
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": []
+     },
+     "siblings": {
+      "total": 2,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/__init__.py:method:OpenAIAgentsInstrumentor.instrumentation_dependencies",
+         "name": "instrumentation_dependencies",
+         "qualified_name": "OpenAIAgentsInstrumentor.instrumentation_dependencies",
+         "kind": "method",
+         "file_path": "src/openinference/instrumentation/openai_agents/__init__.py",
+         "start_line": 72,
+         "end_line": 73,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       },
+       {
+        "endpoint": {
+         "id": "gh/Arize-ai/openinference:Python:src/openinference/instrumentation/openai_agents/__init__.py:method:OpenAIAgentsInstrumentor._uninstrument",
+         "name": "_uninstrument",
+         "qualified_name": "OpenAIAgentsInstrumentor._uninstrument",
+         "kind": "method",
+         "file_path": "src/openinference/instrumentation/openai_agents/__init__.py",
+         "start_line": 145,
+         "end_line": 170,
+         "language": "Python"
+        },
+        "detail": "sibling"
+       }
+      ]
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 25,
+      "parsed_files": 25,
+      "symbols": 516,
+      "relations": 2149,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Markdown": {
+        "files": 2,
+        "symbols": 130
+       },
+       "Pip Requirements": {
+        "files": 1,
+        "symbols": 1
+       },
+       "Python": {
+        "files": 21,
+        "symbols": 339
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 46
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 1,
+       "CALLS": 871,
+       "CONFIGURES": 46,
+       "CONSTRUCTS": 100,
+       "CONTAINS": 101,
+       "DATA_FLOWS": 143,
+       "DEFINES": 516,
+       "EXTENDS": 4,
+       "HANDLES_ROUTE": 1,
+       "HANDLES_TOOL": 9,
+       "IMPORTS": 301,
+       "INHERITS": 4,
+       "PARAM_TYPE": 13,
+       "RETURNS_TYPE": 9,
+       "SIMILAR_TO": 8,
+       "USES_TYPE": 22
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 21,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
    }
   ],
-  "reason": "entire graph is not available here: the entire-graph plugin is not installed; run 'entire plugin install graph' and retry. agent-help lists `entire plugin` as the user's command, so Trueup did not install it."
+  "available": true,
+  "query": "openai-agents tracing: top-level span status is OK in the span but really ERROR (app raised InternalServerError) (openinference, openai-agents: top-level span status is OK)",
+  "reason": "entire graph search, neighbors and impact"
  },
- "method": "ripgrep + ast (fallback)",
+ "method": "entire graph",
  "definitions": [
   {
-   "symbol": "OpenInferenceTracingProcessor",
+   "symbol": "_get_span_status",
+   "qualname": "_get_span_status",
    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
-   "line": 97,
-   "qualname": "OpenInferenceTracingProcessor",
-   "end": 275
-  },
-  {
-   "symbol": "on_trace_start",
-   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
-   "line": 126,
-   "qualname": "OpenInferenceTracingProcessor.on_trace_start",
-   "end": 138
-  },
-  {
-   "symbol": "on_trace_end",
-   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
-   "line": 140,
-   "qualname": "OpenInferenceTracingProcessor.on_trace_end",
-   "end": 149
+   "line": 1152,
+   "end": 1158,
+   "score": 59.0535,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 1
   },
   {
    "symbol": "on_span_end",
+   "qualname": "OpenInferenceTracingProcessor.on_span_end",
    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
    "line": 182,
-   "qualname": "OpenInferenceTracingProcessor.on_span_end",
-   "end": 265
+   "end": 265,
+   "score": 53.6482,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 2
   },
   {
-   "symbol": "_get_span_status",
+   "symbol": "_instrument",
+   "qualname": "OpenAIAgentsInstrumentor._instrument",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
+   "line": 75,
+   "end": 143,
+   "score": 47.9475,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 3
+  },
+  {
+   "symbol": "on_error",
+   "qualname": "_RealtimeSessionState.on_error",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_realtime.py",
+   "line": 605,
+   "end": 615,
+   "score": 45.0751,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 4
+  },
+  {
+   "symbol": null,
+   "qualname": "OpenInferenceTracingProcessor.on_span_start",
    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
-   "line": 1152,
-   "qualname": "_get_span_status",
-   "end": 1158
+   "line": 151,
+   "end": 180,
+   "score": 0,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 5
+  },
+  {
+   "symbol": null,
+   "qualname": "OpenInferenceTracingProcessor.on_trace_end",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 140,
+   "end": 149,
+   "score": 0,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 6
+  },
+  {
+   "symbol": null,
+   "qualname": "OpenInferenceTracingProcessor.on_trace_start",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 126,
+   "end": 138,
+   "score": 0,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 7
+  },
+  {
+   "symbol": null,
+   "qualname": "OpenInferenceTracingProcessor.force_flush",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 267,
+   "end": 270,
+   "score": 0,
+   "package": "python/instrumentation/openinference-instrumentation-openai-agents",
+   "rank": 8
   }
  ],
  "callers": [
   {
-   "symbol": "OpenInferenceTracingProcessor",
-   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
-   "line": 90,
-   "in": "OpenAIAgentsInstrumentor._instrument",
-   "text": "OpenInferenceTracingProcessor,"
-  },
-  {
-   "symbol": "OpenInferenceTracingProcessor",
-   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
-   "line": 96,
-   "in": "OpenAIAgentsInstrumentor._instrument",
-   "text": "set_trace_processors([OpenInferenceTracingProcessor(cast(Tracer, tracer))])"
-  },
-  {
-   "symbol": "OpenInferenceTracingProcessor",
-   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
-   "line": 100,
-   "in": "OpenAIAgentsInstrumentor._instrument",
-   "text": "add_trace_processor(OpenInferenceTracingProcessor(cast(Tracer, tracer)))"
+   "symbol": "_get_span_status",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 97,
+   "in": "OpenInferenceTracingProcessor",
+   "text": "_get_span_status",
+   "confidence": 0.92
   },
   {
    "symbol": "_get_span_status",
    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
-   "line": 264,
+   "line": 182,
    "in": "OpenInferenceTracingProcessor.on_span_end",
-   "text": "otel_span.set_status(status=_get_span_status(span))"
+   "text": "_get_span_status",
+   "confidence": 0.92
+  },
+  {
+   "symbol": "_get_span_status",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 182,
+   "in": "OpenInferenceTracingProcessor.on_span_end",
+   "text": "_get_span_status",
+   "confidence": 0.92
   }
  ],
  "reference": []

@@ -86,18 +86,106 @@ def test_source_excerpt_is_verbatim(repo: Path) -> None:
     assert "5: " not in text  # no line-number prefixes the model could copy into an edit
 
 
-def test_probe_graph_records_why_it_was_not_used(repo: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def fake_graph(missing: bool = False, python: bool = True):
+    """A stand-in for `entire graph` returning JSON shaped like CLI 0.11.4's output."""
     import subprocess
 
-    monkeypatch.setattr(loc.shutil, "which", lambda name: "/bin/" + name)
+    calls = []
 
     def run(cmd, cwd, timeout):
-        missing = cmd[1] == "graph"
-        return subprocess.CompletedProcess(cmd, 1 if missing else 0, "" if missing else "help",
-                                           "the entire-graph plugin is not installed" if missing else "")
+        calls.append(cmd)
+        if cmd[0] != "entire":
+            return loc.run_cmd(cmd, cwd, timeout)
+        if missing:
+            return subprocess.CompletedProcess(cmd, 1, "", "the entire-graph plugin is not installed")
+        sub = cmd[2]
+        if sub == "capabilities":
+            out = {"schema_version": "1.1", "semantic_languages": ["Python"] if python else [],
+                   "relation_support_by_language": {"Python": ["CALLS"]}}
+        elif sub == "search":
+            out = {"repo_root": str(cwd / cmd[cmd.index("--repo") + 1]), "results": [
+                {"kind": "method", "symbol_name": "wrap", "qualified_name": "P.wrap", "file_path": "lib/w.py",
+                 "start_line": 5, "end_line": 6, "score": 9.0},
+                {"kind": "function", "symbol_name": "top", "qualified_name": "top", "file_path": "lib/w.py",
+                 "start_line": 12, "end_line": 13, "score": 5.0},
+                {"kind": "function", "symbol_name": "t", "qualified_name": "t", "file_path": "tests/t.py",
+                 "start_line": 1, "end_line": 2, "score": 99.0}]}
+        elif sub == "neighbors":
+            out = {"repo_root": str(cwd), "matches": [{"incoming": [{"endpoint": {
+                "qualified_name": "top", "file_path": "lib/w.py", "start_line": 12},
+                "evidence": [{"detail": "P().wrap"}], "confidence": 0.9}]}]}
+        else:
+            out = {"repo_root": str(cwd), "match_bodies": []}
+        return subprocess.CompletedProcess(cmd, 0, json.dumps(out), "")
 
-    rec = loc.probe_graph(repo, ("wrap",), run)
-    assert rec["used"] is False and "not installed" in rec["reason"] and len(rec["commands"]) == 3
+    return run, calls
+
+
+def test_locate_uses_the_graph_first_and_writes_no_absolute_paths(repo: Path, tmp_path: Path,
+                                                                  monkeypatch: pytest.MonkeyPatch) -> None:
+    which = loc.shutil.which
+    monkeypatch.setattr(loc.shutil, "which", lambda name: "/bin/entire" if name == "entire" else which(name))
+    monkeypatch.setattr(loc, "ensure_clone", lambda root, lib, run=None: (repo, "abc123"))
+    run, calls = fake_graph()
+    out = tmp_path / "out"
+    res = loc.locate(repo, TARGET, out, run, finding=None)
+    assert res["method"] == "entire graph" and res["graph"]["used"]
+    assert [(d["file"], d["qualname"], d["rank"]) for d in res["definitions"]] == [
+        ("pkg/lib/w.py", "P.wrap", 1), ("pkg/lib/w.py", "top", 2)]  # test hits dropped, paths from the clone
+    assert res["callers"][0]["in"] == "top" and res["callers"][0]["file"] == "pkg/lib/w.py"
+    subs = [c[2] for c in calls if c[0] == "entire"]
+    assert subs[:2] == ["capabilities", "search"] and "neighbors" in subs and "impact" in subs
+    text = (out / "locate.json").read_text()
+    assert str(repo) not in text and str(Path.home()) + "/" not in text
+    assert json.loads(text)["clone"] == ".trueup/clones/lib"
+
+
+@pytest.mark.parametrize("missing, python, reason", [(True, True, "not available"), (False, False, "Python")])
+def test_locate_falls_back_and_says_why(repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+                                        missing: bool, python: bool, reason: str) -> None:
+    which = loc.shutil.which
+    monkeypatch.setattr(loc.shutil, "which", lambda name: "/bin/entire" if name == "entire" else which(name))
+    monkeypatch.setattr(loc, "ensure_clone", lambda root, lib, run=None: (repo, "abc123"))
+    run, _ = fake_graph(missing, python)
+    res = loc.locate(repo, TARGET, tmp_path / "out", run)
+    assert res["method"] == "ripgrep + ast (fallback)" and not res["graph"]["used"]
+    assert reason in res["graph"]["reason"]
+    assert [d["qualname"] for d in res["definitions"]] == ["P.wrap"]
+
+
+def test_scrub_makes_paths_relative() -> None:
+    root = Path("/x/trueup")
+    text = f"{root}/.trueup/clones/lib/a.py and {root} and {Path.home()}/.local/bin/uv"
+    assert loc.scrub(text, root, root / ".trueup/clones/lib") == "a.py and . and ~/.local/bin/uv"
+
+
+DIFF = """--- a/pkg/lib/w.py
++++ b/pkg/lib/w.py
+@@ -4,4 +4,5 @@ class P:
+     def wrap(self, x):
+-        return x
++        y = x
++        return y
+ 
+--- a/pkg/tests/test_trueup_w.py
++++ b/pkg/tests/test_trueup_w.py
+@@ -0,0 +1 @@
++def test(): pass
+"""
+
+
+def test_patched_functions_and_compare(repo: Path) -> None:
+    patched = loc.patched_functions(repo, DIFF)
+    assert patched == [{"file": "pkg/lib/w.py", "qualname": "P.wrap"}]
+    located = {"definitions": [{"file": "pkg/lib/w.py", "qualname": "top", "rank": 1},
+                               {"file": "pkg/lib/w.py", "qualname": "P", "rank": 2}],
+               "callers": [{"in": "P.wrap"}]}
+    c = loc.compare_with_patch(located, patched)
+    assert c["patched"][0]["rank"] is None and c["patched"][0]["class_rank"] == 2
+    assert c["patched"][0]["among_callers"] and c["found"] == 0 and not c["same_function_first"]
+    c = loc.compare_with_patch({"definitions": [{"file": "pkg/lib/w.py", "qualname": "P.wrap", "rank": 1}],
+                                "callers": []}, patched)
+    assert c["same_function_first"] and c["in_top"] == 1
 
 
 JUNIT = """<?xml version="1.0"?><testsuites><testsuite name="pytest">

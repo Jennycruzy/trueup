@@ -1,11 +1,15 @@
 """Locate the wrapper behind a finding, and its callers, in a shallow clone of the library.
 
-First choice is Entire's code graph. `entire agent-help` (CLI 0.11.4) lists no graph
-command; `entire graph` answers that the entire-graph plugin is not installed, and
-`agent-help` marks `entire plugin` as the user's to run, so Trueup does not install
-it. Each run probes again and records what the CLI said. When the graph is not
-there, the fallback is ripgrep for the seed symbols plus Python's ast for the
-enclosing definitions, and locate.json says the graph was not used and why.
+First choice is Entire's code graph (the entire-graph plugin), as its agent guide says:
+`entire graph capabilities --json` must list Python as a semantic language; then, per
+target package, one `entire graph search --profile full` with the finding in one sentence,
+and for the top hits `entire graph neighbors --relation CALLS --direction in` (callers) and
+`entire graph impact`. The library's own reference pattern comes from a second search.
+Every command and its JSON output is kept, with paths relative to the clone.
+
+When the graph is not installed, does not cover Python, fails or finds nothing, the
+fallback is ripgrep for the target's seed symbols plus Python's ast for the enclosing
+definitions, and locate.json says the graph was not used and why.
 """
 
 from __future__ import annotations
@@ -52,30 +56,128 @@ def reset_clone(clone: Path, run: Runner = run_cmd) -> None:
     run(["git", "-C", str(clone), "clean", "--quiet", "-fd"], None, 120)
 
 
-def probe_graph(clone: Path, seeds: tuple[str, ...], run: Runner = run_cmd) -> dict[str, Any]:
-    """Ask the installed Entire CLI for its code graph. Records every command and its output."""
+REPO_ROOT = Path(__file__).resolve().parents[3]  # this Trueup checkout
+GRAPH_TOP = 3  # search hits followed up with neighbors and impact
+GRAPH_TIMEOUT = 600
+
+
+def scrub(text: str, *roots: Path) -> str:
+    """Remove this machine's absolute paths: each root (longest first) becomes relative, home becomes ~."""
+    for r in sorted({str(x.resolve()) for x in roots}, key=len, reverse=True):
+        text = text.replace(r + "/", "").replace(r, ".")
+    home = str(Path.home())
+    return text.replace(home + "/", "~/") if home not in ("/", "") else text
+
+
+def save(path: Path, text: str) -> None:
+    """Write a file Trueup may commit, without this machine's absolute paths."""
+    path.write_text(scrub(text, REPO_ROOT))
+
+
+def _graph(cmd: list[str], clone: Path, run: Runner, record: dict[str, Any]) -> Any:
+    """Run one `entire graph` command in the clone; record it; parsed JSON or None."""
+    entry: dict[str, Any] = {"cmd": " ".join(cmd)}
+    record["commands"].append(entry)
+    try:
+        p = run(cmd, clone, GRAPH_TIMEOUT)
+    except (OSError, subprocess.TimeoutExpired) as e:
+        entry["error"] = type(e).__name__
+        return None
+    entry["exit"] = p.returncode
+    if p.returncode != 0:
+        entry["error"] = (p.stderr or p.stdout).strip()[-500:]
+        return None
+    try:
+        data = json.loads(p.stdout)
+    except json.JSONDecodeError:
+        entry["error"] = "output is not JSON: " + p.stdout.strip()[:200]
+        return None
+    entry["output"] = data
+    return data
+
+
+def probe_graph(clone: Path, run: Runner = run_cmd) -> dict[str, Any]:
+    """Is the code graph usable here for Python? Records the check."""
     record: dict[str, Any] = {"used": False, "commands": []}
     if shutil.which("entire") is None:
         record["reason"] = "entire CLI not on PATH"
         return record
-    for cmd in (["entire", "agent-help"], ["entire", "agent-help", "labs"], ["entire", "graph", "--help"]):
-        try:
-            p = run(cmd, clone, 60)
-            text = (p.stdout + p.stderr).strip()
-            record["commands"].append({"cmd": " ".join(cmd), "exit": p.returncode, "output": text[-3000:]})
-        except (OSError, subprocess.TimeoutExpired) as e:
-            record["commands"].append({"cmd": " ".join(cmd), "error": type(e).__name__})
-    graph = record["commands"][-1]
-    out = graph.get("output", "")
-    if graph.get("exit") == 0 and "not installed" not in out:
-        # The graph answered. Its subcommands are not known to this build, so keep the help
-        # and let a person read it; Trueup still uses the fallback for its own results.
-        record["reason"] = "entire graph answered, but Trueup has no parser for its output yet; fallback used"
-    else:
-        record["reason"] = ("entire graph is not available here: " + (out.splitlines()[0] if out else "no output") +
-                            ". agent-help lists `entire plugin` as the user's command, so Trueup did not "
-                            "install it.")
+    caps = _graph(["entire", "graph", "capabilities", "--json"], clone, run, record)
+    if caps is None:
+        err = record["commands"][-1].get("error", "")
+        record["reason"] = f"entire graph is not available here: {err.splitlines()[0] if err else 'no output'}"
+        return record
+    # Keep what matters for Python, not the whole language table.
+    record["commands"][-1]["output"] = {
+        "schema_version": caps.get("schema_version"),
+        "python_semantic": "Python" in caps.get("semantic_languages", []),
+        "python_relations": caps.get("relation_support_by_language", {}).get("Python", []),
+        "network": caps.get("features_requiring_network_access")}
+    if "Python" not in caps.get("semantic_languages", []):
+        record["reason"] = "entire graph has no semantic support for Python here"
+        return record
+    record["available"] = True
     return record
+
+
+def finding_query(finding: dict[str, Any] | None, target: Target) -> str:
+    """The finding in one plain sentence, as the graph's agent guide asks."""
+    if not finding:
+        return f"{target.code_path} wrapper records the wrong span data"
+    d = finding["details"]
+    ex = d.get("example") or (d.get("leads") or [{}])[0]
+    return (f"{target.code_path} tracing: {d['field']} is {ex.get('trace')} in the span but really "
+            f"{ex.get('truth')} ({finding['title']})")
+
+
+def locate_graph(clone: Path, target: Target, query: str, record: dict[str, Any],
+                 run: Runner = run_cmd) -> dict[str, Any]:
+    """Definitions (ranked search hits), callers and reference uses from the graph, relative to the clone."""
+    definitions, callers, reference = [], [], []
+    for pkg in target.packages:
+        res = _graph(["entire", "graph", "search", "--repo", pkg.path, "--profile", "full", "--format", "json",
+                      "--top-k", "8", "--query", query], clone, run, record)
+        prefix = "" if pkg.path in (".", "") else pkg.path.rstrip("/") + "/"
+        for h in (res or {}).get("results", []):
+            if h.get("kind") not in ("function", "method", "class") or "/tests/" in "/" + h["file_path"]:
+                continue
+            definitions.append({"symbol": h.get("symbol_name"), "qualname": h.get("qualified_name"),
+                                "file": prefix + h["file_path"], "line": h.get("symbol_start_line") or h["start_line"],
+                                "end": h.get("symbol_end_line") or h["end_line"], "score": h.get("score"),
+                                "package": pkg.path})
+    definitions.sort(key=lambda d: -(d["score"] or 0))
+    for i, d in enumerate(definitions, 1):
+        d["rank"] = i
+    for d in definitions[:GRAPH_TOP]:
+        sym = d["qualname"] or d["symbol"]
+        pkg = d["package"]
+        file_in_pkg = d["file"][len(pkg.rstrip("/")) + 1:] if pkg not in (".", "") else d["file"]
+        prefix = "" if pkg in (".", "") else pkg.rstrip("/") + "/"
+        where = ["--file", file_in_pkg]
+        nb = _graph(["entire", "graph", "neighbors", "--repo", pkg, "--symbol", d["symbol"], *where, "--relation",
+                     "CALLS", "--direction", "in", "--format", "json", "--exclude-tests"], clone, run, record)
+        for m in (nb or {}).get("matches", []):
+            for e in m.get("incoming", []):
+                ep = e["endpoint"]
+                callers.append({"symbol": sym, "file": prefix + ep["file_path"] if ep.get("file_path") else None,
+                                "line": ep.get("start_line"), "in": ep.get("qualified_name"),
+                                "text": "; ".join(x.get("detail", "") for x in e.get("evidence", []))[:200],
+                                "confidence": e.get("confidence")})
+        _graph(["entire", "graph", "impact", "--repo", pkg, "--symbol", d["symbol"], *where, "--format", "json",
+                "--exclude-tests"], clone, run, record)
+    if target.reference_seeds:
+        base = "packages" if (clone / "packages").is_dir() else "."
+        res = _graph(["entire", "graph", "search", "--repo", base, "--profile", "fast", "--format", "json",
+                      "--top-k", "8", "--query", "where " + " ".join(target.reference_seeds) +
+                      " is used to record the right span"], clone, run, record)
+        pre = "" if base == "." else base + "/"
+        for h in (res or {}).get("results", []):
+            if "/tests/" in "/" + h["file_path"]:
+                continue
+            reference.append({"symbol": " ".join(target.reference_seeds), "file": pre + h["file_path"],
+                              "line": h.get("focus_line") or h["start_line"], "in": h.get("qualified_name"),
+                              "text": (h.get("signature") or "")[:200]})
+    return {"definitions": definitions, "callers": callers, "reference": reference}
 
 
 def _defs(tree: ast.AST) -> list[tuple[str, int, int, str]]:
@@ -193,13 +295,81 @@ def source_excerpts(clone: Path, located: dict[str, Any], limit: int = 40_000) -
     return "\n\n".join(parts)
 
 
-def locate(root: Path, target: Target, out_dir: Path, run: Runner = run_cmd) -> dict[str, Any]:
+def locate(root: Path, target: Target, out_dir: Path, run: Runner = run_cmd,
+           finding: dict[str, Any] | None = None) -> dict[str, Any]:
+    """Graph first, ripgrep + ast as the fallback. Writes locate.json (no absolute paths); returns the
+    result with the clone's absolute path for the caller."""
     clone, commit = ensure_clone(root, target.library, run)
-    graph = probe_graph(clone, target.seeds, run)
-    located = locate_symbols(clone, target, run)
-    result = {"library": target.library, "code_path": target.code_path, "clone": str(clone), "commit": commit,
-              "graph": graph, "method": "entire graph" if graph["used"] else "ripgrep + ast (fallback)",
-              **located}
+    graph = probe_graph(clone, run)
+    located = None
+    if graph.get("available"):
+        graph["query"] = finding_query(finding, target)
+        located = locate_graph(clone, target, graph["query"], graph, run)
+        if located["definitions"]:
+            graph["used"] = True
+            graph["reason"] = "entire graph search, neighbors and impact"
+        else:
+            graph["reason"] = "entire graph found no function for the query; fallback used"
+            located = None
+    if located is None:
+        located = locate_symbols(clone, target, run)
+    result = {"library": target.library, "code_path": target.code_path,
+              "clone": f".trueup/clones/{target.library}", "commit": commit, "graph": graph,
+              "method": "entire graph" if graph["used"] else "ripgrep + ast (fallback)", **located}
     out_dir.mkdir(parents=True, exist_ok=True)
-    (out_dir / "locate.json").write_text(json.dumps(result, indent=1))
-    return result
+    (out_dir / "locate.json").write_text(scrub(json.dumps(result, indent=1), clone, root))
+    return {**result, "clone": str(clone)}
+
+
+def patched_functions(clone: Path, diff_text: str) -> list[dict[str, Any]]:
+    """The functions a patch.diff changes: each removed or added line, placed at its line in the
+    original file, mapped to the innermost enclosing function with ast. Test files are skipped."""
+    import re
+
+    changed: dict[str, set[int]] = {}
+    file, line = None, 0
+    for ln in diff_text.splitlines():
+        if ln.startswith("--- "):
+            file = ln[6:] if ln.startswith("--- a/") and "/tests/" not in "/" + ln[6:] else None
+            continue
+        if ln.startswith("+++ "):
+            continue
+        m = re.match(r"@@ -(\d+)", ln)
+        if m:
+            line = int(m.group(1))
+            continue
+        if file is None or not ln:
+            continue
+        if ln[0] == "-":
+            changed.setdefault(file, set()).add(line)
+            line += 1
+        elif ln[0] == "+":
+            changed.setdefault(file, set()).add(max(line - 1, 1))  # inserted after the previous original line
+        elif ln[0] == " ":
+            line += 1
+    out: list[dict[str, Any]] = []
+    for f, lines in changed.items():
+        try:
+            defs = [d for d in _defs(ast.parse((clone / f).read_text(errors="replace"))) if d[3] == "function"]
+        except (OSError, SyntaxError):
+            continue
+        for q in dict.fromkeys(enclosing(defs, n) for n in sorted(lines)):
+            if q:  # an import-only change has no enclosing function
+                out.append({"file": f, "qualname": q})
+    return out
+
+
+def compare_with_patch(located: dict[str, Any], patched: list[dict[str, Any]]) -> dict[str, Any]:
+    """Where each patched function ranks among the located definitions: an exact hit, or only inside a
+    class hit (the class was found, not the method)."""
+    rows = []
+    for p in patched:
+        same_file = [d for d in located["definitions"] if d["file"] == p["file"]]
+        exact = next((d for d in same_file if d.get("qualname") == p["qualname"]), None)
+        within = next((d for d in same_file if p["qualname"].startswith((d.get("qualname") or "-") + ".")), None)
+        caller = any(c.get("in") == p["qualname"] for c in located["callers"])
+        rows.append({**p, "rank": exact.get("rank") if exact else None,
+                     "class_rank": within.get("rank") if within and not exact else None, "among_callers": caller})
+    return {"patched": rows, "found": sum(r["rank"] is not None for r in rows),
+            "in_top": sum(r["rank"] is not None and r["rank"] <= GRAPH_TOP for r in rows), "top": GRAPH_TOP,
+            "same_function_first": any(r["rank"] == 1 for r in rows)}

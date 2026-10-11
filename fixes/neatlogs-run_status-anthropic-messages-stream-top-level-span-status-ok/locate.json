@@ -4,647 +4,2187 @@
  "clone": ".trueup/clones/neatlogs",
  "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
  "graph": {
-  "used": false,
+  "used": true,
   "commands": [
    {
-    "cmd": "entire agent-help",
+    "cmd": "entire graph capabilities --json",
     "exit": 0,
-    "output": "Entire's CLI is the source of truth for its own usage. Do not guess flags or\nsubcommands \u2014 read them from this command. You are already inside the repo:\nentire auto-detects it from the git origin remote, so never ask the user for the\nrepo name. Pass --repo only to target a DIFFERENT repo.\n\nCurrent repo: gh/neatlogs/neatlogs  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nWhen to use entire \u2014 the commands that bear on the work:\n  checkpoint  Inspect and search checkpoints\n                read-only except: explain\n  search      Search checkpoints, commits, and sessions using semantic and keyword matching\n                read-only\n  session     Manage agent sessions tracked by Entire\n                read-only except: adopt, attach, resume, stop\n  status      Show Entire status\n                read-only\n  why         Show why a line exists\n                read-only\n\nAlso available (entire agent-help <command> for any of these):\n  read-only, safe to run:\n    activity \u00b7 labs \u00b7 recap \u00b7 version\n  when the task needs them:\n    api \u00b7 dispatch \u00b7 doctor\n  the user's \u2014 suggest, don't run:\n    agent \u00b7 auth \u00b7 clean \u00b7 cluster \u00b7 configure \u00b7 disable \u00b7 enable\n    login \u00b7 logout \u00b7 org \u00b7 plugin \u00b7 project \u00b7 repo\n\nDrill in for exact, currently-installed flags:  entire agent-help <command>  (e.g. entire agent-help checkpoint)\nAdd --json for structured output."
+    "output": {
+     "schema_version": "1.1",
+     "python_semantic": true,
+     "python_relations": [
+      "ASYNC_CALLS",
+      "CALLS",
+      "CONSTRUCTS",
+      "CONTAINS",
+      "DATA_FLOWS",
+      "DEFINES",
+      "EXTENDS",
+      "HANDLES_GRAPHQL",
+      "IMPORTS",
+      "INHERITS",
+      "OVERRIDES",
+      "PARAM_TYPE",
+      "RETURNS_TYPE",
+      "USES_TYPE"
+     ],
+     "network": {
+      "grammar_download": false,
+      "hosted_models": false,
+      "network_discovery": false,
+      "remote_code_fetch": false,
+      "remote_embeddings": false,
+      "telemetry_upload": false
+     }
+    }
    },
    {
-    "cmd": "entire agent-help labs",
+    "cmd": "entire graph search --repo . --profile full --format json --top-k 8 --query anthropic messages stream tracing: top-level span status is OK in the span but really ERROR (app raised RemoteProtocolError) (neatlogs, anthropic messages stream: top-level span status is OK)",
     "exit": 0,
-    "output": "entire labs \u2014 Explore experimental Entire workflows\nLabs\n\nThese are newer Entire workflows we are actively refining. They are available\nto try now, but details may change based on feedback.\n\nAvailable experimental commands:\n  entire review             Run a multi-agent review against the current branch\n  entire import claude-code Import existing Claude Code transcripts as local, read-only history\n  entire tokens             Analyze experimental token usage diagnostics\n  entire tokens profile     Aggregate token usage across committed checkpoints\n  entire session tokens     Show token usage and recommendations for a session\n  entire blame              Show which lines came from Entire checkpoints\n  entire why                Show why a line exists (commit, checkpoint, prompt, session)\n  entire experts            Show agent, skill, and tool provenance for files or topics\n\nTry:\n  entire review --help\n  entire tokens --help\n  entire tokens profile --help\n  entire session tokens --help\n  entire blame --help\n  entire why --help\n  entire experts --help\n\nCurrent repo: gh/neatlogs/neatlogs  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nInherited flags:\n      --context name   Act as this saved login name for this command only \u2014 including the git and agent processes it spawns \u2014 instead of the active context (entire auth contexts lists them)"
+    "output": {
+     "query": "anthropic messages stream tracing: top-level span status is OK in the span but really ERROR (app raised RemoteProtocolError) (neatlogs, anthropic messages stream: top-level span status is OK)",
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "full",
+     "results": [
+      {
+       "rank": 1,
+       "score": 62.2699,
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1199,
+       "end_line": 1281,
+       "focus_line": 1278,
+       "snippet_start_line": 1265,
+       "snippet_end_line": 1281,
+       "symbol_start_line": 1265,
+       "symbol_end_line": 1281,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:SyncStreamWrapper._finalize_error",
+       "symbol_name": "_finalize_error",
+       "qualified_name": "SyncStreamWrapper._finalize_error",
+       "signature": "def _finalize_error(self, error: BaseException)",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "exact-code-token",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      },
+      {
+       "rank": 2,
+       "score": 61.7159,
+       "file_path": "neatlogs/errors.py",
+       "start_line": 8,
+       "end_line": 9,
+       "focus_line": 8,
+       "snippet_start_line": 8,
+       "snippet_end_line": 9,
+       "symbol_start_line": 8,
+       "symbol_end_line": 9,
+       "language": "Python",
+       "kind": "class",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/errors.py:class:NeatlogsConfigurationError",
+       "symbol_name": "NeatlogsConfigurationError",
+       "qualified_name": "NeatlogsConfigurationError",
+       "signature": "class NeatlogsConfigurationError(NeatlogsError, ValueError)",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "exact-code-token",
+        "graph:callers"
+       ],
+       "snippet": "class NeatlogsConfigurationError(NeatlogsError, ValueError):\n    \"\"\"Raised before startup when SDK configuration is invalid or contradictory.\"\"\""
+      },
+      {
+       "rank": 3,
+       "score": 62.2324,
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1362,
+       "end_line": 1444,
+       "focus_line": 1441,
+       "snippet_start_line": 1428,
+       "snippet_end_line": 1444,
+       "symbol_start_line": 1428,
+       "symbol_end_line": 1444,
+       "language": "Python",
+       "kind": "method",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:AsyncStreamWrapper._finalize_error",
+       "symbol_name": "_finalize_error",
+       "qualified_name": "AsyncStreamWrapper._finalize_error",
+       "signature": "def _finalize_error(self, error: BaseException)",
+       "signals": [
+        "path",
+        "body",
+        "symbol-name",
+        "constraint:entity",
+        "exact-code-token",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      },
+      {
+       "rank": 4,
+       "score": 56.9505,
+       "file_path": "neatlogs/core/context.py",
+       "start_line": 13,
+       "end_line": 23,
+       "focus_line": 13,
+       "snippet_start_line": 13,
+       "snippet_end_line": 23,
+       "symbol_start_line": 13,
+       "symbol_end_line": 23,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/core/context.py:function:_reject_http_span_kind",
+       "symbol_name": "_reject_http_span_kind",
+       "qualified_name": "_reject_http_span_kind",
+       "signature": "def _reject_http_span_kind(kind: Any, attributes: Dict[str, Any]) -> None",
+       "signals": [
+        "graph:constructs",
+        "graph:incoming",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "def _reject_http_span_kind(kind: Any, attributes: Dict[str, Any]) -> None:\n    candidates = (\n        kind,\n        attributes.get(\"neatlogs.span.kind\"),\n        attributes.get(\"openinference.span.kind\"),\n    )\n    if any(str(value or \"\").strip().upper() == \"HTTP\" for value in candidates):\n        raise NeatlogsConfigurationError(\n            \"HTTP spans are not supported. Trace the semantic LLM, TOOL, \"\n            \"RETRIEVER, or other AI operation instead.\"\n        )"
+      },
+      {
+       "rank": 5,
+       "score": 56.9505,
+       "file_path": "neatlogs/init.py",
+       "start_line": 108,
+       "end_line": 115,
+       "focus_line": 108,
+       "snippet_start_line": 108,
+       "snippet_end_line": 115,
+       "symbol_start_line": 108,
+       "symbol_end_line": 115,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/init.py:function:_trace_sampler",
+       "symbol_name": "_trace_sampler",
+       "qualified_name": "_trace_sampler",
+       "signature": "def _trace_sampler(sample_rate: float) -> ParentBased",
+       "signals": [
+        "graph:constructs",
+        "graph:incoming",
+        "graph:callers",
+        "complete-symbol"
+       ],
+       "snippet": "def _trace_sampler(sample_rate: float) -> ParentBased:\n    \"\"\"Validate one trace-level rate and preserve the parent's sampling decision.\"\"\"\n    if isinstance(sample_rate, bool) or not isinstance(sample_rate, (int, float)):\n        raise NeatlogsConfigurationError(\"sample_rate must be a finite number from 0.0 to 1.0\")\n    rate = float(sample_rate)\n    if not math.isfinite(rate) or rate < 0.0 or rate > 1.0:\n        raise NeatlogsConfigurationError(\"sample_rate must be a finite number from 0.0 to 1.0\")\n    return ParentBased(root=TraceIdRatioBased(rate))"
+      },
+      {
+       "rank": 6,
+       "score": 55.5443,
+       "file_path": "neatlogs/__init__.py",
+       "start_line": 52,
+       "end_line": 56,
+       "focus_line": 54,
+       "snippet_start_line": 53,
+       "snippet_end_line": 54,
+       "language": "Python",
+       "signals": [
+        "path",
+        "body",
+        "symbol-usage"
+       ],
+       "snippet": ")\nfrom .errors import NeatlogsConfigurationError, NeatlogsError"
+      },
+      {
+       "rank": 7,
+       "score": 55.5443,
+       "file_path": "neatlogs/client.py",
+       "start_line": 55,
+       "end_line": 59,
+       "focus_line": 57,
+       "snippet_start_line": 56,
+       "snippet_end_line": 57,
+       "language": "Python",
+       "signals": [
+        "path",
+        "body",
+        "symbol-usage"
+       ],
+       "snippet": "from .core.upload_authority import uploads_enabled as resolve_uploads_enabled\nfrom .errors import NeatlogsConfigurationError"
+      },
+      {
+       "rank": 8,
+       "score": 0,
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1321,
+       "end_line": 1349,
+       "focus_line": 1321,
+       "snippet_start_line": 1321,
+       "snippet_end_line": 1321,
+       "kind": "method",
+       "qualified_name": "AsyncStreamWrapper.__anext__",
+       "signals": [
+        "related:near-dupe"
+       ],
+       "section": "related",
+       "snippet": "    async def __anext__(self):"
+      }
+     ],
+     "literal_cluster": {
+      "literal": "neatlogs.stream.cancelled",
+      "hits": [
+       {
+        "file_path": "neatlogs/_wrap_utils.py",
+        "line": 1243,
+        "symbol": "SyncStreamWrapper._finalize",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "neatlogs/core/choice_accumulator.py",
+        "line": 479,
+        "symbol": "OpenAIStreamFinalizer.finish",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "neatlogs/core/choice_accumulator.py",
+        "line": 491,
+        "symbol": "OpenAIStreamFinalizer.fail",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "neatlogs/decorators/_base.py",
+        "line": 323,
+        "symbol": "async_generator_wrapper",
+        "role": "CONSUMER"
+       }
+      ],
+      "hits_total": 18,
+      "files_total": 7
+     },
+     "verify_command": {
+      "command": "python -m pytest",
+      "targets": "whole test suite (no covering test identified)",
+      "derived_from": "pyproject.toml pytest config (whole suite)",
+      "tier": "suite"
+     },
+     "stats": {
+      "query_constraints_truncated": true,
+      "files_scanned": 351,
+      "preselection_backend": "go-content",
+      "preselection_passes": 3,
+      "preselection_files_examined": 351,
+      "preselection_confidence": 1,
+      "preselection_coverage": 1,
+      "preselection_diversity": 1,
+      "preselection_widened": true,
+      "files_content_read_during_preselection": 351,
+      "files_content_read_during_query": 336,
+      "bytes_content_read_during_query": 4437354,
+      "files_indexed": 336,
+      "symbols_considered": 4343,
+      "lexical_candidates": 4982,
+      "graph_candidates": 20,
+      "caller_boosted_candidates": 1197,
+      "identifier_usage_candidates": 32,
+      "same_container_neighbor_candidates": 24,
+      "same_file_bridge_candidates": 7,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 8,
+      "result_bytes": 6686,
+      "context_budget_bytes": 24576,
+      "snippets_truncated_by_budget": 3,
+      "complete_symbol_snippets": 4,
+      "locator_snippets": 3,
+      "related_sites": 1,
+      "literal_cluster_bytes": 538,
+      "literal_cluster_hits": 4,
+      "verify_command_bytes": 347,
+      "verify_tier": "suite",
+      "context_block_bytes": 885,
+      "index_cache_hit": true,
+      "index_latency_ms": 294,
+      "query_latency_ms": 1370,
+      "total_latency_ms": 4223,
+      "search_latency_ms": 4223,
+      "preselect_latency_ms": 2558
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 4,
+        "symbols": 4
+       },
+       "JSON": {
+        "files": 8,
+        "symbols": 618
+       },
+       "Markdown": {
+        "files": 11,
+        "symbols": 182
+       },
+       "Pip Requirements": {
+        "files": 14,
+        "symbols": 14
+       },
+       "Python": {
+        "files": 272,
+        "symbols": 3411
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 75
+       },
+       "YAML": {
+        "files": 6,
+        "symbols": 38
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 26,
+       "CALLS": 7517,
+       "CONFIGURES": 731,
+       "CONSTRUCTS": 708,
+       "CONTAINS": 1607,
+       "DATA_FLOWS": 1127,
+       "DEFINES": 4343,
+       "EMITS": 4,
+       "EXTENDS": 106,
+       "HANDLES_GRAPHQL": 3,
+       "HANDLES_ROUTE": 64,
+       "HANDLES_TOOL": 22,
+       "HTTP_CALLS": 8,
+       "IMPORTS": 2746,
+       "INHERITS": 106,
+       "OVERRIDES": 6,
+       "PARAM_TYPE": 108,
+       "RETURNS_TYPE": 56,
+       "SIMILAR_TO": 425,
+       "TESTS": 3,
+       "USES_TYPE": 164
+      }
+     }
+    }
    },
    {
-    "cmd": "entire graph --help",
-    "exit": 1,
-    "output": "the entire-graph plugin is not installed; run 'entire plugin install graph' and retry"
+    "cmd": "entire graph neighbors --repo . --symbol _finalize_error --file neatlogs/_wrap_utils.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "_finalize_error",
+     "file": "neatlogs/_wrap_utils.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 294,
+     "query_latency_ms": 1,
+     "total_latency_ms": 295,
+     "truncated": false,
+     "focus_matches_total": 2,
+     "match_bodies": [
+      {
+       "name": "SyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1265,
+       "end_line": 1281,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      },
+      {
+       "name": "AsyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1428,
+       "end_line": 1444,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      }
+     ],
+     "focus_matches_truncated": false,
+     "disambiguation_required": true,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:SyncStreamWrapper._finalize_error",
+        "name": "_finalize_error",
+        "qualified_name": "SyncStreamWrapper._finalize_error",
+        "kind": "method",
+        "file_path": "neatlogs/_wrap_utils.py",
+        "start_line": 1265,
+        "end_line": 1281,
+        "language": "Python"
+       },
+       "incoming": [],
+       "outgoing": []
+      },
+      {
+       "symbol": {
+        "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:AsyncStreamWrapper._finalize_error",
+        "name": "_finalize_error",
+        "qualified_name": "AsyncStreamWrapper._finalize_error",
+        "kind": "method",
+        "file_path": "neatlogs/_wrap_utils.py",
+        "start_line": 1428,
+        "end_line": 1444,
+        "language": "Python"
+       },
+       "incoming": [],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 324,
+      "parsed_files": 324,
+      "symbols": 4356,
+      "relations": 19910,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 4,
+        "symbols": 4
+       },
+       "JSON": {
+        "files": 9,
+        "symbols": 625
+       },
+       "Markdown": {
+        "files": 11,
+        "symbols": 182
+       },
+       "Pip Requirements": {
+        "files": 14,
+        "symbols": 14
+       },
+       "Python": {
+        "files": 277,
+        "symbols": 3415
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 77
+       },
+       "YAML": {
+        "files": 6,
+        "symbols": 38
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 26,
+       "CALLS": 7522,
+       "CONFIGURES": 740,
+       "CONSTRUCTS": 708,
+       "CONTAINS": 1607,
+       "DATA_FLOWS": 1127,
+       "DEFINES": 4356,
+       "EMITS": 4,
+       "EXTENDS": 106,
+       "HANDLES_GRAPHQL": 3,
+       "HANDLES_ROUTE": 64,
+       "HANDLES_TOOL": 22,
+       "HTTP_CALLS": 8,
+       "IMPORTS": 2749,
+       "INHERITS": 106,
+       "OVERRIDES": 6,
+       "PARAM_TYPE": 108,
+       "RETURNS_TYPE": 56,
+       "SIMILAR_TO": 425,
+       "TESTS": 3,
+       "USES_TYPE": 164
+      }
+     },
+     "completeness_scope": {
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo . --symbol _finalize_error --file neatlogs/_wrap_utils.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "full",
+     "query": "_finalize_error",
+     "file": "neatlogs/_wrap_utils.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 293,
+     "query_latency_ms": 1,
+     "total_latency_ms": 294,
+     "focus_matches_total": 2,
+     "match_bodies": [
+      {
+       "name": "SyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1265,
+       "end_line": 1281,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      },
+      {
+       "name": "AsyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1428,
+       "end_line": 1444,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      }
+     ],
+     "disambiguation_required": true,
+     "definitions": [
+      {
+       "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:SyncStreamWrapper._finalize_error",
+       "name": "_finalize_error",
+       "qualified_name": "SyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1265,
+       "end_line": 1281,
+       "language": "Python"
+      },
+      {
+       "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:AsyncStreamWrapper._finalize_error",
+       "name": "_finalize_error",
+       "qualified_name": "AsyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1428,
+       "end_line": 1444,
+       "language": "Python"
+      }
+     ],
+     "callers": {
+      "total": 0,
+      "entries": null
+     },
+     "callees": {
+      "total": 0,
+      "entries": null
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": null
+     },
+     "data_flows": {
+      "total": 0,
+      "entries": null
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": null
+     },
+     "siblings": {
+      "total": 0,
+      "entries": null
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 324,
+      "parsed_files": 324,
+      "symbols": 4356,
+      "relations": 19910,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 4,
+        "symbols": 4
+       },
+       "JSON": {
+        "files": 9,
+        "symbols": 625
+       },
+       "Markdown": {
+        "files": 11,
+        "symbols": 182
+       },
+       "Pip Requirements": {
+        "files": 14,
+        "symbols": 14
+       },
+       "Python": {
+        "files": 277,
+        "symbols": 3415
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 77
+       },
+       "YAML": {
+        "files": 6,
+        "symbols": 38
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 26,
+       "CALLS": 7522,
+       "CONFIGURES": 740,
+       "CONSTRUCTS": 708,
+       "CONTAINS": 1607,
+       "DATA_FLOWS": 1127,
+       "DEFINES": 4356,
+       "EMITS": 4,
+       "EXTENDS": 106,
+       "HANDLES_GRAPHQL": 3,
+       "HANDLES_ROUTE": 64,
+       "HANDLES_TOOL": 22,
+       "HTTP_CALLS": 8,
+       "IMPORTS": 2749,
+       "INHERITS": 106,
+       "OVERRIDES": 6,
+       "PARAM_TYPE": 108,
+       "RETURNS_TYPE": 56,
+       "SIMILAR_TO": 425,
+       "TESTS": 3,
+       "USES_TYPE": 164
+      }
+     },
+     "completeness_scope": {
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph neighbors --repo . --symbol _finalize_error --file neatlogs/_wrap_utils.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "_finalize_error",
+     "file": "neatlogs/_wrap_utils.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 290,
+     "query_latency_ms": 1,
+     "total_latency_ms": 291,
+     "truncated": false,
+     "focus_matches_total": 2,
+     "match_bodies": [
+      {
+       "name": "SyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1265,
+       "end_line": 1281,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      },
+      {
+       "name": "AsyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1428,
+       "end_line": 1444,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      }
+     ],
+     "focus_matches_truncated": false,
+     "disambiguation_required": true,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:SyncStreamWrapper._finalize_error",
+        "name": "_finalize_error",
+        "qualified_name": "SyncStreamWrapper._finalize_error",
+        "kind": "method",
+        "file_path": "neatlogs/_wrap_utils.py",
+        "start_line": 1265,
+        "end_line": 1281,
+        "language": "Python"
+       },
+       "incoming": [],
+       "outgoing": []
+      },
+      {
+       "symbol": {
+        "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:AsyncStreamWrapper._finalize_error",
+        "name": "_finalize_error",
+        "qualified_name": "AsyncStreamWrapper._finalize_error",
+        "kind": "method",
+        "file_path": "neatlogs/_wrap_utils.py",
+        "start_line": 1428,
+        "end_line": 1444,
+        "language": "Python"
+       },
+       "incoming": [],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 324,
+      "parsed_files": 324,
+      "symbols": 4356,
+      "relations": 19910,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 4,
+        "symbols": 4
+       },
+       "JSON": {
+        "files": 9,
+        "symbols": 625
+       },
+       "Markdown": {
+        "files": 11,
+        "symbols": 182
+       },
+       "Pip Requirements": {
+        "files": 14,
+        "symbols": 14
+       },
+       "Python": {
+        "files": 277,
+        "symbols": 3415
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 77
+       },
+       "YAML": {
+        "files": 6,
+        "symbols": 38
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 26,
+       "CALLS": 7522,
+       "CONFIGURES": 740,
+       "CONSTRUCTS": 708,
+       "CONTAINS": 1607,
+       "DATA_FLOWS": 1127,
+       "DEFINES": 4356,
+       "EMITS": 4,
+       "EXTENDS": 106,
+       "HANDLES_GRAPHQL": 3,
+       "HANDLES_ROUTE": 64,
+       "HANDLES_TOOL": 22,
+       "HTTP_CALLS": 8,
+       "IMPORTS": 2749,
+       "INHERITS": 106,
+       "OVERRIDES": 6,
+       "PARAM_TYPE": 108,
+       "RETURNS_TYPE": 56,
+       "SIMILAR_TO": 425,
+       "TESTS": 3,
+       "USES_TYPE": 164
+      }
+     },
+     "completeness_scope": {
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo . --symbol _finalize_error --file neatlogs/_wrap_utils.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "full",
+     "query": "_finalize_error",
+     "file": "neatlogs/_wrap_utils.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 297,
+     "query_latency_ms": 1,
+     "total_latency_ms": 299,
+     "focus_matches_total": 2,
+     "match_bodies": [
+      {
+       "name": "SyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1265,
+       "end_line": 1281,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      },
+      {
+       "name": "AsyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1428,
+       "end_line": 1444,
+       "source": "    def _finalize_error(self, error: BaseException):\n        if self._finalized:\n            return\n        self._finalized = True\n        if self._incremental and hasattr(self._finalizer, \"fail\"):\n            self._finalizer.fail(self._span, error)\n            return\n        from opentelemetry.trace import StatusCode\n\n        if error.__class__.__name__ in {\"CancelledError\", \"GeneratorExit\"}:\n            self._span.set_attribute(\"neatlogs.stream.cancelled\", True)\n            self._span.set_status(StatusCode.UNSET)\n        else:\n            self._span.set_status(StatusCode.ERROR, str(error))\n            if isinstance(error, Exception):\n                self._span.record_exception(error)\n        self._span.end()"
+      }
+     ],
+     "disambiguation_required": true,
+     "definitions": [
+      {
+       "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:SyncStreamWrapper._finalize_error",
+       "name": "_finalize_error",
+       "qualified_name": "SyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1265,
+       "end_line": 1281,
+       "language": "Python"
+      },
+      {
+       "id": "gh/neatlogs/neatlogs:Python:neatlogs/_wrap_utils.py:method:AsyncStreamWrapper._finalize_error",
+       "name": "_finalize_error",
+       "qualified_name": "AsyncStreamWrapper._finalize_error",
+       "kind": "method",
+       "file_path": "neatlogs/_wrap_utils.py",
+       "start_line": 1428,
+       "end_line": 1444,
+       "language": "Python"
+      }
+     ],
+     "callers": {
+      "total": 0,
+      "entries": null
+     },
+     "callees": {
+      "total": 0,
+      "entries": null
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": null
+     },
+     "data_flows": {
+      "total": 0,
+      "entries": null
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": null
+     },
+     "siblings": {
+      "total": 0,
+      "entries": null
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 324,
+      "parsed_files": 324,
+      "symbols": 4356,
+      "relations": 19910,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 4,
+        "symbols": 4
+       },
+       "JSON": {
+        "files": 9,
+        "symbols": 625
+       },
+       "Markdown": {
+        "files": 11,
+        "symbols": 182
+       },
+       "Pip Requirements": {
+        "files": 14,
+        "symbols": 14
+       },
+       "Python": {
+        "files": 277,
+        "symbols": 3415
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 77
+       },
+       "YAML": {
+        "files": 6,
+        "symbols": 38
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 26,
+       "CALLS": 7522,
+       "CONFIGURES": 740,
+       "CONSTRUCTS": 708,
+       "CONTAINS": 1607,
+       "DATA_FLOWS": 1127,
+       "DEFINES": 4356,
+       "EMITS": 4,
+       "EXTENDS": 106,
+       "HANDLES_GRAPHQL": 3,
+       "HANDLES_ROUTE": 64,
+       "HANDLES_TOOL": 22,
+       "HTTP_CALLS": 8,
+       "IMPORTS": 2749,
+       "INHERITS": 106,
+       "OVERRIDES": 6,
+       "PARAM_TYPE": 108,
+       "RETURNS_TYPE": 56,
+       "SIMILAR_TO": 425,
+       "TESTS": 3,
+       "USES_TYPE": 164
+      }
+     },
+     "completeness_scope": {
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph neighbors --repo . --symbol NeatlogsConfigurationError --file neatlogs/errors.py --relation CALLS --direction in --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "full",
+     "relation": "CALLS",
+     "direction": "in",
+     "query": "NeatlogsConfigurationError",
+     "file": "neatlogs/errors.py",
+     "index_cache_hit": true,
+     "index_latency_ms": 287,
+     "query_latency_ms": 2,
+     "total_latency_ms": 290,
+     "truncated": false,
+     "focus_matches_total": 1,
+     "focus_matches_truncated": false,
+     "disambiguation_required": false,
+     "matches": [
+      {
+       "symbol": {
+        "id": "gh/neatlogs/neatlogs:Python:neatlogs/errors.py:class:NeatlogsConfigurationError",
+        "name": "NeatlogsConfigurationError",
+        "qualified_name": "NeatlogsConfigurationError",
+        "kind": "class",
+        "file_path": "neatlogs/errors.py",
+        "start_line": 8,
+        "end_line": 9,
+        "language": "Python"
+       },
+       "incoming": [
+        {
+         "direction": "in",
+         "relation": "CONSTRUCTS",
+         "endpoint": {
+          "id": "gh/neatlogs/neatlogs:Python:neatlogs/client.py:method:Client.__init__",
+          "name": "__init__",
+          "qualified_name": "Client.__init__",
+          "kind": "method",
+          "file_path": "neatlogs/client.py",
+          "start_line": 86,
+          "end_line": 274,
+          "language": "Python"
+         },
+         "confidence": 0.86,
+         "resolution": "import_resolved",
+         "reason": "direct call expression resolved through import path",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "neatlogs/client.py",
+           "start_line": 86,
+           "end_line": 274,
+           "detail": "NeatlogsConfigurationError"
+          }
+         ],
+         "call_site": {
+          "file_path": "neatlogs/client.py",
+          "line": 111,
+          "additional_sites": 3,
+          "guards": [
+           {
+            "line": 110,
+            "text": "        if isinstance(sample_rate, bool) or not isinstance(sample_rate, (int, float)):"
+           }
+          ]
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CONSTRUCTS",
+         "endpoint": {
+          "id": "gh/neatlogs/neatlogs:Python:neatlogs/core/context.py:function:_reject_http_span_kind",
+          "name": "_reject_http_span_kind",
+          "qualified_name": "_reject_http_span_kind",
+          "kind": "function",
+          "file_path": "neatlogs/core/context.py",
+          "start_line": 13,
+          "end_line": 23,
+          "language": "Python"
+         },
+         "confidence": 0.86,
+         "resolution": "import_resolved",
+         "reason": "direct call expression resolved through import path",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "neatlogs/core/context.py",
+           "start_line": 13,
+           "end_line": 23,
+           "detail": "NeatlogsConfigurationError"
+          }
+         ],
+         "call_site": {
+          "file_path": "neatlogs/core/context.py",
+          "line": 20,
+          "guards": [
+           {
+            "line": 19,
+            "text": "    if any(str(value or \"\").strip().upper() == \"HTTP\" for value in candidates):"
+           }
+          ]
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CONSTRUCTS",
+         "endpoint": {
+          "id": "gh/neatlogs/neatlogs:Python:neatlogs/init.py:function:_trace_sampler",
+          "name": "_trace_sampler",
+          "qualified_name": "_trace_sampler",
+          "kind": "function",
+          "file_path": "neatlogs/init.py",
+          "start_line": 108,
+          "end_line": 115,
+          "language": "Python"
+         },
+         "confidence": 0.86,
+         "resolution": "import_resolved",
+         "reason": "direct call expression resolved through import path",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "neatlogs/init.py",
+           "start_line": 108,
+           "end_line": 115,
+           "detail": "NeatlogsConfigurationError"
+          }
+         ],
+         "call_site": {
+          "file_path": "neatlogs/init.py",
+          "line": 111,
+          "additional_sites": 1,
+          "guards": [
+           {
+            "line": 110,
+            "text": "    if isinstance(sample_rate, bool) or not isinstance(sample_rate, (int, float)):"
+           }
+          ]
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CONSTRUCTS",
+         "endpoint": {
+          "id": "gh/neatlogs/neatlogs:Python:neatlogs/init.py:function:_validate_instrumentations",
+          "name": "_validate_instrumentations",
+          "qualified_name": "_validate_instrumentations",
+          "kind": "function",
+          "file_path": "neatlogs/init.py",
+          "start_line": 118,
+          "end_line": 129,
+          "language": "Python"
+         },
+         "confidence": 0.86,
+         "resolution": "import_resolved",
+         "reason": "direct call expression resolved through import path",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "neatlogs/init.py",
+           "start_line": 118,
+           "end_line": 129,
+           "detail": "NeatlogsConfigurationError"
+          }
+         ],
+         "call_site": {
+          "file_path": "neatlogs/init.py",
+          "line": 124,
+          "guards": [
+           {
+            "line": 123,
+            "text": "    if unsupported:"
+           }
+          ]
+         }
+        },
+        {
+         "direction": "in",
+         "relation": "CONSTRUCTS",
+         "endpoint": {
+          "id": "gh/neatlogs/neatlogs:Python:neatlogs/init.py:function:init",
+          "name": "init",
+          "qualified_name": "init",
+          "kind": "function",
+          "file_path": "neatlogs/init.py",
+          "start_line": 276,
+          "end_line": 794,
+          "language": "Python"
+         },
+         "confidence": 0.86,
+         "resolution": "import_resolved",
+         "reason": "direct call expression resolved through import path",
+         "evidence": [
+          {
+           "kind": "call_site",
+           "file_path": "neatlogs/init.py",
+           "start_line": 276,
+           "end_line": 794,
+           "detail": "NeatlogsConfigurationError"
+          }
+         ],
+         "call_site": {
+          "file_path": "neatlogs/init.py",
+          "line": 419,
+          "additional_sites": 2,
+          "guards": [
+           {
+            "line": 414,
+            "text": "    if _initialized:"
+           }
+          ]
+         }
+        }
+       ],
+       "outgoing": []
+      }
+     ],
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 324,
+      "parsed_files": 324,
+      "symbols": 4356,
+      "relations": 19910,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 4,
+        "symbols": 4
+       },
+       "JSON": {
+        "files": 9,
+        "symbols": 625
+       },
+       "Markdown": {
+        "files": 11,
+        "symbols": 182
+       },
+       "Pip Requirements": {
+        "files": 14,
+        "symbols": 14
+       },
+       "Python": {
+        "files": 277,
+        "symbols": 3415
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 77
+       },
+       "YAML": {
+        "files": 6,
+        "symbols": 38
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 26,
+       "CALLS": 7522,
+       "CONFIGURES": 740,
+       "CONSTRUCTS": 708,
+       "CONTAINS": 1607,
+       "DATA_FLOWS": 1127,
+       "DEFINES": 4356,
+       "EMITS": 4,
+       "EXTENDS": 106,
+       "HANDLES_GRAPHQL": 3,
+       "HANDLES_ROUTE": 64,
+       "HANDLES_TOOL": 22,
+       "HTTP_CALLS": 8,
+       "IMPORTS": 2749,
+       "INHERITS": 106,
+       "OVERRIDES": 6,
+       "PARAM_TYPE": 108,
+       "RETURNS_TYPE": 56,
+       "SIMILAR_TO": 425,
+       "TESTS": 3,
+       "USES_TYPE": 164
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 277,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph impact --repo . --symbol NeatlogsConfigurationError --file neatlogs/errors.py --format json --exclude-tests",
+    "exit": 0,
+    "output": {
+     "format_version": 1,
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "full",
+     "query": "NeatlogsConfigurationError",
+     "file": "neatlogs/errors.py",
+     "depth": 2,
+     "index_cache_hit": true,
+     "index_latency_ms": 292,
+     "query_latency_ms": 5,
+     "total_latency_ms": 298,
+     "focus_matches_total": 1,
+     "disambiguation_required": false,
+     "focus": {
+      "id": "gh/neatlogs/neatlogs:Python:neatlogs/errors.py:class:NeatlogsConfigurationError",
+      "name": "NeatlogsConfigurationError",
+      "qualified_name": "NeatlogsConfigurationError",
+      "kind": "class",
+      "file_path": "neatlogs/errors.py",
+      "start_line": 8,
+      "end_line": 9,
+      "language": "Python"
+     },
+     "callers": {
+      "total": 11,
+      "direct": 5,
+      "transitive": 6,
+      "in": 5,
+      "entries": [
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:Python:neatlogs/client.py:method:Client.__init__",
+         "name": "__init__",
+         "qualified_name": "Client.__init__",
+         "kind": "method",
+         "file_path": "neatlogs/client.py",
+         "start_line": 86,
+         "end_line": 274,
+         "language": "Python"
+        },
+        "relation": "CONSTRUCTS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "neatlogs/client.py",
+         "line": 111,
+         "additional_sites": 3
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:Python:neatlogs/core/context.py:function:_reject_http_span_kind",
+         "name": "_reject_http_span_kind",
+         "qualified_name": "_reject_http_span_kind",
+         "kind": "function",
+         "file_path": "neatlogs/core/context.py",
+         "start_line": 13,
+         "end_line": 23,
+         "language": "Python"
+        },
+        "relation": "CONSTRUCTS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "neatlogs/core/context.py",
+         "line": 20
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:Python:neatlogs/init.py:function:_trace_sampler",
+         "name": "_trace_sampler",
+         "qualified_name": "_trace_sampler",
+         "kind": "function",
+         "file_path": "neatlogs/init.py",
+         "start_line": 108,
+         "end_line": 115,
+         "language": "Python"
+        },
+        "relation": "CONSTRUCTS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "neatlogs/init.py",
+         "line": 111,
+         "additional_sites": 1
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:Python:neatlogs/init.py:function:_validate_instrumentations",
+         "name": "_validate_instrumentations",
+         "qualified_name": "_validate_instrumentations",
+         "kind": "function",
+         "file_path": "neatlogs/init.py",
+         "start_line": 118,
+         "end_line": 129,
+         "language": "Python"
+        },
+        "relation": "CONSTRUCTS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "neatlogs/init.py",
+         "line": 124
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:Python:neatlogs/init.py:function:init",
+         "name": "init",
+         "qualified_name": "init",
+         "kind": "function",
+         "file_path": "neatlogs/init.py",
+         "start_line": 276,
+         "end_line": 794,
+         "language": "Python"
+        },
+        "relation": "CONSTRUCTS",
+        "direction": "in",
+        "depth": 1,
+        "call_site": {
+         "file_path": "neatlogs/init.py",
+         "line": 419,
+         "additional_sites": 2
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:file:examples/sdk_examples/49_langgraph_gemini_qdrant_cohere_reranker.py",
+         "name": "49_langgraph_gemini_qdrant_cohere_reranker.py",
+         "kind": "file",
+         "file_path": "examples/sdk_examples/49_langgraph_gemini_qdrant_cohere_reranker.py",
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "init"
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:file:examples/sdk_examples/50_multi_agent_iterative_research.py",
+         "name": "50_multi_agent_iterative_research.py",
+         "kind": "file",
+         "file_path": "examples/sdk_examples/50_multi_agent_iterative_research.py",
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "init"
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:file:examples/sdk_examples/63_detection_test_workflow.py",
+         "name": "63_detection_test_workflow.py",
+         "kind": "file",
+         "file_path": "examples/sdk_examples/63_detection_test_workflow.py",
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "init"
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:file:examples/sdk_examples/shared_mcp_server.py",
+         "name": "shared_mcp_server.py",
+         "kind": "file",
+         "file_path": "examples/sdk_examples/shared_mcp_server.py",
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "init"
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:Python:neatlogs/core/context.py:function:trace",
+         "name": "trace",
+         "qualified_name": "trace",
+         "kind": "function",
+         "file_path": "neatlogs/core/context.py",
+         "start_line": 27,
+         "end_line": 318,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "_reject_http_span_kind",
+        "call_site": {
+         "file_path": "neatlogs/core/context.py",
+         "line": 129
+        }
+       },
+       {
+        "endpoint": {
+         "id": "gh/neatlogs/neatlogs:Python:neatlogs/doctor_v2.py:function:_controlled_probe_capture",
+         "name": "_controlled_probe_capture",
+         "qualified_name": "_controlled_probe_capture",
+         "kind": "function",
+         "file_path": "neatlogs/doctor_v2.py",
+         "start_line": 745,
+         "end_line": 828,
+         "language": "Python"
+        },
+        "relation": "CALLS",
+        "direction": "in",
+        "depth": 2,
+        "via": "init",
+        "call_site": {
+         "file_path": "neatlogs/doctor_v2.py",
+         "line": 760
+        }
+       }
+      ]
+     },
+     "callees": {
+      "total": 0,
+      "entries": []
+     },
+     "type_consumers": {
+      "total": 0,
+      "entries": []
+     },
+     "data_flows": {
+      "total": 0,
+      "entries": []
+     },
+     "co_changes": {
+      "total": 0,
+      "entries": []
+     },
+     "siblings": {
+      "total": 0,
+      "entries": []
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "stats": {
+      "files": 324,
+      "parsed_files": 324,
+      "symbols": 4356,
+      "relations": 19910,
+      "partial_failures": 0,
+      "completeness_level": "ok"
+     },
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 4,
+        "symbols": 4
+       },
+       "JSON": {
+        "files": 9,
+        "symbols": 625
+       },
+       "Markdown": {
+        "files": 11,
+        "symbols": 182
+       },
+       "Pip Requirements": {
+        "files": 14,
+        "symbols": 14
+       },
+       "Python": {
+        "files": 277,
+        "symbols": 3415
+       },
+       "TOML": {
+        "files": 2,
+        "symbols": 77
+       },
+       "YAML": {
+        "files": 6,
+        "symbols": 38
+       }
+      },
+      "relations": {
+       "ASYNC_CALLS": 26,
+       "CALLS": 7522,
+       "CONFIGURES": 740,
+       "CONSTRUCTS": 708,
+       "CONTAINS": 1607,
+       "DATA_FLOWS": 1127,
+       "DEFINES": 4356,
+       "EMITS": 4,
+       "EXTENDS": 106,
+       "HANDLES_GRAPHQL": 3,
+       "HANDLES_ROUTE": 64,
+       "HANDLES_TOOL": 22,
+       "HTTP_CALLS": 8,
+       "IMPORTS": 2749,
+       "INHERITS": 106,
+       "OVERRIDES": 6,
+       "PARAM_TYPE": 108,
+       "RETURNS_TYPE": 56,
+       "SIMILAR_TO": 425,
+       "TESTS": 3,
+       "USES_TYPE": 164
+      }
+     },
+     "completeness_scope": {
+      "language": "Python",
+      "language_files": 277,
+      "worktree_snapshot": true,
+      "level": "ok"
+     }
+    }
+   },
+   {
+    "cmd": "entire graph search --repo . --profile fast --format json --top-k 8 --query where _err is used to record the right span",
+    "exit": 0,
+    "output": {
+     "query": "where _err is used to record the right span",
+     "repo_root": ".",
+     "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+     "tree": "51b1d43bc054f8ff24a6515efb799f52ad991505",
+     "profile": "fast",
+     "results": [
+      {
+       "rank": 1,
+       "score": 85.6276,
+       "file_path": "neatlogs/agno.py",
+       "start_line": 882,
+       "end_line": 885,
+       "focus_line": 882,
+       "snippet_start_line": 882,
+       "snippet_end_line": 885,
+       "symbol_start_line": 882,
+       "symbol_end_line": 885,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/agno.py:function:_err",
+       "symbol_name": "_err",
+       "qualified_name": "_err",
+       "signature": "def _err(span: Any, e: Exception) -> None",
+       "signals": [
+        "body",
+        "exact-symbol",
+        "symbol-name",
+        "signature",
+        "constraint:entity",
+        "exact-code-token",
+        "graph:callers"
+       ],
+       "snippet": "def _err(span: Any, e: Exception) -> None:\n    span.set_status(StatusCode.ERROR, str(e))\n    span.record_exception(e)\n    span.end()"
+      },
+      {
+       "rank": 2,
+       "score": 85.6276,
+       "file_path": "neatlogs/anthropic.py",
+       "start_line": 761,
+       "end_line": 764,
+       "focus_line": 761,
+       "snippet_start_line": 761,
+       "snippet_end_line": 764,
+       "symbol_start_line": 761,
+       "symbol_end_line": 764,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/anthropic.py:function:_err",
+       "symbol_name": "_err",
+       "qualified_name": "_err",
+       "signature": "def _err(span: Any, e: Exception) -> None",
+       "signals": [
+        "body",
+        "exact-symbol",
+        "symbol-name",
+        "signature",
+        "constraint:entity",
+        "exact-code-token",
+        "graph:callers"
+       ],
+       "snippet": "def _err(span: Any, e: Exception) -> None:\n    span.set_status(StatusCode.ERROR, str(e))\n    span.record_exception(e)\n    span.end()"
+      },
+      {
+       "rank": 3,
+       "score": 85.6276,
+       "file_path": "neatlogs/azure_openai.py",
+       "start_line": 540,
+       "end_line": 543,
+       "focus_line": 540,
+       "snippet_start_line": 540,
+       "snippet_end_line": 543,
+       "symbol_start_line": 540,
+       "symbol_end_line": 543,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/azure_openai.py:function:_err",
+       "symbol_name": "_err",
+       "qualified_name": "_err",
+       "signature": "def _err(span: Any, e: Exception) -> None",
+       "signals": [
+        "body",
+        "exact-symbol",
+        "symbol-name",
+        "signature",
+        "constraint:entity",
+        "exact-code-token",
+        "graph:callers"
+       ],
+       "snippet": "def _err(span: Any, e: Exception) -> None:\n    span.set_status(StatusCode.ERROR, str(e))\n    span.record_exception(e)\n    span.end()"
+      },
+      {
+       "rank": 4,
+       "score": 85.6276,
+       "file_path": "neatlogs/bedrock.py",
+       "start_line": 80,
+       "end_line": 83,
+       "focus_line": 80,
+       "snippet_start_line": 80,
+       "snippet_end_line": 83,
+       "symbol_start_line": 80,
+       "symbol_end_line": 83,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/bedrock.py:function:_err",
+       "symbol_name": "_err",
+       "qualified_name": "_err",
+       "signature": "def _err(span: Any, e: Exception) -> None",
+       "signals": [
+        "body",
+        "exact-symbol",
+        "symbol-name",
+        "signature",
+        "constraint:entity",
+        "exact-code-token",
+        "graph:callers"
+       ],
+       "snippet": "def _err(span: Any, e: Exception) -> None:\n    span.set_status(StatusCode.ERROR, str(e))\n    span.record_exception(e)\n    span.end()"
+      },
+      {
+       "rank": 5,
+       "score": 72.7835,
+       "file_path": "neatlogs/google_genai.py",
+       "start_line": 708,
+       "end_line": 726,
+       "focus_line": 708,
+       "snippet_start_line": 708,
+       "snippet_end_line": 726,
+       "symbol_start_line": 708,
+       "symbol_end_line": 726,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/google_genai.py:function:_start_chat_span",
+       "symbol_name": "_start_chat_span",
+       "qualified_name": "_start_chat_span",
+       "signature": "def _start_chat_span(chat: Any, message: Any, stream: bool) -> Any",
+       "signals": [
+        "body",
+        "symbol-name",
+        "same-container-neighbor",
+        "complete-symbol"
+       ],
+       "snippet": "def _start_chat_span(chat: Any, message: Any, stream: bool) -> Any:\n    model = getattr(chat, \"_model\", None) or getattr(chat, \"model\", None) or \"\"\n    span = get_provider_tracer().start_span(\n        name=\"google_genai.chat.send_message\",\n        attributes={\n            \"neatlogs.span.kind\": \"llm\",\n            \"neatlogs.llm.provider\": \"google_genai\",\n            \"neatlogs.llm.system\": \"google_genai\",\n            \"neatlogs.llm.model_name\": str(model),\n            \"neatlogs.llm.is_streaming\": bool(stream),\n        },\n    )\n    if message is not None:\n        span.set_attribute(\"neatlogs.llm.input_messages.0.role\", \"user\")\n        span.set_attribute(\n            \"neatlogs.llm.input_messages.0.content\",\n            (message if isinstance(message, str) else serialize(message))[:10000],\n        )\n    return span"
+      },
+      {
+       "rank": 6,
+       "score": 72.7835,
+       "file_path": "neatlogs/openrouter.py",
+       "start_line": 707,
+       "end_line": 712,
+       "focus_line": 707,
+       "snippet_start_line": 707,
+       "snippet_end_line": 708,
+       "symbol_start_line": 707,
+       "symbol_end_line": 723,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/openrouter.py:function:_ok",
+       "symbol_name": "_ok",
+       "qualified_name": "_ok",
+       "signature": "def _ok( span: Any, duration_ms: float, ttft_ms: Optional[float] = None, *, interrupted: bool = False, ) -> None",
+       "signals": [
+        "body",
+        "signature",
+        "same-container-neighbor"
+       ],
+       "snippet": "def _ok(\n    span: Any,"
+      },
+      {
+       "rank": 7,
+       "score": 72.7835,
+       "file_path": "neatlogs/pydantic_ai.py",
+       "start_line": 662,
+       "end_line": 667,
+       "focus_line": 662,
+       "snippet_start_line": 662,
+       "snippet_end_line": 663,
+       "symbol_start_line": 662,
+       "symbol_end_line": 698,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/pydantic_ai.py:function:_patch_toolset_class",
+       "symbol_name": "_patch_toolset_class",
+       "qualified_name": "_patch_toolset_class",
+       "signature": "def _patch_toolset_class() -> None",
+       "signals": [
+        "same-container-neighbor"
+       ],
+       "snippet": "def _patch_toolset_class() -> None:\n    \"\"\"Patch FunctionToolset.call_tool (the standard user toolset) for TOOL spans.\"\"\""
+      },
+      {
+       "rank": 8,
+       "score": 72.1877,
+       "file_path": "neatlogs/dspy.py",
+       "start_line": 268,
+       "end_line": 273,
+       "focus_line": 268,
+       "snippet_start_line": 268,
+       "snippet_end_line": 269,
+       "symbol_start_line": 268,
+       "symbol_end_line": 322,
+       "language": "Python",
+       "kind": "function",
+       "symbol_id": "gh/neatlogs/neatlogs:Python:neatlogs/dspy.py:function:_patch_retrieve_class",
+       "symbol_name": "_patch_retrieve_class",
+       "qualified_name": "_patch_retrieve_class",
+       "signature": "def _patch_retrieve_class() -> None",
+       "signals": [
+        "same-container-neighbor"
+       ],
+       "snippet": "def _patch_retrieve_class() -> None:\n    try:"
+      },
+      {
+       "rank": 9,
+       "score": 0,
+       "file_path": "scripts/compatibility/test_analyze_upstream.py",
+       "start_line": 257,
+       "end_line": 262,
+       "focus_line": 262,
+       "snippet_start_line": 262,
+       "snippet_end_line": 262,
+       "kind": "method",
+       "qualified_name": "AnalyzeUpstreamTests.test_gemini_http_error_includes_api_reason_without_key",
+       "signals": [
+        "related:covering-test"
+       ],
+       "section": "covering-test",
+       "snippet": "        self.assertNotIn(\"secret-key\", str(caught.exception))"
+      }
+     ],
+     "literal_cluster": {
+      "literal": "record_exception",
+      "hits": [
+       {
+        "file_path": "neatlogs/_wrap_utils.py",
+        "line": 889,
+        "symbol": "_RootEndingSpan",
+        "role": "EDIT"
+       },
+       {
+        "file_path": "neatlogs/_wrap_utils.py",
+        "line": 1280,
+        "symbol": "SyncStreamWrapper._finalize_error",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "neatlogs/agno.py",
+        "line": 430,
+        "symbol": "_AgnoStreamIter._finalize",
+        "role": "CONSUMER"
+       },
+       {
+        "file_path": "neatlogs/agno.py",
+        "line": 480,
+        "symbol": "_AgnoAsyncStreamIter._finalize",
+        "role": "CONSUMER"
+       }
+      ],
+      "hits_total": 54,
+      "files_total": 22
+     },
+     "verify_command": {
+      "command": "python -m pytest scripts/compatibility/test_analyze_upstream.py -k test_gemini_http_error_includes_api_reason_without_key",
+      "targets": "scripts/compatibility/test_analyze_upstream.py",
+      "derived_from": "pyproject.toml pytest config + covering test path",
+      "tier": "narrow"
+     },
+     "coverage_note": {
+      "symbol": "_err",
+      "total": 5,
+      "peers": [
+       "test_agent_error_handling",
+       "test_error_records_exception",
+       "test_tool_error_marks_tool_span_error",
+       "test_fail_open_on_tracer_error"
+      ]
+     },
+     "stats": {
+      "files_scanned": 351,
+      "preselection_backend": "go-content",
+      "preselection_passes": 3,
+      "preselection_files_examined": 351,
+      "preselection_confidence": 1,
+      "preselection_coverage": 1,
+      "preselection_diversity": 1,
+      "preselection_widened": true,
+      "files_content_read_during_preselection": 351,
+      "files_content_read_during_query": 266,
+      "bytes_content_read_during_query": 4350414,
+      "files_indexed": 266,
+      "symbols_considered": 4087,
+      "lexical_candidates": 2321,
+      "graph_candidates": 20,
+      "caller_boosted_candidates": 448,
+      "identifier_usage_candidates": 12,
+      "same_container_neighbor_candidates": 24,
+      "same_file_bridge_candidates": 3,
+      "sparse_candidates": 0,
+      "sparse_files_content_read": 0,
+      "candidates_selected": 9,
+      "result_bytes": 6469,
+      "context_budget_bytes": 24576,
+      "snippets_truncated_by_budget": 3,
+      "complete_symbol_snippets": 1,
+      "locator_snippets": 3,
+      "covering_tests": 1,
+      "literal_cluster_bytes": 482,
+      "literal_cluster_hits": 4,
+      "verify_command_bytes": 460,
+      "verify_tier": "narrow",
+      "context_block_bytes": 942,
+      "index_cache_hit": false,
+      "index_latency_ms": 7840,
+      "query_latency_ms": 883,
+      "total_latency_ms": 10440,
+      "search_latency_ms": 10440,
+      "preselect_latency_ms": 1716
+     },
+     "warnings": [
+      {
+       "code": "W_WORKTREE_SNAPSHOT",
+       "severity": "warning",
+       "effect_on_semantic_completeness": "snapshot records are read from the working tree because --worktree was requested"
+      }
+     ],
+     "partial_failures": [],
+     "completeness": {
+      "languages": {
+       "Git Ignore": {
+        "files": 1,
+        "symbols": 1
+       },
+       "HTML": {
+        "files": 2,
+        "symbols": 2
+       },
+       "JSON": {
+        "files": 5,
+        "symbols": 440
+       },
+       "Markdown": {
+        "files": 10,
+        "symbols": 177
+       },
+       "Python": {
+        "files": 239,
+        "symbols": 3366
+       },
+       "TOML": {
+        "files": 1,
+        "symbols": 75
+       },
+       "YAML": {
+        "files": 4,
+        "symbols": 26
+       }
+      },
+      "relations": {
+       "CALLS": 3040,
+       "CONFIGURES": 541,
+       "CONSTRUCTS": 514,
+       "CONTAINS": 1584,
+       "DEFINES": 4087,
+       "HANDLES_ROUTE": 61,
+       "HANDLES_TOOL": 22,
+       "IMPORTS": 2630
+      }
+     }
+    }
    }
   ],
-  "reason": "entire graph is not available here: the entire-graph plugin is not installed; run 'entire plugin install graph' and retry. agent-help lists `entire plugin` as the user's command, so Trueup did not install it."
+  "available": true,
+  "query": "anthropic messages stream tracing: top-level span status is OK in the span but really ERROR (app raised RemoteProtocolError) (neatlogs, anthropic messages stream: top-level span status is OK)",
+  "reason": "entire graph search, neighbors and impact"
  },
- "method": "ripgrep + ast (fallback)",
+ "method": "entire graph",
  "definitions": [
   {
-   "symbol": "patched_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 124,
-   "qualname": "_patch_messages.patched_stream",
-   "end": 147
+   "symbol": "_finalize_error",
+   "qualname": "SyncStreamWrapper._finalize_error",
+   "file": "neatlogs/_wrap_utils.py",
+   "line": 1265,
+   "end": 1281,
+   "score": 62.2699,
+   "package": ".",
+   "rank": 1
   },
   {
-   "symbol": "patched_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 205,
-   "qualname": "_patch_async_messages.patched_stream",
-   "end": 228
+   "symbol": "_finalize_error",
+   "qualname": "AsyncStreamWrapper._finalize_error",
+   "file": "neatlogs/_wrap_utils.py",
+   "line": 1428,
+   "end": 1444,
+   "score": 62.2324,
+   "package": ".",
+   "rank": 2
   },
   {
-   "symbol": "patched_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 124,
-   "qualname": "_patch_messages.patched_stream",
-   "end": 147
+   "symbol": "NeatlogsConfigurationError",
+   "qualname": "NeatlogsConfigurationError",
+   "file": "neatlogs/errors.py",
+   "line": 8,
+   "end": 9,
+   "score": 61.7159,
+   "package": ".",
+   "rank": 3
   },
   {
-   "symbol": "patched_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 205,
-   "qualname": "_patch_async_messages.patched_stream",
-   "end": 228
+   "symbol": "_reject_http_span_kind",
+   "qualname": "_reject_http_span_kind",
+   "file": "neatlogs/core/context.py",
+   "line": 13,
+   "end": 23,
+   "score": 56.9505,
+   "package": ".",
+   "rank": 4
   },
   {
-   "symbol": "_SyncStreamManagerWrapper",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 461,
-   "qualname": "_SyncStreamManagerWrapper",
-   "end": 497
+   "symbol": "_trace_sampler",
+   "qualname": "_trace_sampler",
+   "file": "neatlogs/init.py",
+   "line": 108,
+   "end": 115,
+   "score": 56.9505,
+   "package": ".",
+   "rank": 5
   },
   {
-   "symbol": "_SyncStreamManagerWrapper",
-   "file": "neatlogs/anthropic.py",
-   "line": 461,
-   "qualname": "_SyncStreamManagerWrapper",
-   "end": 493
-  },
-  {
-   "symbol": "_SyncStreamIterator",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 500,
-   "qualname": "_SyncStreamIterator",
-   "end": 514
-  },
-  {
-   "symbol": "_SyncStreamIterator",
-   "file": "neatlogs/anthropic.py",
-   "line": 496,
-   "qualname": "_SyncStreamIterator",
-   "end": 510
-  },
-  {
-   "symbol": "_AsyncStreamManagerWrapper",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 517,
-   "qualname": "_AsyncStreamManagerWrapper",
-   "end": 553
-  },
-  {
-   "symbol": "_AsyncStreamManagerWrapper",
-   "file": "neatlogs/anthropic.py",
-   "line": 513,
-   "qualname": "_AsyncStreamManagerWrapper",
-   "end": 545
-  },
-  {
-   "symbol": "_AsyncStreamIterator",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 556,
-   "qualname": "_AsyncStreamIterator",
-   "end": 577
-  },
-  {
-   "symbol": "_AsyncStreamIterator",
-   "file": "neatlogs/anthropic.py",
-   "line": 548,
-   "qualname": "_AsyncStreamIterator",
-   "end": 569
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 350,
-   "qualname": "_finalize_stream",
-   "end": 458
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 385,
-   "qualname": "_finalize_stream",
-   "end": 461
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/google_genai.py",
-   "line": 408,
-   "qualname": "_finalize_stream",
-   "end": 482
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/vertex_ai.py",
-   "line": 347,
-   "qualname": "_finalize_stream",
-   "end": 421
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 350,
-   "qualname": "_finalize_stream",
-   "end": 458
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/azure_openai.py",
-   "line": 385,
-   "qualname": "_finalize_stream",
-   "end": 461
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/google_genai.py",
-   "line": 408,
-   "qualname": "_finalize_stream",
-   "end": 482
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/vertex_ai.py",
-   "line": 347,
-   "qualname": "_finalize_stream",
-   "end": 421
+   "symbol": null,
+   "qualname": "AsyncStreamWrapper.__anext__",
+   "file": "neatlogs/_wrap_utils.py",
+   "line": 1321,
+   "end": 1349,
+   "score": 0,
+   "package": ".",
+   "rank": 6
   }
  ],
  "callers": [
   {
-   "symbol": "patched_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 149,
-   "in": "_patch_messages",
-   "text": "messages.stream = patched_stream"
+   "symbol": "NeatlogsConfigurationError",
+   "file": "neatlogs/client.py",
+   "line": 86,
+   "in": "Client.__init__",
+   "text": "NeatlogsConfigurationError",
+   "confidence": 0.86
   },
   {
-   "symbol": "patched_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 230,
-   "in": "_patch_async_messages",
-   "text": "messages.stream = patched_stream"
+   "symbol": "NeatlogsConfigurationError",
+   "file": "neatlogs/core/context.py",
+   "line": 13,
+   "in": "_reject_http_span_kind",
+   "text": "NeatlogsConfigurationError",
+   "confidence": 0.86
   },
   {
-   "symbol": "patched_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 149,
-   "in": "_patch_messages",
-   "text": "messages.stream = patched_stream"
+   "symbol": "NeatlogsConfigurationError",
+   "file": "neatlogs/init.py",
+   "line": 108,
+   "in": "_trace_sampler",
+   "text": "NeatlogsConfigurationError",
+   "confidence": 0.86
   },
   {
-   "symbol": "patched_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 230,
-   "in": "_patch_async_messages",
-   "text": "messages.stream = patched_stream"
+   "symbol": "NeatlogsConfigurationError",
+   "file": "neatlogs/init.py",
+   "line": 118,
+   "in": "_validate_instrumentations",
+   "text": "NeatlogsConfigurationError",
+   "confidence": 0.86
   },
   {
-   "symbol": "_SyncStreamManagerWrapper",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 147,
-   "in": "_patch_messages.patched_stream",
-   "text": "return _SyncStreamManagerWrapper(stream_mgr, span)"
-  },
-  {
-   "symbol": "_SyncStreamManagerWrapper",
-   "file": "neatlogs/anthropic.py",
-   "line": 147,
-   "in": "_patch_messages.patched_stream",
-   "text": "return _SyncStreamManagerWrapper(stream_mgr, span)"
-  },
-  {
-   "symbol": "_SyncStreamIterator",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 474,
-   "in": "_SyncStreamManagerWrapper.__enter__",
-   "text": "return _SyncStreamIterator(self)"
-  },
-  {
-   "symbol": "_SyncStreamIterator",
-   "file": "neatlogs/anthropic.py",
-   "line": 474,
-   "in": "_SyncStreamManagerWrapper.__enter__",
-   "text": "return _SyncStreamIterator(self)"
-  },
-  {
-   "symbol": "_AsyncStreamManagerWrapper",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 228,
-   "in": "_patch_async_messages.patched_stream",
-   "text": "return _AsyncStreamManagerWrapper(stream_mgr, span)"
-  },
-  {
-   "symbol": "_AsyncStreamManagerWrapper",
-   "file": "neatlogs/anthropic.py",
-   "line": 228,
-   "in": "_patch_async_messages.patched_stream",
-   "text": "return _AsyncStreamManagerWrapper(stream_mgr, span)"
-  },
-  {
-   "symbol": "_AsyncStreamIterator",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 530,
-   "in": "_AsyncStreamManagerWrapper.__aenter__",
-   "text": "return _AsyncStreamIterator(self)"
-  },
-  {
-   "symbol": "_AsyncStreamIterator",
-   "file": "neatlogs/anthropic.py",
-   "line": 526,
-   "in": "_AsyncStreamManagerWrapper.__aenter__",
-   "text": "return _AsyncStreamIterator(self)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 114,
-   "in": "_patch_messages.patched_create",
-   "text": "return SyncStreamWrapper(response, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 195,
-   "in": "_patch_async_messages.patched_create",
-   "text": "return AsyncStreamWrapper(response, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 494,
-   "in": "_SyncStreamManagerWrapper._finalize",
-   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 550,
-   "in": "_AsyncStreamManagerWrapper._finalize",
-   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/vertex_ai.py",
-   "line": 141,
-   "in": "_patch_models.patched_generate_content_stream",
-   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/vertex_ai.py",
-   "line": 197,
-   "in": "_patch_async_models.patched_generate_content_stream",
-   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/vertex_ai.py",
-   "line": 599,
-   "in": "_patch_chat_classes.patched_send_stream",
-   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "build/lib/neatlogs/vertex_ai.py",
-   "line": 639,
-   "in": "_patch_chat_classes.patched_asend_stream",
-   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 114,
-   "in": "_patch_messages.patched_create",
-   "text": "return SyncStreamWrapper(response, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 195,
-   "in": "_patch_async_messages.patched_create",
-   "text": "return AsyncStreamWrapper(response, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 490,
-   "in": "_SyncStreamManagerWrapper._finalize",
-   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/anthropic.py",
-   "line": 542,
-   "in": "_AsyncStreamManagerWrapper._finalize",
-   "text": "_finalize_stream(self._span, self._chunks, elapsed_ms, ttft_ms)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/vertex_ai.py",
-   "line": 141,
-   "in": "_patch_models.patched_generate_content_stream",
-   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/vertex_ai.py",
-   "line": 197,
-   "in": "_patch_async_models.patched_generate_content_stream",
-   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/vertex_ai.py",
-   "line": 599,
-   "in": "_patch_chat_classes.patched_send_stream",
-   "text": "return SyncStreamWrapper(stream, span, _finalize_stream)"
-  },
-  {
-   "symbol": "_finalize_stream",
-   "file": "neatlogs/vertex_ai.py",
-   "line": 639,
-   "in": "_patch_chat_classes.patched_asend_stream",
-   "text": "return AsyncStreamWrapper(stream, span, _finalize_stream)"
+   "symbol": "NeatlogsConfigurationError",
+   "file": "neatlogs/init.py",
+   "line": 276,
+   "in": "init",
+   "text": "NeatlogsConfigurationError",
+   "confidence": 0.86
   }
  ],
  "reference": [
   {
    "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 244,
-   "in": "_patch_agent.patched_run",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 252,
-   "in": "_patch_agent.patched_run",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 282,
-   "in": "_patch_agent.patched_arun",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 290,
-   "in": "_patch_agent.patched_arun",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 330,
-   "in": "_patch_workflow.patched_run",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 337,
-   "in": "_patch_workflow.patched_run",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 363,
-   "in": "_patch_workflow.patched_arun",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 370,
-   "in": "_patch_workflow.patched_arun",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 539,
-   "in": "_patch_function_call_class.patched_execute",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 559,
-   "in": "_patch_function_call_class.patched_aexecute",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 676,
-   "in": "_patch_model_class.make.wrapper",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 698,
-   "in": "_patch_model_class.make.wrapper",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 724,
-   "in": "_patch_model_class.make.wrapper",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
-   "line": 746,
-   "in": "_patch_model_class.make.wrapper",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/agno.py",
+   "file": "neatlogs/agno.py",
    "line": 882,
    "in": "_err",
-   "text": "def _err(span: Any, e: Exception) -> None:"
+   "text": "def _err(span: Any, e: Exception) -> None"
   },
   {
    "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 482,
-   "in": "_SyncStreamManagerWrapper.__exit__",
-   "text": "_err(self._span, exc_val)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 538,
-   "in": "_AsyncStreamManagerWrapper.__aexit__",
-   "text": "_err(self._span, exc_val)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 600,
-   "in": "_extra_message_methods.patched_parse",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 615,
-   "in": "_extra_message_methods.patched_parse",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 645,
-   "in": "_extra_message_methods.patched_count",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 667,
-   "in": "_extra_message_methods.patched_count",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 743,
-   "in": "_patch_legacy_completions.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 760,
-   "in": "_patch_legacy_completions.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/anthropic.py",
-   "line": 769,
+   "file": "neatlogs/anthropic.py",
+   "line": 761,
    "in": "_err",
-   "text": "def _err(span: Any, e: Exception) -> None:"
+   "text": "def _err(span: Any, e: Exception) -> None"
   },
   {
    "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 186,
-   "in": "_patch_completions.patched_create",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 225,
-   "in": "_patch_async_completions.patched_create",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 251,
-   "in": "_patch_responses.patched_create",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 275,
-   "in": "_patch_async_responses.patched_create",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 348,
-   "in": "_patch_embeddings.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 365,
-   "in": "_patch_embeddings.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
+   "file": "neatlogs/azure_openai.py",
    "line": 540,
    "in": "_err",
-   "text": "def _err(span: Any, e: Exception) -> None:"
+   "text": "def _err(span: Any, e: Exception) -> None"
   },
   {
    "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 575,
-   "in": "_patch_method.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/azure_openai.py",
-   "line": 596,
-   "in": "_patch_method.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/bedrock.py",
+   "file": "neatlogs/bedrock.py",
    "line": 80,
    "in": "_err",
-   "text": "def _err(span: Any, e: Exception) -> None:"
+   "text": "def _err(span: Any, e: Exception) -> None"
   },
   {
    "symbol": "_err",
-   "file": "build/lib/neatlogs/bedrock.py",
+   "file": "neatlogs/google_genai.py",
+   "line": 708,
+   "in": "_start_chat_span",
+   "text": "def _start_chat_span(chat: Any, message: Any, stream: bool) -> Any"
+  },
+  {
+   "symbol": "_err",
+   "file": "neatlogs/openrouter.py",
+   "line": 707,
+   "in": "_ok",
+   "text": "def _ok( span: Any, duration_ms: float, ttft_ms: Optional[float] = None, *, interrupted: bool = False, ) -> None"
+  },
+  {
+   "symbol": "_err",
+   "file": "neatlogs/pydantic_ai.py",
+   "line": 662,
+   "in": "_patch_toolset_class",
+   "text": "def _patch_toolset_class() -> None"
+  },
+  {
+   "symbol": "_err",
+   "file": "neatlogs/dspy.py",
+   "line": 268,
+   "in": "_patch_retrieve_class",
+   "text": "def _patch_retrieve_class() -> None"
+  },
+  {
+   "symbol": "_err",
+   "file": "scripts/compatibility/test_analyze_upstream.py",
    "line": 262,
-   "in": "_patch_converse.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/bedrock.py",
-   "line": 282,
-   "in": "_patch_converse_stream.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/bedrock.py",
-   "line": 324,
-   "in": "_wrap_converse_stream",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/bedrock.py",
-   "line": 538,
-   "in": "_patch_invoke_model.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/bedrock.py",
-   "line": 589,
-   "in": "_patch_invoke_model_stream.patched",
-   "text": "_err(span, e)"
-  },
-  {
-   "symbol": "_err",
-   "file": "build/lib/neatlogs/bedrock.py",
-   "line": 633,
-   "in": "_wrap_invoke_stream",
-   "text": "_err(span, e)"
+   "in": "AnalyzeUpstreamTests.test_gemini_http_error_includes_api_reason_without_key",
+   "text": ""
   }
  ]
 }
