@@ -60,7 +60,7 @@ and [failed-then-passed Neatlogs traces](docs/neatlogs.md).
 | Scenario children cannot export user traces | `src/trueup/runner/run.py` | `test_inner_spans_never_leave_the_machine` |
 
 Real: controlled fake-provider truth, 32 checked findings, 3 locally proven patches, read-back Neatlogs evidence,
-and three upstream drafts. Partial: provider recording supports opted-in OpenAI/Anthropic calls, but no real provider
+two upstream issues with fix PRs and one confirmation of an existing fix. Partial: provider recording supports opted-in OpenAI/Anthropic calls, but no real provider
 key was supplied for the final cross-check. Not claimed: universal agent correctness, safe automatic merging,
 upstream acceptance, customer traction, or public deployment of the report/video.
 
@@ -71,11 +71,14 @@ OpenInference patched function second, found an OpenLLMetry patched function six
 
 ### Upstream status
 
+Posted 11 Oct 2026, after re-running each repro on the latest release, on `main` and on every open PR that touches
+the patched files:
+
 | Finding | Issue | PR | Status |
 |---|---|---|---|
-| OpenInference root status | draft only | draft only | waiting for owner approval |
-| OpenLLMetry duplicate spans | [possible duplicate #4377](https://github.com/traceloop/openllmetry/pull/4377) | draft only | re-check before posting |
-| neatlogs stream status | draft only | draft only | waiting for owner approval |
+| OpenInference: a failed agent run is exported with an OK root span | [Arize-ai/openinference#4023](https://github.com/Arize-ai/openinference/issues/4023) | [#4024](https://github.com/Arize-ai/openinference/pull/4024) | open, waiting for maintainer review |
+| OpenLLMetry: every Agents SDK model call is recorded as two LLM spans | [traceloop/openllmetry#4609](https://github.com/traceloop/openllmetry/issues/4609) | [#4610](https://github.com/traceloop/openllmetry/pull/4610) | open, waiting for maintainer review |
+| neatlogs: a failed `messages.stream()` is recorded as OK | already reported by the neatlogs team, [#179](https://github.com/neatlogs/neatlogs/issues/179) | their fix [#180](https://github.com/neatlogs/neatlogs/pull/180); [our check that it fixes our case](https://github.com/neatlogs/neatlogs/pull/180#issuecomment-6113318503) | no duplicate filed |
 
 ## Status: working vertical slice
 
@@ -100,7 +103,7 @@ In CI: `uses: Jennycruzy/trueup@main` with `script` and `library` inputs runs `t
 
 `fix` works on one finding. It shallow-clones the library into `.trueup/clones/<lib>` and finds the wrapper and its callers (Entire's code graph first: `entire graph search`, `neighbors` and `impact`; ripgrep and Python's ast only as the fallback, and `locate.json` says which and why; `--locate-only` re-runs just this step and compares it with the verified patch). The model drafts the smallest change and a unit test in the package's own style; code applies it to the clone. A try is kept only if the new test fails before and passes after, the package's own test suite shows no new failure, the finding's scenarios now match truth, and the full scenario library (run in `.trueup/venvs/<lib>-fix` with the patched package) has no new mismatch. A failed try goes back to the model with the reason, 3 tries at most; then the finding stays unfixed and says so. It writes `fixes/<finding-id>/`: `patch.diff`, the test file, `before-after.md`, `suites.json`, `locate.json`, `tries.json`, `summary.md`, and every run's tries in `runs/`. Exit 0 fixed, 1 not fixed, 2 could not run. Fixes exist for three findings; see `fixes/`.
 
-`upstream` drafts `issue.md` and `pr.md` into `upstream/<finding-id>/`, following the library's issue and PR templates. The text says what goes wrong, which cases are affected and which are not, the before/after table and the environment. It includes a repro under 40 lines that needs only the library and the provider SDK. The repro is run on the latest release and on the patched clone, and both outputs go into the text. Nothing is posted.
+`upstream` drafts `issue.md` and `pr.md` into `upstream/<finding-id>/`, following the library's issue and PR templates. The text says what goes wrong, which cases are affected and which are not, the before/after table and the environment. It includes a repro under 40 lines that needs only the library and the provider SDK. The repro is run on the latest release and on the patched clone, and both outputs go into the text. Nothing is posted by Trueup; a person posts after re-checking.
 
 Commands trace Trueup itself to neatlogs when `NEATLOGS_API_KEY` is set: one session per run (session id = run id),
 one trace per worker, with workflow, library, command, run, and v1/v2 tags. Trueup flushes and shuts down the SDK

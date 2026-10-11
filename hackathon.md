@@ -405,3 +405,19 @@ Everything above is left uncommitted for owner review. No public action was take
 - The "neatlogs 35 → 31 leads" question is answered, and nothing changed in neatlogs (OBSERVED): 35 was counted over 57 scenarios (51 built-in + 6 planner proposals, the `fix --reprove` set); today's plain sweep runs the 51 built-in ones and shows 31. The 51-scenario sweep from 10 Oct showed 58 before the adapter fix removed 27 false leads: 58 − 27 = 31.
 - Not done from the finish list: a real fixer run that fails a try, to show the "fix attempt failed (retried)" detection firing.
 - X post, 11 Oct: https://x.com/jennyoliver57/status/2109360422029594753
+
+## 2026-10-11: first fixes sent upstream
+
+Before posting, each repro was re-run on the latest release, on `main`, and with every open PR that touches the patched files installed (OBSERVED):
+
+- OpenInference 2.5.3, `main` c364180 and open PRs #3493, #3856, #3901: still OK on a failed run. Posted issue [#4023](https://github.com/Arize-ai/openinference/issues/4023) and PR [#4024](https://github.com/Arize-ai/openinference/pull/4024).
+- OpenLLMetry 0.62.4, `main` 17d0c5a and 12 open PRs: still 2 LLM spans and 14 tokens for 1 call and 7 tokens. Posted issue [#4609](https://github.com/traceloop/openllmetry/issues/4609) and PR [#4610](https://github.com/traceloop/openllmetry/pull/4610).
+- neatlogs: the bug was already reported by the neatlogs team on 5 Oct (#179, fix PR #180). Not filed again. PR #180's head (95440a5) turns our repro from OK / 0 exception events into ERROR / 1; [posted that as a comment](https://github.com/neatlogs/neatlogs/pull/180#issuecomment-6113318503).
+
+Three mistakes caught on the way, each one now a lesson for Trueup:
+
+1. **The deduper missed a duplicate.** It searched two narrow phrases ("anthropic span status error stream", "span status error stream") and found nothing, but #179's title says "loses output and reports OK on mid-stream errors". A wider search found it. Next change: search the wrapper's function and file names and the symptom in several wordings, and list every open issue on the touched file.
+2. **A false "regression".** Old OpenLLMetry code looked correct (1 span) only because the newest `traceloop-sdk` passed a keyword (`use_attributes`) that the old instrumentation rejects, so it never started. With matching versions the old code double-counts too. The issue does not call it a regression.
+3. **Two of the fixer's unit tests passed without the fix.** They used `MagicMock` responses, which the Responses wrapper never turns into a span, fix or no fix. They also lived in a package whose test environment does not install the OpenAI instrumentation. The posted PR moves them to the OpenAI package and uses a real client with `httpx.MockTransport` and a new response id per call (the wrapper keeps responses by id, so a repeated id also hid the span). They now fail without the fix (2 of 3) and pass with it. Next change: the verifier must require that every new test fails before the patch, not just one.
+
+A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194424Z-fix-openinference.json`, $0.39): all 3 tries failed (two tests failed with the patch; the third broke `ag-tool-raises`), and Trueup reported "NOT fixed". It also overwrote the earlier proven fix's files in `fixes/`; they were restored from git. Next change: a failed run must never replace a proven fix.
