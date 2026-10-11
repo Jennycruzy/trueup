@@ -1,0 +1,150 @@
+{
+ "finding": "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+ "title": "neatlogs, anthropic messages stream: top-level span status is OK",
+ "library": "neatlogs",
+ "found_in": "20261010T235240Z-neatlogs-proposed",
+ "run_id": "20261011T004502Z-fix-neatlogs",
+ "session_id": "20261011T004502Z-fix-neatlogs",
+ "model": "claude-sonnet-4.6",
+ "started": "2026-10-11T00:45:04Z",
+ "tries": [
+  {
+   "try": 1,
+   "explanation": "When messages.stream() is used, _SyncStreamManagerWrapper.__exit__ and _AsyncStreamManagerWrapper.__aexit__ always call _finalize() which sets StatusCode.OK, even when an exception propagated through the context manager. The fix checks whether an exception was passed to __exit__/__aexit__ and, if so, records it as an error via _err() instead of calling _finalize().",
+   "draft": {
+    "explanation": "When messages.stream() is used, _SyncStreamManagerWrapper.__exit__ and _AsyncStreamManagerWrapper.__aexit__ always call _finalize() which sets StatusCode.OK, even when an exception propagated through the context manager. The fix checks whether an exception was passed to __exit__/__aexit__ and, if so, records it as an error via _err() instead of calling _finalize().",
+    "edits": [
+     {
+      "file": "neatlogs/anthropic.py",
+      "old": "    def __exit__(self, *args):\n        try:\n            self._stream_mgr.__exit__(*args)\n        finally:\n            self._finalize()",
+      "new": "    def __exit__(self, exc_type, exc_val, exc_tb):\n        try:\n            self._stream_mgr.__exit__(exc_type, exc_val, exc_tb)\n        finally:\n            if exc_type is not None and not self._finalized:\n                self._finalized = True\n                _err(self._span, exc_val)\n            else:\n                self._finalize()"
+     },
+     {
+      "file": "neatlogs/anthropic.py",
+      "old": "    async def __aexit__(self, *args):\n        try:\n            await self._stream_mgr.__aexit__(*args)\n        finally:\n            self._finalize()",
+      "new": "    async def __aexit__(self, exc_type, exc_val, exc_tb):\n        try:\n            await self._stream_mgr.__aexit__(exc_type, exc_val, exc_tb)\n        finally:\n            if exc_type is not None and not self._finalized:\n                self._finalized = True\n                _err(self._span, exc_val)\n            else:\n                self._finalize()"
+     }
+    ],
+    "test": {
+     "file": "tests/unit/test_trueup_anthropic_stream_error_status.py",
+     "content": "\"\"\"Tests that messages.stream() sets ERROR status when the stream raises.\"\"\"\nfrom types import SimpleNamespace\nfrom typing import Iterator\n\nimport pytest\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import SimpleSpanProcessor\nfrom opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter\nfrom opentelemetry.trace import StatusCode\n\nfrom neatlogs._wrap_utils import set_neatlogs_provider\nfrom neatlogs.anthropic import wrap_anthropic_client\n\n\nclass _FakeEvent:\n    type = \"content_block_delta\"\n    delta = SimpleNamespace(type=\"text_delta\", text=\"hello\")\n    index = 0\n\n\nclass _ErrorOnIterStream:\n    def __init__(self, error):\n        self._error = error\n\n    def __iter__(self):\n        yield _FakeEvent()\n        raise self._error\n\n    def __enter__(self):\n        return self\n\n    def __exit__(self, *args):\n        pass\n\n\nclass _ErrorOnFirstIterStream:\n    def __init__(self, error):\n        self._error = error\n\n    def __iter__(self):\n        raise self._error\n        yield\n\n    def __enter__(self):\n        return self\n\n    def __exit__(self, *args):\n        pass\n\n\nclass _FakeStreamManager:\n    def __init__(self, stream):\n        self._stream = stream\n\n    def __enter__(self):\n        return self._stream\n\n    def __exit__(self, *args):\n        pass\n\n\nclass _FakeMessages:\n    def __init__(self, stream_mgr):\n        self._stream_mgr = stream_mgr\n\n    def create(self, **kwargs):\n        pass\n\n    def stream(self, **kwargs):\n        return self._stream_mgr\n\n\ndef _setup():\n    provider = TracerProvider()\n    exporter = InMemorySpanExporter()\n    provider.add_span_processor(SimpleSpanProcessor(exporter))\n    set_neatlogs_provider(provider)\n    return exporter\n\n\ndef _make_client(stream_mgr):\n    messages = _FakeMessages(stream_mgr)\n    client = SimpleNamespace(messages=messages, completions=None, beta=None)\n    wrap_anthropic_client(client)\n    return client\n\n\ndef test_stream_helper_cut_sets_error_status():\n    exporter = _setup()\n    error = RuntimeError(\"RemoteProtocolError: peer closed connection\")\n    client = _make_client(_FakeStreamManager(_ErrorOnIterStream(error)))\n\n    with pytest.raises(RuntimeError, match=\"RemoteProtocolError\"):\n        with client.messages.stream(\n            model=\"claude-3-5-sonnet-20241022\",\n            messages=[{\"role\": \"user\", \"content\": \"hi\"}],\n            max_tokens=10,\n        ) as events:\n            for _ in events:\n                pass\n\n    spans = exporter.get_finished_spans()\n    assert len(spans) == 1\n    assert spans[0].name == \"anthropic.messages.create\"\n    assert spans[0].status.status_code == StatusCode.ERROR\n\n\ndef test_stream_helper_error_event_sets_error_status():\n    exporter = _setup()\n    error = ValueError(\"APIStatusError: 529 overloaded\")\n    client = _make_client(_FakeStreamManager(_ErrorOnFirstIterStream(error)))\n\n    with pytest.raises(ValueError, match=\"APIStatusError\"):\n        with client.messages.stream(\n            model=\"claude-3-5-sonnet-20241022\",\n            messages=[{\"role\": \"user\", \"content\": \"hi\"}],\n            max_tokens=10,\n        ) as events:\n            for _ in events:\n                pass\n\n    spans = exporter.get_finished_spans()\n    assert len(spans) == 1\n    assert spans[0].name == \"anthropic.messages.create\"\n    assert spans[0].status.status_code == StatusCode.ERROR\n"
+    }
+   },
+   "ok": true,
+   "new_test": {
+    "before": {
+     "cmd": "pytest tests/unit/test_trueup_anthropic_stream_error_status.py",
+     "cwd": ".",
+     "exit": 1,
+     "tail": "FF                                                                       [100%]\n=================================== FAILURES ===================================\n___________________ test_stream_helper_cut_sets_error_status ___________________\ntests/unit/test_trueup_anthropic_stream_error_status.py:105: in test_stream_helper_cut_sets_error_status\n    assert spans[0].status.status_code == StatusCode.ERROR\nE   assert <StatusCode.OK: 1> == <StatusCode.ERROR: 2>\nE    +  where <StatusCode.OK: 1> = <opentelemetry.trace.status.Status object at 0x7a7e1bc67860>.status_code\nE    +    where <opentelemetry.trace.status.Status object at 0x7a7e1bc67860> = <opentelemetry.sdk.trace.ReadableSpan object at 0x7a7e1bb58860>.status\nE    +  and   <StatusCode.ERROR: 2> = StatusCode.ERROR\n---------------------------- Captured stdout setup -----------------------------\n2026-10-11 00:48:29 - neatlogs - INFO - Neatlogs SDK shutdown complete\n------------------------------ Captured log setup ------------------------------\nINFO     neatlogs:init.py:1269 Neatlogs SDK shutdown complete\n--------------------------- Captured stdout teardown ---------------------------\n2026-10-11 00:48:29 - neatlogs - INFO - Neatlogs SDK shutdown complete\n---------------------------- Captured log teardown -----------------------------\nINFO     neatlogs:init.py:1269 Neatlogs SDK shutdown complete\n_______________ test_stream_helper_error_event_sets_error_status _______________\ntests/unit/test_trueup_anthropic_stream_error_status.py:125: in test_stream_helper_error_event_sets_error_status\n    assert spans[0].status.status_code == StatusCode.ERROR\nE   assert <StatusCode.OK: 1> == <StatusCode.ERROR: 2>\nE    +  where <StatusCode.OK: 1> = <opentelemetry.trace.status.Status object at 0x7a7e1b832150>.status_code\nE    +    where <opentelemetry.trace.status.Status object at 0x7a7e1b832150> = <opentelemetry.sdk.trace.ReadableSpan object at 0x7a7e1b832180>.status\nE    +  and   <StatusCode.ERROR: 2> = StatusCode.ERROR\n---------------------------- Captured stdout setup -----------------------------\n2026-10-11 00:48:29 - neatlogs - INFO - Neatlogs SDK shutdown complete\n------------------------------ Captured log setup ------------------------------\nINFO     neatlogs:init.py:1269 Neatlogs SDK shutdown complete\n--------------------------- Captured stdout teardown ---------------------------\n2026-10-11 00:48:29 - neatlogs - INFO - Neatlogs SDK shutdown complete\n---------------------------- Captured log teardown -----------------------------\nINFO     neatlogs:init.py:1269 Neatlogs SDK shutdown complete\n=========================== short test summary info ============================\nFAILED tests/unit/test_trueup_anthropic_stream_error_status.py::test_stream_helper_cut_sets_error_status\nFAILED tests/unit/test_trueup_anthropic_stream_error_status.py::test_stream_helper_error_event_sets_error_status\n2 failed in 2.88s",
+     "total": 2,
+     "passed": 0,
+     "failed": 2,
+     "errors": 0,
+     "skipped": 0,
+     "failing": [
+      "tests.unit.test_trueup_anthropic_stream_error_status::test_stream_helper_cut_sets_error_status",
+      "tests.unit.test_trueup_anthropic_stream_error_status::test_stream_helper_error_event_sets_error_status"
+     ],
+     "tests": [
+      "tests.unit.test_trueup_anthropic_stream_error_status::test_stream_helper_cut_sets_error_status",
+      "tests.unit.test_trueup_anthropic_stream_error_status::test_stream_helper_error_event_sets_error_status"
+     ]
+    },
+    "after": {
+     "cmd": "pytest tests/unit/test_trueup_anthropic_stream_error_status.py",
+     "cwd": ".",
+     "exit": 0,
+     "tail": "..                                                                       [100%]\n2 passed in 1.58s",
+     "total": 2,
+     "passed": 2,
+     "failed": 0,
+     "errors": 0,
+     "skipped": 0,
+     "failing": [],
+     "tests": [
+      "tests.unit.test_trueup_anthropic_stream_error_status::test_stream_helper_cut_sets_error_status",
+      "tests.unit.test_trueup_anthropic_stream_error_status::test_stream_helper_error_event_sets_error_status"
+     ]
+    },
+    "ok": true,
+    "reason": "new test: fails before (2 of 2 failing), passes after (2 passed)"
+   },
+   "suites": {
+    ".": {
+     "after": {
+      "cmd": "pytest tests/unit",
+      "cwd": ".",
+      "exit": 2,
+      "tail": "==================================== ERRORS ====================================\n________ ERROR collecting tests/unit/test_google_finish_reason_value.py ________\nImportError while importing test module '.trueup/clones/neatlogs/tests/unit/test_google_finish_reason_value.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit/test_google_finish_reason_value.py:1: in <module>\n    from google.genai import types\nE   ModuleNotFoundError: No module named 'google.genai'\n=========================== short test summary info ============================\nERROR tests/unit/test_google_finish_reason_value.py\n!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!\n4 skipped, 1 error in 2.73s",
+      "total": 5,
+      "passed": 0,
+      "failed": 0,
+      "errors": 1,
+      "skipped": 4,
+      "failing": [
+       "::tests.unit.test_google_finish_reason_value"
+      ],
+      "tests": [
+       "::tests.unit.test_google_adk_private_instrumentation",
+       "::tests.unit.test_google_finish_reason_value",
+       "::tests.unit.test_langchain_callback_usage",
+       "::tests.unit.test_pydantic_ai_native_instrumentation",
+       "::tests.unit.test_strands_private_instrumentation"
+      ]
+     },
+     "ok": true,
+     "reason": "same 1 failure(s) as before the patch"
+    }
+   },
+   "scenarios": {
+    "ok": true,
+    "reason": "all 2 scenario(s) of the finding now match truth here"
+   },
+   "sweep": {
+    "totals": {
+     "scenarios_ran": 57,
+     "not_run": 0,
+     "leads": 31,
+     "high": 9,
+     "medium": 22
+    },
+    "new_mismatches": []
+   },
+   "reason": "all 2 scenario(s) of the finding now match truth here",
+   "stage": "verified",
+   "diff": "diff --git a/neatlogs/anthropic.py b/neatlogs/anthropic.py\nindex 85b0645..4007e50 100644\n--- a/neatlogs/anthropic.py\n+++ b/neatlogs/anthropic.py\n@@ -473,11 +473,15 @@ class _SyncStreamManagerWrapper:\n         self._stream = self._stream_mgr.__enter__()\n         return _SyncStreamIterator(self)\n \n-    def __exit__(self, *args):\n+    def __exit__(self, exc_type, exc_val, exc_tb):\n         try:\n-            self._stream_mgr.__exit__(*args)\n+            self._stream_mgr.__exit__(exc_type, exc_val, exc_tb)\n         finally:\n-            self._finalize()\n+            if exc_type is not None and not self._finalized:\n+                self._finalized = True\n+                _err(self._span, exc_val)\n+            else:\n+                self._finalize()\n \n     def _finalize(self):\n         if self._finalized:\n@@ -525,11 +529,15 @@ class _AsyncStreamManagerWrapper:\n         self._stream = await self._stream_mgr.__aenter__()\n         return _AsyncStreamIterator(self)\n \n-    async def __aexit__(self, *args):\n+    async def __aexit__(self, exc_type, exc_val, exc_tb):\n         try:\n-            await self._stream_mgr.__aexit__(*args)\n+            await self._stream_mgr.__aexit__(exc_type, exc_val, exc_tb)\n         finally:\n-            self._finalize()\n+            if exc_type is not None and not self._finalized:\n+                self._finalized = True\n+                _err(self._span, exc_val)\n+            else:\n+                self._finalize()\n \n     def _finalize(self):\n         if self._finalized:\ndiff --git a/tests/unit/test_trueup_anthropic_stream_error_status.py b/tests/unit/test_trueup_anthropic_stream_error_status.py\nnew file mode 100644\nindex 0000000..1f10833\n--- /dev/null\n+++ b/tests/unit/test_trueup_anthropic_stream_error_status.py\n@@ -0,0 +1,125 @@\n+\"\"\"Tests that messages.stream() sets ERROR status when the stream raises.\"\"\"\n+from types import SimpleNamespace\n+from typing import Iterator\n+\n+import pytest\n+from opentelemetry.sdk.trace import TracerProvider\n+from opentelemetry.sdk.trace.export import SimpleSpanProcessor\n+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter\n+from opentelemetry.trace import StatusCode\n+\n+from neatlogs._wrap_utils import set_neatlogs_provider\n+from neatlogs.anthropic import wrap_anthropic_client\n+\n+\n+class _FakeEvent:\n+    type = \"content_block_delta\"\n+    delta = SimpleNamespace(type=\"text_delta\", text=\"hello\")\n+    index = 0\n+\n+\n+class _ErrorOnIterStream:\n+    def __init__(self, error):\n+        self._error = error\n+\n+    def __iter__(self):\n+        yield _FakeEvent()\n+        raise self._error\n+\n+    def __enter__(self):\n+        return self\n+\n+    def __exit__(self, *args):\n+        pass\n+\n+\n+class _ErrorOnFirstIterStream:\n+    def __init__(self, error):\n+        self._error = error\n+\n+    def __iter__(self):\n+        raise self._error\n+        yield\n+\n+    def __enter__(self):\n+        return self\n+\n+    def __exit__(self, *args):\n+        pass\n+\n+\n+class _FakeStreamManager:\n+    def __init__(self, stream):\n+        self._stream = stream\n+\n+    def __enter__(self):\n+        return self._stream\n+\n+    def __exit__(self, *args):\n+        pass\n+\n+\n+class _FakeMessages:\n+    def __init__(self, stream_mgr):\n+        self._stream_mgr = stream_mgr\n+\n+    def create(self, **kwargs):\n+        pass\n+\n+    def stream(self, **kwargs):\n+        return self._stream_mgr\n+\n+\n+def _setup():\n+    provider = TracerProvider()\n+    exporter = InMemorySpanExporter()\n+    provider.add_span_processor(SimpleSpanProcessor(exporter))\n+    set_neatlogs_provider(provider)\n+    return exporter\n+\n+\n+def _make_client(stream_mgr):\n+    messages = _FakeMessages(stream_mgr)\n+    client = SimpleNamespace(messages=messages, completions=None, beta=None)\n+    wrap_anthropic_client(client)\n+    return client\n+\n+\n+def test_stream_helper_cut_sets_error_status():\n+    exporter = _setup()\n+    error = RuntimeError(\"RemoteProtocolError: peer closed connection\")\n+    client = _make_client(_FakeStreamManager(_ErrorOnIterStream(error)))\n+\n+    with pytest.raises(RuntimeError, match=\"RemoteProtocolError\"):\n+        with client.messages.stream(\n+            model=\"claude-3-5-sonnet-20241022\",\n+            messages=[{\"role\": \"user\", \"content\": \"hi\"}],\n+            max_tokens=10,\n+        ) as events:\n+            for _ in events:\n+                pass\n+\n+    spans = exporter.get_finished_spans()\n+    assert len(spans) == 1\n+    assert spans[0].name == \"anthropic.messages.create\"\n+    assert spans[0].status.status_code == StatusCode.ERROR\n+\n+\n+def test_stream_helper_error_event_sets_error_status():\n+    exporter = _setup()\n+    error = ValueError(\"APIStatusError: 529 overloaded\")\n+    client = _make_client(_FakeStreamManager(_ErrorOnFirstIterStream(error)))\n+\n+    with pytest.raises(ValueError, match=\"APIStatusError\"):\n+        with client.messages.stream(\n+            model=\"claude-3-5-sonnet-20241022\",\n+            messages=[{\"role\": \"user\", \"content\": \"hi\"}],\n+            max_tokens=10,\n+        ) as events:\n+            for _ in events:\n+                pass\n+\n+    spans = exporter.get_finished_spans()\n+    assert len(spans) == 1\n+    assert spans[0].name == \"anthropic.messages.create\"\n+    assert spans[0].status.status_code == StatusCode.ERROR\n"
+  }
+ ],
+ "fixed": true,
+ "error": null,
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "locate_method": "ripgrep + ast (fallback)",
+ "suites_before": {
+  ".": {
+   "total": 5,
+   "passed": 0,
+   "failed": 0,
+   "errors": 1,
+   "skipped": 4,
+   "failing": [
+    "::tests.unit.test_google_finish_reason_value"
+   ],
+   "exit": 2
+  }
+ },
+ "usage": {
+  "calls": 2,
+  "input_tokens": 48701,
+  "output_tokens": 3666,
+  "by_model": {
+   "claude-sonnet-4.6": {
+    "calls": 2,
+    "input_tokens": 48701,
+    "output_tokens": 3666
+   }
+  }
+ },
+ "cost_usd": 0.221202,
+ "spend_after_usd": 4.936588799999999
+}

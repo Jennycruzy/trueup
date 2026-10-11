@@ -1,0 +1,29 @@
+{
+ "before": {
+  "python/instrumentation/openinference-instrumentation-openai-agents": {
+   "total": 295,
+   "passed": 295,
+   "failed": 0,
+   "errors": 0,
+   "skipped": 0,
+   "failing": [],
+   "exit": 0
+  }
+ },
+ "after": {
+  "1": {},
+  "2": {},
+  "3": {
+   "python/instrumentation/openinference-instrumentation-openai-agents": {
+    "total": 298,
+    "passed": 298,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "failing": [],
+    "exit": 0,
+    "verdict": "suite passes"
+   }
+  }
+ }
+}

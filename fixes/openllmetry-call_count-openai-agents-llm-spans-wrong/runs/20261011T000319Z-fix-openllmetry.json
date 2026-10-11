@@ -1,0 +1,23 @@
+{
+ "finding": "openllmetry-call_count-openai-agents-llm-spans-wrong",
+ "title": "openllmetry, openai-agents: LLM spans recorded wrong",
+ "library": "openllmetry",
+ "found_in": "20261010T203755Z-openllmetry",
+ "run_id": "20261011T000319Z-fix-openllmetry",
+ "session_id": "20261011T000319Z-fix-openllmetry",
+ "model": "claude-sonnet-4.6",
+ "started": "2026-10-11T00:03:20Z",
+ "tries": [],
+ "fixed": false,
+ "error": "VerifyError: uv pip install --quiet failed: error: No solution found when resolving dependencies\n  cause: Because you require pytest-asyncio>=0.23.7,<0.24.0 and pytest-asyncio>=1.0.0,<2, we can conclude that your requirements are unsatisfiable.",
+ "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+ "locate_method": "ripgrep + ast (fallback)",
+ "usage": {
+  "calls": 0,
+  "input_tokens": 0,
+  "output_tokens": 0,
+  "by_model": {}
+ },
+ "cost_usd": 0.0,
+ "spend_after_usd": 0.2527503
+}

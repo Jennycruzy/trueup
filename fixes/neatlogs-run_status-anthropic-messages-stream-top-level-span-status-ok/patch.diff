@@ -1,0 +1,243 @@
+diff --git a/neatlogs/anthropic.py b/neatlogs/anthropic.py
+index 85b0645..079cf61 100644
+--- a/neatlogs/anthropic.py
++++ b/neatlogs/anthropic.py
+@@ -473,16 +473,19 @@ class _SyncStreamManagerWrapper:
+         self._stream = self._stream_mgr.__enter__()
+         return _SyncStreamIterator(self)
+ 
+-    def __exit__(self, *args):
++    def __exit__(self, exc_type, exc_val, exc_tb):
+         try:
+-            self._stream_mgr.__exit__(*args)
++            self._stream_mgr.__exit__(exc_type, exc_val, exc_tb)
+         finally:
+-            self._finalize()
++            self._finalize(exc_type, exc_val)
+ 
+-    def _finalize(self):
++    def _finalize(self, exc_type=None, exc_val=None):
+         if self._finalized:
+             return
+         self._finalized = True
++        if exc_type is not None and exc_val is not None:
++            _err(self._span, exc_val)
++            return
+         elapsed_ms = (time.perf_counter() - self._start_time) * 1000
+         ttft_ms = None
+         if self._first_chunk_time is not None:
+@@ -525,16 +528,19 @@ class _AsyncStreamManagerWrapper:
+         self._stream = await self._stream_mgr.__aenter__()
+         return _AsyncStreamIterator(self)
+ 
+-    async def __aexit__(self, *args):
++    async def __aexit__(self, exc_type, exc_val, exc_tb):
+         try:
+-            await self._stream_mgr.__aexit__(*args)
++            await self._stream_mgr.__aexit__(exc_type, exc_val, exc_tb)
+         finally:
+-            self._finalize()
++            self._finalize(exc_type, exc_val)
+ 
+-    def _finalize(self):
++    def _finalize(self, exc_type=None, exc_val=None):
+         if self._finalized:
+             return
+         self._finalized = True
++        if exc_type is not None and exc_val is not None:
++            _err(self._span, exc_val)
++            return
+         elapsed_ms = (time.perf_counter() - self._start_time) * 1000
+         ttft_ms = None
+         if self._first_chunk_time is not None:
+diff --git a/tests/unit/test_trueup_anthropic_stream_error_status.py b/tests/unit/test_trueup_anthropic_stream_error_status.py
+new file mode 100644
+index 0000000..13c0a04
+--- /dev/null
++++ b/tests/unit/test_trueup_anthropic_stream_error_status.py
+@@ -0,0 +1,185 @@
++"""Regression tests: messages.stream() errors must produce ERROR spans."""
++from typing import Iterator
++
++import pytest
++from opentelemetry.sdk.trace import TracerProvider
++from opentelemetry.sdk.trace.export import SimpleSpanProcessor
++from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
++from opentelemetry.trace import StatusCode
++
++from neatlogs._wrap_utils import set_neatlogs_provider
++from neatlogs.anthropic import wrap_anthropic_client
++
++
++class RemoteProtocolError(Exception):
++    """Stand-in for httpcore.RemoteProtocolError."""
++
++
++class APIStatusError(Exception):
++    """Stand-in for anthropic.APIStatusError."""
++
++
++class _FakeStream:
++    def __init__(self, events, error):
++        self._events = events
++        self._error = error
++
++    def __iter__(self) -> Iterator:
++        yield from self._events
++        raise self._error
++
++    def __enter__(self):
++        return self
++
++    def __exit__(self, *args):
++        pass
++
++
++class _FakeStreamManager:
++    def __init__(self, events, error):
++        self._stream = _FakeStream(events, error)
++
++    def __enter__(self):
++        return self._stream
++
++    def __exit__(self, exc_type, exc_val, exc_tb):
++        return False
++
++
++class _FakeMessages:
++    def __init__(self, events, error):
++        self._events = events
++        self._error = error
++
++    def create(self, **kwargs):
++        raise NotImplementedError
++
++    def stream(self, **kwargs):
++        return _FakeStreamManager(self._events, self._error)
++
++
++class _FakeClient:
++    def __init__(self, events, error):
++        self.messages = _FakeMessages(events, error)
++
++
++def _make_provider():
++    provider = TracerProvider()
++    exporter = InMemorySpanExporter()
++    provider.add_span_processor(SimpleSpanProcessor(exporter))
++    set_neatlogs_provider(provider)
++    return provider, exporter
++
++
++def test_stream_helper_cut_produces_error_span():
++    """RemoteProtocolError raised during iteration must set span status ERROR."""
++    provider, exporter = _make_provider()
++
++    error = RemoteProtocolError("peer closed connection without sending complete message body")
++    client = _FakeClient(events=[], error=error)
++    wrap_anthropic_client(client)
++
++    with pytest.raises(RemoteProtocolError):
++        with client.messages.stream(
++            model="claude-3-5-haiku-20241022",
++            max_tokens=10,
++            messages=[{"role": "user", "content": "hi"}],
++        ) as stream:
++            for _ in stream:
++                pass
++
++    spans = exporter.get_finished_spans()
++    assert len(spans) == 1
++    span = spans[0]
++    assert span.name == "anthropic.messages.create"
++    assert span.status.status_code == StatusCode.ERROR, (
++        f"Expected ERROR, got {span.status.status_code}"
++    )
++
++
++def test_stream_helper_error_event_produces_error_span():
++    """APIStatusError raised during iteration must set span status ERROR."""
++    provider, exporter = _make_provider()
++
++    error = APIStatusError("Error code: 529 - overloaded")
++    client = _FakeClient(events=[], error=error)
++    wrap_anthropic_client(client)
++
++    with pytest.raises(APIStatusError):
++        with client.messages.stream(
++            model="claude-3-5-haiku-20241022",
++            max_tokens=10,
++            messages=[{"role": "user", "content": "hi"}],
++        ) as stream:
++            for _ in stream:
++                pass
++
++    spans = exporter.get_finished_spans()
++    assert len(spans) == 1
++    span = spans[0]
++    assert span.name == "anthropic.messages.create"
++    assert span.status.status_code == StatusCode.ERROR, (
++        f"Expected ERROR, got {span.status.status_code}"
++    )
++
++
++class _SuccessStream:
++    def __init__(self, events):
++        self._events = events
++
++    def __iter__(self):
++        yield from self._events
++
++    def __enter__(self):
++        return self
++
++    def __exit__(self, *args):
++        pass
++
++
++class _SuccessStreamManager:
++    def __init__(self, events):
++        self._stream = _SuccessStream(events)
++
++    def __enter__(self):
++        return self._stream
++
++    def __exit__(self, exc_type, exc_val, exc_tb):
++        return False
++
++
++class _SuccessMessages:
++    def create(self, **kwargs):
++        raise NotImplementedError
++
++    def stream(self, **kwargs):
++        return _SuccessStreamManager([])
++
++
++class _SuccessClient:
++    def __init__(self):
++        self.messages = _SuccessMessages()
++
++
++def test_successful_stream_produces_ok_span():
++    """A stream that completes without error must still produce an OK span."""
++    provider, exporter = _make_provider()
++
++    client = _SuccessClient()
++    wrap_anthropic_client(client)
++
++    with client.messages.stream(
++        model="claude-3-5-haiku-20241022",
++        max_tokens=10,
++        messages=[{"role": "user", "content": "hi"}],
++    ) as stream:
++        for _ in stream:
++            pass
++
++    spans = exporter.get_finished_spans()
++    assert len(spans) == 1
++    span = spans[0]
++    assert span.name == "anthropic.messages.create"
++    assert span.status.status_code == StatusCode.OK, (
++        f"Expected OK, got {span.status.status_code}"
++    )

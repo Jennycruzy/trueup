@@ -1,0 +1,54 @@
+{
+ "finding": "openinference-run_status-openai-agents-top-level-span-status-ok",
+ "repro_lines": 28,
+ "before": {
+  "exit": 0,
+  "stdout": "the run raised InternalServerError\ntop-level span 'Agent workflow': OK",
+  "stderr": "Error getting response"
+ },
+ "after": {
+  "exit": 0,
+  "stdout": "the run raised InternalServerError\ntop-level span 'Agent workflow': ERROR",
+  "stderr": "Error getting response"
+ },
+ "after_note": "patched",
+ "environment": {
+  "python": "3.12.3",
+  "os": "Linux x86_64",
+  "latest release": {
+   "openinference-instrumentation-openai": "0.1.65",
+   "openinference-instrumentation-anthropic": "3.0.3",
+   "openinference-instrumentation-langchain": "0.1.79",
+   "openinference-instrumentation-openai-agents": "2.5.3",
+   "openai": "3.28.0",
+   "anthropic": "1.13.0",
+   "opentelemetry-sdk": "1.45.1",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai-agents": "0.23.1"
+  },
+  "patched": {
+   "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+   "packages": [
+    "python/instrumentation/openinference-instrumentation-openai-agents"
+   ]
+  }
+ },
+ "boundary": {
+  "affected": [
+   "ag-bad-tool",
+   "ag-llm-fails",
+   "ag-max-turns",
+   "ag-streamed-cut",
+   "ag-streamed-error"
+  ],
+  "right": [
+   "ag-run",
+   "ag-tool-raises",
+   "ag-streamed"
+  ]
+ },
+ "fixed": true,
+ "posted": false
+}

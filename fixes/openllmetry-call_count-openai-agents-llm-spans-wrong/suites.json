@@ -1,0 +1,79 @@
+{
+ "before": {
+  "packages/opentelemetry-instrumentation-openai-agents": {
+   "total": 406,
+   "passed": 405,
+   "failed": 1,
+   "errors": 0,
+   "skipped": 0,
+   "failing": [
+    ".trueup.clones.openllmetry.packages.opentelemetry-instrumentation-openai-agents.tests.test_semconv_messages.TestFinishReasonTopLevel::test_none_finish_reason_omits_attribute"
+   ],
+   "exit": 1
+  },
+  "packages/opentelemetry-instrumentation-openai": {
+   "total": 292,
+   "passed": 291,
+   "failed": 0,
+   "errors": 0,
+   "skipped": 1,
+   "failing": [],
+   "exit": 0
+  }
+ },
+ "after": {
+  "1": {
+   "packages/opentelemetry-instrumentation-openai-agents": {
+    "total": 408,
+    "passed": 407,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "failing": [
+     ".trueup.clones.openllmetry.packages.opentelemetry-instrumentation-openai-agents.tests.test_semconv_messages.TestFinishReasonTopLevel::test_none_finish_reason_omits_attribute"
+    ],
+    "exit": 1,
+    "verdict": "same 1 failure(s) as before the patch"
+   }
+  },
+  "2": {
+   "packages/opentelemetry-instrumentation-openai-agents": {
+    "total": 409,
+    "passed": 407,
+    "failed": 2,
+    "errors": 0,
+    "skipped": 0,
+    "failing": [
+     ".trueup.clones.openllmetry.packages.opentelemetry-instrumentation-openai-agents.tests.test_semconv_messages.TestFinishReasonTopLevel::test_none_finish_reason_omits_attribute",
+     ".trueup.clones.openllmetry.packages.opentelemetry-instrumentation-openai-agents.tests.test_trueup_llm_span_count.TestResponsesWrapperSuppression::test_async_wrapper_suppressed_when_key_set"
+    ],
+    "exit": 1,
+    "verdict": "1 test(s) fail in the full suite after the patch and did not fail before: .trueup.clones.openllmetry.packages.opentelemetry-instrumentation-openai-agents.tests.test_trueup_llm_span_count.TestResponsesWrapperSuppression::test_async_wrapper_suppressed_when_key_set. Output: est_async_wrapper_suppressed_when_key_set\n    asyncio.get_event_loop().run_until_complete(run())\n    ^^^^^^^^^^^^^^^^^^^^^^^^\n/usr/lib/python3.12/asyncio/events.py:702: in get_event_loop\n    raise RuntimeError('There is no current event loop in thread %r.'\nE   RuntimeError: There is no current event loop in thread 'MainThread'.\n- generated xml file: .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai-agents/.trueup-junit.xml -\n=========================== short test summary info ============================\nFAILED tests/test_semconv_messages.py::TestFinishReasonTopLevel::test_none_finish_reason_omits_attribute\nFAILED tests/test_trueup_llm_span_count.py::TestResponsesWrapperSuppression::test_async_wrapper_suppressed_when_key_set\n2 failed, 407 passed in 3.83s\n[non-fatal] Tracing client error 401. Response data is redacted.\n[non-fatal] Tracing client error 401. Response data is redacted.\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call"
+   }
+  },
+  "3": {
+   "packages/opentelemetry-instrumentation-openai-agents": {
+    "total": 410,
+    "passed": 409,
+    "failed": 1,
+    "errors": 0,
+    "skipped": 0,
+    "failing": [
+     ".trueup.clones.openllmetry.packages.opentelemetry-instrumentation-openai-agents.tests.test_semconv_messages.TestFinishReasonTopLevel::test_none_finish_reason_omits_attribute"
+    ],
+    "exit": 1,
+    "verdict": "same 1 failure(s) as before the patch"
+   },
+   "packages/opentelemetry-instrumentation-openai": {
+    "total": 292,
+    "passed": 291,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 1,
+    "failing": [],
+    "exit": 0,
+    "verdict": "suite passes"
+   }
+  }
+ }
+}

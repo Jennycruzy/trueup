@@ -1,0 +1,49 @@
+{
+ "finding": "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+ "repro_lines": 30,
+ "before": {
+  "exit": 0,
+  "stdout": "the app saw APIStatusError\nspan 'anthropic.messages.create': OK, exception events: 0\n2026-10-11 01:14:44 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+  "stderr": ""
+ },
+ "after": {
+  "exit": 0,
+  "stdout": "the app saw APIStatusError\nspan 'anthropic.messages.create': ERROR, exception events: 1\n2026-10-11 01:14:47 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+  "stderr": ""
+ },
+ "after_note": "patched",
+ "environment": {
+  "python": "3.12.3",
+  "os": "Linux x86_64",
+  "latest release": {
+   "neatlogs": "1.4.26",
+   "openinference-instrumentation-langchain": "0.1.79",
+   "openinference-instrumentation-openai-agents": "2.5.3",
+   "openai": "3.28.0",
+   "anthropic": "1.13.0",
+   "opentelemetry-sdk": "1.45.1",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai-agents": "0.23.1"
+  },
+  "patched": {
+   "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+   "packages": [
+    "."
+   ]
+  }
+ },
+ "boundary": {
+  "affected": [
+   "p-an-stream-helper-cut",
+   "p-an-stream-helper-error-event"
+  ],
+  "right": [
+   "p-an-async-stream-cut",
+   "p-an-async-stream-error"
+  ]
+ },
+ "fixed": true,
+ "posted": false
+}

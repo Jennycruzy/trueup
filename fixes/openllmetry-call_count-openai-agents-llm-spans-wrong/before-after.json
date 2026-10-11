@@ -1,0 +1,53 @@
+{
+ "rows": [
+  {
+   "scenario": "ag-bad-tool",
+   "field": "LLM spans",
+   "truth": "1 (provider requests)",
+   "before": 2,
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-llm-fails",
+   "field": "LLM spans",
+   "truth": "2 (provider requests)",
+   "before": 4,
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-max-turns",
+   "field": "LLM spans",
+   "truth": "3 (provider requests)",
+   "before": 6,
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-run",
+   "field": "LLM spans",
+   "truth": "2 (provider requests)",
+   "before": 4,
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-tool-raises",
+   "field": "LLM spans",
+   "truth": "2 (provider requests)",
+   "before": 4,
+   "after": "matches truth"
+  }
+ ],
+ "before": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 32,
+  "high": 22,
+  "medium": 10
+ },
+ "after": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 27,
+  "high": 17,
+  "medium": 10
+ }
+}

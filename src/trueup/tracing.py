@@ -20,7 +20,8 @@ from typing import Any, Callable, Iterator
 from trueup import __version__
 
 KEY_VAR = "NEATLOGS_API_KEY"
-WORKERS = ("trueup-planner", "trueup-runner", "trueup-comparer", "trueup-checker", "trueup-deduper")
+WORKERS = ("trueup-planner", "trueup-runner", "trueup-comparer", "trueup-checker", "trueup-deduper",
+           "trueup-fixer", "trueup-verifier")
 
 _state: dict[str, Any] = {"active": False, "run_id": None, "library": None, "flushed": False}
 

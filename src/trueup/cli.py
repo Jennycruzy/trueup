@@ -16,7 +16,7 @@ EXIT_MISMATCH = 1  # mismatches found
 EXIT_ERROR = 2  # could not run
 
 KEY_VARS = ("NEATLOGS_API_KEY", "NEATLOGS_PROJECT", "TRUEUP_MODEL_KEY", "TRUEUP_MODEL_BASE_URL")
-NOT_BUILT = ("fix", "upstream", "verify", "report")
+NOT_BUILT = ("verify", "report")
 NEATLOGS_ENDPOINT = "https://ingest.neatlogs.com"
 
 
@@ -85,6 +85,11 @@ def build_parser() -> argparse.ArgumentParser:
     au = sub.add_parser("audit", help="run your script's main() against the fake provider and compare its trace")
     au.add_argument("script", type=Path, help="Python file with a main() that calls the openai or anthropic SDK")
     au.add_argument("--library", required=True, choices=LIBRARIES, help="tracing library to set up")
+    fx = sub.add_parser("fix", help="draft a patch and a test for a finding, verify it, write fixes/<id>/")
+    fx.add_argument("finding_id", help="a finding id from findings.json")
+    fx.add_argument("--tries", type=int, default=3, help="most patch tries (default 3)")
+    up = sub.add_parser("upstream", help="draft issue and PR text for a finding into upstream/<id>/ (never posts)")
+    up.add_argument("finding_id", help="a finding id from findings.json")
     ck = sub.add_parser("check", help="run the checker and dedupe over a sweep's leads")
     ck.add_argument("run_id", help="a run id under .trueup/runs, or latest")
     ck.add_argument("--library", choices=LIBRARIES, help="with latest: the newest sweep of this library")
@@ -121,6 +126,17 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"trueup check: {e}", file=sys.stderr)
             return EXIT_ERROR
         return EXIT_MISMATCH if res["counts"]["findings"] else EXIT_OK
+    if args.command == "fix":
+        return fix_command(args.finding_id, args.tries)
+    if args.command == "upstream":
+        from trueup.upstream import upstream
+
+        try:
+            upstream(Path.cwd(), args.finding_id)
+        except (FileNotFoundError, KeyError, ValueError) as e:
+            print(f"trueup upstream: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        return EXIT_OK
     print(f"trueup {args.command}: not built yet", file=sys.stderr)
     return EXIT_ERROR
 
@@ -142,6 +158,31 @@ def plan_command(library: str, max_n: int) -> int:
         return EXIT_ERROR if res["error"] else EXIT_OK
 
     return tracing.run_traced(run_id, library, "plan", body)
+
+
+def fix_command(finding_id: str, tries: int) -> int:
+    from trueup import tracing
+    from trueup.fix import find_finding, fix
+    from trueup.sweep import new_run_id
+
+    try:
+        finding, _ = find_finding(Path.cwd(), finding_id)
+    except FileNotFoundError as e:
+        print(f"trueup fix: {e}", file=sys.stderr)
+        return EXIT_ERROR
+    run_id = new_run_id(f"fix-{finding['library']}")
+
+    def body() -> int:
+        try:
+            res = fix(Path.cwd(), finding_id, run_id=run_id, max_tries=tries)
+        except (KeyError, FileNotFoundError) as e:
+            print(f"trueup fix: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        if res["error"]:
+            return EXIT_ERROR
+        return EXIT_OK if res["fixed"] else EXIT_MISMATCH
+
+    return tracing.run_traced(run_id, finding["library"], "fix", body)
 
 
 if __name__ == "__main__":

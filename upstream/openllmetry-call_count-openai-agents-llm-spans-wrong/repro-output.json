@@ -1,0 +1,56 @@
+{
+ "finding": "openllmetry-call_count-openai-agents-llm-spans-wrong",
+ "repro_lines": 27,
+ "before": {
+  "exit": 0,
+  "stdout": "Traceloop exporting traces to a custom exporter\n\nMetrics are disabled\nprovider requests: 1; LLM spans: 2; output tokens on LLM spans: 14 (provider sent 7)",
+  "stderr": "ERROR:root:Error initializing MCP instrumentor: unable to resolve attribute 'streamablehttp_client' in path 'streamablehttp_client' on <module 'mcp.client.streamable_http' from '.trueup/venvs/openllmetry/lib/python3.12/site-packages/mcp/client/streamable_http.py'>\nWARNING:openai.agents:OPENAI_API_KEY is not set, skipping trace export"
+ },
+ "after": {
+  "exit": 0,
+  "stdout": "Traceloop exporting traces to a custom exporter\n\nMetrics are disabled\nprovider requests: 1; LLM spans: 1; output tokens on LLM spans: 7 (provider sent 7)",
+  "stderr": "ERROR:root:Error initializing MCP instrumentor: unable to resolve attribute 'streamablehttp_client' in path 'streamablehttp_client' on <module 'mcp.client.streamable_http' from '.trueup/venvs/openllmetry-fix/lib/python3.12/site-packages/mcp/client/streamable_http.py'>\nWARNING:openai.agents:OPENAI_API_KEY is not set, skipping trace export"
+ },
+ "after_note": "patched",
+ "environment": {
+  "python": "3.12.3",
+  "os": "Linux x86_64",
+  "latest release": {
+   "traceloop-sdk": "0.62.4",
+   "opentelemetry-instrumentation-openai": "0.62.4",
+   "opentelemetry-instrumentation-anthropic": "0.62.4",
+   "opentelemetry-instrumentation-langchain": "0.62.4",
+   "opentelemetry-instrumentation-openai-agents": "0.62.4",
+   "openai": "3.28.0",
+   "anthropic": "1.13.0",
+   "opentelemetry-sdk": "1.45.1",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai-agents": "0.23.1"
+  },
+  "patched": {
+   "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+   "packages": [
+    "packages/opentelemetry-instrumentation-openai-agents",
+    "packages/opentelemetry-instrumentation-openai"
+   ]
+  }
+ },
+ "boundary": {
+  "affected": [
+   "ag-bad-tool",
+   "ag-llm-fails",
+   "ag-max-turns",
+   "ag-run",
+   "ag-tool-raises"
+  ],
+  "right": [
+   "ag-streamed",
+   "ag-streamed-error",
+   "ag-streamed-cut"
+  ]
+ },
+ "fixed": true,
+ "posted": false
+}

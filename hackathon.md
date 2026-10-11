@@ -187,3 +187,71 @@ Every lead passed all seven rules (reproduced twice, latest release and main, re
 - `p-an-async-stream-error`, `p-an-async-stream-cut` and `p-lc-tools` gave no lead in any library.
 
 So the planner found one new neatlogs behaviour (`messages.stream()` failures show OK) and widened two openllmetry findings to new code paths. All 6 accepted proposals were near variations on existing ones: failure fake models paired with a different app.
+
+## 2026-10-11: the fixer, the verifier, and three real fixes
+
+- `trueup fix <finding-id>`: locate, patch, verify, up to 3 tries per run; `trueup upstream <finding-id>` drafts issue and PR text. Every run is traced in neatlogs as `trueup-fixer` and `trueup-verifier` (session id = run id). Nothing was committed, pushed or posted anywhere.
+- Entire's code graph was not used. `entire agent-help` (CLI 0.11.4) lists no graph command; `entire graph` answers "the entire-graph plugin is not installed", and `agent-help` lists `entire plugin` as the user's command, so Trueup did not install it. Locate used ripgrep plus Python's ast. Each `locate.json` records the Entire commands, their output and this reason.
+- Model: `claude-sonnet-4.6`; the $15 guard stayed on. Key spend went from $0.2528 to $5.9869 ($5.73) over 11 fix runs. The per-run deltas add up to $5.42; the proxy's spend lags, as seen with the planner.
+
+### Fix runs, every try
+
+OpenLLMetry, `openllmetry-call_count-openai-agents-llm-spans-wrong` (Agents SDK non-streamed runs record two LLM spans per call):
+
+| run | try | result | why |
+|---|---|---|---|
+| 000319Z | - | stopped, $0 | one test venv for both packages: their pytest-asyncio pins conflict. Now one venv per package. |
+| 000336Z ($0.66) | 1 | fail: scenarios | set `SUPPRESS_LANGUAGE_MODEL_INSTRUMENTATION_KEY` in the Agents span context, but the Responses wrapper only checks `_SUPPRESS_INSTRUMENTATION_KEY`; still 4 spans for 2 calls. Its test only checked that the key was set. |
+| | 2, 3 | fail: apply | my bug: the clone was not reset after try 1, so the edits were checked against try 1's files. Also the excerpt of a long file had line-number prefixes and no imports, so the model guessed an import block. |
+| 001405Z ($0.59) | 1 | fail: own test | right idea (set the key, check it in the wrapper); one of its new tests failed |
+| | 2, 3 | fail: apply | same reset bug. Fixed: the clone is reset before each draft; excerpts are verbatim with the imports; a missing `old` text gets the nearest real lines back. |
+| 001706Z ($0.27) | 1 | pass, then withdrawn | passed every check at the time. Later I found the verifier left the new test out of the suite comparison: one new async test (`asyncio.get_event_loop()`) passed alone and failed inside the suite. Rule fixed; this result does not count. |
+| 010426Z ($0.65) | 1 | fail: scenarios | patched only the Agents side; the feedback now carries the scenario's truth vs trace and the spans |
+| | 2 | fail: suite | a new async test failed inside the full suite (counted now) |
+| | 3 | **pass** | |
+
+OpenInference, `openinference-run_status-openai-agents-top-level-span-status-ok` (a crashed Agents SDK run shows OK at the top-level span):
+
+| run | try | result | why |
+|---|---|---|---|
+| 002549Z ($0.59) | 1 | fail: own test | the test's agent never reached the error it wanted |
+| | 2 | fail: full library | any ERROR child marked the root ERROR: `ag-tool-raises` (tool raised, run recovered) became ERROR. The full-library check caught it. |
+| | 3 | fail: scenarios | only agent-span errors counted; `ag-bad-tool` and `ag-streamed-error` carry the error on a `turn` or `response` span |
+| 003256Z ($0.68) | 1 | fail: own test | |
+| | 2, 3 | fail: scenarios | counted only spans whose parent is the trace root; the agent span sits under an SDK "Agent workflow" span. The prompt now includes the spans each scenario exported before the patch. |
+| 003533Z ($0.73) | 1 | fail: own test | |
+| | 2 | fail: full library | `ag-tool-raises` ERROR again |
+| | 3 | fail: scenarios | `ag-bad-tool`, `ag-streamed-error` again. Part of the cause was my note in `targets.py`, which said the SDK puts the error on the agent span; the data says otherwise. The note now says the span differs by failure. Failing scenarios now also return the spans the patched library exported. |
+| 004013Z ($0.63) | 1, 2 | fail: own test | |
+| | 3 | **pass** | any ERROR on a span that is not a function (tool) span marks the root ERROR |
+
+neatlogs, `neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok` (a failed `messages.stream()` shows OK; scenarios from both planner runs merged):
+
+| run | try | result | why |
+|---|---|---|---|
+| 004502Z ($0.22) | 1 | pass, then withdrawn | the package's suite did not run at all (one module needs `google.genai`; collection stopped: 0 passed, 1 error) and the verifier read "same failures as before" as a pass. Fixed: pytest runs with `--continue-on-collection-errors`, and a baseline suite with nothing passing stops the fixer before any model call. This result does not count. |
+| 005144Z ($0.40) | 1 | **pass** | the stream manager wrappers pass the exception to `_finalize`, which calls the existing `_err` (ERROR, exception event, end) |
+
+### Results
+
+| finding | scenario before → after | package suite before → after | full library leads (high) before → after | new mismatches |
+|---|---|---|---|---|
+| OpenLLMetry double LLM spans | ag-run 4 → 2 spans (truth 2); ag-max-turns 6 → 3; ag-bad-tool 2 → 1; ag-llm-fails, ag-tool-raises 4 → 2 | openai-agents 405 passed, 1 failing → 409 passed, same 1 failing (`test_none_finish_reason_omits_attribute`, fails on the clean clone too); openai 291 passed, 1 skipped → same | 32 (22) → 27 (17) | 0 |
+| OpenInference root OK on failed run | 5 scenarios OK → ERROR (truth ERROR) | 295 passed → 298 passed | 19 (7) → 14 (2) | 0 |
+| neatlogs `messages.stream()` failure OK | p-an-stream-helper-cut, p-an-stream-helper-error-event OK → ERROR | 527 passed, 1 collection error (`google.genai` not installed), 4 skipped → 530 passed, same error | 35 (11) → 31 (9) | 0 |
+
+Full library = 57 scenarios (51 + 6 planner proposals) in a venv with the library's packages built from the clone, before and after the patch. Clone commits: OpenLLMetry `df4921a409`, OpenInference `c364180e5b`, neatlogs `202f8776ea`.
+
+The standalone repros (`upstream/<id>/repro.py`, 27-30 lines, only the library and the SDK, `httpx.MockTransport`), on the latest release and then on the patched clone:
+- OpenLLMetry: "LLM spans: 2; output tokens 14 (provider sent 7)" → "LLM spans: 1; output tokens 7".
+- OpenInference: HTTP 500, the run raises `InternalServerError`; top-level span OK → ERROR.
+- neatlogs: SSE stream ending in an error event, the app sees `APIStatusError`; span OK, 0 exception events → ERROR, 1 exception event. anthropic 1.13 uses `httpx2`, so this repro imports `httpx2`.
+
+Limits, read by hand:
+- Several new tests contain functions that also pass without the patch (OpenLLMetry 3 of 4, OpenInference 2 of 3, neatlogs 1 of 3). The OpenInference and neatlogs ones are "stays OK when the run succeeds" guards. The OpenLLMetry wrapper tests feed a MagicMock response; the unpatched wrapper fails inside `@dont_throw` and exports nothing, so they would pass either way. Each fix rests on the test functions that do fail before, plus the real scenarios and the repro. The verifier now lists such test functions in every log.
+- OpenInference: any ERROR on a span that is not a tool span marks the run ERROR. A span error the SDK later recovers from (none in the scenarios) would also mark the root ERROR.
+- neatlogs: on failure the span gets the error and ends; partial text and tokens from before the failure are not recorded.
+- The OpenLLMetry openai-agents test suite itself tries to upload Agents SDK traces with its fake key (it prints "Tracing client error 401"). No real key is in the test environment: `vf.test_env()` drops every variable whose name has KEY, TOKEN, SECRET or PASSWORD.
+- Three verifier holes were found during these runs and closed (clone not reset between tries; new tests left out of the suite comparison; a suite that does not run read as "same failures"). Two "passes" were withdrawn because of them. Earlier tries in these logs ran under the weaker rules.
+
+Upstream drafts are in `upstream/<id>/` (issue.md, pr.md, repro.py, repro-output.json). None was posted.

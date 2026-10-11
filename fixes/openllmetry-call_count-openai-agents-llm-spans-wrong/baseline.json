@@ -1,0 +1,398 @@
+{
+ "commit": "df4921a40940cdce136c4409380a55e9d4c7a96d",
+ "suites": {
+  "packages/opentelemetry-instrumentation-openai-agents": {
+   "cmd": "pytest tests",
+   "cwd": "packages/opentelemetry-instrumentation-openai-agents",
+   "exit": 1,
+   "tail": "sonTopLevel object at 0x76bf6a440560>\ntracer_and_exporter = (<opentelemetry.sdk.trace.Tracer object at 0x76bf6129c950>, <opentelemetry.sdk.trace.export.in_memory_span_exporter.InMemorySpanExporter object at 0x76bf6129c800>)\n\n    def test_none_finish_reason_omits_attribute(self, tracer_and_exporter):\n        \"\"\"Spec \u00a74: None finish_reason \u2192 attribute omitted, NOT fabricated.\"\"\"\n        from opentelemetry.instrumentation.openai_agents._hooks import (\n            _extract_response_attributes,\n        )\n    \n        tracer, _ = tracer_and_exporter\n        span = tracer.start_span(\"test\")\n    \n        response = MagicMock()\n        response.temperature = None\n        response.max_output_tokens = None\n        response.top_p = None\n        response.model = \"gpt-4o\"\n        response.id = \"resp_1\"\n        response.frequency_penalty = None\n        response.finish_reason = None\n        response.output = []\n        response.usage = None\n    \n        _extract_response_attributes(span, response, trace_content=True)\n    \n>       assert GenAIAttributes.GEN_AI_RESPONSE_FINISH_REASONS not in span.attributes\nE       assert 'gen_ai.response.finish_reasons' not in mappingproxy({'gen_ai.response.model': 'gpt-4o', 'gen_ai.response.id': 'resp_1', 'gen_ai.response.finish_reasons': (\"<MagicMock name='mock.status' id='130564457400512'>\",)})\nE        +  where 'gen_ai.response.finish_reasons' = GenAIAttributes.GEN_AI_RESPONSE_FINISH_REASONS\nE        +  and   mappingproxy({'gen_ai.response.model': 'gpt-4o', 'gen_ai.response.id': 'resp_1', 'gen_ai.response.finish_reasons': (\"<MagicMock name='mock.status' id='130564457400512'>\",)}) = _Span(name=\"test\", context=SpanContext(trace_id=0x20d256ffdaa5f3542ee3120397c7217d, span_id=0xe08d51aea66bbd6e, trace_flags=0x03, trace_state=[], is_remote=False)).attributes\n\ntests/test_semconv_messages.py:2373: AssertionError\n------------------------------ Captured log call -------------------------------\nWARNING  opentelemetry.attributes:__init__.py:91 Invalid type `<class 'unittest.mock.MagicMock'>` for attribute value. Expected one of bool, str, None, bytes, int, float or a Mapping or Sequence of those types. Value's __str__ method will be called if it exists, otherwise the value will be replaced with None.\n- generated xml file: .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai-agents/.trueup-junit.xml -\n=========================== short test summary info ============================\nFAILED tests/test_semconv_messages.py::TestFinishReasonTopLevel::test_none_finish_reason_omits_attribute\n1 failed, 405 passed in 5.94s\n[non-fatal] Tracing client error 401. Response data is redacted.\n[non-fatal] Tracing client error 401. Response data is redacted.\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call\nProcessor is already shutdown, ignoring call",
+   "total": 406,
+   "passed": 405,
+   "failed": 1,
+   "errors": 0,
+   "skipped": 0,
+   "failing": [
+    ".trueup.clones.openllmetry.packages.opentelemetry-instrumentation-openai-agents.tests.test_semconv_messages.TestFinishReasonTopLevel::test_none_finish_reason_omits_attribute"
+   ]
+  },
+  "packages/opentelemetry-instrumentation-openai": {
+   "cmd": "pytest tests",
+   "cwd": "packages/opentelemetry-instrumentation-openai",
+   "exit": 0,
+   "tail": "y:859: DeprecationWarning: The Assistants API is deprecated in favor of the Responses API\n    openai_client.beta.threads.messages.create(\n\ntests/traces/test_assistant.py::test_streaming_existing_assistant\n  .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/tests/traces/test_assistant.py:922: DeprecationWarning: The Assistants API is deprecated in favor of the Responses API\n    thread = openai_client.beta.threads.create()\n\ntests/traces/test_assistant.py::test_streaming_existing_assistant\n  .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/tests/traces/test_assistant.py:924: DeprecationWarning: The Assistants API is deprecated in favor of the Responses API\n    openai_client.beta.threads.messages.create(\n\ntests/traces/test_assistant.py::test_streaming_existing_assistant_with_events_with_content\n  .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/tests/traces/test_assistant.py:995: DeprecationWarning: The Assistants API is deprecated in favor of the Responses API\n    thread = openai_client.beta.threads.create()\n\ntests/traces/test_assistant.py::test_streaming_existing_assistant_with_events_with_content\n  .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/tests/traces/test_assistant.py:997: DeprecationWarning: The Assistants API is deprecated in favor of the Responses API\n    openai_client.beta.threads.messages.create(\n\ntests/traces/test_assistant.py::test_streaming_existing_assistant_with_events_with_no_content\n  .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/tests/traces/test_assistant.py:1085: DeprecationWarning: The Assistants API is deprecated in favor of the Responses API\n    thread = openai_client.beta.threads.create()\n\ntests/traces/test_assistant.py::test_streaming_existing_assistant_with_events_with_no_content\n  .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/tests/traces/test_assistant.py:1087: DeprecationWarning: The Assistants API is deprecated in favor of the Responses API\n    openai_client.beta.threads.messages.create(\n\ntests/traces/test_semconv_compliance.py::TestReasoningAttrsOmittedWhenNone::test_chat_reasoning_effort_absent_when_none\n  .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/tests/traces/test_semconv_compliance.py:596: RuntimeWarning: coroutine 'dont_throw.<locals>.async_wrapper' was never awaited\n    _handle_request(mock_span, {\"model\": \"gpt-4\", \"messages\": []})\n  Enable tracemalloc to get traceback where the object was allocated.\n  See https://docs.pytest.org/en/stable/how-to/capture-warnings.html#resource-warnings for more info.\n\n-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html\n- generated xml file: .trueup/clones/openllmetry/packages/opentelemetry-instrumentation-openai/.trueup-junit.xml -\n291 passed, 1 skipped, 329 warnings in 16.70s",
+   "total": 292,
+   "passed": 291,
+   "failed": 0,
+   "errors": 0,
+   "skipped": 1,
+   "failing": []
+  }
+ },
+ "sweep": {
+  "leads": {
+   "oa-chat-plain": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-tools": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-refusal": [],
+   "oa-chat-n2": [],
+   "oa-chat-500": [],
+   "oa-chat-stream-error-event": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised APIError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 span status",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "OK, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "oa-chat-stream-cut": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised APIConnectionError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 span status",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "OK, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "oa-chat-stream-break": [],
+   "oa-chat-async-stream": [],
+   "oa-resp-plain": [],
+   "oa-resp-tool": [],
+   "oa-resp-reasoning": [],
+   "oa-resp-failed": [
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "failed"
+     ],
+     "trace": [
+      "error"
+     ],
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-incomplete": [],
+   "oa-resp-stream": [],
+   "oa-resp-stream-tool": [],
+   "oa-resp-stream-error-event": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised RuntimeError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 span status",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "OK, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "an-plain": [],
+   "an-thinking": [],
+   "an-stream-helper": [
+    {
+     "field": "call 1 tokens",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": 5,
+      "output": 4
+     },
+     "severity": "high",
+     "check": "tokens",
+     "kind": "lead"
+    }
+   ],
+   "an-stream-thinking": [
+    {
+     "field": "call 1 tokens",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": 5,
+      "output": 4
+     },
+     "severity": "high",
+     "check": "tokens",
+     "kind": "lead"
+    }
+   ],
+   "an-stream-tools": [
+    {
+     "field": "call 1 tokens",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": 5,
+      "output": 4
+     },
+     "severity": "high",
+     "check": "tokens",
+     "kind": "lead"
+    }
+   ],
+   "an-create-stream": [
+    {
+     "field": "call 1 tokens",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": 5,
+      "output": 4
+     },
+     "severity": "high",
+     "check": "tokens",
+     "kind": "lead"
+    }
+   ],
+   "an-stream-error-event": [
+    {
+     "field": "call 1 span",
+     "truth": "ended and exported (error_event)",
+     "trace": "no span",
+     "severity": "high",
+     "check": "span_closed",
+     "kind": "lead"
+    }
+   ],
+   "an-stream-cut": [
+    {
+     "field": "call 1 span",
+     "truth": "ended and exported (cut)",
+     "trace": "no span",
+     "severity": "high",
+     "check": "span_closed",
+     "kind": "lead"
+    }
+   ],
+   "an-529": [],
+   "an-async": [],
+   "lc-invoke": [],
+   "lc-stream": [],
+   "lc-stream-error-event": [],
+   "lc-stream-cut": [],
+   "lc-refusal": [
+    {
+     "field": "call 1 output text",
+     "truth": "I can't help with that.",
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    }
+   ],
+   "lc-500": [],
+   "lg-agent": [],
+   "lg-tool-raises": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-stream": [],
+   "lg-step-limit": [],
+   "ag-run": [
+    {
+     "field": "LLM spans",
+     "truth": "2 (provider requests)",
+     "trace": 4,
+     "severity": "high",
+     "check": "call_count",
+     "kind": "lead"
+    }
+   ],
+   "ag-tool-raises": [
+    {
+     "field": "LLM spans",
+     "truth": "2 (provider requests)",
+     "trace": 4,
+     "severity": "high",
+     "check": "call_count",
+     "kind": "lead"
+    }
+   ],
+   "ag-llm-fails": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised InternalServerError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "LLM spans",
+     "truth": "2 (provider requests)",
+     "trace": 4,
+     "severity": "high",
+     "check": "call_count",
+     "kind": "lead"
+    },
+    {
+     "field": "call 2 span status",
+     "truth": "ERROR with exception event (http_error)",
+     "trace": "ERROR, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised MaxTurnsExceeded)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "LLM spans",
+     "truth": "3 (provider requests)",
+     "trace": 6,
+     "severity": "high",
+     "check": "call_count",
+     "kind": "lead"
+    }
+   ],
+   "ag-bad-tool": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "LLM spans",
+     "truth": "1 (provider requests)",
+     "trace": 2,
+     "severity": "high",
+     "check": "call_count",
+     "kind": "lead"
+    },
+    {
+     "field": "any span",
+     "truth": "ERROR or exception event (ModelBehaviorError)",
+     "trace": "no span records an error",
+     "severity": "medium",
+     "check": "error_recorded",
+     "kind": "lead"
+    }
+   ],
+   "ag-streamed": [],
+   "ag-streamed-error": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 2 span status",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "ERROR, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "ag-streamed-cut": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised APIConnectionError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 2 span status",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "ERROR, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-stream-helper-cut": [
+    {
+     "field": "call 1 span",
+     "truth": "ended and exported (cut)",
+     "trace": "no span",
+     "severity": "high",
+     "check": "span_closed",
+     "kind": "lead"
+    }
+   ],
+   "p-lc-tools": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-error-event": [
+    {
+     "field": "call 1 span",
+     "truth": "ended and exported (error_event)",
+     "trace": "no span",
+     "severity": "high",
+     "check": "span_closed",
+     "kind": "lead"
+    }
+   ],
+   "p-oa-chat-async-stream-error": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised APIError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 span status",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "OK, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ]
+  },
+  "not_run": {}
+ }
+}

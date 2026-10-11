@@ -1,0 +1,32 @@
+{
+ "rows": [
+  {
+   "scenario": "p-an-stream-helper-cut",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised RemoteProtocolError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "p-an-stream-helper-error-event",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised APIStatusError)",
+   "before": "OK",
+   "after": "matches truth"
+  }
+ ],
+ "before": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 35,
+  "high": 11,
+  "medium": 24
+ },
+ "after": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 31,
+  "high": 9,
+  "medium": 22
+ }
+}

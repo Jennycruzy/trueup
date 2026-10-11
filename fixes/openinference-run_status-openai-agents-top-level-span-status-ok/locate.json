@@ -1,0 +1,96 @@
+{
+ "library": "openinference",
+ "code_path": "openai-agents",
+ "clone": ".trueup/clones/openinference",
+ "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+ "graph": {
+  "used": false,
+  "commands": [
+   {
+    "cmd": "entire agent-help",
+    "exit": 0,
+    "output": "Entire's CLI is the source of truth for its own usage. Do not guess flags or\nsubcommands \u2014 read them from this command. You are already inside the repo:\nentire auto-detects it from the git origin remote, so never ask the user for the\nrepo name. Pass --repo only to target a DIFFERENT repo.\n\nCurrent repo: gh/Arize-ai/openinference  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nWhen to use entire \u2014 the commands that bear on the work:\n  checkpoint  Inspect and search checkpoints\n                read-only except: explain\n  search      Search checkpoints, commits, and sessions using semantic and keyword matching\n                read-only\n  session     Manage agent sessions tracked by Entire\n                read-only except: adopt, attach, resume, stop\n  status      Show Entire status\n                read-only\n  why         Show why a line exists\n                read-only\n\nAlso available (entire agent-help <command> for any of these):\n  read-only, safe to run:\n    activity \u00b7 labs \u00b7 recap \u00b7 version\n  when the task needs them:\n    api \u00b7 dispatch \u00b7 doctor\n  the user's \u2014 suggest, don't run:\n    agent \u00b7 auth \u00b7 clean \u00b7 cluster \u00b7 configure \u00b7 disable \u00b7 enable\n    login \u00b7 logout \u00b7 org \u00b7 plugin \u00b7 project \u00b7 repo\n\nDrill in for exact, currently-installed flags:  entire agent-help <command>  (e.g. entire agent-help checkpoint)\nAdd --json for structured output."
+   },
+   {
+    "cmd": "entire agent-help labs",
+    "exit": 0,
+    "output": "entire labs \u2014 Explore experimental Entire workflows\nLabs\n\nThese are newer Entire workflows we are actively refining. They are available\nto try now, but details may change based on feedback.\n\nAvailable experimental commands:\n  entire review             Run a multi-agent review against the current branch\n  entire import claude-code Import existing Claude Code transcripts as local, read-only history\n  entire tokens             Analyze experimental token usage diagnostics\n  entire tokens profile     Aggregate token usage across committed checkpoints\n  entire session tokens     Show token usage and recommendations for a session\n  entire blame              Show which lines came from Entire checkpoints\n  entire why                Show why a line exists (commit, checkpoint, prompt, session)\n  entire experts            Show agent, skill, and tool provenance for files or topics\n\nTry:\n  entire review --help\n  entire tokens --help\n  entire tokens profile --help\n  entire session tokens --help\n  entire blame --help\n  entire why --help\n  entire experts --help\n\nCurrent repo: gh/Arize-ai/openinference  (auto-detected from origin; pass --repo only for a DIFFERENT repo)\n\nInherited flags:\n      --context name   Act as this saved login name for this command only \u2014 including the git and agent processes it spawns \u2014 instead of the active context (entire auth contexts lists them)"
+   },
+   {
+    "cmd": "entire graph --help",
+    "exit": 1,
+    "output": "the entire-graph plugin is not installed; run 'entire plugin install graph' and retry"
+   }
+  ],
+  "reason": "entire graph is not available here: the entire-graph plugin is not installed; run 'entire plugin install graph' and retry. agent-help lists `entire plugin` as the user's command, so Trueup did not install it."
+ },
+ "method": "ripgrep + ast (fallback)",
+ "definitions": [
+  {
+   "symbol": "OpenInferenceTracingProcessor",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 97,
+   "qualname": "OpenInferenceTracingProcessor",
+   "end": 275
+  },
+  {
+   "symbol": "on_trace_start",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 126,
+   "qualname": "OpenInferenceTracingProcessor.on_trace_start",
+   "end": 138
+  },
+  {
+   "symbol": "on_trace_end",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 140,
+   "qualname": "OpenInferenceTracingProcessor.on_trace_end",
+   "end": 149
+  },
+  {
+   "symbol": "on_span_end",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 182,
+   "qualname": "OpenInferenceTracingProcessor.on_span_end",
+   "end": 265
+  },
+  {
+   "symbol": "_get_span_status",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 1152,
+   "qualname": "_get_span_status",
+   "end": 1158
+  }
+ ],
+ "callers": [
+  {
+   "symbol": "OpenInferenceTracingProcessor",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
+   "line": 90,
+   "in": "OpenAIAgentsInstrumentor._instrument",
+   "text": "OpenInferenceTracingProcessor,"
+  },
+  {
+   "symbol": "OpenInferenceTracingProcessor",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
+   "line": 96,
+   "in": "OpenAIAgentsInstrumentor._instrument",
+   "text": "set_trace_processors([OpenInferenceTracingProcessor(cast(Tracer, tracer))])"
+  },
+  {
+   "symbol": "OpenInferenceTracingProcessor",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
+   "line": 100,
+   "in": "OpenAIAgentsInstrumentor._instrument",
+   "text": "add_trace_processor(OpenInferenceTracingProcessor(cast(Tracer, tracer)))"
+  },
+  {
+   "symbol": "_get_span_status",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "line": 264,
+   "in": "OpenInferenceTracingProcessor.on_span_end",
+   "text": "otel_span.set_status(status=_get_span_status(span))"
+  }
+ ],
+ "reference": []
+}

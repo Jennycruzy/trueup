@@ -1,0 +1,53 @@
+{
+ "rows": [
+  {
+   "scenario": "ag-bad-tool",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised ModelBehaviorError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-llm-fails",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised InternalServerError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-max-turns",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised MaxTurnsExceeded)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-streamed-cut",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised APIConnectionError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-streamed-error",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised ModelBehaviorError)",
+   "before": "OK",
+   "after": "matches truth"
+  }
+ ],
+ "before": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 19,
+  "high": 7,
+  "medium": 12
+ },
+ "after": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 14,
+  "high": 2,
+  "medium": 12
+ }
+}
