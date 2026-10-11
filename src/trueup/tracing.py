@@ -63,7 +63,9 @@ def start(run_id: str, library: str, command: str, out: Callable[[str], None] = 
 
         init = neatlogs.init
     try:
+        # Trueup has no end users; the team name fills neatlogs' user column (TRUEUP_USER overrides it).
         init(api_key=os.environ[KEY_VAR], workflow_name="trueup", instrumentations=["openai"],
+             user_id=os.environ.get("TRUEUP_USER", "jenny-builds"),
              tags=[f"run_id:{run_id}", f"library:{library}", f"trueup:{__version__}", f"command:{command}"]
              + ([f"variant:{variant}"] if variant else []))
     except Exception as e:  # noqa: BLE001 - tracing must not stop the run
