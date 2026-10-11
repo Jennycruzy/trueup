@@ -1,0 +1,65 @@
+{
+ "app": {
+  "exception_module": "builtins",
+  "exception_type": "RuntimeError",
+  "message": "stream error event: fake stream error",
+  "outcome": "exception",
+  "seconds": 0.297
+ },
+ "calls": 1,
+ "exception": "RuntimeError",
+ "expected": {
+  "calls": 1,
+  "exception": "RuntimeError",
+  "fake": [
+   "error_event"
+  ],
+  "outcome": "exception",
+  "tokens": [
+   null
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "error_event"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.responses",
+   "finish": [],
+   "include_usage": false,
+   "n": null,
+   "outcome": "error_event",
+   "path": "/v1/responses",
+   "response_id": "resp_0945f4f90002",
+   "scenario": "resp-error-event",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [
+    "hel"
+   ],
+   "tool_calls": [],
+   "usage": null,
+   "usage_sent": false
+  }
+ ],
+ "finish": [
+  []
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "exception",
+ "response_ids": [
+  "resp_0945f4f90002"
+ ],
+ "scenario": "oa-resp-stream-error-event",
+ "tokens": [
+  null
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

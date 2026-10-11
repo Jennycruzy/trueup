@@ -1,0 +1,151 @@
+{
+ "app": {
+  "outcome": "ok",
+  "result": {
+   "answer": "It is sunny in Lagos."
+  },
+  "seconds": 0.158
+ },
+ "calls": 2,
+ "expected": {
+  "calls": 2,
+  "fake": [
+   "complete",
+   "complete"
+  ],
+  "finish": [
+   [
+    "completed"
+   ],
+   [
+    "completed"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   },
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ],
+   []
+  ],
+  "tool_runs": [
+   {
+    "name": "get_weather",
+    "outcome": "ok"
+   }
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete",
+  "complete"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.responses",
+   "finish": [
+    "completed"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/responses",
+   "response_id": "resp_30029d0f0003",
+   "scenario": "agent-resp",
+   "seq": 1,
+   "status_code": 200,
+   "stream": false,
+   "text": [],
+   "tool_calls": [
+    {
+     "arguments": "{\"city\":\"Lagos\"}",
+     "id": "call_30029d0f0002",
+     "name": "get_weather"
+    }
+   ],
+   "usage": {
+    "input_tokens": 11,
+    "output_tokens": 7,
+    "reasoning_tokens": 0,
+    "total_tokens": 18
+   },
+   "usage_sent": true
+  },
+  {
+   "api": "openai.responses",
+   "finish": [
+    "completed"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/responses",
+   "response_id": "resp_30029d0f0005",
+   "scenario": "agent-resp",
+   "seq": 2,
+   "status_code": 200,
+   "stream": false,
+   "text": [
+    "It is sunny in Lagos."
+   ],
+   "tool_calls": [],
+   "usage": {
+    "input_tokens": 11,
+    "output_tokens": 7,
+    "reasoning_tokens": 0,
+    "total_tokens": 18
+   },
+   "usage_sent": true
+  }
+ ],
+ "finish": [
+  [
+   "completed"
+  ],
+  [
+   "completed"
+  ]
+ ],
+ "include_usage": [
+  false,
+  false
+ ],
+ "outcome": "ok",
+ "response_ids": [
+  "resp_30029d0f0003",
+  "resp_30029d0f0005"
+ ],
+ "scenario": "ag-run",
+ "tokens": [
+  {
+   "input": 11,
+   "output": 7
+  },
+  {
+   "input": 11,
+   "output": 7
+  }
+ ],
+ "tool_calls": [
+  [
+   "get_weather"
+  ],
+  []
+ ],
+ "tool_runs": [
+  {
+   "name": "get_weather",
+   "outcome": "ok"
+  }
+ ]
+}

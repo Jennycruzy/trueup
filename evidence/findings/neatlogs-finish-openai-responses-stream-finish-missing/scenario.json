@@ -1,0 +1,31 @@
+{
+ "api": "responses",
+ "app": "resp_stream",
+ "does": "Streams a Responses call with the stream helper.",
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "completed"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "framework": "none",
+ "id": "oa-resp-stream",
+ "model": "resp-plain",
+ "provider": "openai",
+ "status": "built"
+}

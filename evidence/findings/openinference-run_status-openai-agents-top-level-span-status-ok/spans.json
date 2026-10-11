@@ -1,0 +1,159 @@
+[
+ {
+  "attributes": {
+   "llm.finish_reason": "stop",
+   "llm.model_name": "agent-resp-fail2",
+   "llm.output_messages.0.message.role": "assistant",
+   "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+   "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+   "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_e9bb139a0002",
+   "llm.system": "openai",
+   "llm.token_count.completion": 7,
+   "llm.token_count.completion_details.reasoning": 0,
+   "llm.token_count.prompt": 11,
+   "llm.token_count.prompt_details.cache_read": 0,
+   "llm.token_count.total": 18,
+   "openinference.span.kind": "LLM",
+   "output.mime_type": "application/json",
+   "output.value": "{\"id\":\"resp_e9bb139a0003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-fail2\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_e9bb139a0002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_e9bb139a0001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}"
+  },
+  "end_ns": 1791664658201096960,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "response",
+  "parent_id": "566c8ed9775d88d6",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "dda59d1ca300c91b",
+  "start_ns": 1791664658003128064,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "openinference.span.kind": "TOOL",
+   "output.value": "Sunny in Lagos",
+   "tool.description": "",
+   "tool.name": "get_weather",
+   "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}"
+  },
+  "end_ns": 1791664658205456896,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "get_weather",
+  "parent_id": "566c8ed9775d88d6",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "f4d92f2cd0bd87a3",
+  "start_ns": 1791664658203121920,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "openinference.span.kind": "CHAIN"
+  },
+  "end_ns": 1791664658205744128,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "turn",
+  "parent_id": "c6619c027a46e277",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "566c8ed9775d88d6",
+  "start_ns": 1791664658002182912,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "llm.system": "openai",
+   "openinference.span.kind": "LLM"
+  },
+  "end_ns": 1791664658215559936,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "response",
+  "parent_id": "1d566dbd98a78c67",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "35a35fef07373509",
+  "start_ns": 1791664658206851840,
+  "status": {
+   "code": "ERROR",
+   "description": "Error getting response: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+  }
+ },
+ {
+  "attributes": {
+   "openinference.span.kind": "CHAIN"
+  },
+  "end_ns": 1791664658215870976,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "turn",
+  "parent_id": "c6619c027a46e277",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "1d566dbd98a78c67",
+  "start_ns": 1791664658205905920,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "agent.name": "helper",
+   "graph.node.id": "helper",
+   "openinference.span.kind": "AGENT"
+  },
+  "end_ns": 1791664658216000000,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "helper",
+  "parent_id": "d10ad5a752617057",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "c6619c027a46e277",
+  "start_ns": 1791664658002018048,
+  "status": {
+   "code": "ERROR",
+   "description": "Error in agent run: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+  }
+ },
+ {
+  "attributes": {
+   "openinference.span.kind": "CHAIN"
+  },
+  "end_ns": 1791664658216196096,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "Agent workflow",
+  "parent_id": "e5ec8f78cae50b56",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "d10ad5a752617057",
+  "start_ns": 1791664658001283840,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "openinference.span.kind": "AGENT"
+  },
+  "end_ns": 1791664658216253100,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "Agent workflow",
+  "parent_id": null,
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "e5ec8f78cae50b56",
+  "start_ns": 1791664658001177828,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

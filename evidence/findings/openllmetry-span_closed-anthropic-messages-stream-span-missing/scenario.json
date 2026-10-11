@@ -1,0 +1,21 @@
+{
+ "api": "messages",
+ "app": "an_create_stream",
+ "does": "An error event arrives mid-stream.",
+ "expected": {
+  "calls": 1,
+  "exception": "APIStatusError",
+  "fake": [
+   "error_event"
+  ],
+  "outcome": "exception",
+  "tokens": [
+   null
+  ]
+ },
+ "framework": "none",
+ "id": "an-stream-error-event",
+ "model": "anth-error-event",
+ "provider": "anthropic",
+ "status": "built"
+}

@@ -1,0 +1,129 @@
+{
+ "finding": "openinference-run_status-openai-agents-top-level-span-status-ok",
+ "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+ "method": "entire graph",
+ "graph_reason": "entire graph search, neighbors and impact",
+ "query": "openai-agents tracing: top-level span status is OK in the span but really ERROR (app raised InternalServerError) (openinference, openai-agents: top-level span status is OK)",
+ "patched_functions": [
+  {
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "qualname": "OpenInferenceTracingProcessor.__init__"
+  },
+  {
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "qualname": "OpenInferenceTracingProcessor.on_trace_end"
+  },
+  {
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "qualname": "OpenInferenceTracingProcessor.on_span_end"
+  }
+ ],
+ "graph": {
+  "patched": [
+   {
+    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+    "qualname": "OpenInferenceTracingProcessor.__init__",
+    "rank": null,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+    "qualname": "OpenInferenceTracingProcessor.on_trace_end",
+    "rank": 6,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+    "qualname": "OpenInferenceTracingProcessor.on_span_end",
+    "rank": 2,
+    "class_rank": null,
+    "among_callers": true
+   }
+  ],
+  "found": 2,
+  "in_top": 1,
+  "top": 3,
+  "same_function_first": false
+ },
+ "fallback": {
+  "patched": [
+   {
+    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+    "qualname": "OpenInferenceTracingProcessor.__init__",
+    "rank": null,
+    "class_rank": 1,
+    "among_callers": false
+   },
+   {
+    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+    "qualname": "OpenInferenceTracingProcessor.on_trace_end",
+    "rank": 3,
+    "class_rank": null,
+    "among_callers": false
+   },
+   {
+    "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+    "qualname": "OpenInferenceTracingProcessor.on_span_end",
+    "rank": 4,
+    "class_rank": null,
+    "among_callers": true
+   }
+  ],
+  "found": 2,
+  "in_top": 1,
+  "top": 3,
+  "same_function_first": false
+ },
+ "graph_top": [
+  {
+   "rank": 1,
+   "qualname": "_get_span_status",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "score": 59.0535
+  },
+  {
+   "rank": 2,
+   "qualname": "OpenInferenceTracingProcessor.on_span_end",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "score": 53.6482
+  },
+  {
+   "rank": 3,
+   "qualname": "OpenAIAgentsInstrumentor._instrument",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/__init__.py",
+   "score": 47.9475
+  },
+  {
+   "rank": 4,
+   "qualname": "_RealtimeSessionState.on_error",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_realtime.py",
+   "score": 45.0751
+  },
+  {
+   "rank": 5,
+   "qualname": "OpenInferenceTracingProcessor.on_span_start",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "score": 0
+  },
+  {
+   "rank": 6,
+   "qualname": "OpenInferenceTracingProcessor.on_trace_end",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "score": 0
+  },
+  {
+   "rank": 7,
+   "qualname": "OpenInferenceTracingProcessor.on_trace_start",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "score": 0
+  },
+  {
+   "rank": 8,
+   "qualname": "OpenInferenceTracingProcessor.force_flush",
+   "file": "python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py",
+   "score": 0
+  }
+ ]
+}

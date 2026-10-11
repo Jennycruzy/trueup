@@ -1,0 +1,74 @@
+{
+ "check": "error_recorded",
+ "code_path": "openai-agents",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:38:21+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "openai-agents error not recorded",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:38:24+00:00",
+    "hits": 3,
+    "include_prs": true,
+    "query": "error not recorded",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "error_recorded",
+  "field": "any span",
+  "kind": "lead",
+  "library": "openllmetry",
+  "scenario": "ag-bad-tool",
+  "severity": "medium",
+  "trace": "no span records an error",
+  "truth": "ERROR or exception event (ModelBehaviorError)"
+ },
+ "example_run": "20261010T203755Z-openllmetry",
+ "field": "any span",
+ "fixed": false,
+ "found_in": [
+  "20261010T203755Z-openllmetry"
+ ],
+ "id": "openllmetry-error_recorded-openai-agents-any-span-missing",
+ "leads": [
+  {
+   "check": "error_recorded",
+   "field": "any span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-bad-tool",
+   "severity": "medium",
+   "trace": "no span records an error",
+   "truth": "ERROR or exception event (ModelBehaviorError)"
+  }
+ ],
+ "library": "openllmetry",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main df4921a409",
+  "recommended_setup": "Traceloop.init(); framework openai-agents (packages installed)",
+  "reference": "neatlogs, openinference record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203755Z-openllmetry/repros/openllmetry-ag-bad-tool.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "ag-bad-tool"
+ ],
+ "severity": "medium",
+ "title": "openllmetry, openai-agents: any span not recorded",
+ "trace": "missing",
+ "upstream": null
+}

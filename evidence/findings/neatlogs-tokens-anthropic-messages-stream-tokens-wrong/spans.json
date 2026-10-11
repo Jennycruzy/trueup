@@ -1,0 +1,30 @@
+[
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "neatlogs.wrapper",
+   "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+   "neatlogs.llm.input_messages.0.role": "user",
+   "neatlogs.llm.is_streaming": true,
+   "neatlogs.llm.max_tokens": 64,
+   "neatlogs.llm.metrics.duration_ms": 46.208,
+   "neatlogs.llm.model_name": "anth-plain",
+   "neatlogs.llm.provider": "anthropic",
+   "neatlogs.llm.system": "anthropic",
+   "neatlogs.metrics.duration_ms": 46.785932,
+   "neatlogs.span.kind": "llm",
+   "neatlogs.workflow_name": "child"
+  },
+  "end_ns": 1791664491434376485,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "anthropic.messages.create",
+  "parent_id": null,
+  "scope": "neatlogs.wrapper",
+  "span_id": "0cf398d3fdccaf33",
+  "start_ns": 1791664491387590553,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

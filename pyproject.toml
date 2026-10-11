@@ -13,6 +13,7 @@ dependencies = [
 
 [project.scripts]
 trueup = "trueup.cli:main"
+entire-trueup = "trueup.cli:main"  # `entire trueup ...` (Entire runs entire-<name> from PATH)
 
 [dependency-groups]
 dev = [

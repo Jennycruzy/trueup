@@ -1,0 +1,44 @@
+{
+ "api": "responses",
+ "app": "ag_run",
+ "does": "The second model call returns 500; the run raises.",
+ "expected": {
+  "calls": 2,
+  "exception": "InternalServerError",
+  "fake": [
+   "complete",
+   "http_error"
+  ],
+  "finish": [
+   [
+    "completed"
+   ],
+   []
+  ],
+  "outcome": "exception",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   },
+   null
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ],
+   []
+  ],
+  "tool_runs": [
+   {
+    "name": "get_weather",
+    "outcome": "ok"
+   }
+  ]
+ },
+ "framework": "openai-agents",
+ "id": "ag-llm-fails",
+ "model": "agent-resp-fail2",
+ "provider": "openai",
+ "status": "built"
+}

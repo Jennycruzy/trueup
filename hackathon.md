@@ -272,3 +272,60 @@ Did the graph point at the function that was actually patched? Ranks among the g
 | neatlogs `messages.stream()` failure OK | `__exit__`/`__aexit__` and `_finalize` of both stream manager wrappers | 0 of 4 | none | no | the top 2 were `_finalize_error` of the shared stream wrappers in `_wrap_utils.py`: the same kind of code (error on a stream), in a different place |
 
 So for the three fixes the graph pointed at the patched function in one case (OpenInference, rank 2), was close in one (OpenLLMetry, the openai half at rank 6) and missed in one (neatlogs). The fallback's "rank" is not a fair comparison. It searches seed symbols that I wrote into `targets.py` after reading the code, and for neatlogs it only returns the classes. The fix runs themselves used the fallback, and the model was given whole files around those definitions. Whether graph-only locate would have led to the same patches was not tested: that needs new model calls.
+
+## 2026-10-11: v2 from v1's traces, the evidence bundle and the judge path
+
+### Reading v1's traces back from neatlogs
+
+- Public API (`app.neatlogs.com/api/v1/public`): every call with `NEATLOGS_API_KEY` answers 401 "A valid public API credential is required", with `x-api-key` or `Bearer`, with or without `x-project-id`. The docs say "Ingest credentials do not authorize Public API reads"; reads need a public API key or a service-account token, and we have neither. The docs do not say whether it is paid-only.
+- MCP server (`ingest.neatlogs.com/mcp`): it accepts the project key as a bearer token. `trueup traces <session-id>` (`trueup.neatlogs_read`) uses only `search_traces` and `get_trace_context`. Three limits: field projection on both answers `not_enabled` (NL-1923, NL-1924 rollouts), `get_trace_context(created_after=...)` answers HTTP 409, and search finds a trace only by keyword. Search is the only way to list traces.
+- Search found 9 traces from v1's 12 model runs, against about 8 opened per fix run. Session `20261010T235208Z-plan-neatlogs` has none. So most of v1 had to be read from its local run records (`plan.json`, `fixes/*/runs/*.json`, `spend.json`). The traces still showed what the records could not: the model's reply text.
+
+What v1 wasted, and the v2 change for each:
+
+| waste in v1 | seen in | v2 change |
+|---|---|---|
+| Fixer replies that were not JSON, each retried with the full ~25k-token prompt: 14 of 40 fixer calls. The trace shows a reply that opens "Let me look more carefully at the exact import text...". | trace of `20261011T000336Z-fix-openllmetry`; calls vs tries in every fix run | lenient JSON (the first JSON object in the reply) and "the first character of your reply is {" |
+| Revisions re-sent every earlier draft: 140,607 input tokens over 6 calls. | `20261011T003256Z-fix-openinference`; trace `20261011T002549Z` (48,598 tokens over 2 calls) | send the first prompt, the last draft and one line per earlier failure |
+| A test failing after the patch was reported as the last 1,200 characters of pytest output, often warnings and captured logs. | `20261011T001405Z-fix-openllmetry` try 1 ("PydanticDeprecatedSince20..."), `20261011T004013Z-fix-openinference` try 1 ("Captured log call") | send the `E` lines, the failing test's location and the FAILED summary |
+| Planner first tries guessed what the fake does: 3 wrong exception classes, 1 wrong fake outcome. | trace `20261010T234842Z-plan-openllmetry`; `plan.json` of `20261010T235208Z-plan-neatlogs` | the prompt lists what really happened in every existing scenario (app, fake model, fake outcome, exception) |
+| Traces missing in neatlogs. | the 9 traces above | flush after each worker trace |
+
+v1 = the planner and fixer as they were at the start of this session (the planner prompt already had the corrections from its first runs). Both versions ran today from the same code with `--variant v1|v2`. They are tagged `variant:v1` / `variant:v2` in neatlogs (and `trueup.variant` on every worker trace). Planner: `--max 3` on openllmetry and neatlogs. Fixer: the OpenInference root-status finding, which took 3 tries in all four earlier runs. The answer key is the 23 checked findings for openllmetry (9) and neatlogs (14). Recall is the share of them hit by a lead from the run's accepted proposals, swept under that library.
+
+| job | version | sessions (= run ids) | first try accepted | tries per item | model calls (JSON retries) | tokens in / out | cost at list price | wall time | answer-key recall | traces found in neatlogs |
+|---|---|---|---|---|---|---|---|---|---|---|
+| planner | v1 | `20261011T013638Z-plan-openllmetry`, `20261011T013725Z-plan-neatlogs` | 2 of 6 | 1.83 | 7 (0) | 57,686 / 2,671 | $0.21 | 42 s | 2 of 23 | 0 of 2 |
+| planner | v2 | `20261011T013704Z-plan-openllmetry`, `20261011T013748Z-plan-neatlogs` | 3 of 6 | 1.67 | 6 (0) | 59,681 / 2,281 | $0.21 | 40 s | 3 of 23 | 0 of 2 |
+| fixer | v1 | `20261011T013927Z-fix-openinference` | 0 of 1 | 2 | 4 (2) | 108,886 / 13,389 | $0.53 | 253 s | fixed | 1 of 6 |
+| fixer | v2 | `20261011T014344Z-fix-openinference` | 0 of 1 | 2 | 2 (0) | 49,438 / 4,900 | $0.22 | 334 s | fixed | 1 of 6 |
+
+What this shows:
+- Fixer: v2 used half the calls, 55% fewer input tokens and 58% less money for the same result (fixed on try 2). The saving is the two JSON retries plus the shorter revision prompt. v2 took longer: its try 1 got further (it failed at the full scenario library, not at the finding's scenarios), so more verifier time. One run each, so try counts are not a measured improvement.
+- Planner: v2 accepted one more proposal on the first try (3 of 6 against 2 of 6) at the same cost. That is one proposal in a sample of six, so it is not evidence that v2 is better. v2 also accepted a bad scenario: `p-an-async-stream-tools` pairs a non-streaming app with a streaming fake model, and the app then crashes with its own `AttributeError`. The untraced run agreed with the stated truth, so code accepted it. v1 accepted no such scenario.
+- The per-worker flush did not help. neatlogs search finds none of the four planner sessions and one trace per fix session, for v1 and v2 alike. Whether the traces were never stored or only not indexed for search could not be told apart with the tools available.
+- Unchecked leads from these proposals, not findings: in neatlogs a Responses stream with status `failed` shows the run OK with no error recorded (v1 and v2), and an Anthropic 529 on a stream exports no span (v1). Neither has been through `trueup check`.
+- The earlier v1 planner runs (prompt before its corrections) accepted 1 of 6 proposals on the first try.
+
+### Evidence bundle, verify and report
+
+- `trueup fix <id> --reprove` (no model call) applies the committed `patch.diff` to the clean clone, sweeps all 57 scenarios again and writes `fixes/<id>/proof.json` with every lead before and after. It reproduced all three recorded results: OpenLLMetry 32 (22 high) → 27 (17 high), OpenInference 19 (7) → 14 (2), neatlogs 35 (11) → 31 (9), 0 new mismatches.
+- `trueup bundle` writes `evidence/` (159 files, 376 KB). Each of the 29 findings has finding.json (rules, dedupe log, upstream link), scenario.json, truth.json, spans.json and repro.py; fixed findings also have proof.json, patch.diff and graph.json. Spans keep only attributes the comparer reads, and the trimmed spans are kept only if the comparer gives the same leads on them. Also in the bundle: runs.json (run id, kind, versions, neatlogs session), withdrawn.json (2 by `latest_and_main`, 27 of Trueup's own finish false alarms; 6 disputed groups), v1v2.json and manifest.json.
+- `trueup verify` needs only `evidence/`: it checks every sha256 (and that no file is missing or extra), re-runs the comparer on every finding's truth and spans and on the after-patch spans, recomputes every headline number and the v1/v2 table, and compares them with headline.json. Tests change one byte, add or remove a file, edit a number and fix up the manifest to match, or edit spans so the bug is gone; each one fails.
+- `trueup report` writes `docs/index.html` only if the bundle verifies: plain HTML and CSS, no scripts, light and dark, phone width, the same bytes for the same bundle. Order: headline tables, the OpenInference crashed-run-shown-OK finding from start to finish, all findings, withdrawn leads, upstream drafts (not yet posted).
+- `action.yml`: a composite GitHub Action that runs `trueup audit <script> --library <lib>` and uploads `.trueup/runs/`. `entire-trueup` console script: `entire trueup verify` worked through Entire CLI 0.11.4.
+
+### Judge path, timed
+
+From a fresh clone of the working tree (copied into a temp git repo inside `.trueup/`, since nothing here is committed), with no keys set and an empty uv cache:
+
+| step | exit | time |
+|---|---|---|
+| `uv sync` | 0 | 2 s (246 MB downloaded) |
+| `uv run pytest -q` | 0 | 28 s |
+| `uv run trueup verify` | 0 | under 1 s |
+| `uv run trueup sweep openllmetry --case ag-run` | 1 (a lead) | 16 s, venv build included |
+
+The sweep shows the double count: 2 provider calls, 4 LLM spans. Exit 1 means a lead was found. The download time depends on the network.
+
+Spend for this session: key at $5.9869 before, $7.2802 after ($1.29). The $15 guard stayed on; only `claude-sonnet-4.6` was called.

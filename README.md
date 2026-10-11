@@ -1,5 +1,7 @@
 Trueup finds where your AI agent's traces disagree with what really happened, fixes the tracing code, and proves the fix.
 
+The [neatHack business plan](business/cfo-plan.md) documents the free-to-paid product strategy, target customer, risks, and validation milestones. It does not claim traction or treat illustrative financial assumptions as facts.
+
 ## What it does
 
 Teams watch their AI agents through tracing libraries such as neatlogs, OpenInference and OpenLLMetry. These libraries wrap the AI provider's SDK and record each call. When a wrapper gets a case wrong, the dashboard can show a crashed run as OK, miss a refusal, or show twice the real cost.
@@ -8,9 +10,15 @@ Trueup runs the agent against a fake provider, so it knows what really happened.
 
 The work is split into small workers: planner, runner, comparer, checker, deduper, fixer, verifier and reporter. A language model proposes; plain code decides.
 
-## Status: early build
+## Status: working vertical slice
 
-`trueup doctor`, `trueup sweep <neatlogs|openinference|openllmetry>`, `trueup audit <script> --library <lib>`, `trueup check <run_id|latest> --library <lib>`, `trueup plan <lib> [--max N]`, `trueup fix <finding-id>` and `trueup upstream <finding-id>` work.
+`trueup doctor`, `trueup demo`, `trueup bundle`, `trueup verify`, `trueup report`, `trueup traces <session-id>`, `trueup sweep <neatlogs|openinference|openllmetry>`, `trueup audit <script> --library <lib>`, `trueup check <run_id|latest> --library <lib>`, `trueup plan <lib> [--max N]`, `trueup fix <finding-id>` and `trueup upstream <finding-id>` work.
+
+The judge-facing proof is available in the [static evidence report](docs/index.html). `trueup demo` replays one complete verified finding locally; it needs no API keys, network access or model call. `trueup verify` recomputes the report's numbers and checks every evidence hash.
+
+`bundle` writes `evidence/` from the local runs, fixes and upstream drafts. `verify` needs only `evidence/`: no keys, no network; it fails if any byte changed. `report` builds `docs/index.html` from a bundle that verifies. `traces <session-id>` reads a run's own traces back from neatlogs through its MCP server. `fix <id> --reprove` re-applies a committed patch and sweeps every scenario again (no model call). `plan` and `fix` take `--variant v1|v2`; the comparison is in `hackathon.md`.
+
+In CI: `uses: Jennycruzy/trueup@main` with `script` and `library` inputs runs `trueup audit` (see `action.yml`). As an Entire plugin: `entire-trueup` is installed with the package, so `entire trueup verify` works when it is on PATH.
 
 `sweep` runs the scenarios (plain SDK, LangChain/LangGraph and the OpenAI Agents SDK; pick with `--framework`) against a fake provider, compares truth with the trace, prints a table of leads and writes truth, trace and `leads.json` to `.trueup/runs/<run_id>/`. A lead is a disagreement between truth and trace; it is not a confirmed bug.
 
@@ -28,7 +36,9 @@ Commands that call the model trace Trueup itself to neatlogs when `NEATLOGS_API_
 
 `doctor` also makes one GET each to neatlogs and the model proxy (no model call).
 
-The other commands (`verify`, `report`) print "not built yet" and exit 2.
+The [business plan](docs/business-plan.md) was developed in cfo.ai. It keeps the launch-stage facts separate from
+illustrative pricing, adoption, hiring, and runway assumptions; the cfo.ai share/export link will be attached to
+the submission evidence.
 
 Exit codes: 0 no leads, 1 leads found, 2 could not run.
 
@@ -39,7 +49,11 @@ Needs Python 3.12 and [uv](https://docs.astral.sh/uv/).
 ```sh
 uv sync
 uv run trueup doctor
+uv run trueup demo             # offline before/after proof for the featured fix
+uv run trueup verify           # recompute and validate the committed evidence
+uv run trueup report           # rebuild docs/index.html
 uv run pytest -q         # offline unit tests
+uv run trueup sweep openllmetry --case ag-run   # the double-span case
 uv run pytest -q -m e2e  # builds per-library venvs, runs subprocesses
 uv run trueup sweep neatlogs
 uv run trueup sweep openllmetry --framework openai-agents
@@ -50,6 +64,10 @@ uv run trueup sweep openllmetry --proposed
 uv run trueup fix openllmetry-call_count-openai-agents-llm-spans-wrong
 uv run trueup upstream openllmetry-call_count-openai-agents-llm-spans-wrong
 ```
+
+`audit --cases mine` loads `.trueup/cases/*.json`. Each reviewed data file has exactly an `id`, a provider
+`route` (`/v1/chat/completions`, `/v1/responses`, or `/v1/messages`), and a `scenario` supported by that route.
+It combines existing fake wire behaviors with the user's agent; custom executable code is never loaded.
 
 ## License
 

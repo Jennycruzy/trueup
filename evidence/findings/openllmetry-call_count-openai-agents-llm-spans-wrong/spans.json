@@ -1,0 +1,189 @@
+[
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.is_streaming": false,
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"get_weather\", \"id\": \"fc_30029d0f0001\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.request.model": "agent-resp",
+   "gen_ai.response.finish_reasons": [
+    "tool_call"
+   ],
+   "gen_ai.response.id": "resp_30029d0f0003",
+   "gen_ai.response.model": "agent-resp",
+   "gen_ai.usage.cache_read.input_tokens": 0,
+   "gen_ai.usage.input_tokens": 11,
+   "gen_ai.usage.output_tokens": 7,
+   "gen_ai.usage.reasoning_tokens": 0,
+   "gen_ai.usage.total_tokens": 18
+  },
+  "end_ns": 1791664939165480223,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "2a865abb74c56eb6",
+  "scope": "opentelemetry.instrumentation.openai.v1",
+  "span_id": "d76a30e9a1c32e89",
+  "start_ns": 1791664939030988800,
+  "status": {
+   "code": "UNSET",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"get_weather\", \"id\": \"call_30029d0f0002\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.response.finish_reasons": [
+    "tool_call"
+   ],
+   "gen_ai.response.id": "resp_30029d0f0003",
+   "gen_ai.response.model": "agent-resp",
+   "gen_ai.usage.cache_read.input_tokens": 0,
+   "gen_ai.usage.input_tokens": 11,
+   "gen_ai.usage.output_tokens": 7,
+   "gen_ai.usage.reasoning_tokens": 0,
+   "gen_ai.usage.total_tokens": 18
+  },
+  "end_ns": 1791664939165923944,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "927d93fae5276074",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "2a865abb74c56eb6",
+  "start_ns": 1791664939030622076,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "execute_tool",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.tool.call.arguments": "{\"city\":\"Lagos\"}",
+   "gen_ai.tool.call.result": "Sunny in Lagos",
+   "gen_ai.tool.name": "get_weather",
+   "gen_ai.tool.type": "function",
+   "traceloop.span.kind": "tool"
+  },
+  "end_ns": 1791664939168850299,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "get_weather.tool",
+  "parent_id": "927d93fae5276074",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "a2fe2a6f8ccb5641",
+  "start_ns": 1791664939167286401,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.is_streaming": false,
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"text\", \"content\": \"It is sunny in Lagos.\"}], \"finish_reason\": \"stop\"}]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.request.model": "agent-resp",
+   "gen_ai.response.finish_reasons": [
+    "stop"
+   ],
+   "gen_ai.response.id": "resp_30029d0f0005",
+   "gen_ai.response.model": "agent-resp",
+   "gen_ai.usage.cache_read.input_tokens": 0,
+   "gen_ai.usage.input_tokens": 11,
+   "gen_ai.usage.output_tokens": 7,
+   "gen_ai.usage.reasoning_tokens": 0,
+   "gen_ai.usage.total_tokens": 18
+  },
+  "end_ns": 1791664939180993325,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "c8b4957cf291a602",
+  "scope": "opentelemetry.instrumentation.openai.v1",
+  "span_id": "224dd6f06f4c24bf",
+  "start_ns": 1791664939170010624,
+  "status": {
+   "code": "UNSET",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"text\", \"content\": \"It is sunny in Lagos.\"}], \"finish_reason\": \"stop\"}]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.response.finish_reasons": [
+    "stop"
+   ],
+   "gen_ai.response.id": "resp_30029d0f0005",
+   "gen_ai.response.model": "agent-resp",
+   "gen_ai.usage.cache_read.input_tokens": 0,
+   "gen_ai.usage.input_tokens": 11,
+   "gen_ai.usage.output_tokens": 7,
+   "gen_ai.usage.reasoning_tokens": 0,
+   "gen_ai.usage.total_tokens": 18
+  },
+  "end_ns": 1791664939181236557,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "927d93fae5276074",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "c8b4957cf291a602",
+  "start_ns": 1791664939169812585,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "invoke_agent",
+   "gen_ai.provider.name": "openai",
+   "traceloop.span.kind": "agent"
+  },
+  "end_ns": 1791664939183253295,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "helper.agent",
+  "parent_id": "54c0de81df75451b",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "927d93fae5276074",
+  "start_ns": 1791664939029965249,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.provider.name": "openai",
+   "traceloop.span.kind": "workflow",
+   "traceloop.workflow.name": "Agent Workflow"
+  },
+  "end_ns": 1791664939183317095,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "Agent Workflow",
+  "parent_id": null,
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "54c0de81df75451b",
+  "start_ns": 1791664939029118913,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

@@ -1,0 +1,109 @@
+{
+ "app": {
+  "outcome": "ok",
+  "result": {
+   "blocks": [
+    "thinking",
+    "text",
+    "tool_use"
+   ],
+   "text": "hello",
+   "tool_inputs": [
+    {
+     "city": "Lagos"
+    }
+   ],
+   "usage": [
+    5,
+    3
+   ]
+  },
+  "seconds": 0.079
+ },
+ "calls": 1,
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "tool_use"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 5,
+    "output": 3
+   }
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ]
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete"
+ ],
+ "fake_log": [
+  {
+   "api": "anthropic.messages",
+   "finish": [
+    "tool_use"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/messages",
+   "response_id": "msg_ad04e2040001",
+   "scenario": "anth-tools",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [
+    "hello"
+   ],
+   "tool_calls": [
+    {
+     "arguments": "{\"city\":\"Lagos\"}",
+     "id": "toolu_ad04e2040002",
+     "name": "get_weather"
+    }
+   ],
+   "usage": {
+    "input_tokens": 5,
+    "output_tokens": 3,
+    "total_tokens": 8
+   },
+   "usage_sent": true
+  }
+ ],
+ "finish": [
+  [
+   "tool_use"
+  ]
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "ok",
+ "response_ids": [
+  "msg_ad04e2040001"
+ ],
+ "scenario": "an-stream-tools",
+ "tokens": [
+  {
+   "input": 5,
+   "output": 3
+  }
+ ],
+ "tool_calls": [
+  [
+   "get_weather"
+  ]
+ ],
+ "tool_runs": []
+}

@@ -1,0 +1,754 @@
+{
+ "after": {
+  "leads": {
+   "ag-bad-tool": [],
+   "ag-llm-fails": [
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (http_error)"
+    }
+   ],
+   "ag-max-turns": [],
+   "ag-run": [],
+   "ag-streamed": [],
+   "ag-streamed-cut": [
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (cut)"
+    }
+   ],
+   "ag-streamed-error": [
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (error_event)"
+    }
+   ],
+   "ag-tool-raises": [],
+   "an-529": [],
+   "an-async": [],
+   "an-create-stream": [],
+   "an-plain": [],
+   "an-stream-cut": [],
+   "an-stream-error-event": [],
+   "an-stream-helper": [],
+   "an-stream-thinking": [],
+   "an-stream-tools": [],
+   "an-thinking": [],
+   "lc-500": [],
+   "lc-invoke": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "lc-stream": [],
+   "lc-stream-cut": [],
+   "lc-stream-error-event": [],
+   "lg-agent": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-step-limit": [],
+   "lg-stream": [],
+   "lg-tool-raises": [],
+   "oa-chat-500": [],
+   "oa-chat-async-stream": [],
+   "oa-chat-n2": [],
+   "oa-chat-plain": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "oa-chat-stream-break": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "trace": "no span",
+     "truth": "ended and exported (complete)"
+    }
+   ],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-tools": [],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "failed"
+     ]
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "incomplete"
+     ]
+    }
+   ],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "trace": "no span",
+     "truth": "ended and exported (error_event)"
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-cut": [],
+   "p-an-stream-helper-error-event": [],
+   "p-lc-tools": [],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "after_observations": {
+  "ag-llm-fails": {
+   "trace": {
+    "spans": [
+     {
+      "attributes": {
+       "llm.finish_reason": "stop",
+       "llm.model_name": "agent-resp-fail2",
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_27aad7d80002",
+       "llm.system": "openai",
+       "llm.token_count.completion": 7,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.total": 18,
+       "openinference.span.kind": "LLM",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_27aad7d80003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-fail2\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_27aad7d80002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_27aad7d80001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}"
+      },
+      "end_ns": 1791683553618415104,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "response",
+      "parent_id": "fa0607be1c7919ee",
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "23cee78bfa0e920d",
+      "start_ns": 1791683553421590016,
+      "status": {
+       "code": "OK",
+       "description": null
+      }
+     },
+     {
+      "attributes": {
+       "openinference.span.kind": "TOOL",
+       "output.value": "Sunny in Lagos",
+       "tool.description": "",
+       "tool.name": "get_weather",
+       "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}"
+      },
+      "end_ns": 1791683553623858944,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "get_weather",
+      "parent_id": "fa0607be1c7919ee",
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "314ab32b4e408e6c",
+      "start_ns": 1791683553620361984,
+      "status": {
+       "code": "OK",
+       "description": null
+      }
+     },
+     {
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "end_ns": 1791683553624134144,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "turn",
+      "parent_id": "1b8f211d26df63bb",
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "fa0607be1c7919ee",
+      "start_ns": 1791683553420972032,
+      "status": {
+       "code": "OK",
+       "description": null
+      }
+     },
+     {
+      "attributes": {
+       "llm.system": "openai",
+       "openinference.span.kind": "LLM"
+      },
+      "end_ns": 1791683553635191040,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "response",
+      "parent_id": "1c5c6224e5be8ed6",
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "3360394e70df080f",
+      "start_ns": 1791683553624857856,
+      "status": {
+       "code": "ERROR",
+       "description": "Error getting response: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+      }
+     },
+     {
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "end_ns": 1791683553635411968,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "turn",
+      "parent_id": "1b8f211d26df63bb",
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "1c5c6224e5be8ed6",
+      "start_ns": 1791683553624273920,
+      "status": {
+       "code": "OK",
+       "description": null
+      }
+     },
+     {
+      "attributes": {
+       "agent.name": "helper",
+       "graph.node.id": "helper",
+       "openinference.span.kind": "AGENT"
+      },
+      "end_ns": 1791683553635528960,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "helper",
+      "parent_id": "9481c1f1b2032411",
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "1b8f211d26df63bb",
+      "start_ns": 1791683553420824064,
+      "status": {
+       "code": "ERROR",
+       "description": "Error in agent run: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+      }
+     },
+     {
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "end_ns": 1791683553635629056,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "Agent workflow",
+      "parent_id": "40ac08d529d206e8",
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "9481c1f1b2032411",
+      "start_ns": 1791683553420217088,
+      "status": {
+       "code": "OK",
+       "description": null
+      }
+     },
+     {
+      "attributes": {
+       "openinference.span.kind": "AGENT"
+      },
+      "end_ns": 1791683553635679743,
+      "events": [],
+      "kind": "INTERNAL",
+      "name": "Agent workflow",
+      "parent_id": null,
+      "scope": "openinference.instrumentation.openai_agents",
+      "span_id": "40ac08d529d206e8",
+      "start_ns": 1791683553420116630,
+      "status": {
+       "code": "ERROR",
+       "description": "Error in agent run: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+      }
+     }
+    ]
+   },
+   "truth": {
+    "app": {
+     "exception_module": "openai",
+     "exception_type": "InternalServerError",
+     "message": "Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}",
+     "outcome": "exception",
+     "seconds": 0.221
+    },
+    "calls": 2,
+    "exception": "InternalServerError",
+    "expected": {
+     "calls": 2,
+     "exception": "InternalServerError",
+     "fake": [
+      "complete",
+      "http_error"
+     ],
+     "finish": [
+      [
+       "completed"
+      ],
+      []
+     ],
+     "outcome": "exception",
+     "tokens": [
+      {
+       "input": 11,
+       "output": 7
+      },
+      null
+     ],
+     "tool_calls": [
+      [
+       "get_weather"
+      ],
+      []
+     ],
+     "tool_runs": [
+      {
+       "name": "get_weather",
+       "outcome": "ok"
+      }
+     ]
+    },
+    "expected_mismatch": [],
+    "fake": [
+     "complete",
+     "http_error"
+    ],
+    "fake_log": [
+     {
+      "api": "openai.responses",
+      "finish": [
+       "completed"
+      ],
+      "include_usage": false,
+      "n": null,
+      "outcome": "complete",
+      "path": "/v1/responses",
+      "response_id": "resp_27aad7d80003",
+      "scenario": "agent-resp-fail2",
+      "seq": 1,
+      "status_code": 200,
+      "stream": false,
+      "text": [],
+      "tool_calls": [
+       {
+        "arguments": "{\"city\":\"Lagos\"}",
+        "id": "call_27aad7d80002",
+        "name": "get_weather"
+       }
+      ],
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "reasoning_tokens": 0,
+       "total_tokens": 18
+      },
+      "usage_sent": true
+     },
+     {
+      "api": "openai.responses",
+      "finish": [],
+      "include_usage": false,
+      "n": null,
+      "outcome": "http_error",
+      "path": "/v1/responses",
+      "response_id": null,
+      "scenario": "agent-resp-fail2",
+      "seq": 2,
+      "status_code": 500,
+      "stream": false,
+      "text": [],
+      "tool_calls": [],
+      "usage": null,
+      "usage_sent": false
+     }
+    ],
+    "finish": [
+     [
+      "completed"
+     ],
+     []
+    ],
+    "include_usage": [
+     false,
+     false
+    ],
+    "outcome": "exception",
+    "response_ids": [
+     "resp_27aad7d80003",
+     null
+    ],
+    "scenario": "ag-llm-fails",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     },
+     null
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ],
+     []
+    ],
+    "tool_runs": [
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     }
+    ]
+   }
+  }
+ },
+ "before": {
+  "leads": {
+   "ag-bad-tool": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised ModelBehaviorError)"
+    }
+   ],
+   "ag-llm-fails": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised InternalServerError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (http_error)"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised MaxTurnsExceeded)"
+    }
+   ],
+   "ag-run": [],
+   "ag-streamed": [],
+   "ag-streamed-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised APIConnectionError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (cut)"
+    }
+   ],
+   "ag-streamed-error": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised ModelBehaviorError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (error_event)"
+    }
+   ],
+   "ag-tool-raises": [],
+   "an-529": [],
+   "an-async": [],
+   "an-create-stream": [],
+   "an-plain": [],
+   "an-stream-cut": [],
+   "an-stream-error-event": [],
+   "an-stream-helper": [],
+   "an-stream-thinking": [],
+   "an-stream-tools": [],
+   "an-thinking": [],
+   "lc-500": [],
+   "lc-invoke": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "lc-stream": [],
+   "lc-stream-cut": [],
+   "lc-stream-error-event": [],
+   "lg-agent": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-step-limit": [],
+   "lg-stream": [],
+   "lg-tool-raises": [],
+   "oa-chat-500": [],
+   "oa-chat-async-stream": [],
+   "oa-chat-n2": [],
+   "oa-chat-plain": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "oa-chat-stream-break": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "trace": "no span",
+     "truth": "ended and exported (complete)"
+    }
+   ],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-tools": [],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "failed"
+     ]
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "incomplete"
+     ]
+    }
+   ],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "trace": "no span",
+     "truth": "ended and exported (error_event)"
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-cut": [],
+   "p-an-stream-helper-error-event": [],
+   "p-lc-tools": [],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+ "finding": "openinference-run_status-openai-agents-top-level-span-status-ok",
+ "new_mismatches": [],
+ "rows": [
+  {
+   "after": "matches truth",
+   "before": "OK",
+   "field": "top-level span status",
+   "scenario": "ag-bad-tool",
+   "truth": "ERROR (app raised ModelBehaviorError)"
+  },
+  {
+   "after": "matches truth",
+   "before": "OK",
+   "field": "top-level span status",
+   "scenario": "ag-llm-fails",
+   "truth": "ERROR (app raised InternalServerError)"
+  },
+  {
+   "after": "matches truth",
+   "before": "OK",
+   "field": "top-level span status",
+   "scenario": "ag-max-turns",
+   "truth": "ERROR (app raised MaxTurnsExceeded)"
+  },
+  {
+   "after": "matches truth",
+   "before": "OK",
+   "field": "top-level span status",
+   "scenario": "ag-streamed-cut",
+   "truth": "ERROR (app raised APIConnectionError)"
+  },
+  {
+   "after": "matches truth",
+   "before": "OK",
+   "field": "top-level span status",
+   "scenario": "ag-streamed-error",
+   "truth": "ERROR (app raised ModelBehaviorError)"
+  }
+ ]
+}

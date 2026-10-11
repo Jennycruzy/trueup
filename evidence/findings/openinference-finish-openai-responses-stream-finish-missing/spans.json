@@ -1,0 +1,36 @@
+[
+ {
+  "attributes": {
+   "llm.model_name": "resp-plain",
+   "llm.output_messages.0.message.contents.0.message_content.text": "hello",
+   "llm.output_messages.0.message.contents.0.message_content.type": "text",
+   "llm.output_messages.0.message.role": "assistant",
+   "llm.system": "openai",
+   "llm.token_count.completion": 7,
+   "llm.token_count.completion_details.reasoning": 0,
+   "llm.token_count.prompt": 11,
+   "llm.token_count.prompt_details.cache_read": 0,
+   "llm.token_count.total": 18,
+   "openinference.span.kind": "LLM",
+   "output.mime_type": "application/json",
+   "output.value": "{\"id\":\"resp_d11a27e10002\",\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"model\":\"resp-plain\",\"object\":\"response\",\"output\":[{\"id\":\"msg_d11a27e10001\",\"content\":[{\"annotations\":[],\"text\":\"hello\",\"type\":\"output_text\"}],\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"tool_choice\":\"auto\",\"tools\":[],\"status\":\"completed\",\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18}}"
+  },
+  "end_ns": 1791664599865947772,
+  "events": [
+   {
+    "attributes": {},
+    "name": "First Token Stream Event"
+   }
+  ],
+  "kind": "INTERNAL",
+  "name": "Response",
+  "parent_id": null,
+  "scope": "openinference.instrumentation.openai",
+  "span_id": "bab46ddb4e1f93f9",
+  "start_ns": 1791664599420004721,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

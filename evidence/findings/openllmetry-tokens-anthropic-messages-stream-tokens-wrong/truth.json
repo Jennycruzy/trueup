@@ -1,0 +1,93 @@
+{
+ "app": {
+  "outcome": "ok",
+  "result": {
+   "blocks": [
+    "text"
+   ],
+   "text": "hello",
+   "tool_inputs": [],
+   "usage": [
+    5,
+    3
+   ]
+  },
+  "seconds": 0.057
+ },
+ "calls": 1,
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "end_turn"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 5,
+    "output": 3
+   }
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete"
+ ],
+ "fake_log": [
+  {
+   "api": "anthropic.messages",
+   "finish": [
+    "end_turn"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/messages",
+   "response_id": "msg_190e19b60001",
+   "scenario": "anth-plain",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [
+    "hello"
+   ],
+   "tool_calls": [],
+   "usage": {
+    "input_tokens": 5,
+    "output_tokens": 3,
+    "total_tokens": 8
+   },
+   "usage_sent": true
+  }
+ ],
+ "finish": [
+  [
+   "end_turn"
+  ]
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "ok",
+ "response_ids": [
+  "msg_190e19b60001"
+ ],
+ "scenario": "an-stream-helper",
+ "tokens": [
+  {
+   "input": 5,
+   "output": 3
+  }
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

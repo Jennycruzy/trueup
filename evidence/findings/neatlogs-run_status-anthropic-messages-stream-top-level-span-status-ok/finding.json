@@ -1,0 +1,90 @@
+{
+ "check": "run_status",
+ "code_path": "anthropic messages stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:53:57+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "anthropic span status error stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:54:00+00:00",
+    "hits": 1,
+    "include_prs": true,
+    "query": "span status error stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "run_status",
+  "field": "top-level span status",
+  "kind": "lead",
+  "library": "neatlogs",
+  "scenario": "p-an-stream-helper-error-event",
+  "severity": "high",
+  "trace": "OK",
+  "truth": "ERROR (app raised APIStatusError)"
+ },
+ "example_run": "20261010T235028Z-neatlogs-proposed",
+ "field": "top-level span status",
+ "fixed": true,
+ "found_in": [
+  "20261010T235028Z-neatlogs-proposed",
+  "20261010T235240Z-neatlogs-proposed"
+ ],
+ "id": "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+ "leads": [
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "p-an-stream-helper-error-event",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised APIStatusError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "p-an-stream-helper-cut",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised RemoteProtocolError)"
+  }
+ ],
+ "library": "neatlogs",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main 202f8776ea",
+  "recommended_setup": "neatlogs.init(instrumentations=<README keys>); framework none",
+  "reference": "openinference, openllmetry record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T235028Z-neatlogs-proposed/repros/neatlogs-p-an-stream-helper-error-event.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "p-an-stream-helper-cut",
+  "p-an-stream-helper-error-event"
+ ],
+ "severity": "high",
+ "title": "neatlogs, anthropic messages stream: top-level span status is OK",
+ "trace": "OK",
+ "upstream": {
+  "issue": "upstream/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/issue.md",
+  "pr": "upstream/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/pr.md",
+  "status": "not yet posted"
+ }
+}

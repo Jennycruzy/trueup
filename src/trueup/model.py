@@ -60,11 +60,25 @@ def guard(spend: float, limit: float = SPEND_LIMIT) -> None:
                                 "No model call made.")
 
 
-def parse_json(text: str) -> Any:
-    """JSON from a model reply; a ```json fence around it is allowed."""
+def parse_json(text: str, lenient: bool = False) -> Any:
+    """JSON from a model reply; a ```json fence around it is allowed.
+
+    lenient (v2): if that fails, the first JSON object in the text, so prose before or after it does not
+    cost a retry. v1's fixer traces in neatlogs (session 20261011T000336Z-fix-openllmetry) show a reply
+    starting "Let me look more carefully at the exact import text..." that was retried in full."""
     t = text.strip()
     m = re.fullmatch(r"```(?:json)?\s*(.*?)\s*```", t, re.S)
-    return json.loads(m.group(1) if m else t)
+    try:
+        return json.loads(m.group(1) if m else t)
+    except json.JSONDecodeError:
+        if not lenient:
+            raise
+    for m2 in re.finditer(r"\{", t):
+        try:
+            return json.JSONDecoder().raw_decode(t, m2.start())[0]
+        except json.JSONDecodeError:
+            continue
+    return json.loads(t)  # raises with the original reason
 
 
 @dataclass
@@ -72,6 +86,8 @@ class Usage:
     calls: int = 0
     input_tokens: int = 0
     output_tokens: int = 0
+    json_retries: int = 0  # calls spent because a reply was not valid JSON
+    truncated: int = 0  # replies cut at max_tokens
     by_model: dict[str, dict[str, int]] = field(default_factory=dict)
 
     def add(self, model: str, inp: int, out: int) -> None:
@@ -85,7 +101,7 @@ class Usage:
 
     def to_dict(self) -> dict[str, Any]:
         return {"calls": self.calls, "input_tokens": self.input_tokens, "output_tokens": self.output_tokens,
-                "by_model": self.by_model}
+                "json_retries": self.json_retries, "truncated": self.truncated, "by_model": self.by_model}
 
 
 class ModelClient:
@@ -130,16 +146,21 @@ class ModelClient:
                 raise ModelError(f"model call failed: HTTP {e.status_code}") from None
             u = r.usage
             self.usage.add(model, getattr(u, "prompt_tokens", 0) or 0, getattr(u, "completion_tokens", 0) or 0)
+            if getattr(r.choices[0], "finish_reason", None) == "length":
+                self.usage.truncated += 1
             return r.choices[0].message.content or ""
         raise ModelError(f"model call failed after {self.retries + 1} tries: {type(last).__name__}")
 
-    def chat_json(self, model: str, messages: list[dict[str, Any]], max_tokens: int = 4000) -> Any:
+    def chat_json(self, model: str, messages: list[dict[str, Any]], max_tokens: int = 4000,
+                  lenient: bool = False) -> Any:
         """Like chat, but the reply must be JSON. Invalid JSON is retried, then raises ModelError."""
         msgs = list(messages)
         for attempt in range(self.json_retries + 1):
+            if attempt:
+                self.usage.json_retries += 1
             text = self.chat(model, msgs, max_tokens)
             try:
-                return parse_json(text)
+                return parse_json(text, lenient)
             except json.JSONDecodeError as e:
                 msgs = [*messages, {"role": "assistant", "content": text},
                         {"role": "user", "content": f"That was not valid JSON ({e.msg}). Reply with JSON only."}]

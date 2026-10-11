@@ -1,0 +1,178 @@
+[
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.is_streaming": false,
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"get_weather\", \"id\": \"fc_cad44b490001\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.request.model": "agent-resp-fail2",
+   "gen_ai.response.finish_reasons": [
+    "tool_call"
+   ],
+   "gen_ai.response.id": "resp_cad44b490003",
+   "gen_ai.response.model": "agent-resp-fail2",
+   "gen_ai.usage.cache_read.input_tokens": 0,
+   "gen_ai.usage.input_tokens": 11,
+   "gen_ai.usage.output_tokens": 7,
+   "gen_ai.usage.reasoning_tokens": 0,
+   "gen_ai.usage.total_tokens": 18
+  },
+  "end_ns": 1791664951314239736,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "f00ee4a49f108179",
+  "scope": "opentelemetry.instrumentation.openai.v1",
+  "span_id": "90fc8059cd8ceed5",
+  "start_ns": 1791664951210490368,
+  "status": {
+   "code": "UNSET",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"tool_call\", \"name\": \"get_weather\", \"id\": \"call_cad44b490002\", \"arguments\": {\"city\": \"Lagos\"}}], \"finish_reason\": \"tool_call\"}]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.response.finish_reasons": [
+    "tool_call"
+   ],
+   "gen_ai.response.id": "resp_cad44b490003",
+   "gen_ai.response.model": "agent-resp-fail2",
+   "gen_ai.usage.cache_read.input_tokens": 0,
+   "gen_ai.usage.input_tokens": 11,
+   "gen_ai.usage.output_tokens": 7,
+   "gen_ai.usage.reasoning_tokens": 0,
+   "gen_ai.usage.total_tokens": 18
+  },
+  "end_ns": 1791664951314496102,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "fd8cf27bf9a15476",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "f00ee4a49f108179",
+  "start_ns": 1791664951210028133,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "execute_tool",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.tool.call.arguments": "{\"city\":\"Lagos\"}",
+   "gen_ai.tool.call.result": "Sunny in Lagos",
+   "gen_ai.tool.name": "get_weather",
+   "gen_ai.tool.type": "function",
+   "traceloop.span.kind": "tool"
+  },
+  "end_ns": 1791664951316569627,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "get_weather.tool",
+  "parent_id": "fd8cf27bf9a15476",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "1a0585febbee5214",
+  "start_ns": 1791664951315517611,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "error.type": "InternalServerError",
+   "gen_ai.agent.name": "helper",
+   "gen_ai.is_streaming": false,
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.request.model": "agent-resp-fail2"
+  },
+  "end_ns": 1791664951324799878,
+  "events": [
+   {
+    "attributes": {
+     "exception.escaped": "False",
+     "exception.message": "Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}",
+     "exception.type": "openai.InternalServerError"
+    },
+    "name": "exception"
+   }
+  ],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "81517b8635c7a519",
+  "scope": "opentelemetry.instrumentation.openai.v1",
+  "span_id": "fde0ef07c10ca875",
+  "start_ns": 1791664951317585152,
+  "status": {
+   "code": "ERROR",
+   "description": "Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}"
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "chat",
+   "gen_ai.provider.name": "openai"
+  },
+  "end_ns": 1791664951324856184,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": "fd8cf27bf9a15476",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "81517b8635c7a519",
+  "start_ns": 1791664951317415483,
+  "status": {
+   "code": "ERROR",
+   "description": "{'message': 'Error getting response', 'data': {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}}"
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.agent.name": "helper",
+   "gen_ai.operation.name": "invoke_agent",
+   "gen_ai.provider.name": "openai",
+   "traceloop.span.kind": "agent"
+  },
+  "end_ns": 1791664951325156264,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "helper.agent",
+  "parent_id": "bc5ad98628d99acf",
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "fd8cf27bf9a15476",
+  "start_ns": 1791664951209206083,
+  "status": {
+   "code": "ERROR",
+   "description": "{'message': 'Error in agent run', 'data': {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}}"
+  }
+ },
+ {
+  "attributes": {
+   "gen_ai.provider.name": "openai",
+   "traceloop.span.kind": "workflow",
+   "traceloop.workflow.name": "Agent Workflow"
+  },
+  "end_ns": 1791664951325219273,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "Agent Workflow",
+  "parent_id": null,
+  "scope": "opentelemetry.instrumentation.openai_agents",
+  "span_id": "bc5ad98628d99acf",
+  "start_ns": 1791664951208431984,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

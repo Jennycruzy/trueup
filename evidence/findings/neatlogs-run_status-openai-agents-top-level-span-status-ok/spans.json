@@ -1,0 +1,238 @@
+[
+ {
+  "attributes": {
+   "llm.finish_reason": "stop",
+   "llm.model_name": "agent-resp-fail2",
+   "llm.output_messages.0.message.role": "assistant",
+   "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+   "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+   "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_c65b97fc0002",
+   "llm.system": "openai",
+   "llm.token_count.completion": 7,
+   "llm.token_count.completion_details.reasoning": 0,
+   "llm.token_count.prompt": 11,
+   "llm.token_count.prompt_details.cache_read": 0,
+   "llm.token_count.total": 18,
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.input": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}]",
+   "neatlogs.llm.input_mime_type": "application/json",
+   "neatlogs.llm.invocation_parameters": "{\"temperature\": 1.0, \"top_p\": 1.0, \"stream\": false, \"id\": \"resp_c65b97fc0003\", \"created_at\": 0.0, \"model\": \"agent-resp-fail2\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+   "neatlogs.llm.model_name": "agent-resp-fail2",
+   "neatlogs.llm.output": "{\"id\":\"resp_c65b97fc0003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-fail2\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_c65b97fc0002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_c65b97fc0001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+   "neatlogs.llm.output_messages.0.role": "assistant",
+   "neatlogs.llm.output_mime_type": "application/json",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.llm.token_count.cache_read": 0,
+   "neatlogs.llm.token_count.completion": 7,
+   "neatlogs.llm.token_count.prompt": 11,
+   "neatlogs.llm.token_count.reasoning": 0,
+   "neatlogs.llm.token_count.total": 18,
+   "neatlogs.llm.tool_calls.0.arguments": "{\"city\":\"Lagos\"}",
+   "neatlogs.llm.tool_calls.0.id": "call_c65b97fc0002",
+   "neatlogs.llm.tool_calls.0.name": "get_weather",
+   "neatlogs.metrics.duration_ms": 191.974144,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "llm",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "LLM",
+   "output.mime_type": "application/json",
+   "output.value": "{\"id\":\"resp_c65b97fc0003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-fail2\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_c65b97fc0002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_c65b97fc0001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}"
+  },
+  "end_ns": 1791664541738963968,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "response",
+  "parent_id": "f831815bbdf7f943",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "3f265c2a729021e8",
+  "start_ns": 1791664541546989824,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 1.372928,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "tool",
+   "neatlogs.tool.description": "",
+   "neatlogs.tool.input": "{\"city\":\"Lagos\"}",
+   "neatlogs.tool.input_mime_type": "application/json",
+   "neatlogs.tool.name": "get_weather",
+   "neatlogs.tool.output": "Sunny in Lagos",
+   "neatlogs.tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "TOOL",
+   "output.value": "Sunny in Lagos",
+   "tool.description": "",
+   "tool.name": "get_weather",
+   "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}"
+  },
+  "end_ns": 1791664541744798976,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "get_weather",
+  "parent_id": "f831815bbdf7f943",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "7b52e59d05e63b9d",
+  "start_ns": 1791664541743426048,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 199.363072,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "chain",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "CHAIN"
+  },
+  "end_ns": 1791664541745657088,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "turn",
+  "parent_id": "30712c2e844a6b4b",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "f831815bbdf7f943",
+  "start_ns": 1791664541546294016,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "llm.system": "openai",
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 6.383104,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "llm",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "LLM"
+  },
+  "end_ns": 1791664541753291008,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "response",
+  "parent_id": "88290f874bfe8c54",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "03991374cd54a0cf",
+  "start_ns": 1791664541746907904,
+  "status": {
+   "code": "ERROR",
+   "description": "Error getting response: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+  }
+ },
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 7.740928,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "chain",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "CHAIN"
+  },
+  "end_ns": 1791664541753978880,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "turn",
+  "parent_id": "30712c2e844a6b4b",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "88290f874bfe8c54",
+  "start_ns": 1791664541746237952,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "agent.name": "helper",
+   "graph.node.id": "helper",
+   "neatlogs.agent.name": "helper",
+   "neatlogs.graph.node.id": "helper",
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 208.356096,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "agent",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "AGENT"
+  },
+  "end_ns": 1791664541754443008,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "helper",
+  "parent_id": "d3de9ca8b3510fa3",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "30712c2e844a6b4b",
+  "start_ns": 1791664541546086912,
+  "status": {
+   "code": "ERROR",
+   "description": "Error in agent run: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+  }
+ },
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 209.607936,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "chain",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "CHAIN"
+  },
+  "end_ns": 1791664541754877952,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "Agent workflow",
+  "parent_id": "bc9d0e8143d0ea52",
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "d3de9ca8b3510fa3",
+  "start_ns": 1791664541545270016,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ },
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "openinference.instrumentation.openai_agents",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 210.541953,
+   "neatlogs.provider": "openai",
+   "neatlogs.span.kind": "agent",
+   "neatlogs.workflow_name": "child",
+   "openinference.span.kind": "AGENT"
+  },
+  "end_ns": 1791664541755257780,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "Agent workflow",
+  "parent_id": null,
+  "scope": "openinference.instrumentation.openai_agents",
+  "span_id": "bc9d0e8143d0ea52",
+  "start_ns": 1791664541544715827,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

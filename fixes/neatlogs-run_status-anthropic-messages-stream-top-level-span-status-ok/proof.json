@@ -1,0 +1,997 @@
+{
+ "finding": "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "before": {
+  "leads": {
+   "oa-chat-plain": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-tools": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "oa-chat-n2": [],
+   "oa-chat-500": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-break": [],
+   "oa-chat-async-stream": [],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "failed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "incomplete"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised RuntimeError)",
+     "trace": "UNSET"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "UNSET, no exception event"
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "an-plain": [],
+   "an-thinking": [],
+   "an-stream-helper": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "hello",
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "end_turn"
+     ],
+     "trace": null
+    }
+   ],
+   "an-stream-thinking": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "hello",
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "end_turn"
+     ],
+     "trace": null
+    }
+   ],
+   "an-stream-tools": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "hello",
+     "trace": null
+    },
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "tool_use"
+     ],
+     "trace": null
+    }
+   ],
+   "an-create-stream": [],
+   "an-stream-error-event": [],
+   "an-stream-cut": [],
+   "an-529": [],
+   "an-async": [],
+   "lc-invoke": [],
+   "lc-stream": [],
+   "lc-stream-error-event": [],
+   "lc-stream-cut": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "lc-500": [],
+   "lg-agent": [],
+   "lg-tool-raises": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-stream": [],
+   "lg-step-limit": [],
+   "ag-run": [],
+   "ag-tool-raises": [],
+   "ag-llm-fails": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised InternalServerError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (http_error)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised MaxTurnsExceeded)",
+     "trace": "OK"
+    }
+   ],
+   "ag-bad-tool": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK"
+    }
+   ],
+   "ag-streamed": [],
+   "ag-streamed-error": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-streamed-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised APIConnectionError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-stream-helper-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised RemoteProtocolError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "OK, no exception event"
+    }
+   ],
+   "p-lc-tools": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-error-event": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised APIStatusError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "OK, no exception event"
+    }
+   ],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "after": {
+  "leads": {
+   "oa-chat-plain": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-tools": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "oa-chat-n2": [],
+   "oa-chat-500": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-break": [],
+   "oa-chat-async-stream": [],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "failed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "incomplete"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised RuntimeError)",
+     "trace": "UNSET"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "UNSET, no exception event"
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "an-plain": [],
+   "an-thinking": [],
+   "an-stream-helper": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "hello",
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "end_turn"
+     ],
+     "trace": null
+    }
+   ],
+   "an-stream-thinking": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "hello",
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "end_turn"
+     ],
+     "trace": null
+    }
+   ],
+   "an-stream-tools": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "hello",
+     "trace": null
+    },
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "tool_use"
+     ],
+     "trace": null
+    }
+   ],
+   "an-create-stream": [],
+   "an-stream-error-event": [],
+   "an-stream-cut": [],
+   "an-529": [],
+   "an-async": [],
+   "lc-invoke": [],
+   "lc-stream": [],
+   "lc-stream-error-event": [],
+   "lc-stream-cut": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "lc-500": [],
+   "lg-agent": [],
+   "lg-tool-raises": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-stream": [],
+   "lg-step-limit": [],
+   "ag-run": [],
+   "ag-tool-raises": [],
+   "ag-llm-fails": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised InternalServerError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (http_error)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised MaxTurnsExceeded)",
+     "trace": "OK"
+    }
+   ],
+   "ag-bad-tool": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK"
+    }
+   ],
+   "ag-streamed": [],
+   "ag-streamed-error": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-streamed-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised APIConnectionError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-stream-helper-cut": [],
+   "p-lc-tools": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-error-event": [],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "rows": [
+  {
+   "scenario": "p-an-stream-helper-cut",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised RemoteProtocolError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "p-an-stream-helper-error-event",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised APIStatusError)",
+   "before": "OK",
+   "after": "matches truth"
+  }
+ ],
+ "new_mismatches": [],
+ "after_observations": {
+  "p-an-stream-helper-cut": {
+   "truth": {
+    "calls": 1,
+    "outcome": "exception",
+    "tokens": [
+     null
+    ],
+    "finish": [
+     []
+    ],
+    "tool_calls": [
+     []
+    ],
+    "fake": [
+     "cut"
+    ],
+    "response_ids": [
+     "msg_ceebc4bb0001"
+    ],
+    "include_usage": [
+     false
+    ],
+    "tool_runs": [],
+    "exception": "RemoteProtocolError",
+    "scenario": "p-an-stream-helper-cut",
+    "expected": {
+     "calls": 1,
+     "outcome": "exception",
+     "exception": "RemoteProtocolError",
+     "fake": [
+      "cut"
+     ],
+     "tokens": [
+      null
+     ]
+    },
+    "expected_mismatch": [],
+    "app": {
+     "outcome": "exception",
+     "exception_type": "RemoteProtocolError",
+     "exception_module": "httpx2",
+     "message": "peer closed connection without sending complete message body (received 477 bytes, expected 989)",
+     "seconds": 0.07
+    },
+    "fake_log": [
+     {
+      "api": "anthropic.messages",
+      "path": "/v1/messages",
+      "scenario": "anth-cut",
+      "stream": true,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "msg_ceebc4bb0001",
+      "outcome": "cut",
+      "usage": null,
+      "usage_sent": false,
+      "finish": [],
+      "tool_calls": [],
+      "text": [
+       "hel"
+      ],
+      "seq": 1
+     }
+    ]
+   },
+   "trace": {
+    "library": "neatlogs",
+    "versions": {
+     "neatlogs": "1.4.26",
+     "openinference-instrumentation-langchain": "0.1.79",
+     "openinference-instrumentation-openai-agents": "2.5.3",
+     "openai": "3.28.0",
+     "anthropic": "1.13.0",
+     "opentelemetry-sdk": "1.45.1",
+     "langchain-core": "1.6.9",
+     "langchain-openai": "1.7.0",
+     "langgraph": "1.2.14",
+     "openai-agents": "0.23.1"
+    },
+    "spans": [
+     {
+      "name": "anthropic.messages.create",
+      "kind": "INTERNAL",
+      "trace_id": "a0c2b6e921ac23c2877639e5ee88338b",
+      "span_id": "6fcd2cecf5392d23",
+      "parent_id": null,
+      "start_ns": 1791683745510282129,
+      "end_ns": 1791683745553412655,
+      "status": {
+       "code": "ERROR",
+       "description": "peer closed connection without sending complete message body (received 477 bytes, expected 989)"
+      },
+      "scope": "neatlogs.wrapper",
+      "attributes": {
+       "neatlogs.workflow_name": "child",
+       "neatlogs.span.kind": "llm",
+       "neatlogs.llm.provider": "anthropic",
+       "neatlogs.llm.system": "anthropic",
+       "neatlogs.llm.model_name": "anth-cut",
+       "neatlogs.llm.is_streaming": true,
+       "neatlogs.llm.input_messages.0.role": "user",
+       "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+       "neatlogs.llm.max_tokens": 64,
+       "neatlogs.instrumentation.name": "neatlogs.wrapper",
+       "neatlogs.metrics.duration_ms": 43.130526
+      },
+      "events": [
+       {
+        "name": "exception",
+        "attributes": {
+         "exception.type": "httpx2.RemoteProtocolError",
+         "exception.message": "peer closed connection without sending complete message body (received 477 bytes, expected 989)",
+         "exception.stacktrace": "Traceback (most recent call last):\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/httpcore2/_exceptions.py\", line 13, in map_exceptions\n    yield\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/httpcore2/_sync/http11.py\", line 197, in _receive_event\n    event = self._h11_state.next_event()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/h11/_connection.py\", line 481, in next_event\n    event = self._extract_next_receive_event()\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/h11/_connection.py\", line 431, in _extract_next_receive_event\n    event = self._reader.read_eof()\n            ^^^^^^^^^^^^^^^^^^^^^^^\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/h11/_readers.py\", line 137, in read_eof\n    raise RemoteProtocolError(\nh11._util.RemoteProtocolError: peer closed connection without sending complete message body (received 477 bytes, expected 989)\n\nThe above exception was the direct cause of the following exception:\n\nTraceback (most recent call last):\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/httpx2/_transports/default.py\", line 98, in map_httpcore_exceptions\n    yield\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/httpx2/_transports/default.py\", line 124, in __iter__\n    yield from self._httpcore_stream\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/httpcore2/_sync/connection_pool.py\", line 426, in __iter__\n    for chunk in iterator:\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/httpcore2/_sync/http11.py\", line 320, in __iter__\n    raise exc\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/httpcore2/_sync/http11.py\", line 312, in __iter__\n    for chunk in iterator:\n  File \"....[3441 more chars]",
+         "exception.escaped": "False"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  },
+  "p-an-stream-helper-error-event": {
+   "truth": {
+    "calls": 1,
+    "outcome": "exception",
+    "tokens": [
+     null
+    ],
+    "finish": [
+     []
+    ],
+    "tool_calls": [
+     []
+    ],
+    "fake": [
+     "error_event"
+    ],
+    "response_ids": [
+     "msg_1525c5de0001"
+    ],
+    "include_usage": [
+     false
+    ],
+    "tool_runs": [],
+    "exception": "APIStatusError",
+    "scenario": "p-an-stream-helper-error-event",
+    "expected": {
+     "calls": 1,
+     "outcome": "exception",
+     "exception": "APIStatusError",
+     "fake": [
+      "error_event"
+     ],
+     "tokens": [
+      null
+     ]
+    },
+    "expected_mismatch": [],
+    "app": {
+     "outcome": "exception",
+     "exception_type": "APIStatusError",
+     "exception_module": "anthropic",
+     "message": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}",
+     "seconds": 0.08
+    },
+    "fake_log": [
+     {
+      "api": "anthropic.messages",
+      "path": "/v1/messages",
+      "scenario": "anth-error-event",
+      "stream": true,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "msg_1525c5de0001",
+      "outcome": "error_event",
+      "usage": null,
+      "usage_sent": false,
+      "finish": [],
+      "tool_calls": [],
+      "text": [
+       "hel"
+      ],
+      "seq": 1
+     }
+    ]
+   },
+   "trace": {
+    "library": "neatlogs",
+    "versions": {
+     "neatlogs": "1.4.26",
+     "openinference-instrumentation-langchain": "0.1.79",
+     "openinference-instrumentation-openai-agents": "2.5.3",
+     "openai": "3.28.0",
+     "anthropic": "1.13.0",
+     "opentelemetry-sdk": "1.45.1",
+     "langchain-core": "1.6.9",
+     "langchain-openai": "1.7.0",
+     "langgraph": "1.2.14",
+     "openai-agents": "0.23.1"
+    },
+    "spans": [
+     {
+      "name": "anthropic.messages.create",
+      "kind": "INTERNAL",
+      "trace_id": "3c5dd42e88ce9771775f25c4cfcc519f",
+      "span_id": "c6c0e2c7f417d044",
+      "parent_id": null,
+      "start_ns": 1791683753142240627,
+      "end_ns": 1791683753192312577,
+      "status": {
+       "code": "ERROR",
+       "description": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}"
+      },
+      "scope": "neatlogs.wrapper",
+      "attributes": {
+       "neatlogs.workflow_name": "child",
+       "neatlogs.span.kind": "llm",
+       "neatlogs.llm.provider": "anthropic",
+       "neatlogs.llm.system": "anthropic",
+       "neatlogs.llm.model_name": "anth-error-event",
+       "neatlogs.llm.is_streaming": true,
+       "neatlogs.llm.input_messages.0.role": "user",
+       "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+       "neatlogs.llm.max_tokens": 64,
+       "neatlogs.instrumentation.name": "neatlogs.wrapper",
+       "neatlogs.metrics.duration_ms": 50.07195
+      },
+      "events": [
+       {
+        "name": "exception",
+        "attributes": {
+         "exception.type": "anthropic.APIStatusError",
+         "exception.message": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}",
+         "exception.stacktrace": "Traceback (most recent call last):\n  File \"src/trueup/runner/apps.py\", line 171, in an_stream_helper\n    text = \"\".join(s.text_stream)\n           ^^^^^^^^^^^^^^^^^^^^^^\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/anthropic/lib/streaming/_messages.py\", line 146, in __stream_text__\n    for chunk in self:\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/anthropic/lib/streaming/_messages.py\", line 72, in __iter__\n    for item in self._iterator:\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/anthropic/lib/streaming/_messages.py\", line 133, in __stream__\n    for sse_event in self._raw_stream:\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/anthropic/_streaming.py\", line 49, in __iter__\n    for item in self._iterator:\n  File \".trueup/venvs/neatlogs-fix/lib/python3.12/site-packages/anthropic/_streaming.py\", line 148, in __stream__\n    raise self._client._make_status_error(\nanthropic.APIStatusError: {'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}\n",
+         "exception.escaped": "False"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

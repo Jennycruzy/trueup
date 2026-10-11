@@ -1,0 +1,134 @@
+{
+ "app": {
+  "exception_module": "openai",
+  "exception_type": "InternalServerError",
+  "message": "Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}",
+  "outcome": "exception",
+  "seconds": 0.121
+ },
+ "calls": 2,
+ "exception": "InternalServerError",
+ "expected": {
+  "calls": 2,
+  "exception": "InternalServerError",
+  "fake": [
+   "complete",
+   "http_error"
+  ],
+  "finish": [
+   [
+    "completed"
+   ],
+   []
+  ],
+  "outcome": "exception",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   },
+   null
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ],
+   []
+  ],
+  "tool_runs": [
+   {
+    "name": "get_weather",
+    "outcome": "ok"
+   }
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete",
+  "http_error"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.responses",
+   "finish": [
+    "completed"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/responses",
+   "response_id": "resp_cad44b490003",
+   "scenario": "agent-resp-fail2",
+   "seq": 1,
+   "status_code": 200,
+   "stream": false,
+   "text": [],
+   "tool_calls": [
+    {
+     "arguments": "{\"city\":\"Lagos\"}",
+     "id": "call_cad44b490002",
+     "name": "get_weather"
+    }
+   ],
+   "usage": {
+    "input_tokens": 11,
+    "output_tokens": 7,
+    "reasoning_tokens": 0,
+    "total_tokens": 18
+   },
+   "usage_sent": true
+  },
+  {
+   "api": "openai.responses",
+   "finish": [],
+   "include_usage": false,
+   "n": null,
+   "outcome": "http_error",
+   "path": "/v1/responses",
+   "response_id": null,
+   "scenario": "agent-resp-fail2",
+   "seq": 2,
+   "status_code": 500,
+   "stream": false,
+   "text": [],
+   "tool_calls": [],
+   "usage": null,
+   "usage_sent": false
+  }
+ ],
+ "finish": [
+  [
+   "completed"
+  ],
+  []
+ ],
+ "include_usage": [
+  false,
+  false
+ ],
+ "outcome": "exception",
+ "response_ids": [
+  "resp_cad44b490003",
+  null
+ ],
+ "scenario": "ag-llm-fails",
+ "tokens": [
+  {
+   "input": 11,
+   "output": 7
+  },
+  null
+ ],
+ "tool_calls": [
+  [
+   "get_weather"
+  ],
+  []
+ ],
+ "tool_runs": [
+  {
+   "name": "get_weather",
+   "outcome": "ok"
+  }
+ ]
+}

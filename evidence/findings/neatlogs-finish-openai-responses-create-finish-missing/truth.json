@@ -1,0 +1,91 @@
+{
+ "app": {
+  "outcome": "ok",
+  "result": {
+   "output_types": [
+    "message"
+   ],
+   "status": "completed",
+   "text": "hello",
+   "total_tokens": 18
+  },
+  "seconds": 0.73
+ },
+ "calls": 1,
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "completed"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.responses",
+   "finish": [
+    "completed"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/responses",
+   "response_id": "resp_ce70d2950002",
+   "scenario": "resp-plain",
+   "seq": 1,
+   "status_code": 200,
+   "stream": false,
+   "text": [
+    "hello"
+   ],
+   "tool_calls": [],
+   "usage": {
+    "input_tokens": 11,
+    "output_tokens": 7,
+    "reasoning_tokens": 0,
+    "total_tokens": 18
+   },
+   "usage_sent": true
+  }
+ ],
+ "finish": [
+  [
+   "completed"
+  ]
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "ok",
+ "response_ids": [
+  "resp_ce70d2950002"
+ ],
+ "scenario": "oa-resp-plain",
+ "tokens": [
+  {
+   "input": 11,
+   "output": 7
+  }
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

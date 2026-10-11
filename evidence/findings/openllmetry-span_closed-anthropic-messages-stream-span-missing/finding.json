@@ -1,0 +1,115 @@
+{
+ "check": "span_closed",
+ "code_path": "anthropic messages stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [
+   {
+    "title": "\ud83d\udc1b Bug Report: Anthropic instrumentation: streaming spans are never ended on early exit (with-block, messages.stream() helper, close)",
+    "url": "https://github.com/traceloop/openllmetry/issues/4536",
+    "why_not": "about spans not ended when the app stops reading early; the finding is no span after a mid-stream error or cut"
+   }
+  ],
+  "searches": [
+   {
+    "date": "2026-10-10T23:37:56+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "anthropic span not ended stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:37:59+00:00",
+    "hits": 5,
+    "include_prs": true,
+    "query": "span not ended stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "span_closed",
+  "field": "call 1 span",
+  "kind": "lead",
+  "library": "openllmetry",
+  "scenario": "an-stream-error-event",
+  "severity": "high",
+  "trace": "no span",
+  "truth": "ended and exported (error_event)"
+ },
+ "example_run": "20261010T203755Z-openllmetry",
+ "field": "span",
+ "fixed": false,
+ "found_in": [
+  "20261010T203755Z-openllmetry",
+  "20261010T235010Z-openllmetry-proposed",
+  "20261010T235247Z-openllmetry-proposed"
+ ],
+ "id": "openllmetry-span_closed-anthropic-messages-stream-span-missing",
+ "leads": [
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-error-event",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (error_event)"
+  },
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-cut",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (cut)"
+  },
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "p-an-stream-helper-error-event",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (error_event)"
+  },
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "p-an-stream-helper-cut",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (cut)"
+  }
+ ],
+ "library": "openllmetry",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main df4921a409",
+  "recommended_setup": "Traceloop.init(); framework none",
+  "reference": "neatlogs, openinference record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203755Z-openllmetry/repros/openllmetry-an-stream-error-event.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "an-stream-cut",
+  "an-stream-error-event",
+  "p-an-stream-helper-cut",
+  "p-an-stream-helper-error-event"
+ ],
+ "severity": "high",
+ "title": "openllmetry, anthropic messages stream: span not recorded",
+ "trace": "missing",
+ "upstream": null
+}

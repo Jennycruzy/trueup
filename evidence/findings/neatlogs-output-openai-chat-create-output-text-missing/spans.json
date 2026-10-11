@@ -1,0 +1,38 @@
+[
+ {
+  "attributes": {
+   "neatlogs.capture_fidelity": "native",
+   "neatlogs.instrumentation.name": "neatlogs.wrapper",
+   "neatlogs.llm.choices.0.finish_reason": "stop",
+   "neatlogs.llm.finish_reason": "stop",
+   "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+   "neatlogs.llm.input_messages.0.role": "user",
+   "neatlogs.llm.is_streaming": false,
+   "neatlogs.llm.metrics.duration_ms": 12.661,
+   "neatlogs.llm.model_name": "chat-refusal",
+   "neatlogs.llm.output_messages.0.role": "assistant",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.response_id": "chatcmpl-45f9ecef0001",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.llm.token_count.completion": 7,
+   "neatlogs.llm.token_count.prompt": 11,
+   "neatlogs.llm.token_count.total": 18,
+   "neatlogs.llm.usage": "{\"completion_tokens\":7,\"prompt_tokens\":11,\"total_tokens\":18}",
+   "neatlogs.metrics.duration_ms": 14.671644,
+   "neatlogs.span.kind": "llm",
+   "neatlogs.workflow_name": "child"
+  },
+  "end_ns": 1791664431861041517,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "openai.chat.completions.create",
+  "parent_id": null,
+  "scope": "neatlogs.wrapper",
+  "span_id": "7b63651d480e9a0f",
+  "start_ns": 1791664431846369873,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

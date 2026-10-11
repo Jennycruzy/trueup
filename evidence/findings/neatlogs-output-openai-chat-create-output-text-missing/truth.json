@@ -1,0 +1,88 @@
+{
+ "app": {
+  "outcome": "ok",
+  "result": {
+   "finish": "stop",
+   "refusal": "I can't help with that.",
+   "text": null,
+   "total_tokens": 18
+  },
+  "seconds": 0.704
+ },
+ "calls": 1,
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "stop"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.chat",
+   "finish": [
+    "stop"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/chat/completions",
+   "response_id": "chatcmpl-45f9ecef0001",
+   "scenario": "chat-refusal",
+   "seq": 1,
+   "status_code": 200,
+   "stream": false,
+   "text": [
+    "I can't help with that."
+   ],
+   "tool_calls": [],
+   "usage": {
+    "input_tokens": 11,
+    "output_tokens": 7,
+    "total_tokens": 18
+   },
+   "usage_sent": true
+  }
+ ],
+ "finish": [
+  [
+   "stop"
+  ]
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "ok",
+ "response_ids": [
+  "chatcmpl-45f9ecef0001"
+ ],
+ "scenario": "oa-chat-refusal",
+ "tokens": [
+  {
+   "input": 11,
+   "output": 7
+  }
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

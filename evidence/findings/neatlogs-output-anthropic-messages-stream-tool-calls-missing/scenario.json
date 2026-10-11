@@ -1,0 +1,33 @@
+{
+ "api": "messages",
+ "app": "an_stream_helper_tools",
+ "does": "Streams a tool_use block built from input_json_delta.",
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "tool_use"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 5,
+    "output": 3
+   }
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ]
+  ]
+ },
+ "framework": "none",
+ "id": "an-stream-tools",
+ "model": "anth-tools",
+ "provider": "anthropic",
+ "status": "built"
+}

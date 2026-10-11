@@ -1,0 +1,28 @@
+{
+ "api": "chat",
+ "app": "chat_stream_break",
+ "does": "The app stops reading after the first chunk and closes the stream.",
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "stop"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   null
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "framework": "none",
+ "id": "oa-chat-stream-break",
+ "model": "chat-plain",
+ "provider": "openai",
+ "status": "built"
+}

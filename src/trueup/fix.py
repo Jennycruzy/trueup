@@ -99,7 +99,8 @@ def baseline(root: Path, clone: Path, commit: str, target: tg.Target, fix_dir: P
 
 
 def verify_try(root: Path, clone: Path, target: tg.Target, finding: dict[str, Any], draft: dict[str, Any],
-               writes: list[dict[str, str]], base: dict[str, Any], out: Callable[[str], None]) -> dict[str, Any]:
+               writes: list[dict[str, str]], base: dict[str, Any], out: Callable[[str], None],
+               variant: str = "v1") -> dict[str, Any]:
     """Apply the try to the clean clone step by step. Returns the try's record with ok and reason."""
     rec: dict[str, Any] = {"ok": False}
     test = draft["test"]
@@ -114,7 +115,7 @@ def verify_try(root: Path, clone: Path, target: tg.Target, finding: dict[str, An
     pt.write_files(clone, writes)
     out("  new test on the patched code")
     t_after = vf.run_pytest(tpy, clone, pkg_of_test, [test_rel])
-    ok, why = vf.new_test_verdict(t_before, t_after)
+    ok, why = vf.new_test_verdict(t_before, t_after, variant)
     rec["new_test"] = {"before": t_before, "after": t_after, "ok": ok, "reason": why}
     out(f"  {why[:300]}")
     if not ok:
@@ -157,23 +158,31 @@ def verify_try(root: Path, clone: Path, target: tg.Target, finding: dict[str, An
 
 
 def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_id: str | None = None,
-        out: Callable[[str], None] = print, max_tries: int = MAX_TRIES) -> dict[str, Any]:
+        out: Callable[[str], None] = print, max_tries: int = MAX_TRIES, variant: str = "v2",
+        out_dir: Path | None = None) -> dict[str, Any]:
+    """out_dir: write there instead of fixes/<id>/ (the v1/v2 comparison runs do, so the committed fix
+    stays as it was verified). The baseline cache of fixes/<id>/ is reused."""
     from trueup.sweep import new_run_id
 
     finding, found_in = find_finding(root, finding_id)
     target = tg.get(finding["library"], finding["details"]["code_path"])
     run_id = run_id or new_run_id(f"fix-{finding['library']}")
     run_dir = root / ".trueup" / "runs" / run_id
-    fix_dir = root / "fixes" / finding_id
+    fix_dir = out_dir or root / "fixes" / finding_id
     run_dir.mkdir(parents=True, exist_ok=True)
     fix_dir.mkdir(parents=True, exist_ok=True)
+    cached = root / "fixes" / finding_id / "baseline.json"
+    if out_dir and cached.exists() and not (fix_dir / "baseline.json").exists():
+        (fix_dir / "baseline.json").write_text(cached.read_text())
+    t0 = time.monotonic()
     for stale in [fix_dir / "patch.diff", *fix_dir.glob("before-after.*"), *fix_dir.glob("test_trueup_*.py")]:
         stale.unlink(missing_ok=True)  # a run that does not fix must not leave an earlier patch behind
     client = client or ModelClient()
     record_spend(run_dir, "before", client)
     result: dict[str, Any] = {"finding": finding_id, "title": finding["title"], "library": target.library,
                               "found_in": found_in.name, "run_id": run_id, "session_id": tracing.session_id(),
-                              "model": PLAN_MODEL, "started": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                              "model": PLAN_MODEL, "variant": variant,
+                              "started": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
                               "tries": [], "fixed": False, "error": None}
     clone = None
     try:
@@ -193,12 +202,13 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
                                                               "failing", "exit")} for k, v in base["suites"].items()}
         messages = pt.first_prompt(finding, target, located, loc.source_excerpts(clone, located),
                                    pt.test_style(clone, target), pt.span_summary(
-            sorted({found_in.parent / n for n in finding["details"]["runs"].values()}), finding))
+            sorted({found_in.parent / n for n in finding["details"]["runs"].values()}), finding), variant)
+        first = messages
         for n in range(1, max_tries + 1):
             out(f"try {n}/{max_tries}: asking {PLAN_MODEL} for a patch")
             rec: dict[str, Any] = {"try": n}
             with tracing.worker("trueup-fixer", step=f"draft {n}") as span:
-                draft = client.chat_json(PLAN_MODEL, messages, max_tokens=12000)
+                draft = client.chat_json(PLAN_MODEL, messages, max_tokens=12000, lenient=variant == "v2")
                 rec["explanation"] = draft.get("explanation") if isinstance(draft, dict) else None
                 rec["draft"] = draft
                 try:
@@ -210,7 +220,7 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
                     tracing.set_verdict(span, "does not apply")
             if "stage" not in rec:
                 with tracing.worker("trueup-verifier", step=f"try {n}") as span:
-                    rec.update(verify_try(root, clone, target, finding, draft, writes, base, out))
+                    rec.update(verify_try(root, clone, target, finding, draft, writes, base, out, variant))
                     rec["stage"] = "verified" if rec["ok"] else "verify"
                     rec["diff"] = pt.diff(clone)
                     tracing.set_verdict(span, "pass" if rec["ok"] else "fail")
@@ -220,7 +230,11 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
                 result["fixed"] = True
                 write_fix(fix_dir, finding, target, base, rec)
                 break
-            messages = pt.revision_prompt(messages, draft, rec["reason"])
+            if variant == "v2":
+                messages = pt.revision_prompt_v2(first, draft, rec["reason"],
+                                                 [t["reason"] for t in result["tries"][:-1]])
+            else:
+                messages = pt.revision_prompt(messages, draft, rec["reason"])
     except (ModelError, vf.VerifyError, RuntimeError) as e:
         result["error"] = f"{type(e).__name__}: {e}"
         out(f"fixer stopped: {result['error']}")
@@ -231,9 +245,15 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
         spend = json.loads((run_dir / "spend.json").read_text())
         result["usage"], result["cost_usd"] = spend.get("usage"), spend.get("run_cost_usd")
         result["spend_after_usd"] = spend.get("after", {}).get("spend_usd")
+        result["wall_s"] = round(time.monotonic() - t0, 1)
+        result["traces_opened"] = tracing.opened()
         write_log(fix_dir, run_dir, result)
     out(f"{finding_id}: {'fixed, verified' if result['fixed'] else 'NOT fixed'} after {len(result['tries'])} "
         f"tr{'y' if len(result['tries']) == 1 else 'ies'}; model cost ${result['cost_usd']}; wrote {fix_dir}")
+    from trueup.state import State
+    with State(root) as state:
+        status = "fixed" if result["fixed"] else "error" if result["error"] else "not_fixed"
+        state.save_fix(finding_id, status, result)
     return result
 
 
@@ -339,3 +359,54 @@ def write_log(fix_dir: Path, run_dir: Path, result: dict[str, Any]) -> None:
     if (fix_dir / "before-after.md").exists() and result["fixed"]:
         lines += ["", "## Before and after", "", (fix_dir / "before-after.md").read_text()]
     loc.save((fix_dir / "summary.md"), "\n".join(lines) + "\n")
+
+
+def reprove(root: Path, finding_id: str, out: Callable[[str], None] = print) -> dict[str, Any]:
+    """Apply the committed fixes/<id>/patch.diff to the clean clone and sweep the full scenario library
+    again (no model call). Writes fixes/<id>/proof.json: every lead before (the fix's baseline) and after,
+    and the finding's scenarios' observations after the patch, so the counts can be recomputed."""
+    import subprocess
+
+    from trueup.runner import run_scenario
+
+    finding, _ = find_finding(root, finding_id)
+    target = tg.get(finding["library"], finding["details"]["code_path"])
+    fix_dir = root / "fixes" / finding_id
+    base = json.loads((fix_dir / "baseline.json").read_text())
+    clone, commit = loc.ensure_clone(root, target.library)
+    if commit != base["commit"]:
+        raise RuntimeError(f"clone is at {commit[:10]}, the fix was verified at {base['commit'][:10]}")
+    loc.reset_clone(clone)
+    p = subprocess.run(["git", "-C", str(clone), "apply", str((fix_dir / "patch.diff").resolve())],
+                       capture_output=True, text=True, timeout=120)
+    if p.returncode != 0:
+        raise RuntimeError(f"patch.diff does not apply: {p.stderr.strip()[-300:]}")
+    observations: dict[str, Any] = {}
+
+    def run(py: Path, library: str, sid: str) -> dict[str, Any]:
+        r = run_scenario(py, library, sid)
+        if sid in finding["details"]["scenarios"] and r.get("observation"):
+            observations[sid] = r["observation"]
+        return r
+
+    try:
+        fpy = vf.venvs.venv_dir(root, f"{target.library}-fix") / "bin" / "python"
+        vf.reinstall(fpy, clone, target)
+        out("patched: full scenario library")
+        after = vf.sweep_scenarios(fpy, target.library, all_scenarios(), run=run, out=out)
+    finally:
+        loc.reset_clone(clone)
+        vf.reinstall(vf.venvs.venv_dir(root, f"{target.library}-fix") / "bin" / "python", clone, target)
+    keep = ("check", "field", "severity", "truth", "trace")
+    proof = {"finding": finding_id, "commit": commit,
+             "before": {"leads": {s: [{k: m.get(k) for k in keep} for m in ls] for s, ls in base["sweep"]["leads"].items()},
+                        "not_run": base["sweep"]["not_run"]},
+             "after": {"leads": {s: [{k: m.get(k) for k in keep} for m in ls] for s, ls in after["leads"].items()},
+                       "not_run": after["not_run"]},
+             "rows": vf.before_after(finding, base["sweep"], after),
+             "new_mismatches": vf.new_mismatches(base["sweep"], after),
+             "after_observations": observations}
+    loc.save(fix_dir / "proof.json", json.dumps(proof, indent=1, default=str))
+    tb, ta = vf.totals(base["sweep"]), vf.totals(after)
+    out(f"before {tb}; after {ta}; new mismatches {len(proof['new_mismatches'])}")
+    return proof

@@ -1,0 +1,23 @@
+[
+ {
+  "attributes": {
+   "gen_ai.is_streaming": true,
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.request.model": "resp-error-event"
+  },
+  "end_ns": 1791664794265461943,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "openai.response",
+  "parent_id": null,
+  "scope": "opentelemetry.instrumentation.openai.v1",
+  "span_id": "d5800054e94878ad",
+  "start_ns": 1791664794186465577,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

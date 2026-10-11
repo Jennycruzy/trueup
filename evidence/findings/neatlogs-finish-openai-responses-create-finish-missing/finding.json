@@ -1,0 +1,130 @@
+{
+ "check": "finish",
+ "code_path": "openai responses create",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:32:04+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "responses finish reason",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:32:07+00:00",
+    "hits": 6,
+    "include_prs": true,
+    "query": "finish reason",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "finish",
+  "field": "call 1 finish",
+  "kind": "lead",
+  "library": "neatlogs",
+  "scenario": "oa-resp-plain",
+  "severity": "medium",
+  "trace": null,
+  "truth": [
+   "completed"
+  ]
+ },
+ "example_run": "20261010T203332Z-neatlogs",
+ "field": "finish",
+ "fixed": false,
+ "found_in": [
+  "20261010T203332Z-neatlogs"
+ ],
+ "id": "neatlogs-finish-openai-responses-create-finish-missing",
+ "leads": [
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-plain",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-tool",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-reasoning",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-failed",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "failed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "oa-resp-incomplete",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "incomplete"
+   ]
+  }
+ ],
+ "library": "neatlogs",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main 202f8776ea",
+  "recommended_setup": "neatlogs.init(instrumentations=<README keys>); framework none",
+  "reference": "openllmetry record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203332Z-neatlogs/repros/neatlogs-oa-resp-plain.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "oa-resp-failed",
+  "oa-resp-incomplete",
+  "oa-resp-plain",
+  "oa-resp-reasoning",
+  "oa-resp-tool"
+ ],
+ "severity": "medium",
+ "title": "neatlogs, openai responses create: finish not recorded",
+ "trace": "missing",
+ "upstream": null
+}

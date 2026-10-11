@@ -1,0 +1,21 @@
+{
+ "api": "responses",
+ "app": "resp_stream_raw",
+ "does": "An error event arrives mid-stream. The SDK hands it to the app; the app raises RuntimeError.",
+ "expected": {
+  "calls": 1,
+  "exception": "RuntimeError",
+  "fake": [
+   "error_event"
+  ],
+  "outcome": "exception",
+  "tokens": [
+   null
+  ]
+ },
+ "framework": "none",
+ "id": "oa-resp-stream-error-event",
+ "model": "resp-error-event",
+ "provider": "openai",
+ "status": "built"
+}

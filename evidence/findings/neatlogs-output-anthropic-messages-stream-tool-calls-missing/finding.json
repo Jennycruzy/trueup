@@ -1,0 +1,84 @@
+{
+ "check": "output",
+ "code_path": "anthropic messages stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:32:19+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "anthropic tool calls stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:32:22+00:00",
+    "hits": 3,
+    "include_prs": true,
+    "query": "tool calls stream",
+    "repo": "neatlogs/neatlogs",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "output",
+  "field": "call 1 tool calls",
+  "kind": "lead",
+  "library": "neatlogs",
+  "scenario": "an-stream-tools",
+  "severity": "medium",
+  "trace": null,
+  "truth": [
+   [
+    "get_weather",
+    "{\"city\":\"Lagos\"}"
+   ]
+  ]
+ },
+ "example_run": "20261010T203332Z-neatlogs",
+ "field": "tool calls",
+ "fixed": false,
+ "found_in": [
+  "20261010T203332Z-neatlogs"
+ ],
+ "id": "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+ "leads": [
+  {
+   "check": "output",
+   "field": "call 1 tool calls",
+   "kind": "lead",
+   "library": "neatlogs",
+   "scenario": "an-stream-tools",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    [
+     "get_weather",
+     "{\"city\":\"Lagos\"}"
+    ]
+   ]
+  }
+ ],
+ "library": "neatlogs",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main 202f8776ea",
+  "recommended_setup": "neatlogs.init(instrumentations=<README keys>); framework none",
+  "reference": "openinference, openllmetry record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203332Z-neatlogs/repros/neatlogs-an-stream-tools.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "an-stream-tools"
+ ],
+ "severity": "medium",
+ "title": "neatlogs, anthropic messages stream: tool calls not recorded",
+ "trace": "missing",
+ "upstream": null
+}

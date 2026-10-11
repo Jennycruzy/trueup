@@ -314,3 +314,31 @@ def test_cli_and_tracing_know_fix_and_upstream() -> None:
     assert p.parse_args(["fix", "f-1"]).finding_id == "f-1"
     assert p.parse_args(["upstream", "f-1"]).command == "upstream"
     assert {"trueup-fixer", "trueup-verifier"} <= set(tracing.WORKERS)
+
+
+def test_v2_brief_keeps_why_a_test_failed():
+    from trueup.fixer.verify import brief, new_test_verdict
+
+    out = ("....\nwarnings: PydanticDeprecatedSince20 ...\n" * 50 +
+           "tests/test_trueup_x.py:12: in test_root\n    assert s == ERROR\nE   AssertionError: expected ERROR got OK\n"
+           "------ Captured log call ------\nERROR openai.agents: noise\n" * 1 +
+           "FAILED tests/test_trueup_x.py::test_root - AssertionError\n")
+    b = brief(out)
+    assert "E   AssertionError: expected ERROR got OK" in b and "FAILED tests/test_trueup_x.py::test_root" in b
+    assert "Pydantic" not in b
+    before = {"total": 1, "failing": ["t"], "exit": 1, "tail": out[-3000:], "brief": b}
+    after = {"total": 1, "failing": ["t"], "exit": 1, "tail": out[-3000:], "brief": b}
+    ok, why = new_test_verdict(before, after, "v2")
+    assert not ok and "AssertionError: expected ERROR got OK" in why
+    ok, why1 = new_test_verdict(before, after, "v1")
+    assert not ok and "Why, from pytest" not in why1
+
+
+def test_v2_revision_sends_only_the_last_draft():
+    from trueup.fixer.patch import revision_prompt, revision_prompt_v2
+
+    first = [{"role": "system", "content": "s"}, {"role": "user", "content": "u"}]
+    v1 = revision_prompt(revision_prompt(first, {"d": 1}, "r1"), {"d": 2}, "r2")
+    v2 = revision_prompt_v2(first, {"d": 2}, "r2", ["r1"])
+    assert len(v1) == 6 and len(v2) == 4
+    assert '"d": 1' not in json.dumps(v2) and "try 1: r1" in v2[-1]["content"]

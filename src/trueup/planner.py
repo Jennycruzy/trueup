@@ -18,6 +18,7 @@ from trueup import tracing
 from trueup.model import PLAN_MODEL, ModelClient, ModelError, record_spend
 from trueup.scenarios import ALL
 from trueup.scenarios import proposed as prop
+from trueup.state import State
 
 REVISIONS = 2
 SOURCE_LIMIT = 60_000  # characters of wrapper source sent to the model
@@ -94,9 +95,34 @@ def library_summary() -> list[dict[str, Any]]:
         for s in prop.load()]
 
 
-def first_prompt(library: str, source: str, findings: list[dict[str, Any]], n: int) -> list[dict[str, str]]:
+VARIANTS = ("v1", "v2")
+
+
+def seen_outcomes() -> list[dict[str, Any]]:
+    """v2: what the fake really did and what the app really saw, for every existing scenario (its truth
+    was confirmed by an untraced run). v1's first tries were rejected for guessing these: 3 wrong
+    exception classes and 1 wrong fake outcome (sessions 20261010T234842Z-plan-openllmetry, read back
+    from neatlogs, and 20261010T235208Z-plan-neatlogs, whose trace never reached neatlogs; plan.json)."""
+    rows = []
+    for s in [*ALL, *prop.load()]:
+        e = s.expected
+        if s.status != "built" or "fake" not in e:
+            continue
+        rows.append({"app": s.app, "model": s.model, "calls": e.get("calls"), "fake": e["fake"],
+                     "outcome": e.get("outcome"), **({"exception": e["exception"]} if e.get("exception") else {})})
+    return rows
+
+
+def first_prompt(library: str, source: str, findings: list[dict[str, Any]], n: int,
+                 variant: str = "v2") -> list[dict[str, str]]:
+    seen = ""
+    if variant == "v2":
+        seen = ("What really happened in the existing scenarios (untraced runs). The same fake model gives "
+                "the same fake outcome and the same exception class on another app of the same provider, api "
+                "and streaming style; an app that does not stream gets HTTP 400 (http_error, BadRequestError) "
+                f"from a stream-only fake model:\n{json.dumps(seen_outcomes())}\n\n")
     user = (f"Library under test: {library}.\n\nWhat a scenario may use:\n{json.dumps(prop.catalogue())}\n\n"
-            f"Existing scenarios (do not repeat an app + model pair):\n{json.dumps(library_summary())}\n\n"
+            f"Existing scenarios (do not repeat an app + model pair):\n{json.dumps(library_summary())}\n\n{seen}"
             f"Current findings for {library}:\n{json.dumps(findings)}\n\n"
             f"Wrapper source of {library} as installed:\n{source}\n\nPropose at most {n} new scenarios.")
     return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
@@ -127,20 +153,26 @@ def check(p: Any, taken: set[tuple[str, str]], ids: set[str],
 def plan(root: Path, library: str, max_n: int = 5, *, client: ModelClient | None = None,
          run_id: str | None = None, out: Callable[[str], None] = print,
          untraced: Callable[[dict[str, Any]], tuple[list[str], Any]] = prop.untraced_check,
-         save: bool = True) -> dict[str, Any]:
+         save: bool = True, variant: str = "v2", save_dir: Path | None = None) -> dict[str, Any]:
     from trueup.sweep import new_run_id
 
     run_id = run_id or new_run_id(f"plan-{library}")
     run_dir = root / ".trueup" / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
+    with State(root) as state:
+        state.begin_run(run_id, "plan", library)
     client = client or ModelClient()
     record_spend(run_dir, "before", client)
+    import time
+
+    t0 = time.monotonic()
     result: dict[str, Any] = {"run_id": run_id, "library": library, "model": PLAN_MODEL, "max": max_n,
+                              "variant": variant,
                               "session_id": tracing.session_id(), "proposals": [], "accepted": [], "rejected": [],
                               "error": None}
     try:
         with tracing.worker("trueup-planner") as span:
-            _plan(root, library, max_n, client, result, out, untraced, save)
+            _plan(root, library, max_n, client, result, out, untraced, save, variant, save_dir, run_id)
             tracing.set_verdict(span, f"accepted {len(result['accepted'])}, rejected {len(result['rejected'])}")
     except ModelError as e:
         result["error"] = str(e)
@@ -149,7 +181,11 @@ def plan(root: Path, library: str, max_n: int = 5, *, client: ModelClient | None
         record_spend(run_dir, "after", client)
         spend = json.loads((run_dir / "spend.json").read_text())
         result["usage"], result["cost_usd"] = spend.get("usage"), spend.get("run_cost_usd")
+        result["wall_s"] = round(time.monotonic() - t0, 1)
+        result["traces_opened"] = tracing.opened()
         (run_dir / "plan.json").write_text(json.dumps(result, indent=1, default=str))
+        with State(root) as state:
+            state.finish_run(run_id, "error" if result["error"] else "complete")
     out(f"proposals: {len(result['proposals'])}  accepted: {len(result['accepted'])}  "
         f"rejected: {len(result['rejected'])}")
     for r in result["rejected"]:
@@ -160,18 +196,44 @@ def plan(root: Path, library: str, max_n: int = 5, *, client: ModelClient | None
 
 
 def _plan(root: Path, library: str, max_n: int, client: ModelClient, result: dict[str, Any],
-          out: Callable[[str], None], untraced: Callable[..., Any], save: bool) -> None:
+          out: Callable[[str], None], untraced: Callable[..., Any], save: bool, variant: str = "v2",
+          save_dir: Path | None = None, run_id: str | None = None) -> None:
     source = wrapper_source(root, library)
     findings = latest_findings(root, library)
     out(f"planning for {library}: {len(source)} chars of wrapper source, {len(findings)} findings")
-    reply = client.chat_json(PLAN_MODEL, first_prompt(library, source, findings, max_n))
-    props = reply.get("proposals") if isinstance(reply, dict) else None
+    initial = None
+    if run_id:
+        with State(root) as state:
+            initial = state.observation(run_id, "planner:initial")
+    if initial:
+        props = initial["proposals"]
+        out("resumed initial proposal batch from state.db")
+    else:
+        reply = client.chat_json(PLAN_MODEL, first_prompt(library, source, findings, max_n, variant),
+                                 lenient=variant == "v2")
+        props = reply.get("proposals") if isinstance(reply, dict) else None
+        if isinstance(props, list) and run_id:
+            with State(root) as state:
+                state.save_observation(run_id, "planner:initial", {"status": "complete", "proposals": props})
     if not isinstance(props, list):
         raise ModelError('model reply has no "proposals" list; stopping the planner')
     existing = prop.load()
     taken = {(s.app, s.model) for s in existing}
     ids = {s.id for s in existing}
-    for p in props[:max_n]:
+    for index, p in enumerate(props[:max_n]):
+        saved = None
+        if run_id:
+            with State(root) as state:
+                saved = state.observation(run_id, f"planner:proposal:{index}")
+        if saved:
+            result["proposals"].append(saved["proposal"])
+            result[saved["decision"]].append(saved["result"])
+            if saved["decision"] == "accepted":
+                accepted = saved["result"]["proposal"]
+                taken.add((accepted["app"], accepted["model"]))
+                ids.add(accepted["id"])
+            out(f"  {saved['result']['id']}: resumed {saved['decision']} from state.db")
+            continue
         result["proposals"].append(p)
         pid = p.get("id", "?") if isinstance(p, dict) else "?"
         history = []
@@ -183,7 +245,7 @@ def _plan(root: Path, library: str, max_n: int, client: ModelClient, result: dic
             out(f"  {pid}: rejected ({'; '.join(reasons)[:200]})")
             if attempt == REVISIONS:
                 break
-            rev = client.chat_json(PLAN_MODEL, revision_prompt(p, reasons))
+            rev = client.chat_json(PLAN_MODEL, revision_prompt(p, reasons), lenient=variant == "v2")
             revised = rev.get("proposals") if isinstance(rev, dict) else None
             if not revised:
                 history.append({"proposal": None, "reasons": ["withdrawn by the model"]})
@@ -191,11 +253,23 @@ def _plan(root: Path, library: str, max_n: int, client: ModelClient, result: dic
                 break
             p = revised[0]
         if reasons:
-            result["rejected"].append({"id": pid, "reasons": reasons, "tries": len(history), "history": history})
+            decided = {"id": pid, "reasons": reasons, "tries": len(history), "history": history}
+            result["rejected"].append(decided)
+            if run_id:
+                with State(root) as state:
+                    state.save_observation(run_id, f"planner:proposal:{index}",
+                                           {"status": "complete", "decision": "rejected",
+                                            "proposal": result["proposals"][-1], "result": decided})
             continue
         taken.add((p["app"], p["model"]))
         ids.add(p["id"])
-        path = prop.save(p, library) if save else None
-        result["accepted"].append({"id": p["id"], "revisions": len(history), "proposal": p,
-                                   "path": str(path) if path else None})
+        path = prop.save(p, library, save_dir) if save else None
+        decided = {"id": p["id"], "revisions": len(history), "proposal": p,
+                   "path": str(path) if path else None}
+        result["accepted"].append(decided)
+        if run_id:
+            with State(root) as state:
+                state.save_observation(run_id, f"planner:proposal:{index}",
+                                       {"status": "complete", "decision": "accepted",
+                                        "proposal": result["proposals"][-1], "result": decided})
         out(f"  {p['id']}: accepted{f' after {len(history)} revision(s)' if history else ''}")

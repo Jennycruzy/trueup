@@ -1,0 +1,35 @@
+name: Trueup audit
+description: Run your agent script against a fake provider under a tracing library and fail on trace mismatches.
+inputs:
+  script:
+    description: Python file with a main() that calls the openai or anthropic SDK
+    required: true
+  library:
+    description: neatlogs, openinference or openllmetry
+    required: true
+  fail-on-leads:
+    description: fail the step when Trueup finds a lead (true/false)
+    default: "true"
+runs:
+  using: composite
+  steps:
+    - uses: astral-sh/setup-uv@v6
+    - name: trueup audit
+      shell: bash
+      env:
+        TRUEUP_SCRIPT: ${{ inputs.script }}
+        TRUEUP_LIBRARY: ${{ inputs.library }}
+        TRUEUP_FAIL: ${{ inputs.fail-on-leads }}
+      run: |
+        set +e
+        uv run --project "$GITHUB_ACTION_PATH" trueup audit "$TRUEUP_SCRIPT" --library "$TRUEUP_LIBRARY"
+        code=$?
+        if [ "$code" = 1 ] && [ "$TRUEUP_FAIL" != "true" ]; then code=0; fi
+        exit $code
+    - name: upload Trueup runs
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: trueup-runs
+        path: .trueup/runs/
+        if-no-files-found: ignore

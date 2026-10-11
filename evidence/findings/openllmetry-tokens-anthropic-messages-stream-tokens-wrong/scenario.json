@@ -1,0 +1,31 @@
+{
+ "api": "messages",
+ "app": "an_stream_helper",
+ "does": "Uses messages.stream, reads text_stream and the final message.",
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "end_turn"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 5,
+    "output": 3
+   }
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "framework": "none",
+ "id": "an-stream-helper",
+ "model": "anth-plain",
+ "provider": "anthropic",
+ "status": "built"
+}

@@ -1,0 +1,74 @@
+{
+ "check": "run_status",
+ "code_path": "openai responses stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:37:48+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "responses span status error stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:37:41+00:00",
+    "hits": 16,
+    "include_prs": true,
+    "query": "span status error stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "run_status",
+  "field": "top-level span status",
+  "kind": "lead",
+  "library": "openllmetry",
+  "scenario": "oa-resp-stream-error-event",
+  "severity": "high",
+  "trace": "OK",
+  "truth": "ERROR (app raised RuntimeError)"
+ },
+ "example_run": "20261010T203755Z-openllmetry",
+ "field": "top-level span status",
+ "fixed": false,
+ "found_in": [
+  "20261010T203755Z-openllmetry"
+ ],
+ "id": "openllmetry-run_status-openai-responses-stream-top-level-span-status-ok",
+ "leads": [
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "oa-resp-stream-error-event",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised RuntimeError)"
+  }
+ ],
+ "library": "openllmetry",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main df4921a409",
+  "recommended_setup": "Traceloop.init(); framework none",
+  "reference": "openinference record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203755Z-openllmetry/repros/openllmetry-oa-resp-stream-error-event.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "oa-resp-stream-error-event"
+ ],
+ "severity": "high",
+ "title": "openllmetry, openai responses stream: top-level span status is OK",
+ "trace": "OK",
+ "upstream": null
+}

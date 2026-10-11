@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+- `--variant v1|v2` on `plan` and `fix` (default v2), tagged `variant:<v>` in neatlogs. v2: lenient JSON and a JSON-only instruction for the fixer, revisions that carry only the last draft, failing-test reasons built from pytest's `E` lines, a planner prompt listing what the fake really did in every existing scenario, and a neatlogs flush after each worker. `Usage` counts JSON retries and truncated replies; plan.json and fix logs record wall time and the traces opened.
+- `trueup traces <session-id>` (`trueup.neatlogs_read`): reads a run's traces back through the neatlogs MCP server (read tools only). The Public API refuses the ingest key.
+- `trueup fix <id> --reprove`: applies the committed patch to the clean clone, sweeps every scenario again and writes `proof.json` (no model call). `fix --out-dir` writes somewhere other than `fixes/<id>/`.
+- `trueup bundle` writes `evidence/` with `manifest.json` (sha256 of every file). `trueup verify` checks the hashes, re-runs the comparer on saved truth and spans and recomputes every headline number, offline. `trueup report` writes `docs/index.html` from a bundle that verifies.
+- `trueup sweep <lib> --case <scenario>` runs single scenarios. `plan --save-dir` saves proposals elsewhere.
+- `action.yml`: GitHub Action that runs `trueup audit`. `entire-trueup` console script for `entire trueup ...`. CI also runs `trueup verify`.
+
 - Locate uses Entire's code graph first. It checks `entire graph capabilities --json`, then runs `entire graph search --profile full` per target package with the finding as one sentence, and `entire graph neighbors --relation CALLS --direction in` and `entire graph impact` on the top 3 hits. A second search finds the library's reference pattern. ripgrep + ast is the fallback when the graph is missing, does not cover Python, fails or finds nothing. Every graph command and its JSON output is in locate.json.
 - `trueup fix <id> --locate-only`: re-runs only locate (no model call), keeps the fix runs' locate output as `locate-fix-run.json`, and writes `graph-compare.json/.md` with the rank of each function `patch.diff` changed (from the diff and ast), for the graph and the fallback.
 - Files under `fixes/` and `upstream/` are written through `locate.save`, which removes this machine's absolute paths (clone paths relative to the clone, home as `~`).

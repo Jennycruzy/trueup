@@ -16,6 +16,7 @@ from trueup.runner import NOT_RUN, RAN, run_scenario, venvs
 from trueup.runner.run import not_run
 from trueup.scenarios import FRAMEWORKS, select
 from trueup.scenarios.proposed import load as load_proposed
+from trueup.state import State
 
 
 def new_run_id(library: str) -> str:
@@ -41,29 +42,52 @@ def sweep(
     framework: str = "all",
     *,
     proposed: str | None = None,
+    cases: list[str] | None = None,
     ensure: Callable[[Path, str], Path] = venvs.ensure,
     run: Callable[..., dict[str, Any]] = run_scenario,
     out: Callable[[str], None] = print,
+    run_id: str | None = None,
+    providers: tuple[str, ...] | None = None,
 ) -> tuple[Path, list[dict[str, Any]]]:
-    run_id = new_run_id(library) + ("-proposed" if proposed else "")
+    run_id = run_id or new_run_id(library) + ("-proposed" if proposed else "")
     run_dir = root / ".trueup" / "runs" / run_id
     run_dir.mkdir(parents=True, exist_ok=True)
     started = time.monotonic()
     scenarios = select(framework) if proposed is None else [
         s for s in load_proposed(proposed) if framework == "all" or s.framework in FRAMEWORKS[framework]]
-    try:
-        out(f"preparing venv for {library}")
-        python: Path | None = ensure(root, library)
+    if cases:
+        from trueup.scenarios import get
+
+        scenarios = [get(c) for c in cases]  # KeyError for an unknown id
+    if providers:
+        unknown = set(providers) - {"openai", "anthropic"}
+        if unknown:
+            raise ValueError(f"unknown provider(s): {', '.join(sorted(unknown))}")
+        scenarios = [s for s in scenarios if s.provider in providers]
+    with State(root) as state:
+        state.begin_run(run_id, "sweep", library)
+        cached = {s.id: state.observation(run_id, s.id) for s in scenarios}
+        pending = [s for s in scenarios if cached[s.id] is None]
+        python: Path | None = None
         venv_error = None
-    except Exception as e:  # noqa: BLE001 - every scenario is reported NOT RUN
-        python, venv_error = None, f"venv not ready: {e}"
-    results = []
-    with tracing.worker("trueup-runner") as span:
-        for s in scenarios:
-            r = not_run(s.id, library, venv_error) if python is None else run(python, library, s.id)
-            results.append(r)
-            out(summary_line(r))
-        tracing.set_verdict(span, f"ran {sum(r['status'] == RAN for r in results)}/{len(results)}")
+        if pending:
+            try:
+                out(f"preparing venv for {library}")
+                python = ensure(root, library)
+            except Exception as e:  # noqa: BLE001 - every pending scenario is reported NOT RUN
+                venv_error = f"venv not ready: {e}"
+        results = []
+        with tracing.worker("trueup-runner") as span:
+            for s in scenarios:
+                r = cached[s.id]
+                if r is None:
+                    r = not_run(s.id, library, venv_error) if python is None else run(python, library, s.id)
+                    state.save_observation(run_id, s.id, r)
+                else:
+                    out(f"{s.id:30} resumed from state.db")
+                results.append(r)
+                out(summary_line(r))
+            tracing.set_verdict(span, f"ran {sum(r['status'] == RAN for r in results)}/{len(results)}")
     with tracing.worker("trueup-comparer") as span:
         for r in results:
             if r["status"] == RAN:
@@ -78,7 +102,9 @@ def sweep(
     totals = (f"leads: {c['leads']} (high {c['by_severity']['high']}, medium {c['by_severity']['medium']}, "
               f"low {c['by_severity']['low']})  notes: {c['notes']}")
     lines = [
-        f"trueup sweep {library} --framework {framework}{f' --proposed {proposed}' if proposed else ''}  run {run_id}",
+        f"trueup sweep {library} --framework {framework}"
+        f"{f' --provider {','.join(providers)}' if providers else ''}"
+        f"{f' --proposed {proposed}' if proposed else ''}  run {run_id}",
         f"scenarios: {len(results)}  ran: {ran}  not run: {len(results) - ran}  "
         f"time: {time.monotonic() - started:.0f} s",
         totals,
@@ -93,6 +119,7 @@ def sweep(
         "run_id": run_id,
         "library": library,
         "framework": framework,
+        "providers": list(providers or ("openai", "anthropic")),
         "proposed": proposed,
         "scenarios": [{"id": r["scenario"], "status": r["status"], "reason": r["reason"]} for r in results],
     }, indent=1))
@@ -103,6 +130,9 @@ def sweep(
     out(table)
     out(totals)
     out(f"ran {ran}/{len(results)}; wrote {run_dir}")
+    with State(root) as state:
+        state.finish_run(run_id, "mismatch" if exit_code(results) == 1 else "complete" if exit_code(results) == 0
+                         else "error")
     return run_dir, results
 
 

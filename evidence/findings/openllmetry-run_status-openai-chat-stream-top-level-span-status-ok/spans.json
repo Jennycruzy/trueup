@@ -1,0 +1,35 @@
+[
+ {
+  "attributes": {
+   "gen_ai.is_streaming": true,
+   "gen_ai.openai.api_base": "http://127.0.0.1:38151/v1/",
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"content\": \"hel\", \"type\": \"text\"}], \"finish_reason\": \"\"}]",
+   "gen_ai.provider.name": "openai",
+   "gen_ai.request.model": "chat-error-event",
+   "gen_ai.response.id": "chatcmpl-d4ad1d390001",
+   "gen_ai.response.model": "chat-error-event"
+  },
+  "end_ns": 1791664727795161115,
+  "events": [
+   {
+    "attributes": {},
+    "name": "gen_ai.content.completion.chunk"
+   },
+   {
+    "attributes": {},
+    "name": "gen_ai.content.completion.chunk"
+   }
+  ],
+  "kind": "CLIENT",
+  "name": "openai.chat",
+  "parent_id": null,
+  "scope": "opentelemetry.instrumentation.openai.v1",
+  "span_id": "9aee1a97f7bbecae",
+  "start_ns": 1791664727782379478,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

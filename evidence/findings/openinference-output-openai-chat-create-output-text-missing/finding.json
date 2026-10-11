@@ -1,0 +1,85 @@
+{
+ "check": "output",
+ "code_path": "openai chat create",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [
+   {
+    "title": "fix(openai): accumulate streamed refusal and reasoning_content",
+    "url": "https://github.com/Arize-ai/openinference/pull/3996",
+    "why_not": "fixes streamed refusal fragments being overwritten; the finding is a non-streamed refusal not recorded"
+   },
+   {
+    "title": "fix(openai): accumulate streamed refusal and reasoning_content",
+    "url": "https://github.com/Arize-ai/openinference/pull/3797",
+    "why_not": "about streamed refusal fragments; the finding is a non-streamed refusal not recorded"
+   }
+  ],
+  "searches": [
+   {
+    "date": "2026-10-10T23:34:21+00:00",
+    "hits": 4,
+    "include_prs": true,
+    "query": "openai refusal",
+    "repo": "Arize-ai/openinference",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:34:24+00:00",
+    "hits": 24,
+    "include_prs": true,
+    "query": "refusal",
+    "repo": "Arize-ai/openinference",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "output",
+  "field": "call 1 output text",
+  "kind": "lead",
+  "library": "openinference",
+  "scenario": "oa-chat-refusal",
+  "severity": "medium",
+  "trace": null,
+  "truth": "I can't help with that."
+ },
+ "example_run": "20261010T203600Z-openinference",
+ "field": "output text",
+ "fixed": false,
+ "found_in": [
+  "20261010T203600Z-openinference"
+ ],
+ "id": "openinference-output-openai-chat-create-output-text-missing",
+ "leads": [
+  {
+   "check": "output",
+   "field": "call 1 output text",
+   "kind": "lead",
+   "library": "openinference",
+   "scenario": "oa-chat-refusal",
+   "severity": "medium",
+   "trace": null,
+   "truth": "I can't help with that."
+  }
+ ],
+ "library": "openinference",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main c364180e5b",
+  "recommended_setup": "the OpenInference instrumentor for the SDK or framework; framework none",
+  "reference": "openllmetry record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203600Z-openinference/repros/openinference-oa-chat-refusal.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "oa-chat-refusal"
+ ],
+ "severity": "medium",
+ "title": "openinference, openai chat create: output text not recorded",
+ "trace": "missing",
+ "upstream": null
+}

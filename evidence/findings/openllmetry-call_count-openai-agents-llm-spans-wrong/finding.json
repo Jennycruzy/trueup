@@ -1,0 +1,122 @@
+{
+ "check": "call_count",
+ "code_path": "openai-agents",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:37:21+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "openai-agents duplicate spans",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:37:24+00:00",
+    "hits": 29,
+    "include_prs": true,
+    "query": "duplicate spans",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "call_count",
+  "field": "LLM spans",
+  "kind": "lead",
+  "library": "openllmetry",
+  "scenario": "ag-run",
+  "severity": "high",
+  "trace": 4,
+  "truth": "2 (provider requests)"
+ },
+ "example_run": "20261010T203755Z-openllmetry",
+ "field": "LLM spans",
+ "fixed": true,
+ "found_in": [
+  "20261010T203755Z-openllmetry"
+ ],
+ "id": "openllmetry-call_count-openai-agents-llm-spans-wrong",
+ "leads": [
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-run",
+   "severity": "high",
+   "trace": 4,
+   "truth": "2 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-tool-raises",
+   "severity": "high",
+   "trace": 4,
+   "truth": "2 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-llm-fails",
+   "severity": "high",
+   "trace": 4,
+   "truth": "2 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-max-turns",
+   "severity": "high",
+   "trace": 6,
+   "truth": "3 (provider requests)"
+  },
+  {
+   "check": "call_count",
+   "field": "LLM spans",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-bad-tool",
+   "severity": "high",
+   "trace": 2,
+   "truth": "1 (provider requests)"
+  }
+ ],
+ "library": "openllmetry",
+ "rules": {
+  "fake_truthful": "2 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main df4921a409",
+  "recommended_setup": "Traceloop.init(); framework openai-agents (packages installed)",
+  "reference": "neatlogs, openinference record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203755Z-openllmetry/repros/openllmetry-ag-run.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "ag-bad-tool",
+  "ag-llm-fails",
+  "ag-max-turns",
+  "ag-run",
+  "ag-tool-raises"
+ ],
+ "severity": "high",
+ "title": "openllmetry, openai-agents: LLM spans recorded wrong",
+ "trace": "wrong",
+ "upstream": {
+  "issue": "upstream/openllmetry-call_count-openai-agents-llm-spans-wrong/issue.md",
+  "pr": "upstream/openllmetry-call_count-openai-agents-llm-spans-wrong/pr.md",
+  "status": "not yet posted"
+ }
+}

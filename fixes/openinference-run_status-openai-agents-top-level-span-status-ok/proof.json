@@ -1,0 +1,2232 @@
+{
+ "finding": "openinference-run_status-openai-agents-top-level-span-status-ok",
+ "commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+ "before": {
+  "leads": {
+   "oa-chat-plain": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-tools": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "oa-chat-n2": [],
+   "oa-chat-500": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-break": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "truth": "ended and exported (complete)",
+     "trace": "no span"
+    }
+   ],
+   "oa-chat-async-stream": [],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "failed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "incomplete"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "truth": "ended and exported (error_event)",
+     "trace": "no span"
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "an-plain": [],
+   "an-thinking": [],
+   "an-stream-helper": [],
+   "an-stream-thinking": [],
+   "an-stream-tools": [],
+   "an-create-stream": [],
+   "an-stream-error-event": [],
+   "an-stream-cut": [],
+   "an-529": [],
+   "an-async": [],
+   "lc-invoke": [],
+   "lc-stream": [],
+   "lc-stream-error-event": [],
+   "lc-stream-cut": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "lc-500": [],
+   "lg-agent": [],
+   "lg-tool-raises": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-stream": [],
+   "lg-step-limit": [],
+   "ag-run": [],
+   "ag-tool-raises": [],
+   "ag-llm-fails": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised InternalServerError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (http_error)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised MaxTurnsExceeded)",
+     "trace": "OK"
+    }
+   ],
+   "ag-bad-tool": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK"
+    }
+   ],
+   "ag-streamed": [],
+   "ag-streamed-error": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-streamed-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "truth": "ERROR (app raised APIConnectionError)",
+     "trace": "OK"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-stream-helper-cut": [],
+   "p-lc-tools": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-error-event": [],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "after": {
+  "leads": {
+   "oa-chat-plain": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-tools": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "oa-chat-n2": [],
+   "oa-chat-500": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-break": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "truth": "ended and exported (complete)",
+     "trace": "no span"
+    }
+   ],
+   "oa-chat-async-stream": [],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "failed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "incomplete"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "truth": [
+      "completed"
+     ],
+     "trace": null
+    }
+   ],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "severity": "high",
+     "truth": "ended and exported (error_event)",
+     "trace": "no span"
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "an-plain": [],
+   "an-thinking": [],
+   "an-stream-helper": [],
+   "an-stream-thinking": [],
+   "an-stream-tools": [],
+   "an-create-stream": [],
+   "an-stream-error-event": [],
+   "an-stream-cut": [],
+   "an-529": [],
+   "an-async": [],
+   "lc-invoke": [],
+   "lc-stream": [],
+   "lc-stream-error-event": [],
+   "lc-stream-cut": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "truth": "I can't help with that.",
+     "trace": null
+    }
+   ],
+   "lc-500": [],
+   "lg-agent": [],
+   "lg-tool-raises": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-stream": [],
+   "lg-step-limit": [],
+   "ag-run": [],
+   "ag-tool-raises": [],
+   "ag-llm-fails": [
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (http_error)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-max-turns": [],
+   "ag-bad-tool": [],
+   "ag-streamed": [],
+   "ag-streamed-error": [
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "ag-streamed-cut": [
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "ERROR, no exception event"
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-stream-helper-cut": [],
+   "p-lc-tools": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-error-event": [],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "rows": [
+  {
+   "scenario": "ag-bad-tool",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised ModelBehaviorError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-llm-fails",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised InternalServerError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-max-turns",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised MaxTurnsExceeded)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-streamed-cut",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised APIConnectionError)",
+   "before": "OK",
+   "after": "matches truth"
+  },
+  {
+   "scenario": "ag-streamed-error",
+   "field": "top-level span status",
+   "truth": "ERROR (app raised ModelBehaviorError)",
+   "before": "OK",
+   "after": "matches truth"
+  }
+ ],
+ "new_mismatches": [],
+ "after_observations": {
+  "ag-llm-fails": {
+   "truth": {
+    "calls": 2,
+    "outcome": "exception",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     },
+     null
+    ],
+    "finish": [
+     [
+      "completed"
+     ],
+     []
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ],
+     []
+    ],
+    "fake": [
+     "complete",
+     "http_error"
+    ],
+    "response_ids": [
+     "resp_27aad7d80003",
+     null
+    ],
+    "include_usage": [
+     false,
+     false
+    ],
+    "tool_runs": [
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     }
+    ],
+    "exception": "InternalServerError",
+    "scenario": "ag-llm-fails",
+    "expected": {
+     "calls": 2,
+     "outcome": "exception",
+     "tokens": [
+      {
+       "input": 11,
+       "output": 7
+      },
+      null
+     ],
+     "finish": [
+      [
+       "completed"
+      ],
+      []
+     ],
+     "tool_calls": [
+      [
+       "get_weather"
+      ],
+      []
+     ],
+     "fake": [
+      "complete",
+      "http_error"
+     ],
+     "tool_runs": [
+      {
+       "name": "get_weather",
+       "outcome": "ok"
+      }
+     ],
+     "exception": "InternalServerError"
+    },
+    "expected_mismatch": [],
+    "app": {
+     "outcome": "exception",
+     "exception_type": "InternalServerError",
+     "exception_module": "openai",
+     "message": "Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}",
+     "seconds": 0.221
+    },
+    "fake_log": [
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-fail2",
+      "stream": false,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_27aad7d80003",
+      "outcome": "complete",
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "total_tokens": 18,
+       "reasoning_tokens": 0
+      },
+      "usage_sent": true,
+      "finish": [
+       "completed"
+      ],
+      "tool_calls": [
+       {
+        "id": "call_27aad7d80002",
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Lagos\"}"
+       }
+      ],
+      "text": [],
+      "seq": 1
+     },
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-fail2",
+      "stream": false,
+      "include_usage": false,
+      "n": null,
+      "status_code": 500,
+      "response_id": null,
+      "outcome": "http_error",
+      "usage": null,
+      "usage_sent": false,
+      "finish": [],
+      "tool_calls": [],
+      "text": [],
+      "seq": 2
+     }
+    ]
+   },
+   "trace": {
+    "library": "openinference",
+    "versions": {
+     "openinference-instrumentation-openai": "0.1.65",
+     "openinference-instrumentation-anthropic": "3.0.3",
+     "openinference-instrumentation-langchain": "0.1.79",
+     "openinference-instrumentation-openai-agents": "2.5.3",
+     "openai": "3.28.0",
+     "anthropic": "1.13.0",
+     "opentelemetry-sdk": "1.45.1",
+     "langchain-core": "1.6.9",
+     "langchain-openai": "1.7.0",
+     "langgraph": "1.2.14",
+     "openai-agents": "0.23.1"
+    },
+    "spans": [
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "23cee78bfa0e920d",
+      "parent_id": "fa0607be1c7919ee",
+      "start_ns": 1791683553421590016,
+      "end_ns": 1791683553618415104,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_27aad7d80003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-fail2\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_27aad7d80002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_27aad7d80001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+       "llm.token_count.completion": 7,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.total": 18,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_27aad7d80002",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.model_name": "agent-resp-fail2",
+       "llm.finish_reason": "stop",
+       "llm.invocation_parameters": "{\"id\": \"resp_27aad7d80003\", \"created_at\": 0.0, \"model\": \"agent-resp-fail2\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+       "input.mime_type": "application/json",
+       "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}]",
+       "llm.input_messages.1.message.role": "user",
+       "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "get_weather",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "314ab32b4e408e6c",
+      "parent_id": "fa0607be1c7919ee",
+      "start_ns": 1791683553620361984,
+      "end_ns": 1791683553623858944,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "tool.name": "get_weather",
+       "input.value": "{\"city\":\"Lagos\"}",
+       "input.mime_type": "application/json",
+       "output.value": "Sunny in Lagos",
+       "tool.description": "",
+       "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}",
+       "openinference.span.kind": "TOOL"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "fa0607be1c7919ee",
+      "parent_id": "1b8f211d26df63bb",
+      "start_ns": 1791683553420972032,
+      "end_ns": 1791683553624134144,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "3360394e70df080f",
+      "parent_id": "1c5c6224e5be8ed6",
+      "start_ns": 1791683553624857856,
+      "end_ns": 1791683553635191040,
+      "status": {
+       "code": "ERROR",
+       "description": "Error getting response: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "1c5c6224e5be8ed6",
+      "parent_id": "1b8f211d26df63bb",
+      "start_ns": 1791683553624273920,
+      "end_ns": 1791683553635411968,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "helper",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "1b8f211d26df63bb",
+      "parent_id": "9481c1f1b2032411",
+      "start_ns": 1791683553420824064,
+      "end_ns": 1791683553635528960,
+      "status": {
+       "code": "ERROR",
+       "description": "Error in agent run: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "graph.node.id": "helper",
+       "agent.name": "helper",
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "9481c1f1b2032411",
+      "parent_id": "40ac08d529d206e8",
+      "start_ns": 1791683553420217088,
+      "end_ns": 1791683553635629056,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "e7db761a4c49a96b9bc32c91ddf0a9d3",
+      "span_id": "40ac08d529d206e8",
+      "parent_id": null,
+      "start_ns": 1791683553420116630,
+      "end_ns": 1791683553635679743,
+      "status": {
+       "code": "ERROR",
+       "description": "Error in agent run: {'error': \"Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_error', 'code': None, 'param': None}}\"}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     }
+    ]
+   }
+  },
+  "ag-max-turns": {
+   "truth": {
+    "calls": 3,
+    "outcome": "exception",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     },
+     {
+      "input": 11,
+      "output": 7
+     },
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "completed"
+     ],
+     [
+      "completed"
+     ],
+     [
+      "completed"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ],
+     [
+      "get_weather"
+     ],
+     [
+      "get_weather"
+     ]
+    ],
+    "fake": [
+     "complete",
+     "complete",
+     "complete"
+    ],
+    "response_ids": [
+     "resp_f72ba5250003",
+     "resp_f72ba5250006",
+     "resp_f72ba5250009"
+    ],
+    "include_usage": [
+     false,
+     false,
+     false
+    ],
+    "tool_runs": [
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     },
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     },
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     }
+    ],
+    "exception": "MaxTurnsExceeded",
+    "scenario": "ag-max-turns",
+    "expected": {
+     "calls": 3,
+     "outcome": "exception",
+     "tokens": [
+      {
+       "input": 11,
+       "output": 7
+      },
+      {
+       "input": 11,
+       "output": 7
+      },
+      {
+       "input": 11,
+       "output": 7
+      }
+     ],
+     "finish": [
+      [
+       "completed"
+      ],
+      [
+       "completed"
+      ],
+      [
+       "completed"
+      ]
+     ],
+     "tool_calls": [
+      [
+       "get_weather"
+      ],
+      [
+       "get_weather"
+      ],
+      [
+       "get_weather"
+      ]
+     ],
+     "fake": [
+      "complete",
+      "complete",
+      "complete"
+     ],
+     "tool_runs": [
+      {
+       "name": "get_weather",
+       "outcome": "ok"
+      },
+      {
+       "name": "get_weather",
+       "outcome": "ok"
+      },
+      {
+       "name": "get_weather",
+       "outcome": "ok"
+      }
+     ],
+     "exception": "MaxTurnsExceeded"
+    },
+    "expected_mismatch": [],
+    "app": {
+     "outcome": "exception",
+     "exception_type": "MaxTurnsExceeded",
+     "exception_module": "agents.exceptions",
+     "message": "Max turns (3) exceeded",
+     "seconds": 0.264
+    },
+    "fake_log": [
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-loop",
+      "stream": false,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_f72ba5250003",
+      "outcome": "complete",
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "total_tokens": 18,
+       "reasoning_tokens": 0
+      },
+      "usage_sent": true,
+      "finish": [
+       "completed"
+      ],
+      "tool_calls": [
+       {
+        "id": "call_f72ba5250002",
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Lagos\"}"
+       }
+      ],
+      "text": [],
+      "seq": 1
+     },
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-loop",
+      "stream": false,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_f72ba5250006",
+      "outcome": "complete",
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "total_tokens": 18,
+       "reasoning_tokens": 0
+      },
+      "usage_sent": true,
+      "finish": [
+       "completed"
+      ],
+      "tool_calls": [
+       {
+        "id": "call_f72ba5250005",
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Lagos\"}"
+       }
+      ],
+      "text": [],
+      "seq": 2
+     },
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-loop",
+      "stream": false,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_f72ba5250009",
+      "outcome": "complete",
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "total_tokens": 18,
+       "reasoning_tokens": 0
+      },
+      "usage_sent": true,
+      "finish": [
+       "completed"
+      ],
+      "tool_calls": [
+       {
+        "id": "call_f72ba5250008",
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Lagos\"}"
+       }
+      ],
+      "text": [],
+      "seq": 3
+     }
+    ]
+   },
+   "trace": {
+    "library": "openinference",
+    "versions": {
+     "openinference-instrumentation-openai": "0.1.65",
+     "openinference-instrumentation-anthropic": "3.0.3",
+     "openinference-instrumentation-langchain": "0.1.79",
+     "openinference-instrumentation-openai-agents": "2.5.3",
+     "openai": "3.28.0",
+     "anthropic": "1.13.0",
+     "opentelemetry-sdk": "1.45.1",
+     "langchain-core": "1.6.9",
+     "langchain-openai": "1.7.0",
+     "langgraph": "1.2.14",
+     "openai-agents": "0.23.1"
+    },
+    "spans": [
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "c2a9f52bb09a2208",
+      "parent_id": "09c9c44632858b96",
+      "start_ns": 1791683556034339840,
+      "end_ns": 1791683556227200000,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_f72ba5250003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-loop\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_f72ba5250002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_f72ba5250001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+       "llm.token_count.completion": 7,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.total": 18,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_f72ba5250002",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.model_name": "agent-resp-loop",
+       "llm.finish_reason": "stop",
+       "llm.invocation_parameters": "{\"id\": \"resp_f72ba5250003\", \"created_at\": 0.0, \"model\": \"agent-resp-loop\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+       "input.mime_type": "application/json",
+       "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}]",
+       "llm.input_messages.1.message.role": "user",
+       "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "get_weather",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "711463d20db26fe0",
+      "parent_id": "09c9c44632858b96",
+      "start_ns": 1791683556230107136,
+      "end_ns": 1791683556231579904,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "tool.name": "get_weather",
+       "input.value": "{\"city\":\"Lagos\"}",
+       "input.mime_type": "application/json",
+       "output.value": "Sunny in Lagos",
+       "tool.description": "",
+       "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}",
+       "openinference.span.kind": "TOOL"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "09c9c44632858b96",
+      "parent_id": "06daeca1b114a99b",
+      "start_ns": 1791683556033655808,
+      "end_ns": 1791683556231888128,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "5fd6784309ff022a",
+      "parent_id": "3db04b3301222ba8",
+      "start_ns": 1791683556232641024,
+      "end_ns": 1791683556238217984,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_f72ba5250006\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-loop\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_f72ba5250005\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_f72ba5250004\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+       "llm.token_count.completion": 7,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.total": 18,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_f72ba5250005",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.model_name": "agent-resp-loop",
+       "llm.finish_reason": "stop",
+       "llm.invocation_parameters": "{\"id\": \"resp_f72ba5250006\", \"created_at\": 0.0, \"model\": \"agent-resp-loop\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+       "input.mime_type": "application/json",
+       "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}, {\"arguments\": \"{\\\"city\\\":\\\"Lagos\\\"}\", \"call_id\": \"call_f72ba5250002\", \"name\": \"get_weather\", \"type\": \"function_call\", \"id\": \"fc_f72ba5250001\", \"status\": \"completed\"}, {\"call_id\": \"call_f72ba5250002\", \"output\": \"Sunny in Lagos\", \"type\": \"function_call_output\"}]",
+       "llm.input_messages.1.message.role": "user",
+       "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+       "llm.input_messages.2.message.role": "assistant",
+       "llm.input_messages.2.message.tool_calls.0.tool_call.id": "call_f72ba5250002",
+       "llm.input_messages.2.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.input_messages.2.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.input_messages.3.message.role": "tool",
+       "llm.input_messages.3.message.tool_call_id": "call_f72ba5250002",
+       "llm.input_messages.3.message.content": "Sunny in Lagos",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "get_weather",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "4e196ff6e9668352",
+      "parent_id": "3db04b3301222ba8",
+      "start_ns": 1791683556239305984,
+      "end_ns": 1791683556240623104,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "tool.name": "get_weather",
+       "input.value": "{\"city\":\"Lagos\"}",
+       "input.mime_type": "application/json",
+       "output.value": "Sunny in Lagos",
+       "tool.description": "",
+       "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}",
+       "openinference.span.kind": "TOOL"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "3db04b3301222ba8",
+      "parent_id": "06daeca1b114a99b",
+      "start_ns": 1791683556232036096,
+      "end_ns": 1791683556240861952,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "ef3068bd1638627f",
+      "parent_id": "06804b4119e0f1bf",
+      "start_ns": 1791683556241451008,
+      "end_ns": 1791683556289020928,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_f72ba5250009\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-loop\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_f72ba5250008\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_f72ba5250007\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+       "llm.token_count.completion": 7,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.total": 18,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_f72ba5250008",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.model_name": "agent-resp-loop",
+       "llm.finish_reason": "stop",
+       "llm.invocation_parameters": "{\"id\": \"resp_f72ba5250009\", \"created_at\": 0.0, \"model\": \"agent-resp-loop\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+       "input.mime_type": "application/json",
+       "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}, {\"arguments\": \"{\\\"city\\\":\\\"Lagos\\\"}\", \"call_id\": \"call_f72ba5250002\", \"name\": \"get_weather\", \"type\": \"function_call\", \"id\": \"fc_f72ba5250001\", \"status\": \"completed\"}, {\"call_id\": \"call_f72ba5250002\", \"output\": \"Sunny in Lagos\", \"type\": \"function_call_output\"}, {\"arguments\": \"{\\\"city\\\":\\\"Lagos\\\"}\", \"call_id\": \"call_f72ba5250005\", \"name\": \"get_weather\", \"type\": \"function_call\", \"id\": \"fc_f72ba5250004\", \"status\": \"completed\"}, {\"call_id\": \"call_f72ba5250005\", \"output\": \"Sunny in Lagos\", \"type\": \"function_call_output\"}]",
+       "llm.input_messages.1.message.role": "user",
+       "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+       "llm.input_messages.2.message.role": "assistant",
+       "llm.input_messages.2.message.tool_calls.0.tool_call.id": "call_f72ba5250002",
+       "llm.input_messages.2.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.input_messages.2.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.input_messages.3.message.role": "tool",
+       "llm.input_messages.3.message.tool_call_id": "call_f72ba5250002",
+       "llm.input_messages.3.message.content": "Sunny in Lagos",
+       "llm.input_messages.4.message.role": "assistant",
+       "llm.input_messages.4.message.tool_calls.0.tool_call.id": "call_f72ba5250005",
+       "llm.input_messages.4.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.input_messages.4.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.input_messages.5.message.role": "tool",
+       "llm.input_messages.5.message.tool_call_id": "call_f72ba5250005",
+       "llm.input_messages.5.message.content": "Sunny in Lagos",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "get_weather",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "365dc611fc98d6b6",
+      "parent_id": "06804b4119e0f1bf",
+      "start_ns": 1791683556291233024,
+      "end_ns": 1791683556292332032,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "tool.name": "get_weather",
+       "input.value": "{\"city\":\"Lagos\"}",
+       "input.mime_type": "application/json",
+       "output.value": "Sunny in Lagos",
+       "tool.description": "",
+       "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}",
+       "openinference.span.kind": "TOOL"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "06804b4119e0f1bf",
+      "parent_id": "06daeca1b114a99b",
+      "start_ns": 1791683556240973056,
+      "end_ns": 1791683556292553984,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "helper",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "06daeca1b114a99b",
+      "parent_id": "1b64909c82bdd9e5",
+      "start_ns": 1791683556033468928,
+      "end_ns": 1791683556292777984,
+      "status": {
+       "code": "ERROR",
+       "description": "Max turns exceeded: {'max_turns': 3}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "graph.node.id": "helper",
+       "agent.name": "helper",
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "1b64909c82bdd9e5",
+      "parent_id": "aff3b0b77fdfcfb0",
+      "start_ns": 1791683556032829952,
+      "end_ns": 1791683556292875008,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "998c23be291d233fe2acf1ce24b9d56a",
+      "span_id": "aff3b0b77fdfcfb0",
+      "parent_id": null,
+      "start_ns": 1791683556032705960,
+      "end_ns": 1791683556292924171,
+      "status": {
+       "code": "ERROR",
+       "description": "Max turns exceeded: {'max_turns': 3}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     }
+    ]
+   }
+  },
+  "ag-bad-tool": {
+   "truth": {
+    "calls": 1,
+    "outcome": "exception",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     }
+    ],
+    "finish": [
+     [
+      "completed"
+     ]
+    ],
+    "tool_calls": [
+     [
+      "no_such_tool"
+     ]
+    ],
+    "fake": [
+     "complete"
+    ],
+    "response_ids": [
+     "resp_f7eabd740003"
+    ],
+    "include_usage": [
+     false
+    ],
+    "tool_runs": [],
+    "exception": "ModelBehaviorError",
+    "scenario": "ag-bad-tool",
+    "expected": {
+     "calls": 1,
+     "outcome": "exception",
+     "tokens": [
+      {
+       "input": 11,
+       "output": 7
+      }
+     ],
+     "finish": [
+      [
+       "completed"
+      ]
+     ],
+     "tool_calls": [
+      [
+       "no_such_tool"
+      ]
+     ],
+     "fake": [
+      "complete"
+     ],
+     "tool_runs": [],
+     "exception": "ModelBehaviorError"
+    },
+    "expected_mismatch": [],
+    "app": {
+     "outcome": "exception",
+     "exception_type": "ModelBehaviorError",
+     "exception_module": "agents.exceptions",
+     "message": "Tool no_such_tool not found in agent helper",
+     "seconds": 0.201
+    },
+    "fake_log": [
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-badtool",
+      "stream": false,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_f7eabd740003",
+      "outcome": "complete",
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "total_tokens": 18,
+       "reasoning_tokens": 0
+      },
+      "usage_sent": true,
+      "finish": [
+       "completed"
+      ],
+      "tool_calls": [
+       {
+        "id": "call_f7eabd740002",
+        "name": "no_such_tool",
+        "arguments": "{\"city\":\"Lagos\"}"
+       }
+      ],
+      "text": [],
+      "seq": 1
+     }
+    ]
+   },
+   "trace": {
+    "library": "openinference",
+    "versions": {
+     "openinference-instrumentation-openai": "0.1.65",
+     "openinference-instrumentation-anthropic": "3.0.3",
+     "openinference-instrumentation-langchain": "0.1.79",
+     "openinference-instrumentation-openai-agents": "2.5.3",
+     "openai": "3.28.0",
+     "anthropic": "1.13.0",
+     "opentelemetry-sdk": "1.45.1",
+     "langchain-core": "1.6.9",
+     "langchain-openai": "1.7.0",
+     "langgraph": "1.2.14",
+     "openai-agents": "0.23.1"
+    },
+    "spans": [
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "8377ef30ac8ebf5a3135989e4dc1f21a",
+      "span_id": "4319be1cc9c8021d",
+      "parent_id": "5545d4f3407e830b",
+      "start_ns": 1791683558716200960,
+      "end_ns": 1791683558909348864,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_f7eabd740003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-badtool\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_f7eabd740002\",\"name\":\"no_such_tool\",\"type\":\"function_call\",\"id\":\"fc_f7eabd740001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+       "llm.token_count.completion": 7,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.total": 18,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_f7eabd740002",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "no_such_tool",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.model_name": "agent-resp-badtool",
+       "llm.finish_reason": "stop",
+       "llm.invocation_parameters": "{\"id\": \"resp_f7eabd740003\", \"created_at\": 0.0, \"model\": \"agent-resp-badtool\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+       "input.mime_type": "application/json",
+       "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}]",
+       "llm.input_messages.1.message.role": "user",
+       "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "8377ef30ac8ebf5a3135989e4dc1f21a",
+      "span_id": "5545d4f3407e830b",
+      "parent_id": "dc40b28d785fc473",
+      "start_ns": 1791683558715101952,
+      "end_ns": 1791683558910973184,
+      "status": {
+       "code": "ERROR",
+       "description": "Tool not found: {'tool_name': 'no_such_tool'}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "helper",
+      "kind": "INTERNAL",
+      "trace_id": "8377ef30ac8ebf5a3135989e4dc1f21a",
+      "span_id": "dc40b28d785fc473",
+      "parent_id": "16b8ebfc929146d0",
+      "start_ns": 1791683558714947072,
+      "end_ns": 1791683558911115008,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "graph.node.id": "helper",
+       "agent.name": "helper",
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "8377ef30ac8ebf5a3135989e4dc1f21a",
+      "span_id": "16b8ebfc929146d0",
+      "parent_id": "8a4627f4b18eb134",
+      "start_ns": 1791683558714309888,
+      "end_ns": 1791683558911207936,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "8377ef30ac8ebf5a3135989e4dc1f21a",
+      "span_id": "8a4627f4b18eb134",
+      "parent_id": null,
+      "start_ns": 1791683558714199229,
+      "end_ns": 1791683558911260076,
+      "status": {
+       "code": "ERROR",
+       "description": "Tool not found: {'tool_name': 'no_such_tool'}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     }
+    ]
+   }
+  },
+  "ag-streamed-error": {
+   "truth": {
+    "calls": 2,
+    "outcome": "exception",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     },
+     null
+    ],
+    "finish": [
+     [
+      "completed"
+     ],
+     []
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ],
+     []
+    ],
+    "fake": [
+     "complete",
+     "error_event"
+    ],
+    "response_ids": [
+     "resp_1fd50d4a0003",
+     "resp_1fd50d4a0005"
+    ],
+    "include_usage": [
+     false,
+     false
+    ],
+    "tool_runs": [
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     }
+    ],
+    "exception": "ModelBehaviorError",
+    "scenario": "ag-streamed-error",
+    "expected": {
+     "calls": 2,
+     "outcome": "exception",
+     "tokens": [
+      {
+       "input": 11,
+       "output": 7
+      },
+      null
+     ],
+     "finish": [
+      [
+       "completed"
+      ],
+      []
+     ],
+     "tool_calls": [
+      [
+       "get_weather"
+      ],
+      []
+     ],
+     "fake": [
+      "complete",
+      "error_event"
+     ],
+     "tool_runs": [
+      {
+       "name": "get_weather",
+       "outcome": "ok"
+      }
+     ],
+     "exception": "ModelBehaviorError"
+    },
+    "expected_mismatch": [],
+    "app": {
+     "outcome": "exception",
+     "exception_type": "ModelBehaviorError",
+     "exception_module": "agents.exceptions",
+     "message": "Responses stream ended with terminal event `error`. code=server_error; message=fake stream error.",
+     "seconds": 0.721
+    },
+    "fake_log": [
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-error-event",
+      "stream": true,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_1fd50d4a0003",
+      "outcome": "complete",
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "total_tokens": 18,
+       "reasoning_tokens": 0
+      },
+      "usage_sent": true,
+      "finish": [
+       "completed"
+      ],
+      "tool_calls": [
+       {
+        "id": "call_1fd50d4a0002",
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Lagos\"}"
+       }
+      ],
+      "text": [],
+      "seq": 1
+     },
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-error-event",
+      "stream": true,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_1fd50d4a0005",
+      "outcome": "error_event",
+      "usage": null,
+      "usage_sent": false,
+      "finish": [],
+      "tool_calls": [],
+      "text": [
+       "It "
+      ],
+      "seq": 2
+     }
+    ]
+   },
+   "trace": {
+    "library": "openinference",
+    "versions": {
+     "openinference-instrumentation-openai": "0.1.65",
+     "openinference-instrumentation-anthropic": "3.0.3",
+     "openinference-instrumentation-langchain": "0.1.79",
+     "openinference-instrumentation-openai-agents": "2.5.3",
+     "openai": "3.28.0",
+     "anthropic": "1.13.0",
+     "opentelemetry-sdk": "1.45.1",
+     "langchain-core": "1.6.9",
+     "langchain-openai": "1.7.0",
+     "langgraph": "1.2.14",
+     "openai-agents": "0.23.1"
+    },
+    "spans": [
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "82a9f0a481d777e0",
+      "parent_id": "6cf7a5797565b032",
+      "start_ns": 1791683565032627200,
+      "end_ns": 1791683565736368896,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_1fd50d4a0003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-error-event\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_1fd50d4a0002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_1fd50d4a0001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+       "llm.token_count.completion": 7,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.total": 18,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_1fd50d4a0002",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.model_name": "agent-resp-error-event",
+       "llm.finish_reason": "stop",
+       "llm.invocation_parameters": "{\"id\": \"resp_1fd50d4a0003\", \"created_at\": 0.0, \"model\": \"agent-resp-error-event\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+       "input.mime_type": "application/json",
+       "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}]",
+       "llm.input_messages.1.message.role": "user",
+       "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "get_weather",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "461066a3d7db2fa2",
+      "parent_id": "6cf7a5797565b032",
+      "start_ns": 1791683565738287872,
+      "end_ns": 1791683565739334144,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "tool.name": "get_weather",
+       "input.value": "{\"city\":\"Lagos\"}",
+       "input.mime_type": "application/json",
+       "output.value": "Sunny in Lagos",
+       "tool.description": "",
+       "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}",
+       "openinference.span.kind": "TOOL"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "6cf7a5797565b032",
+      "parent_id": "7edb1d03dab1b836",
+      "start_ns": 1791683565031981824,
+      "end_ns": 1791683565739651840,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "9f6649de5c186c36",
+      "parent_id": "5cdb54a5a4d93542",
+      "start_ns": 1791683565740637952,
+      "end_ns": 1791683565746859008,
+      "status": {
+       "code": "ERROR",
+       "description": "Error streaming response: {'error': 'Responses stream ended with terminal event `error`. code=server_error; message=fake stream error.'}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "5cdb54a5a4d93542",
+      "parent_id": "7edb1d03dab1b836",
+      "start_ns": 1791683565740077056,
+      "end_ns": 1791683565746978048,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "helper",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "7edb1d03dab1b836",
+      "parent_id": "6e9dae4b6e14db23",
+      "start_ns": 1791683565031836160,
+      "end_ns": 1791683565747052032,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "graph.node.id": "helper",
+       "agent.name": "helper",
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "6e9dae4b6e14db23",
+      "parent_id": "9dacf0232aa4875e",
+      "start_ns": 1791683565031565056,
+      "end_ns": 1791683565747131136,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "b1ae7af1012b73ab95e295b1c54f98be",
+      "span_id": "9dacf0232aa4875e",
+      "parent_id": null,
+      "start_ns": 1791683565031473394,
+      "end_ns": 1791683565747177311,
+      "status": {
+       "code": "ERROR",
+       "description": "Error streaming response: {'error': 'Responses stream ended with terminal event `error`. code=server_error; message=fake stream error.'}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     }
+    ]
+   }
+  },
+  "ag-streamed-cut": {
+   "truth": {
+    "calls": 2,
+    "outcome": "exception",
+    "tokens": [
+     {
+      "input": 11,
+      "output": 7
+     },
+     null
+    ],
+    "finish": [
+     [
+      "completed"
+     ],
+     []
+    ],
+    "tool_calls": [
+     [
+      "get_weather"
+     ],
+     []
+    ],
+    "fake": [
+     "complete",
+     "cut"
+    ],
+    "response_ids": [
+     "resp_85594ea00003",
+     "resp_85594ea00005"
+    ],
+    "include_usage": [
+     false,
+     false
+    ],
+    "tool_runs": [
+     {
+      "name": "get_weather",
+      "outcome": "ok"
+     }
+    ],
+    "exception": "APIConnectionError",
+    "scenario": "ag-streamed-cut",
+    "expected": {
+     "calls": 2,
+     "outcome": "exception",
+     "tokens": [
+      {
+       "input": 11,
+       "output": 7
+      },
+      null
+     ],
+     "finish": [
+      [
+       "completed"
+      ],
+      []
+     ],
+     "tool_calls": [
+      [
+       "get_weather"
+      ],
+      []
+     ],
+     "fake": [
+      "complete",
+      "cut"
+     ],
+     "tool_runs": [
+      {
+       "name": "get_weather",
+       "outcome": "ok"
+      }
+     ],
+     "exception": "APIConnectionError"
+    },
+    "expected_mismatch": [],
+    "app": {
+     "outcome": "exception",
+     "exception_type": "APIConnectionError",
+     "exception_module": "openai",
+     "message": "Connection error.",
+     "seconds": 0.816
+    },
+    "fake_log": [
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-cut",
+      "stream": true,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_85594ea00003",
+      "outcome": "complete",
+      "usage": {
+       "input_tokens": 11,
+       "output_tokens": 7,
+       "total_tokens": 18,
+       "reasoning_tokens": 0
+      },
+      "usage_sent": true,
+      "finish": [
+       "completed"
+      ],
+      "tool_calls": [
+       {
+        "id": "call_85594ea00002",
+        "name": "get_weather",
+        "arguments": "{\"city\":\"Lagos\"}"
+       }
+      ],
+      "text": [],
+      "seq": 1
+     },
+     {
+      "api": "openai.responses",
+      "path": "/v1/responses",
+      "scenario": "agent-resp-cut",
+      "stream": true,
+      "include_usage": false,
+      "n": null,
+      "status_code": 200,
+      "response_id": "resp_85594ea00005",
+      "outcome": "cut",
+      "usage": null,
+      "usage_sent": false,
+      "finish": [],
+      "tool_calls": [],
+      "text": [
+       "It "
+      ],
+      "seq": 2
+     }
+    ]
+   },
+   "trace": {
+    "library": "openinference",
+    "versions": {
+     "openinference-instrumentation-openai": "0.1.65",
+     "openinference-instrumentation-anthropic": "3.0.3",
+     "openinference-instrumentation-langchain": "0.1.79",
+     "openinference-instrumentation-openai-agents": "2.5.3",
+     "openai": "3.28.0",
+     "anthropic": "1.13.0",
+     "opentelemetry-sdk": "1.45.1",
+     "langchain-core": "1.6.9",
+     "langchain-openai": "1.7.0",
+     "langgraph": "1.2.14",
+     "openai-agents": "0.23.1"
+    },
+    "spans": [
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "80f83c76095b126a",
+      "parent_id": "375a909251cfed51",
+      "start_ns": 1791683568354990080,
+      "end_ns": 1791683569148590080,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "output.mime_type": "application/json",
+       "output.value": "{\"id\":\"resp_85594ea00003\",\"access_programs\":null,\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"instructions\":null,\"metadata\":null,\"model\":\"agent-resp-cut\",\"object\":\"response\",\"output\":[{\"arguments\":\"{\\\"city\\\":\\\"Lagos\\\"}\",\"call_id\":\"call_85594ea00002\",\"name\":\"get_weather\",\"type\":\"function_call\",\"id\":\"fc_85594ea00001\",\"async_\":null,\"caller\":null,\"namespace\":null,\"status\":\"completed\"}],\"parallel_tool_calls\":true,\"temperature\":null,\"tool_choice\":\"auto\",\"tools\":[],\"top_p\":null,\"background\":null,\"completed_at\":null,\"conversation\":null,\"max_output_tokens\":null,\"max_tool_calls\":null,\"moderation\":null,\"previous_response_id\":null,\"prompt\":null,\"prompt_cache_diagnostics\":null,\"prompt_cache_key\":null,\"prompt_cache_options\":null,\"prompt_cache_retention\":null,\"reasoning\":null,\"safety_identifier\":null,\"service_tier\":null,\"status\":\"completed\",\"text\":null,\"top_logprobs\":null,\"truncation\":null,\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cache_write_tokens\":null,\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18},\"user\":null}",
+       "llm.token_count.completion": 7,
+       "llm.token_count.prompt": 11,
+       "llm.token_count.total": 18,
+       "llm.token_count.prompt_details.cache_read": 0,
+       "llm.token_count.completion_details.reasoning": 0,
+       "llm.output_messages.0.message.role": "assistant",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.id": "call_85594ea00002",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.name": "get_weather",
+       "llm.output_messages.0.message.tool_calls.0.tool_call.function.arguments": "{\"city\":\"Lagos\"}",
+       "llm.model_name": "agent-resp-cut",
+       "llm.finish_reason": "stop",
+       "llm.invocation_parameters": "{\"id\": \"resp_85594ea00003\", \"created_at\": 0.0, \"model\": \"agent-resp-cut\", \"parallel_tool_calls\": true, \"tool_choice\": \"auto\"}",
+       "input.mime_type": "application/json",
+       "input.value": "[{\"content\": \"What is the weather in Lagos?\", \"role\": \"user\"}]",
+       "llm.input_messages.1.message.role": "user",
+       "llm.input_messages.1.message.content": "What is the weather in Lagos?",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "get_weather",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "7eed39240d589211",
+      "parent_id": "375a909251cfed51",
+      "start_ns": 1791683569151060224,
+      "end_ns": 1791683569152265984,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "tool.name": "get_weather",
+       "input.value": "{\"city\":\"Lagos\"}",
+       "input.mime_type": "application/json",
+       "output.value": "Sunny in Lagos",
+       "tool.description": "",
+       "tool.parameters": "{\"properties\": {\"city\": {\"title\": \"City\", \"type\": \"string\"}}, \"required\": [\"city\"], \"title\": \"get_weather_args\", \"type\": \"object\", \"additionalProperties\": false}",
+       "openinference.span.kind": "TOOL"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "375a909251cfed51",
+      "parent_id": "8db13ef6a8da25cb",
+      "start_ns": 1791683568353750016,
+      "end_ns": 1791683569152601856,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "response",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "f7534770d30bfd52",
+      "parent_id": "2f6142f920ea731e",
+      "start_ns": 1791683569153816832,
+      "end_ns": 1791683569161867008,
+      "status": {
+       "code": "ERROR",
+       "description": "Error streaming response: {'error': 'Connection error.'}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "llm.system": "openai",
+       "openinference.span.kind": "LLM"
+      },
+      "events": []
+     },
+     {
+      "name": "turn",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "2f6142f920ea731e",
+      "parent_id": "8db13ef6a8da25cb",
+      "start_ns": 1791683569153053952,
+      "end_ns": 1791683569162161152,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "helper",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "8db13ef6a8da25cb",
+      "parent_id": "d4b1cf5fe11d005f",
+      "start_ns": 1791683568353571840,
+      "end_ns": 1791683569162260992,
+      "status": {
+       "code": "ERROR",
+       "description": "Error in agent run: {'error': 'Connection error.'}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "graph.node.id": "helper",
+       "agent.name": "helper",
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "d4b1cf5fe11d005f",
+      "parent_id": "6f0d1e91f597e676",
+      "start_ns": 1791683568353241088,
+      "end_ns": 1791683569162358016,
+      "status": {
+       "code": "OK",
+       "description": null
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "CHAIN"
+      },
+      "events": []
+     },
+     {
+      "name": "Agent workflow",
+      "kind": "INTERNAL",
+      "trace_id": "e90cbcb35d46a38b783c02cd9ab76110",
+      "span_id": "6f0d1e91f597e676",
+      "parent_id": null,
+      "start_ns": 1791683568353142103,
+      "end_ns": 1791683569162410173,
+      "status": {
+       "code": "ERROR",
+       "description": "Error in agent run: {'error': 'Connection error.'}"
+      },
+      "scope": "openinference.instrumentation.openai_agents",
+      "attributes": {
+       "openinference.span.kind": "AGENT"
+      },
+      "events": []
+     }
+    ]
+   }
+  }
+ }
+}

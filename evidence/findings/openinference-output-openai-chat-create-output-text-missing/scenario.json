@@ -1,0 +1,31 @@
+{
+ "api": "chat",
+ "app": "chat_create",
+ "does": "The model refuses; content is null, refusal is set.",
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "stop"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "framework": "none",
+ "id": "oa-chat-refusal",
+ "model": "chat-refusal",
+ "provider": "openai",
+ "status": "built"
+}

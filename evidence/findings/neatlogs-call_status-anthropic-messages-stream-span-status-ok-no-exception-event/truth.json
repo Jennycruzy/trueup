@@ -1,0 +1,65 @@
+{
+ "app": {
+  "exception_module": "anthropic",
+  "exception_type": "APIStatusError",
+  "message": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}",
+  "outcome": "exception",
+  "seconds": 0.062
+ },
+ "calls": 1,
+ "exception": "APIStatusError",
+ "expected": {
+  "calls": 1,
+  "exception": "APIStatusError",
+  "fake": [
+   "error_event"
+  ],
+  "outcome": "exception",
+  "tokens": [
+   null
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "error_event"
+ ],
+ "fake_log": [
+  {
+   "api": "anthropic.messages",
+   "finish": [],
+   "include_usage": false,
+   "n": null,
+   "outcome": "error_event",
+   "path": "/v1/messages",
+   "response_id": "msg_7aee55e40001",
+   "scenario": "anth-error-event",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [
+    "hel"
+   ],
+   "tool_calls": [],
+   "usage": null,
+   "usage_sent": false
+  }
+ ],
+ "finish": [
+  []
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "exception",
+ "response_ids": [
+  "msg_7aee55e40001"
+ ],
+ "scenario": "p-an-stream-helper-error-event",
+ "tokens": [
+  null
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

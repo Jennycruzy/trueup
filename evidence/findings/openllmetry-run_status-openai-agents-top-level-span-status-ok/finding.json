@@ -1,0 +1,118 @@
+{
+ "check": "run_status",
+ "code_path": "openai-agents",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:37:31+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "openai-agents span status error",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:37:34+00:00",
+    "hits": 30,
+    "include_prs": true,
+    "query": "span status error",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "run_status",
+  "field": "top-level span status",
+  "kind": "lead",
+  "library": "openllmetry",
+  "scenario": "ag-llm-fails",
+  "severity": "high",
+  "trace": "OK",
+  "truth": "ERROR (app raised InternalServerError)"
+ },
+ "example_run": "20261010T203755Z-openllmetry",
+ "field": "top-level span status",
+ "fixed": false,
+ "found_in": [
+  "20261010T203755Z-openllmetry"
+ ],
+ "id": "openllmetry-run_status-openai-agents-top-level-span-status-ok",
+ "leads": [
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-llm-fails",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised InternalServerError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-max-turns",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised MaxTurnsExceeded)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-bad-tool",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised ModelBehaviorError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-streamed-error",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised ModelBehaviorError)"
+  },
+  {
+   "check": "run_status",
+   "field": "top-level span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "ag-streamed-cut",
+   "severity": "high",
+   "trace": "OK",
+   "truth": "ERROR (app raised APIConnectionError)"
+  }
+ ],
+ "library": "openllmetry",
+ "rules": {
+  "fake_truthful": "2 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main df4921a409",
+  "recommended_setup": "Traceloop.init(); framework openai-agents (packages installed)",
+  "reference": "OTel trace API: set span status to Error when the operation it covers failed",
+  "repro": ".trueup/runs/20261010T203755Z-openllmetry/repros/openllmetry-ag-llm-fails.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "ag-bad-tool",
+  "ag-llm-fails",
+  "ag-max-turns",
+  "ag-streamed-cut",
+  "ag-streamed-error"
+ ],
+ "severity": "high",
+ "title": "openllmetry, openai-agents: top-level span status is OK",
+ "trace": "OK",
+ "upstream": null
+}

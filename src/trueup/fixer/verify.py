@@ -122,14 +122,33 @@ def run_pytest(py: Path, clone: Path, pkg: Package, args: list[str], timeout: fl
            *args]
     try:
         p = subprocess.run(cmd, cwd=cwd, capture_output=True, text=True, timeout=timeout, env=test_env())
-        code, tail = p.returncode, (p.stdout + p.stderr).strip()[-3000:]
+        text = (p.stdout + p.stderr).strip()
+        code, tail = p.returncode, text[-3000:]
     except subprocess.TimeoutExpired:
         code, tail = -1, f"timed out after {timeout:.0f} s"
-    res: dict[str, Any] = {"cmd": " ".join(["pytest", *args]), "cwd": pkg.path, "exit": code, "tail": tail}
+        text = tail
+    res: dict[str, Any] = {"cmd": " ".join(["pytest", *args]), "cwd": pkg.path, "exit": code, "tail": tail,
+                           "brief": brief(text)}
     if junit.exists():
         res.update(parse_junit(junit))
         junit.unlink()
     return res
+
+
+def brief(text: str, limit: int = 1500) -> str:
+    """The lines that say why tests failed: the `file:line: in test` locations, the `E ` lines and the
+    FAILED/ERROR summary. v1 sent the last 1200 characters of the output instead, which often held
+    warnings and captured logs (sessions 20261011T001405Z-fix-openllmetry and
+    20261011T004013Z-fix-openinference, try 1: "PydanticDeprecatedSince20 ...", "Captured log call")."""
+    keep = [ln for ln in text.splitlines() if ln.startswith(("E ", "FAILED", "ERROR ")) or
+            (": in test" in ln and ln.lstrip().startswith(("tests/", "test")))]
+    out, n = [], 0
+    for ln in keep:
+        if n + len(ln) > limit:
+            break
+        out.append(ln)
+        n += len(ln) + 1
+    return "\n".join(out)
 
 
 def baseline_usable(before: dict[str, Any]) -> tuple[bool, str]:
@@ -155,8 +174,12 @@ def suite_verdict(before: dict[str, Any], after: dict[str, Any]) -> tuple[bool, 
     return True, ("suite passes" if not same else f"same {same} failure(s) as before the patch")
 
 
-def new_test_verdict(before: dict[str, Any], after: dict[str, Any]) -> tuple[bool, str]:
+def new_test_verdict(before: dict[str, Any], after: dict[str, Any], variant: str = "v1") -> tuple[bool, str]:
     """The new test must fail on the unpatched code and pass on the patched code."""
+    if variant == "v2" and after.get("brief") and (after.get("total", 0) == 0 or after.get("failing")) \
+            and before.get("total", 0) and before.get("failing"):
+        return False, (f"the new test fails with the patch (exit {after['exit']}). Why, from pytest:\n"
+                       f"{after['brief']}\nLast lines:\n{after['tail'][-300:]}")
     if before.get("total", 0) == 0:
         return False, f"the new test was not collected before the patch (exit {before['exit']}): " \
                       f"{before['tail'][-600:]}"

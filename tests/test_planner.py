@@ -255,6 +255,19 @@ def test_planner_stops_at_spend_limit(tmp_path, proposed_dir):
     assert "spend limit reached" in res["error"] and c.client.sent == []
 
 
+def test_planner_resume_reuses_initial_batch_and_completed_proposals(tmp_path, proposed_dir):
+    root = fake_root(tmp_path)
+    first = client([json.dumps({"proposals": [GOOD]})])
+    one = planner.plan(root, "neatlogs", 1, client=first, run_id="resume-plan", out=lambda _: None,
+                       untraced=lambda p: ([], None))
+    assert len(first.client.sent) == 1 and len(one["accepted"]) == 1
+    resumed = client([])
+    two = planner.plan(root, "neatlogs", 1, client=resumed, run_id="resume-plan", out=lambda _: None,
+                       untraced=lambda p: ([], None))
+    assert resumed.client.sent == []
+    assert [x["id"] for x in two["accepted"]] == [GOOD["id"]]
+
+
 def test_sweep_proposed(tmp_path, proposed_dir):
     prop.save(GOOD, "neatlogs")
     seen = []
@@ -266,3 +279,26 @@ def test_sweep_proposed(tmp_path, proposed_dir):
     run_dir, results = sweep(tmp_path, "openllmetry", proposed="neatlogs", ensure=lambda r, l: Path("/py"),
                              run=run, out=lambda s: None)
     assert seen == ["p-chat-stream-usage-tools"] and run_dir.name.endswith("-openllmetry-proposed")
+
+
+# v2 ---------------------------------------------------------------------------------------------
+
+def test_lenient_json_skips_prose_around_the_object():
+    from trueup.model import parse_json
+
+    text = 'Let me look more carefully at the file.\n{"edits": [], "test": {"file": "x"}}\nDone.'
+    with pytest.raises(json.JSONDecodeError):
+        parse_json(text)
+    assert parse_json(text, lenient=True) == {"edits": [], "test": {"file": "x"}}
+    with pytest.raises(json.JSONDecodeError):
+        parse_json("no json here", lenient=True)
+
+
+def test_v2_prompt_shows_what_the_fake_really_did():
+    from trueup.planner import first_prompt, seen_outcomes
+
+    rows = seen_outcomes()
+    assert any(r.get("exception") == "BadRequestError" or r.get("exception") for r in rows)
+    v1 = first_prompt("neatlogs", "src", [], 3, "v1")[1]["content"]
+    v2 = first_prompt("neatlogs", "src", [], 3, "v2")[1]["content"]
+    assert "What really happened in the existing scenarios" in v2 and "What really happened" not in v1

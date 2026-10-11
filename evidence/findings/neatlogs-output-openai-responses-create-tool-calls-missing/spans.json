@@ -1,0 +1,31 @@
+[
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "neatlogs.wrapper",
+   "neatlogs.llm.input_messages.0.content": "\"What is the weather in Lagos?\"",
+   "neatlogs.llm.input_messages.0.role": "user",
+   "neatlogs.llm.is_streaming": false,
+   "neatlogs.llm.metrics.duration_ms": 90.664,
+   "neatlogs.llm.model_name": "resp-tool",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.llm.token_count.completion": 7,
+   "neatlogs.llm.token_count.prompt": 11,
+   "neatlogs.metrics.duration_ms": 92.004547,
+   "neatlogs.span.kind": "llm",
+   "neatlogs.workflow_name": "child"
+  },
+  "end_ns": 1791664458350997155,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "openai.responses.create",
+  "parent_id": null,
+  "scope": "neatlogs.wrapper",
+  "span_id": "7e11c213f3da0046",
+  "start_ns": 1791664458258992608,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

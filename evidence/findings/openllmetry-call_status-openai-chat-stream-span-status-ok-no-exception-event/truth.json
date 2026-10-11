@@ -1,0 +1,65 @@
+{
+ "app": {
+  "exception_module": "openai",
+  "exception_type": "APIError",
+  "message": "fake stream error",
+  "outcome": "exception",
+  "seconds": 0.014
+ },
+ "calls": 1,
+ "exception": "APIError",
+ "expected": {
+  "calls": 1,
+  "exception": "APIError",
+  "fake": [
+   "error_event"
+  ],
+  "outcome": "exception",
+  "tokens": [
+   null
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "error_event"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.chat",
+   "finish": [],
+   "include_usage": false,
+   "n": null,
+   "outcome": "error_event",
+   "path": "/v1/chat/completions",
+   "response_id": "chatcmpl-d4ad1d390001",
+   "scenario": "chat-error-event",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [
+    "hel"
+   ],
+   "tool_calls": [],
+   "usage": null,
+   "usage_sent": false
+  }
+ ],
+ "finish": [
+  []
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "exception",
+ "response_ids": [
+  "chatcmpl-d4ad1d390001"
+ ],
+ "scenario": "oa-chat-stream-error-event",
+ "tokens": [
+  null
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

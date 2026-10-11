@@ -1,0 +1,860 @@
+{
+ "after": {
+  "leads": {
+   "ag-bad-tool": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised ModelBehaviorError)"
+    }
+   ],
+   "ag-llm-fails": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised InternalServerError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (http_error)"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised MaxTurnsExceeded)"
+    }
+   ],
+   "ag-run": [],
+   "ag-streamed": [],
+   "ag-streamed-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised APIConnectionError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (cut)"
+    }
+   ],
+   "ag-streamed-error": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised ModelBehaviorError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (error_event)"
+    }
+   ],
+   "ag-tool-raises": [],
+   "an-529": [],
+   "an-async": [],
+   "an-create-stream": [],
+   "an-plain": [],
+   "an-stream-cut": [],
+   "an-stream-error-event": [],
+   "an-stream-helper": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "truth": {
+      "input": 5,
+      "output": 3
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "hello"
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "end_turn"
+     ]
+    }
+   ],
+   "an-stream-thinking": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "truth": {
+      "input": 5,
+      "output": 3
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "hello"
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "end_turn"
+     ]
+    }
+   ],
+   "an-stream-tools": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "truth": {
+      "input": 5,
+      "output": 3
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "hello"
+    },
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ]
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "tool_use"
+     ]
+    }
+   ],
+   "an-thinking": [],
+   "lc-500": [],
+   "lc-invoke": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "lc-stream": [],
+   "lc-stream-cut": [],
+   "lc-stream-error-event": [],
+   "lg-agent": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-step-limit": [],
+   "lg-stream": [],
+   "lg-tool-raises": [],
+   "oa-chat-500": [],
+   "oa-chat-async-stream": [],
+   "oa-chat-n2": [],
+   "oa-chat-plain": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "oa-chat-stream-break": [],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-tools": [],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "failed"
+     ]
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "incomplete"
+     ]
+    }
+   ],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "UNSET",
+     "truth": "ERROR (app raised RuntimeError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "trace": "UNSET, no exception event",
+     "truth": "ERROR with exception event (error_event)"
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ]
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ]
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-cut": [],
+   "p-an-stream-helper-error-event": [],
+   "p-lc-tools": [],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "after_observations": {
+  "p-an-stream-helper-error-event": {
+   "trace": {
+    "spans": [
+     {
+      "attributes": {
+       "neatlogs.instrumentation.name": "neatlogs.wrapper",
+       "neatlogs.llm.input_messages.0.content": "What is the weather in Lagos?",
+       "neatlogs.llm.input_messages.0.role": "user",
+       "neatlogs.llm.is_streaming": true,
+       "neatlogs.llm.max_tokens": 64,
+       "neatlogs.llm.model_name": "anth-error-event",
+       "neatlogs.llm.provider": "anthropic",
+       "neatlogs.llm.system": "anthropic",
+       "neatlogs.metrics.duration_ms": 50.07195,
+       "neatlogs.span.kind": "llm",
+       "neatlogs.workflow_name": "child"
+      },
+      "end_ns": 1791683753192312577,
+      "events": [
+       {
+        "attributes": {
+         "exception.escaped": "False",
+         "exception.message": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}",
+         "exception.type": "anthropic.APIStatusError"
+        },
+        "name": "exception"
+       }
+      ],
+      "kind": "INTERNAL",
+      "name": "anthropic.messages.create",
+      "parent_id": null,
+      "scope": "neatlogs.wrapper",
+      "span_id": "c6c0e2c7f417d044",
+      "start_ns": 1791683753142240627,
+      "status": {
+       "code": "ERROR",
+       "description": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}"
+      }
+     }
+    ]
+   },
+   "truth": {
+    "app": {
+     "exception_module": "anthropic",
+     "exception_type": "APIStatusError",
+     "message": "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}}",
+     "outcome": "exception",
+     "seconds": 0.08
+    },
+    "calls": 1,
+    "exception": "APIStatusError",
+    "expected": {
+     "calls": 1,
+     "exception": "APIStatusError",
+     "fake": [
+      "error_event"
+     ],
+     "outcome": "exception",
+     "tokens": [
+      null
+     ]
+    },
+    "expected_mismatch": [],
+    "fake": [
+     "error_event"
+    ],
+    "fake_log": [
+     {
+      "api": "anthropic.messages",
+      "finish": [],
+      "include_usage": false,
+      "n": null,
+      "outcome": "error_event",
+      "path": "/v1/messages",
+      "response_id": "msg_1525c5de0001",
+      "scenario": "anth-error-event",
+      "seq": 1,
+      "status_code": 200,
+      "stream": true,
+      "text": [
+       "hel"
+      ],
+      "tool_calls": [],
+      "usage": null,
+      "usage_sent": false
+     }
+    ],
+    "finish": [
+     []
+    ],
+    "include_usage": [
+     false
+    ],
+    "outcome": "exception",
+    "response_ids": [
+     "msg_1525c5de0001"
+    ],
+    "scenario": "p-an-stream-helper-error-event",
+    "tokens": [
+     null
+    ],
+    "tool_calls": [
+     []
+    ],
+    "tool_runs": []
+   }
+  }
+ },
+ "before": {
+  "leads": {
+   "ag-bad-tool": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised ModelBehaviorError)"
+    }
+   ],
+   "ag-llm-fails": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised InternalServerError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (http_error)"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised MaxTurnsExceeded)"
+    }
+   ],
+   "ag-run": [],
+   "ag-streamed": [],
+   "ag-streamed-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised APIConnectionError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (cut)"
+    }
+   ],
+   "ag-streamed-error": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised ModelBehaviorError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 2 span status",
+     "severity": "medium",
+     "trace": "ERROR, no exception event",
+     "truth": "ERROR with exception event (error_event)"
+    }
+   ],
+   "ag-tool-raises": [],
+   "an-529": [],
+   "an-async": [],
+   "an-create-stream": [],
+   "an-plain": [],
+   "an-stream-cut": [],
+   "an-stream-error-event": [],
+   "an-stream-helper": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "truth": {
+      "input": 5,
+      "output": 3
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "hello"
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "end_turn"
+     ]
+    }
+   ],
+   "an-stream-thinking": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "truth": {
+      "input": 5,
+      "output": 3
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "hello"
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "end_turn"
+     ]
+    }
+   ],
+   "an-stream-tools": [
+    {
+     "check": "tokens",
+     "field": "call 1 tokens",
+     "severity": "high",
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "truth": {
+      "input": 5,
+      "output": 3
+     }
+    },
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "hello"
+    },
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ]
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "tool_use"
+     ]
+    }
+   ],
+   "an-thinking": [],
+   "lc-500": [],
+   "lc-invoke": [],
+   "lc-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "lc-stream": [],
+   "lc-stream-cut": [],
+   "lc-stream-error-event": [],
+   "lg-agent": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-step-limit": [],
+   "lg-stream": [],
+   "lg-tool-raises": [],
+   "oa-chat-500": [],
+   "oa-chat-async-stream": [],
+   "oa-chat-n2": [],
+   "oa-chat-plain": [],
+   "oa-chat-refusal": [
+    {
+     "check": "output",
+     "field": "call 1 output text",
+     "severity": "medium",
+     "trace": null,
+     "truth": "I can't help with that."
+    }
+   ],
+   "oa-chat-stream-break": [],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-tools": [],
+   "oa-resp-failed": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "failed"
+     ]
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "incomplete"
+     ]
+    }
+   ],
+   "oa-resp-plain": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "oa-resp-stream-error-event": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "UNSET",
+     "truth": "ERROR (app raised RuntimeError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "trace": "UNSET, no exception event",
+     "truth": "ERROR with exception event (error_event)"
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ]
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "check": "output",
+     "field": "call 1 tool calls",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ]
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "completed"
+     ]
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-cut": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised RemoteProtocolError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "trace": "OK, no exception event",
+     "truth": "ERROR with exception event (cut)"
+    }
+   ],
+   "p-an-stream-helper-error-event": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised APIStatusError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "severity": "medium",
+     "trace": "OK, no exception event",
+     "truth": "ERROR with exception event (error_event)"
+    }
+   ],
+   "p-lc-tools": [],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {}
+ },
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "finding": "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+ "new_mismatches": [],
+ "rows": [
+  {
+   "after": "matches truth",
+   "before": "OK",
+   "field": "top-level span status",
+   "scenario": "p-an-stream-helper-cut",
+   "truth": "ERROR (app raised RemoteProtocolError)"
+  },
+  {
+   "after": "matches truth",
+   "before": "OK",
+   "field": "top-level span status",
+   "scenario": "p-an-stream-helper-error-event",
+   "truth": "ERROR (app raised APIStatusError)"
+  }
+ ]
+}

@@ -1,0 +1,75 @@
+{
+ "app": {
+  "outcome": "ok",
+  "result": {
+   "chunks_read": 1
+  },
+  "seconds": 0.058
+ },
+ "calls": 1,
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "stop"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   null
+  ],
+  "tool_calls": [
+   []
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.chat",
+   "finish": [
+    "stop"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/chat/completions",
+   "response_id": "chatcmpl-f76955840001",
+   "scenario": "chat-plain",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [
+    "hello"
+   ],
+   "tool_calls": [],
+   "usage": null,
+   "usage_sent": false
+  }
+ ],
+ "finish": [
+  [
+   "stop"
+  ]
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "ok",
+ "response_ids": [
+  "chatcmpl-f76955840001"
+ ],
+ "scenario": "oa-chat-stream-break",
+ "tokens": [
+  null
+ ],
+ "tool_calls": [
+  []
+ ],
+ "tool_runs": []
+}

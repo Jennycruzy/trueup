@@ -1,0 +1,171 @@
+{
+ "already_known": 4,
+ "disputed_groups": 6,
+ "findings": {
+  "by_library": {
+   "neatlogs": {
+    "findings": 14,
+    "high": 4,
+    "low": 0,
+    "medium": 10
+   },
+   "openinference": {
+    "findings": 6,
+    "high": 3,
+    "low": 0,
+    "medium": 3
+   },
+   "openllmetry": {
+    "findings": 9,
+    "high": 6,
+    "low": 0,
+    "medium": 3
+   }
+  },
+  "by_severity": {
+   "high": 13,
+   "low": 0,
+   "medium": 16
+  },
+  "total": 29
+ },
+ "fixes": {
+  "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok": {
+   "after": {
+    "high": 9,
+    "leads": 31,
+    "medium": 22,
+    "scenarios": 57
+   },
+   "before": {
+    "high": 11,
+    "leads": 35,
+    "medium": 24,
+    "scenarios": 57
+   },
+   "finding_scenarios_still_wrong": 0,
+   "new_mismatches": 0,
+   "proven": true
+  },
+  "openinference-run_status-openai-agents-top-level-span-status-ok": {
+   "after": {
+    "high": 2,
+    "leads": 14,
+    "medium": 12,
+    "scenarios": 57
+   },
+   "before": {
+    "high": 7,
+    "leads": 19,
+    "medium": 12,
+    "scenarios": 57
+   },
+   "finding_scenarios_still_wrong": 0,
+   "new_mismatches": 0,
+   "proven": true
+  },
+  "openllmetry-call_count-openai-agents-llm-spans-wrong": {
+   "after": {
+    "high": 17,
+    "leads": 27,
+    "medium": 10,
+    "scenarios": 57
+   },
+   "before": {
+    "high": 22,
+    "leads": 32,
+    "medium": 10,
+    "scenarios": 57
+   },
+   "finding_scenarios_still_wrong": 0,
+   "new_mismatches": 0,
+   "proven": true
+  }
+ },
+ "fixes_proven": 3,
+ "upstream_drafts": 3,
+ "v1v2": [
+  {
+   "accepted": "5 of 6",
+   "accepted_app_crash": 0,
+   "calls": 7,
+   "cost_usd": 0.2131,
+   "first_try": "2 of 6",
+   "input_tokens": 57686,
+   "job": "planner",
+   "json_retries": 0,
+   "output_tokens": 2671,
+   "recall": "2 of 23",
+   "runs": [
+    "20261011T013638Z-plan-openllmetry",
+    "20261011T013725Z-plan-neatlogs"
+   ],
+   "traces_received": "0 of 2",
+   "tries_per_item": 1.83,
+   "variant": "v1",
+   "wall_s": 42.4
+  },
+  {
+   "accepted": "5 of 6",
+   "accepted_app_crash": 1,
+   "calls": 6,
+   "cost_usd": 0.2133,
+   "first_try": "3 of 6",
+   "input_tokens": 59681,
+   "job": "planner",
+   "json_retries": 0,
+   "output_tokens": 2281,
+   "recall": "3 of 23",
+   "runs": [
+    "20261011T013704Z-plan-openllmetry",
+    "20261011T013748Z-plan-neatlogs"
+   ],
+   "traces_received": "0 of 2",
+   "tries_per_item": 1.67,
+   "variant": "v2",
+   "wall_s": 39.5
+  },
+  {
+   "accepted": "1 of 1",
+   "accepted_app_crash": 0,
+   "calls": 4,
+   "cost_usd": 0.5275,
+   "first_try": "0 of 1",
+   "input_tokens": 108886,
+   "job": "fixer",
+   "json_retries": 2,
+   "output_tokens": 13389,
+   "recall": "1 of 1 fixed",
+   "runs": [
+    "20261011T013927Z-fix-openinference"
+   ],
+   "traces_received": "1 of 6",
+   "tries_per_item": 2.0,
+   "variant": "v1",
+   "wall_s": 253.2
+  },
+  {
+   "accepted": "1 of 1",
+   "accepted_app_crash": 0,
+   "calls": 2,
+   "cost_usd": 0.2218,
+   "first_try": "0 of 1",
+   "input_tokens": 49438,
+   "job": "fixer",
+   "json_retries": 0,
+   "output_tokens": 4900,
+   "recall": "1 of 1 fixed",
+   "runs": [
+    "20261011T014344Z-fix-openinference"
+   ],
+   "traces_received": "1 of 6",
+   "tries_per_item": 2.0,
+   "variant": "v2",
+   "wall_s": 333.7
+  }
+ ],
+ "withdrawn_by_rule": {
+  "latest_and_main": 2,
+  "trueup_own_false_alarm": 27
+ }
+}

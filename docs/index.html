@@ -1,0 +1,277 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Trueup evidence</title>
+<style>
+:root{color-scheme:light dark;--bg:#fff;--fg:#1b1b1b;--muted:#5c5c5c;--line:#d8d8d8;--soft:#f4f4f4;
+--bad:#b3261e;--good:#1e6b34}
+@media (prefers-color-scheme:dark){:root{--bg:#141414;--fg:#e8e8e8;--muted:#a8a8a8;--line:#3a3a3a;
+--soft:#1f1f1f;--bad:#ff8a80;--good:#7fd48f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);
+font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:58rem;margin:0 auto;padding:1rem}h1{font-size:1.6rem;margin:.5rem 0}
+h2{font-size:1.25rem;margin-top:2.2rem;border-bottom:1px solid var(--line);padding-bottom:.3rem}
+h3{font-size:1.05rem;margin-top:1.4rem}a{color:inherit}p.muted,.muted{color:var(--muted)}
+.wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}table{border-collapse:collapse;width:100%;font-size:.92rem}
+th,td{border:1px solid var(--line);padding:.35rem .5rem;text-align:left;vertical-align:top}
+th{background:var(--soft)}code,pre{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:.85rem}
+pre{background:var(--soft);padding:.7rem;overflow-x:auto;border:1px solid var(--line)}
+.bad{color:var(--bad);font-weight:600}.good{color:var(--good);font-weight:600}
+ol.steps{padding-left:1.3rem}ol.steps>li{margin-bottom:1rem}
+.flow{display:flex;flex-wrap:wrap;gap:.3rem;align-items:center;margin:.6rem 0}
+.flow span{border:1px solid var(--line);padding:.15rem .5rem;background:var(--soft)}
+details{margin:.5rem 0}summary{cursor:pointer}
+</style></head><body><main>
+<h1>Trueup evidence</h1>
+<p>Trueup runs AI agents against a fake provider, so it knows what really happened, and compares that with what the tracing library recorded. Every number on this page is recomputed from <a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/">evidence/</a> by <code>uv run trueup verify</code>, with no keys and no network.</p>
+<h2>Headline</h2>
+<div class="wrap"><table><thead><tr><th>library</th><th>findings</th><th>high</th><th>medium</th></tr></thead><tbody><tr><td>neatlogs</td><td>14</td><td>4</td><td>10</td></tr><tr><td>openinference</td><td>6</td><td>3</td><td>3</td></tr><tr><td>openllmetry</td><td>9</td><td>6</td><td>3</td></tr><tr><td><b>all</b></td><td><b>29</b></td><td>13</td><td>16</td></tr></tbody></table></div>
+<p>Withdrawn leads by rule: latest_and_main: 2, trueup_own_false_alarm: 27. Disputed groups (the conventions do not decide): 6. Already reported upstream: 4. Fixes proven: 3 of 3. Upstream drafts: 3, none posted.</p>
+<h3>Fixes: leads in the full scenario library, before and after the patch</h3>
+<div class="wrap"><table><thead><tr><th>finding</th><th>before</th><th>after</th><th>new mismatches</th><th>proven</th></tr></thead><tbody><tr><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/">neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok</a></td><td>35 (11 high)</td><td>31 (9 high)</td><td>0</td><td><span class="good">yes</span></td></tr><tr><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openinference-run_status-openai-agents-top-level-span-status-ok/">openinference-run_status-openai-agents-top-level-span-status-ok</a></td><td>19 (7 high)</td><td>14 (2 high)</td><td>0</td><td><span class="good">yes</span></td></tr><tr><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-call_count-openai-agents-llm-spans-wrong/">openllmetry-call_count-openai-agents-llm-spans-wrong</a></td><td>32 (22 high)</td><td>27 (17 high)</td><td>0</td><td><span class="good">yes</span></td></tr></tbody></table></div>
+<h3>v1 and v2 of the planner and the fixer</h3>
+<div class="wrap"><table><thead><tr><th>job</th><th>version</th><th>first try accepted</th><th>tries per item</th><th>model calls (JSON retries)</th><th>tokens in / out</th><th>cost (list price)</th><th>wall time</th><th>answer-key recall</th><th>traces found in neatlogs</th></tr></thead><tbody><tr><td>planner</td><td>v1</td><td>2 of 6</td><td>1.83</td><td>7 (0)</td><td>57,686 / 2,671</td><td>$0.21</td><td>42 s</td><td>2 of 23</td><td>0 of 2</td></tr><tr><td>planner</td><td>v2</td><td>3 of 6</td><td>1.67</td><td>6 (0)</td><td>59,681 / 2,281</td><td>$0.21</td><td>40 s</td><td>3 of 23</td><td>0 of 2</td></tr><tr><td>fixer</td><td>v1</td><td>0 of 1</td><td>2.0</td><td>4 (2)</td><td>108,886 / 13,389</td><td>$0.53</td><td>253 s</td><td>1 of 1 fixed</td><td>1 of 6</td></tr><tr><td>fixer</td><td>v2</td><td>0 of 1</td><td>2.0</td><td>2 (0)</td><td>49,438 / 4,900</td><td>$0.22</td><td>334 s</td><td>1 of 1 fixed</td><td>1 of 6</td></tr></tbody></table></div>
+<p class=muted>One run per library and version, so these are small samples. Run ids, neatlogs session ids and the raw data are in <a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/v1v2.json">evidence/v1v2.json</a>.</p>
+<h2>One finding, start to finish</h2>
+<div class="flow"><span>shown as OK</span>→<span>found</span>→<span>double-checked</span>→<span>fixed</span>→<span>proven</span></div>
+<p><b>openinference, openai-agents: top-level span status is OK</b> (high). Example scenario <code>ag-llm-fails</code>: The second model call returns 500; the run raises.</p>
+<ol class=steps>
+<li><b>Shown as OK.</b> What really happened: 2 provider call(s), the app raised <code>InternalServerError</code>. What OpenInference exported:<div class="wrap"><table><thead><tr><th>span</th><th>status</th><th>parent</th><th>events</th></tr></thead><tbody><tr><td>response</td><td>OK</td><td>turn</td><td>-</td></tr><tr><td>get_weather</td><td>OK</td><td>turn</td><td>-</td></tr><tr><td>turn</td><td>OK</td><td>helper</td><td>-</td></tr><tr><td>response</td><td>ERROR</td><td>turn</td><td>-</td></tr><tr><td>turn</td><td>OK</td><td>helper</td><td>-</td></tr><tr><td>helper</td><td>ERROR</td><td>Agent workflow</td><td>-</td></tr><tr><td>Agent workflow</td><td>OK</td><td>Agent workflow</td><td>-</td></tr><tr><td>Agent workflow</td><td><b>OK</b> (top level)</td><td>(root)</td><td>-</td></tr></tbody></table></div></li>
+<li><b>Found.</b> The comparer's lead: top-level span status: truth <span class=good>ERROR (app raised InternalServerError)</span>, trace <span class=bad>OK</span>. Same lead in 5 scenarios: ag-bad-tool, ag-llm-fails, ag-max-turns, ag-streamed-cut, ag-streamed-error.</li>
+<li><b>Double-checked.</b> Every rule passed:<ul><li><code>fake_truthful</code>: 2 call(s), unique response ids</li><li><code>fresh_process</code>: same lead with the same values in 2 fresh processes</li><li><code>harness_sane</code>: own client per event loop; export off, no endpoint; reruns fast</li><li><code>latest_and_main</code>: latest release and main c364180e5b</li><li><code>recommended_setup</code>: the OpenInference instrumentor for the SDK or framework; framework openai-agents (packages installed)</li><li><code>reference</code>: OTel trace API: set span status to Error when the operation it covers failed</li><li><code>repro</code>: .trueup/runs/20261010T203600Z-openinference/repros/openinference-ag-llm-fails.py: 31 lines, no keys, shows the lead</li></ul>Searched the library's issues and PRs: not found.</li>
+<li><b>Fixed.</b> The model drafted a patch and a test; code kept it only after the test failed before and passed after, the package's suite showed no new failure and every scenario matched truth. Earlier fix runs on this finding: 20261011T002549Z-fix-openinference: 3 tries, not fixed; 20261011T003256Z-fix-openinference: 3 tries, not fixed; 20261011T003533Z-fix-openinference: 3 tries, not fixed; 20261011T004013Z-fix-openinference: 3 tries, fixed.<details><summary>patch.diff</summary><pre>diff --git a/python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py b/python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py
+index bc41aaa..a350d96 100644
+--- a/python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py
++++ b/python/instrumentation/openinference-instrumentation-openai-agents/src/openinference/instrumentation/openai_agents/_processor.py
+@@ -117,6 +117,7 @@ class OpenInferenceTracingProcessor(TracingProcessor):
+         self._root_spans: dict[str, OtelSpan] = {}
+         self._otel_spans: dict[str, OtelSpan] = {}
+         self._tokens: dict[str, object] = {}
++        self._root_span_errors: dict[str, Status] = {}
+         # This captures in flight handoff. Once the handoff is complete, the entry is deleted
+         # If the handoff does not complete, the entry stays in the dict.
+         # Use an OrderedDict and _MAX_HANDOFFS_IN_FLIGHT to cap the size of the dict
+@@ -144,8 +145,12 @@ class OpenInferenceTracingProcessor(TracingProcessor):
+             trace: The trace that started.
+         &quot;&quot;&quot;
+         root_span = self._root_spans.pop(trace.trace_id, None)
++        error_status = self._root_span_errors.pop(trace.trace_id, None)
+         if root_span:
+-            root_span.set_status(Status(StatusCode.OK))
++            if error_status is not None:
++                root_span.set_status(error_status)
++            else:
++                root_span.set_status(Status(StatusCode.OK))
+             root_span.end()
+ 
+     def on_span_start(self, span: Span[Any]) -&gt; None:
+@@ -261,7 +266,14 @@ class OpenInferenceTracingProcessor(TracingProcessor):
+                 end_time = _as_utc_nano(datetime.fromisoformat(span.ended_at))
+             except ValueError:
+                 pass
+-        otel_span.set_status(status=_get_span_status(span))
++        status = _get_span_status(span)
++        otel_span.set_status(status=status)
++        if (
++            status.status_code == StatusCode.ERROR
++            and not isinstance(data, FunctionSpanData)
++            and span.trace_id in self._root_spans
++        ):
++            self._root_span_errors[span.trace_id] = status
+         otel_span.end(end_time)
+ 
+     def force_flush(self) -&gt; None:
+diff --git a/python/instrumentation/openinference-instrumentation-openai-agents/tests/test_trueup_root_span_status.py b/python/instrumentation/openinference-instrumentation-openai-agents/tests/test_trueup_root_span_status.py
+new file mode 100644
+index 0000000..415e82a
+--- /dev/null
++++ b/python/instrumentation/openinference-instrumentation-openai-agents/tests/test_trueup_root_span_status.py
+@@ -0,0 +1,170 @@
++&quot;&quot;&quot;Tests that the root (trace-level) span gets ERROR status when the agent run raises.&quot;&quot;&quot;
++from __future__ import annotations
++
++from typing import Any
++
++import pytest
++from agents import Agent, Runner, function_tool
++from agents.exceptions import MaxTurnsExceeded
++from agents.items import ModelResponse
++from agents.models.interface import Model
++from agents.usage import Usage
++from openai.types.responses import (
++    ResponseFunctionToolCall,
++    ResponseOutputMessage,
++    ResponseOutputText,
++)
++from opentelemetry.sdk import trace as trace_sdk
++from opentelemetry.sdk.trace import ReadableSpan
++from opentelemetry.sdk.trace.export import SimpleSpanProcessor
++from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
++from opentelemetry.trace import StatusCode
++
++from openinference.instrumentation.openai_agents import OpenAIAgentsInstrumentor
++
++
++@function_tool
++def get_weather(city: str) -&gt; str:
++    &quot;&quot;&quot;Get weather.&quot;&quot;&quot;
++    return f&quot;sunny in {city}&quot;
++
++
++class _LoopForeverModel(Model):
++    &quot;&quot;&quot;Model that always asks for a tool call, causing MaxTurnsExceeded.&quot;&quot;&quot;
++
++    async def get_response(self, *args: Any, **kwargs: Any) -&gt; ModelResponse:
++        output: list[Any] = [
++            ResponseFunctionToolCall(
++                type=&quot;function_call&quot;,
++                call_id=&quot;call-1&quot;,
++                name=&quot;get_weather&quot;,
++                arguments=&#x27;{&quot;city&quot;: &quot;London&quot;}&#x27;,
++            )
++        ]
++        return ModelResponse(output=output, usage=Usage(), response_id=None)
++
++    def stream_response(self, *args: Any, **kwargs: Any) -&gt; Any:
++        raise NotImplementedError
++
++
++class _SuccessModel(Model):
++    &quot;&quot;&quot;Model that succeeds on the first turn.&quot;&quot;&quot;
++
++    async def get_response(self, *args: Any, **kwargs: Any) -&gt; ModelResponse:
++        output: list[Any] = [
++            ResponseOutputMessage(
++                id=&quot;m1&quot;,
++                type=&quot;message&quot;,
++                role=&quot;assistant&quot;,
++                status=&quot;completed&quot;,
++                content=[
++                    ResponseOutputText(
++                        type=&quot;output_text&quot;, text=&quot;Hello!&quot;, annotations=[]
++                    )
++                ],
++            )
++        ]
++        return ModelResponse(output=output, usage=Usage(), response_id=None)
++
++    def stream_response(self, *args: Any, **kwargs: Any) -&gt; Any:
++        raise NotImplementedError
++
++
++class _ToolRaisesModel(Model):
++    &quot;&quot;&quot;Model that calls a tool on turn 1 (tool raises), then answers on turn 2.&quot;&quot;&quot;
++
++    def __init__(self) -&gt; None:
++        self._calls = 0
++
++    async def get_response(self, *args: Any, **kwargs: Any) -&gt; ModelResponse:
++        self._calls += 1
++        if self._calls == 1:
++            output: list[Any] = [
++                ResponseFunctionToolCall(
++                    type=&quot;function_call&quot;,
++                    call_id=&quot;call-1&quot;,
++                    name=&quot;get_weather_raises&quot;,
++                    arguments=&#x27;{&quot;city&quot;: &quot;London&quot;}&#x27;,
++                )
++            ]
++        else:
++            output = [
++                ResponseOutputMessage(
++                    id=&quot;m1&quot;,
++                    type=&quot;message&quot;,
++                    role=&quot;assistant&quot;,
++                    status=&quot;completed&quot;,
++                    content=[
++                        ResponseOutputText(
++                            type=&quot;output_text&quot;, text=&quot;It is sunny.&quot;, annotations=[]
++                        )
++                    ],
++                )
++            ]
++        return ModelResponse(output=output, usage=Usage(), response_id=None)
++
++    def stream_response(self, *args: Any, **kwargs: Any) -&gt; Any:
++        raise NotImplementedError
++
++
++@pytest.fixture
++def exporter() -&gt; Any:
++    _exporter = InMemorySpanExporter()
++    provider = trace_sdk.TracerProvider()
++    provider.add_span_processor(SimpleSpanProcessor(_exporter))
++    OpenAIAgentsInstrumentor().instrument(tracer_provider=provider)
++    yield _exporter
++    OpenAIAgentsInstrumentor().uninstrument()
++
++
++def _root_span(spans: list[ReadableSpan]) -&gt; ReadableSpan:
++    roots = [s for s in spans if s.parent is None]
++    assert len(roots) == 1, f&quot;expected 1 root span, got {len(roots)}: {[s.name for s in roots]}&quot;
++    return roots[0]
++
++
++async def test_root_span_is_error_when_max_turns_exceeded(exporter: InMemorySpanExporter) -&gt; None:
++    &quot;&quot;&quot;When MaxTurnsExceeded is raised the root span must be ERROR.&quot;&quot;&quot;
++    agent = Agent(name=&quot;helper&quot;, model=_LoopForeverModel(), tools=[get_weather])
++    with pytest.raises(MaxTurnsExceeded):
++        await Runner.run(agent, &quot;hi&quot;, max_turns=2)
++
++    spans = list(exporter.get_finished_spans())
++    root = _root_span(spans)
++    assert root.status.status_code == StatusCode.ERROR, (
++        f&quot;root span status should be ERROR, got {root.status.status_code}&quot;
++    )
++
++
++async def test_root_span_is_ok_when_run_succeeds(exporter: InMemorySpanExporter) -&gt; None:
++    &quot;&quot;&quot;A successful run must keep the root span as OK (regression guard).&quot;&quot;&quot;
++    agent = Agent(name=&quot;helper&quot;, model=_SuccessModel())
++    result = await Runner.run(agent, &quot;hi&quot;)
++    assert result.final_output == &quot;Hello!&quot;
++
++    spans = list(exporter.get_finished_spans())
++    root = _root_span(spans)
++    assert root.status.status_code == StatusCode.OK, (
++        f&quot;root span status should be OK, got {root.status.status_code}&quot;
++    )
++
++
++async def test_root_span_is_ok_when_tool_raises_but_run_succeeds(
++    exporter: InMemorySpanExporter,
++) -&gt; None:
++    &quot;&quot;&quot;A non-fatal tool error must NOT mark the root span as ERROR.&quot;&quot;&quot;
++
++    @function_tool
++    def get_weather_raises(city: str) -&gt; str:
++        &quot;&quot;&quot;Get weather but always raises.&quot;&quot;&quot;
++        raise RuntimeError(&quot;Tool execution failed&quot;)
++
++    agent = Agent(name=&quot;helper&quot;, model=_ToolRaisesModel(), tools=[get_weather_raises])
++    result = await Runner.run(agent, &quot;hi&quot;)
++    assert result.final_output == &quot;It is sunny.&quot;
++
++    spans = list(exporter.get_finished_spans())
++    root = _root_span(spans)
++    assert root.status.status_code == StatusCode.OK, (
++        f&quot;root span status should be OK for non-fatal tool error, got {root.status.status_code}&quot;
++    )
+</pre></details></li>
+<li><b>Proven.</b> The patch applied to the library's main branch (commit <code>c364180e5b</code>), the full scenario library run again:<div class="wrap"><table><thead><tr><th>scenario</th><th>truth</th><th>before</th><th>after</th></tr></thead><tbody><tr><td>ag-bad-tool</td><td>ERROR (app raised ModelBehaviorError)</td><td><span class=bad>OK</span></td><td><span class=good>matches truth</span></td></tr><tr><td>ag-llm-fails</td><td>ERROR (app raised InternalServerError)</td><td><span class=bad>OK</span></td><td><span class=good>matches truth</span></td></tr><tr><td>ag-max-turns</td><td>ERROR (app raised MaxTurnsExceeded)</td><td><span class=bad>OK</span></td><td><span class=good>matches truth</span></td></tr><tr><td>ag-streamed-cut</td><td>ERROR (app raised APIConnectionError)</td><td><span class=bad>OK</span></td><td><span class=good>matches truth</span></td></tr><tr><td>ag-streamed-error</td><td>ERROR (app raised ModelBehaviorError)</td><td><span class=bad>OK</span></td><td><span class=good>matches truth</span></td></tr></tbody></table></div><p>All scenarios: 19 leads (7 high) before, 14 (2 high) after, 0 new. The same run after the patch:</p><div class="wrap"><table><thead><tr><th>span</th><th>status</th><th>parent</th><th>events</th></tr></thead><tbody><tr><td>response</td><td>OK</td><td>turn</td><td>-</td></tr><tr><td>get_weather</td><td>OK</td><td>turn</td><td>-</td></tr><tr><td>turn</td><td>OK</td><td>helper</td><td>-</td></tr><tr><td>response</td><td>ERROR</td><td>turn</td><td>-</td></tr><tr><td>turn</td><td>OK</td><td>helper</td><td>-</td></tr><tr><td>helper</td><td>ERROR</td><td>Agent workflow</td><td>-</td></tr><tr><td>Agent workflow</td><td>OK</td><td>Agent workflow</td><td>-</td></tr><tr><td>Agent workflow</td><td><b>ERROR</b> (top level)</td><td>(root)</td><td>-</td></tr></tbody></table></div></li>
+</ol>
+<h2>All findings</h2>
+<div class="wrap"><table><thead><tr><th>library</th><th>severity</th><th>finding</th><th>example</th><th>scenarios</th><th>known upstream</th><th>fixed</th></tr></thead><tbody><tr><td>neatlogs</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/">neatlogs, anthropic messages stream: top-level span status is OK</a></td><td>top-level span status: truth ERROR (app raised APIStatusError), trace OK</td><td>2</td><td>not found</td><td>yes, proven</td></tr><tr><td>neatlogs</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-run_status-openai-agents-top-level-span-status-ok/">neatlogs, openai-agents: top-level span status is OK</a></td><td>top-level span status: truth ERROR (app raised InternalServerError), trace OK</td><td>5</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/">neatlogs, openai responses stream: top-level span status is UNSET</a></td><td>top-level span status: truth ERROR (app raised RuntimeError), trace UNSET</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-tokens-anthropic-messages-stream-tokens-wrong/">neatlogs, anthropic messages stream: tokens recorded wrong</a></td><td>call 1 tokens: truth {&quot;input&quot;: 5, &quot;output&quot;: 3}, trace {&quot;input&quot;: null, &quot;output&quot;: null}</td><td>3</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event/">neatlogs, anthropic messages stream: span status is OK, no exception event</a></td><td>call 1 span status: truth ERROR with exception event (error_event), trace OK, no exception event</td><td>2</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event/">neatlogs, openai responses stream: span status is UNSET, no exception event</a></td><td>call 1 span status: truth ERROR with exception event (error_event), trace UNSET, no exception event</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-finish-anthropic-messages-stream-finish-missing/">neatlogs, anthropic messages stream: finish not recorded</a></td><td>call 1 finish: truth [&quot;end_turn&quot;], trace null</td><td>3</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-finish-openai-responses-create-finish-missing/">neatlogs, openai responses create: finish not recorded</a></td><td>call 1 finish: truth [&quot;completed&quot;], trace null</td><td>5</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-finish-openai-responses-stream-finish-missing/">neatlogs, openai responses stream: finish not recorded</a></td><td>call 1 finish: truth [&quot;completed&quot;], trace null</td><td>2</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-output-anthropic-messages-stream-output-text-missing/">neatlogs, anthropic messages stream: output text not recorded</a></td><td>call 1 output text: truth hello, trace null</td><td>3</td><td>already known <a href="https://github.com/neatlogs/neatlogs/pull/180">pull 180</a> <a href="https://github.com/neatlogs/neatlogs/issues/179">issues 179</a></td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-output-anthropic-messages-stream-tool-calls-missing/">neatlogs, anthropic messages stream: tool calls not recorded</a></td><td>call 1 tool calls: truth [[&quot;get_weather&quot;, &quot;{\&quot;city\&quot;:\&quot;Lagos\&quot;}&quot;]], trace null</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-output-openai-chat-create-output-text-missing/">neatlogs, openai chat create: output text not recorded</a></td><td>call 1 output text: truth I can&#x27;t help with that., trace null</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-output-openai-responses-create-tool-calls-missing/">neatlogs, openai responses create: tool calls not recorded</a></td><td>call 1 tool calls: truth [[&quot;get_weather&quot;, &quot;{\&quot;city\&quot;:\&quot;Lagos\&quot;}&quot;]], trace null</td><td>1</td><td>already known <a href="https://github.com/neatlogs/neatlogs/pull/186">pull 186</a> <a href="https://github.com/neatlogs/neatlogs/issues/185">issues 185</a></td><td>-</td></tr><tr><td>neatlogs</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/neatlogs-output-openai-responses-stream-tool-calls-missing/">neatlogs, openai responses stream: tool calls not recorded</a></td><td>call 1 tool calls: truth [[&quot;get_weather&quot;, &quot;{\&quot;city\&quot;:\&quot;Lagos\&quot;}&quot;]], trace null</td><td>1</td><td>already known <a href="https://github.com/neatlogs/neatlogs/pull/186">pull 186</a> <a href="https://github.com/neatlogs/neatlogs/issues/185">issues 185</a></td><td>-</td></tr><tr><td>openinference</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openinference-run_status-openai-agents-top-level-span-status-ok/">openinference, openai-agents: top-level span status is OK</a></td><td>top-level span status: truth ERROR (app raised InternalServerError), trace OK</td><td>5</td><td>not found</td><td>yes, proven</td></tr><tr><td>openinference</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openinference-span_closed-openai-chat-stream-span-missing/">openinference, openai chat stream: span not recorded</a></td><td>call 1 span: truth ended and exported (complete), trace no span</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>openinference</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openinference-span_closed-openai-responses-stream-span-missing/">openinference, openai responses stream: span not recorded</a></td><td>call 1 span: truth ended and exported (error_event), trace no span</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>openinference</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openinference-finish-openai-responses-create-finish-missing/">openinference, openai responses create: finish not recorded</a></td><td>call 1 finish: truth [&quot;completed&quot;], trace null</td><td>5</td><td>not found</td><td>-</td></tr><tr><td>openinference</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openinference-finish-openai-responses-stream-finish-missing/">openinference, openai responses stream: finish not recorded</a></td><td>call 1 finish: truth [&quot;completed&quot;], trace null</td><td>2</td><td>not found</td><td>-</td></tr><tr><td>openinference</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openinference-output-openai-chat-create-output-text-missing/">openinference, openai chat create: output text not recorded</a></td><td>call 1 output text: truth I can&#x27;t help with that., trace null</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>openllmetry</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-call_count-openai-agents-llm-spans-wrong/">openllmetry, openai-agents: LLM spans recorded wrong</a></td><td>LLM spans: truth 2 (provider requests), trace 4</td><td>5</td><td>not found</td><td>yes, proven</td></tr><tr><td>openllmetry</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-run_status-openai-agents-top-level-span-status-ok/">openllmetry, openai-agents: top-level span status is OK</a></td><td>top-level span status: truth ERROR (app raised InternalServerError), trace OK</td><td>5</td><td>not found</td><td>-</td></tr><tr><td>openllmetry</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-run_status-openai-chat-stream-top-level-span-status-ok/">openllmetry, openai chat stream: top-level span status is OK</a></td><td>top-level span status: truth ERROR (app raised APIError), trace OK</td><td>3</td><td>not found</td><td>-</td></tr><tr><td>openllmetry</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-run_status-openai-responses-stream-top-level-span-status-ok/">openllmetry, openai responses stream: top-level span status is OK</a></td><td>top-level span status: truth ERROR (app raised RuntimeError), trace OK</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>openllmetry</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-span_closed-anthropic-messages-stream-span-missing/">openllmetry, anthropic messages stream: span not recorded</a></td><td>call 1 span: truth ended and exported (error_event), trace no span</td><td>4</td><td>not found</td><td>-</td></tr><tr><td>openllmetry</td><td>high</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-tokens-anthropic-messages-stream-tokens-wrong/">openllmetry, anthropic messages stream: tokens recorded wrong</a></td><td>call 1 tokens: truth {&quot;input&quot;: 5, &quot;output&quot;: 3}, trace {&quot;input&quot;: 5, &quot;output&quot;: 4}</td><td>4</td><td>already known <a href="https://github.com/traceloop/openllmetry/pull/4377">pull 4377</a> <a href="https://github.com/traceloop/openllmetry/pull/3976">pull 3976</a> <a href="https://github.com/traceloop/openllmetry/issues/4449">issues 4449</a> <a href="https://github.com/traceloop/openllmetry/pull/3975">pull 3975</a></td><td>-</td></tr><tr><td>openllmetry</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-call_status-openai-chat-stream-span-status-ok-no-exception-event/">openllmetry, openai chat stream: span status is OK, no exception event</a></td><td>call 1 span status: truth ERROR with exception event (error_event), trace OK, no exception event</td><td>3</td><td>not found</td><td>-</td></tr><tr><td>openllmetry</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-call_status-openai-responses-stream-span-status-ok-no-exception-event/">openllmetry, openai responses stream: span status is OK, no exception event</a></td><td>call 1 span status: truth ERROR with exception event (error_event), trace OK, no exception event</td><td>1</td><td>not found</td><td>-</td></tr><tr><td>openllmetry</td><td>medium</td><td><a href="https://github.com/Jennycruzy/trueup/blob/main/evidence/findings/openllmetry-error_recorded-openai-agents-any-span-missing/">openllmetry, openai-agents: any span not recorded</a></td><td>any span: truth ERROR or exception event (ModelBehaviorError), trace no span records an error</td><td>1</td><td>not found</td><td>-</td></tr></tbody></table></div>
+<h2>Withdrawn leads</h2><p>A lead is withdrawn when a rule fails. Withdrawn leads are kept and counted.</p>
+<div class="wrap"><table><thead><tr><th>library</th><th>scenario</th><th>check</th><th>leads</th><th>rule</th><th>reason</th></tr></thead><tbody><tr><td>openllmetry</td><td>oa-resp-failed</td><td>span_closed</td><td>1</td><td>latest_and_main</td><td>does not reproduce on main (df4921a409); fixed there</td></tr><tr><td>openllmetry</td><td>oa-resp-incomplete</td><td>span_closed</td><td>1</td><td>latest_and_main</td><td>does not reproduce on main (df4921a409); fixed there</td></tr><tr><td>neatlogs</td><td>ag-bad-tool</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>ag-llm-fails</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>ag-max-turns</td><td>finish</td><td>3</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>ag-run</td><td>finish</td><td>2</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>ag-streamed</td><td>finish</td><td>2</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>ag-streamed-cut</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>ag-streamed-error</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>ag-tool-raises</td><td>finish</td><td>2</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lc-invoke</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lc-refusal</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lc-stream</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lg-agent</td><td>finish</td><td>2</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lg-llm-fails</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lg-parallel</td><td>finish</td><td>2</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lg-step-limit</td><td>finish</td><td>3</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lg-stream</td><td>finish</td><td>2</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr><tr><td>neatlogs</td><td>lg-tool-raises</td><td>finish</td><td>1</td><td>trueup_own_false_alarm</td><td>Trueup&#x27;s neatlogs adapter read only neatlogs.llm.finish_reason; these framework spans carry it in llm.finish_reason. Adapter fixed; the leads were ours.</td></tr></tbody></table></div>
+<h3>Disputed: the conventions do not decide</h3>
+<div class="wrap"><table><thead><tr><th>group</th><th>scenarios</th><th>why</th></tr></thead><tbody><tr><td>neatlogs, openai-agents: span status is ERROR, no exception event</td><td>ag-llm-fails, ag-streamed-cut, ag-streamed-error</td><td>openinference, openllmetry behave the same and no OTel convention defines it</td></tr><tr><td>neatlogs, langchain: output text not recorded</td><td>lc-refusal</td><td>openinference, openllmetry behave the same and no OTel convention defines it</td></tr><tr><td>openinference, openai-agents: span status is ERROR, no exception event</td><td>ag-llm-fails, ag-streamed-cut, ag-streamed-error</td><td>neatlogs, openllmetry behave the same and no OTel convention defines it</td></tr><tr><td>openinference, langchain: output text not recorded</td><td>lc-refusal</td><td>neatlogs, openllmetry behave the same and no OTel convention defines it</td></tr><tr><td>openllmetry, openai-agents: span status is ERROR, no exception event</td><td>ag-llm-fails, ag-streamed-cut, ag-streamed-error</td><td>neatlogs, openinference behave the same and no OTel convention defines it</td></tr><tr><td>openllmetry, langchain: output text not recorded</td><td>lc-refusal</td><td>neatlogs, openinference behave the same and no OTel convention defines it</td></tr></tbody></table></div>
+<h2>Upstream drafts</h2><p><b>Not yet posted.</b> Issue and PR text for each fixed finding, with a standalone repro run on the latest release and on the patched code.</p><ul>
+<li>neatlogs, anthropic messages stream: top-level span status is OK: <a href="https://github.com/Jennycruzy/trueup/blob/main/upstream/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/issue.md">issue draft</a>, <a href="https://github.com/Jennycruzy/trueup/blob/main/upstream/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/pr.md">PR draft</a> <b>(not yet posted)</b></li>
+<li>openinference, openai-agents: top-level span status is OK: <a href="https://github.com/Jennycruzy/trueup/blob/main/upstream/openinference-run_status-openai-agents-top-level-span-status-ok/issue.md">issue draft</a>, <a href="https://github.com/Jennycruzy/trueup/blob/main/upstream/openinference-run_status-openai-agents-top-level-span-status-ok/pr.md">PR draft</a> <b>(not yet posted)</b></li>
+<li>openllmetry, openai-agents: LLM spans recorded wrong: <a href="https://github.com/Jennycruzy/trueup/blob/main/upstream/openllmetry-call_count-openai-agents-llm-spans-wrong/issue.md">issue draft</a>, <a href="https://github.com/Jennycruzy/trueup/blob/main/upstream/openllmetry-call_count-openai-agents-llm-spans-wrong/pr.md">PR draft</a> <b>(not yet posted)</b></li>
+</ul>
+<h2>Check it yourself</h2><pre>git clone https://github.com/Jennycruzy/trueup && cd trueup
+uv sync
+uv run pytest -q
+uv run trueup verify
+uv run trueup sweep openllmetry --case ag-run</pre><p class=muted>verify fails if any byte of the bundle changed. The sweep needs no keys: the provider is a local fake.</p></main></body></html>

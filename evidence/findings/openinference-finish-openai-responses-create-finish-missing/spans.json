@@ -1,0 +1,31 @@
+[
+ {
+  "attributes": {
+   "llm.model_name": "resp-plain",
+   "llm.output_messages.0.message.contents.0.message_content.text": "hello",
+   "llm.output_messages.0.message.contents.0.message_content.type": "text",
+   "llm.output_messages.0.message.role": "assistant",
+   "llm.system": "openai",
+   "llm.token_count.completion": 7,
+   "llm.token_count.completion_details.reasoning": 0,
+   "llm.token_count.prompt": 11,
+   "llm.token_count.prompt_details.cache_read": 0,
+   "llm.token_count.total": 18,
+   "openinference.span.kind": "LLM",
+   "output.mime_type": "application/json",
+   "output.value": "{\"id\":\"resp_920ec7cf0002\",\"created_at\":0.0,\"error\":null,\"incomplete_details\":null,\"model\":\"resp-plain\",\"object\":\"response\",\"output\":[{\"id\":\"msg_920ec7cf0001\",\"content\":[{\"annotations\":[],\"text\":\"hello\",\"type\":\"output_text\"}],\"role\":\"assistant\",\"status\":\"completed\",\"type\":\"message\"}],\"parallel_tool_calls\":true,\"tool_choice\":\"auto\",\"tools\":[],\"status\":\"completed\",\"usage\":{\"input_tokens\":11,\"input_tokens_details\":{\"cached_tokens\":0},\"output_tokens\":7,\"output_tokens_details\":{\"reasoning_tokens\":0},\"total_tokens\":18}}"
+  },
+  "end_ns": 1791664587819399537,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "Response",
+  "parent_id": null,
+  "scope": "openinference.instrumentation.openai",
+  "span_id": "4b26c33ea0e2a07a",
+  "start_ns": 1791664587667178004,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

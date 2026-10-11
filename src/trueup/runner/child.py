@@ -150,8 +150,32 @@ def run_audit(library: str, script: str, overrides: dict[str, str]) -> dict[str,
     }
 
 
+def run_record_audit(library: str, script: str) -> dict[str, Any]:
+    """Run a user's main against base URLs supplied by the parent recording proxy."""
+    logging.disable(logging.CRITICAL)
+    exporter, flush = SETUPS[library]()
+    main_fn = _load_main(script)
+    t0 = time.monotonic()
+    try:
+        result = main_fn()
+        if inspect.iscoroutine(result):
+            result = asyncio.run(result)
+        app = {"outcome": "ok", "result": repr(result)[:500]}
+    except BaseException as e:  # noqa: BLE001 - the outcome is recorded truth
+        app = {"outcome": "exception", "exception_type": type(e).__name__,
+               "exception_module": type(e).__module__, "message": str(e)[:500]}
+    app["seconds"] = round(time.monotonic() - t0, 3)
+    gc.collect()
+    flush()
+    spans = [span_to_dict(s) for s in exporter.get_finished_spans()]
+    return {"app": app, "trace": {"library": library, "versions": _versions(library), "spans": spans}}
+
+
 def main(argv: list[str]) -> int:
-    if argv[0] == "--audit":
+    if argv[0] == "--record-audit":
+        library, script, out_path = argv[1:]
+        job = lambda: run_record_audit(library, script)  # noqa: E731
+    elif argv[0] == "--audit":
         library, script, overrides_path, out_path = argv[1:]
         with open(overrides_path) as f:
             overrides = json.load(f)

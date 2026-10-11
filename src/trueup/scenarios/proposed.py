@@ -198,8 +198,8 @@ def untraced_check(p: dict[str, Any], timeout: float = 120) -> tuple[list[str], 
     return diffs, t
 
 
-def save(p: dict[str, Any], library: str) -> Path:
-    d = proposed_dir() / library
+def save(p: dict[str, Any], library: str, base: Path | None = None) -> Path:
+    d = (base or proposed_dir()) / library
     d.mkdir(parents=True, exist_ok=True)
     path = d / f"{p['id']}.json"
     path.write_text(json.dumps({k: p[k] for k in FIELDS}, indent=1) + "\n")

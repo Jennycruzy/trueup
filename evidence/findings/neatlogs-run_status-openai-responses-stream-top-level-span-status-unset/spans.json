@@ -1,0 +1,33 @@
+[
+ {
+  "attributes": {
+   "neatlogs.instrumentation.name": "neatlogs.wrapper",
+   "neatlogs.llm.input_messages.0.content": "\"hi\"",
+   "neatlogs.llm.input_messages.0.role": "user",
+   "neatlogs.llm.is_streaming": true,
+   "neatlogs.llm.metrics.duration_ms": 66.086,
+   "neatlogs.llm.metrics.ttft_ms": 64.518,
+   "neatlogs.llm.model_name": "resp-error-event",
+   "neatlogs.llm.output_messages.0.content": "hel",
+   "neatlogs.llm.output_messages.0.role": "assistant",
+   "neatlogs.llm.provider": "openai",
+   "neatlogs.llm.system": "openai",
+   "neatlogs.metrics.duration_ms": 218.043317,
+   "neatlogs.span.kind": "llm",
+   "neatlogs.stream.cancelled": true,
+   "neatlogs.workflow_name": "child"
+  },
+  "end_ns": 1791664480023342806,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "openai.responses.create",
+  "parent_id": null,
+  "scope": "neatlogs.wrapper",
+  "span_id": "729fda6d26b320b8",
+  "start_ns": 1791664479805299489,
+  "status": {
+   "code": "UNSET",
+   "description": null
+  }
+ }
+]

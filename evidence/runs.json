@@ -1,0 +1,236 @@
+[
+ {
+  "kind": "sweep+check",
+  "library": "neatlogs",
+  "neatlogs_session": null,
+  "run_id": "20261010T203332Z-neatlogs",
+  "variant": null,
+  "versions": {
+   "anthropic": "1.13.0",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "neatlogs": "1.4.26",
+   "openai": "3.28.0",
+   "openai-agents": "0.23.1",
+   "openinference-instrumentation-langchain": "0.1.79",
+   "openinference-instrumentation-openai-agents": "2.5.3",
+   "opentelemetry-sdk": "1.45.1"
+  }
+ },
+ {
+  "kind": "sweep+check",
+  "library": "openinference",
+  "neatlogs_session": null,
+  "run_id": "20261010T203600Z-openinference",
+  "variant": null,
+  "versions": {
+   "anthropic": "1.13.0",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai": "3.28.0",
+   "openai-agents": "0.23.1",
+   "openinference-instrumentation-anthropic": "3.0.3",
+   "openinference-instrumentation-langchain": "0.1.79",
+   "openinference-instrumentation-openai": "0.1.65",
+   "openinference-instrumentation-openai-agents": "2.5.3",
+   "opentelemetry-sdk": "1.45.1"
+  }
+ },
+ {
+  "kind": "sweep+check",
+  "library": "openllmetry",
+  "neatlogs_session": null,
+  "run_id": "20261010T203755Z-openllmetry",
+  "variant": null,
+  "versions": {
+   "anthropic": "1.13.0",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai": "3.28.0",
+   "openai-agents": "0.23.1",
+   "opentelemetry-instrumentation-anthropic": "0.62.4",
+   "opentelemetry-instrumentation-langchain": "0.62.4",
+   "opentelemetry-instrumentation-openai": "0.62.4",
+   "opentelemetry-instrumentation-openai-agents": "0.62.4",
+   "opentelemetry-sdk": "1.45.1",
+   "traceloop-sdk": "0.62.4"
+  }
+ },
+ {
+  "kind": "sweep+check",
+  "library": "openllmetry",
+  "neatlogs_session": null,
+  "run_id": "20261010T235010Z-openllmetry-proposed",
+  "variant": null,
+  "versions": {
+   "anthropic": "1.13.0",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai": "3.28.0",
+   "openai-agents": "0.23.1",
+   "opentelemetry-instrumentation-anthropic": "0.62.4",
+   "opentelemetry-instrumentation-langchain": "0.62.4",
+   "opentelemetry-instrumentation-openai": "0.62.4",
+   "opentelemetry-instrumentation-openai-agents": "0.62.4",
+   "opentelemetry-sdk": "1.45.1",
+   "traceloop-sdk": "0.62.4"
+  }
+ },
+ {
+  "kind": "sweep+check",
+  "library": "neatlogs",
+  "neatlogs_session": null,
+  "run_id": "20261010T235028Z-neatlogs-proposed",
+  "variant": null,
+  "versions": {
+   "anthropic": "1.13.0",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "neatlogs": "1.4.26",
+   "openai": "3.28.0",
+   "openai-agents": "0.23.1",
+   "openinference-instrumentation-langchain": "0.1.79",
+   "openinference-instrumentation-openai-agents": "2.5.3",
+   "opentelemetry-sdk": "1.45.1"
+  }
+ },
+ {
+  "kind": "sweep+check",
+  "library": "neatlogs",
+  "neatlogs_session": null,
+  "run_id": "20261010T235240Z-neatlogs-proposed",
+  "variant": null,
+  "versions": {
+   "anthropic": "1.13.0",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "neatlogs": "1.4.26",
+   "openai": "3.28.0",
+   "openai-agents": "0.23.1",
+   "openinference-instrumentation-langchain": "0.1.79",
+   "openinference-instrumentation-openai-agents": "2.5.3",
+   "opentelemetry-sdk": "1.45.1"
+  }
+ },
+ {
+  "kind": "sweep+check",
+  "library": "openllmetry",
+  "neatlogs_session": null,
+  "run_id": "20261010T235247Z-openllmetry-proposed",
+  "variant": null,
+  "versions": {
+   "anthropic": "1.13.0",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai": "3.28.0",
+   "openai-agents": "0.23.1",
+   "opentelemetry-instrumentation-anthropic": "0.62.4",
+   "opentelemetry-instrumentation-langchain": "0.62.4",
+   "opentelemetry-instrumentation-openai": "0.62.4",
+   "opentelemetry-instrumentation-openai-agents": "0.62.4",
+   "opentelemetry-sdk": "1.45.1",
+   "traceloop-sdk": "0.62.4"
+  }
+ },
+ {
+  "kind": "plan",
+  "library": "openllmetry",
+  "neatlogs_session": "20261011T013638Z-plan-openllmetry",
+  "run_id": "20261011T013638Z-plan-openllmetry",
+  "variant": "v1",
+  "versions": {
+   "model": "claude-sonnet-4.6"
+  }
+ },
+ {
+  "kind": "plan",
+  "library": "openllmetry",
+  "neatlogs_session": "20261011T013704Z-plan-openllmetry",
+  "run_id": "20261011T013704Z-plan-openllmetry",
+  "variant": "v2",
+  "versions": {
+   "model": "claude-sonnet-4.6"
+  }
+ },
+ {
+  "kind": "plan",
+  "library": "neatlogs",
+  "neatlogs_session": "20261011T013725Z-plan-neatlogs",
+  "run_id": "20261011T013725Z-plan-neatlogs",
+  "variant": "v1",
+  "versions": {
+   "model": "claude-sonnet-4.6"
+  }
+ },
+ {
+  "kind": "plan",
+  "library": "neatlogs",
+  "neatlogs_session": "20261011T013748Z-plan-neatlogs",
+  "run_id": "20261011T013748Z-plan-neatlogs",
+  "variant": "v2",
+  "versions": {
+   "model": "claude-sonnet-4.6"
+  }
+ },
+ {
+  "kind": "sweep (proposals)",
+  "library": "openllmetry",
+  "neatlogs_session": null,
+  "run_id": "20261011T013824Z-openllmetry-proposed",
+  "variant": "v1",
+  "versions": {}
+ },
+ {
+  "kind": "sweep (proposals)",
+  "library": "neatlogs",
+  "neatlogs_session": null,
+  "run_id": "20261011T013836Z-neatlogs-proposed",
+  "variant": "v1",
+  "versions": {}
+ },
+ {
+  "kind": "sweep (proposals)",
+  "library": "openllmetry",
+  "neatlogs_session": null,
+  "run_id": "20261011T013847Z-openllmetry-proposed",
+  "variant": "v2",
+  "versions": {}
+ },
+ {
+  "kind": "sweep (proposals)",
+  "library": "neatlogs",
+  "neatlogs_session": null,
+  "run_id": "20261011T013900Z-neatlogs-proposed",
+  "variant": "v2",
+  "versions": {}
+ },
+ {
+  "kind": "fix",
+  "library": "openinference",
+  "neatlogs_session": "20261011T013927Z-fix-openinference",
+  "run_id": "20261011T013927Z-fix-openinference",
+  "variant": "v1",
+  "versions": {
+   "clone_commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+   "model": "claude-sonnet-4.6"
+  }
+ },
+ {
+  "kind": "fix",
+  "library": "openinference",
+  "neatlogs_session": "20261011T014344Z-fix-openinference",
+  "run_id": "20261011T014344Z-fix-openinference",
+  "variant": "v2",
+  "versions": {
+   "clone_commit": "c364180e5be52f0cdc00fbc88f9462603569f4e2",
+   "model": "claude-sonnet-4.6"
+  }
+ }
+]

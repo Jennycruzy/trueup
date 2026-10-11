@@ -1,0 +1,74 @@
+{
+ "check": "span_closed",
+ "code_path": "openai chat stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:33:52+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "openai span not ended stream",
+    "repo": "Arize-ai/openinference",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:33:54+00:00",
+    "hits": 1,
+    "include_prs": true,
+    "query": "span not ended stream",
+    "repo": "Arize-ai/openinference",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "span_closed",
+  "field": "call 1 span",
+  "kind": "lead",
+  "library": "openinference",
+  "scenario": "oa-chat-stream-break",
+  "severity": "high",
+  "trace": "no span",
+  "truth": "ended and exported (complete)"
+ },
+ "example_run": "20261010T203600Z-openinference",
+ "field": "span",
+ "fixed": false,
+ "found_in": [
+  "20261010T203600Z-openinference"
+ ],
+ "id": "openinference-span_closed-openai-chat-stream-span-missing",
+ "leads": [
+  {
+   "check": "span_closed",
+   "field": "call 1 span",
+   "kind": "lead",
+   "library": "openinference",
+   "scenario": "oa-chat-stream-break",
+   "severity": "high",
+   "trace": "no span",
+   "truth": "ended and exported (complete)"
+  }
+ ],
+ "library": "openinference",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main c364180e5b",
+  "recommended_setup": "the OpenInference instrumentor for the SDK or framework; framework none",
+  "reference": "neatlogs, openllmetry record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203600Z-openinference/repros/openinference-oa-chat-stream-break.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "oa-chat-stream-break"
+ ],
+ "severity": "high",
+ "title": "openinference, openai chat stream: span not recorded",
+ "trace": "missing",
+ "upstream": null
+}

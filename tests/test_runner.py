@@ -150,3 +150,16 @@ def test_cli_sweep_framework_defaults_to_all():
 
     assert build_parser().parse_args(["sweep", "neatlogs"]).framework == "all"
     assert build_parser().parse_args(["sweep", "neatlogs", "--framework", "openai-agents"]).framework == "openai-agents"
+
+
+def test_sweep_filters_providers_and_records_filter(tmp_path):
+    seen = []
+    run_dir, results = sweep(
+        tmp_path, "openinference", "none", providers=("anthropic",),
+        ensure=lambda root, lib: Path("/py"),
+        run=lambda py, lib, sid: seen.append(sid) or _fake_obs(sid),
+        out=lambda s: None,
+    )
+    assert results and all(sid.startswith("an-") for sid in seen)
+    assert json.loads((run_dir / "index.json").read_text())["providers"] == ["anthropic"]
+    assert "--provider anthropic" in (run_dir / "summary.txt").read_text()

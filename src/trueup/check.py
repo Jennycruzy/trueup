@@ -31,6 +31,7 @@ from trueup.runner import RAN, run_scenario, venvs
 from trueup.runner.run import child_env
 from trueup.runner.setups import LIBRARIES
 from trueup.scenarios import get
+from trueup.state import State
 
 # The distributions that are the library itself (checked against PyPI's latest).
 LIB_DISTS = {
@@ -211,9 +212,13 @@ def decide(evidence: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 
 def check(root: Path, run_id: str, library: str | None, out: Callable[[str], None] = print,
-          search: Callable[[list[str]], str] = dedupe.gh_search) -> dict[str, Any]:
+          search: Callable[[list[str]], str] = dedupe.gh_search,
+          state_run_id: str | None = None) -> dict[str, Any]:
     run_dir = find_run(root, run_id, library)
     lib = json.loads((run_dir / "leads.json").read_text())["library"]
+    state_run_id = state_run_id or f"check-{run_dir.name}"
+    with State(root) as state:
+        state.begin_run(state_run_id, "check", lib)
     if library and lib != library:
         raise ValueError(f"{run_dir.name} is a {lib} sweep, not {library}")
     with tracing.worker("trueup-checker") as span:
@@ -252,9 +257,12 @@ def check(root: Path, run_id: str, library: str | None, out: Callable[[str], Non
         indent=1, default=str))
     (run_dir / "evidence.json").write_text(json.dumps(
         [{k: v for k, v in ev.items() if k != "observation"} for ev in evidence], indent=1, default=str))
+    with State(root) as state:
+        state.save_check_results(state_run_id, items, finding_dicts, withdrawn)
+        state.finish_run(state_run_id, "mismatch" if findings else "complete")
     out(summary(lib, counts, finding_dicts))
     out(f"wrote {run_dir}/findings.json, withdrawn.json, evidence.json")
-    return {"run_dir": run_dir, "counts": counts}
+    return {"run_dir": run_dir, "counts": counts, "state_run_id": state_run_id}
 
 
 def summary(library: str, counts: dict[str, Any], findings: list[dict[str, Any]]) -> str:

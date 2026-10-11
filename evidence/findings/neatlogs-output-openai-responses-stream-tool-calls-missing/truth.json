@@ -1,0 +1,98 @@
+{
+ "app": {
+  "outcome": "ok",
+  "result": {
+   "output_types": [
+    "function_call"
+   ],
+   "status": "completed",
+   "text": ""
+  },
+  "seconds": 1.058
+ },
+ "calls": 1,
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "completed"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ]
+  ]
+ },
+ "expected_mismatch": [],
+ "fake": [
+  "complete"
+ ],
+ "fake_log": [
+  {
+   "api": "openai.responses",
+   "finish": [
+    "completed"
+   ],
+   "include_usage": false,
+   "n": null,
+   "outcome": "complete",
+   "path": "/v1/responses",
+   "response_id": "resp_00b975bc0003",
+   "scenario": "resp-tool",
+   "seq": 1,
+   "status_code": 200,
+   "stream": true,
+   "text": [],
+   "tool_calls": [
+    {
+     "arguments": "{\"city\":\"Lagos\"}",
+     "id": "call_00b975bc0002",
+     "name": "get_weather"
+    }
+   ],
+   "usage": {
+    "input_tokens": 11,
+    "output_tokens": 7,
+    "reasoning_tokens": 0,
+    "total_tokens": 18
+   },
+   "usage_sent": true
+  }
+ ],
+ "finish": [
+  [
+   "completed"
+  ]
+ ],
+ "include_usage": [
+  false
+ ],
+ "outcome": "ok",
+ "response_ids": [
+  "resp_00b975bc0003"
+ ],
+ "scenario": "oa-resp-stream-tool",
+ "tokens": [
+  {
+   "input": 11,
+   "output": 7
+  }
+ ],
+ "tool_calls": [
+  [
+   "get_weather"
+  ]
+ ],
+ "tool_runs": []
+}

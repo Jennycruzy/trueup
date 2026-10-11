@@ -11,6 +11,7 @@ from pathlib import Path
 from typing import Any
 
 from trueup.runner.setups import CHILD_ENV, CHILD_ENV_DROP
+from trueup.runner import truth
 from trueup.scenarios import BUILT, get
 
 SRC = Path(__file__).resolve().parents[2]  # .../src
@@ -58,13 +59,14 @@ def run_audit(python: Path, library: str, script: Path, label: str, overrides: d
         return _run_child(python, library, label, ["--audit", library, str(script.resolve()), str(ov)], timeout)
 
 
-def _run_child(python: Path, library: str, label: str, args: list[str], timeout: float) -> dict[str, Any]:
+def _run_child(python: Path, library: str, label: str, args: list[str], timeout: float,
+               env: dict[str, str] | None = None) -> dict[str, Any]:
     with tempfile.TemporaryDirectory(prefix="trueup-") as tmp:
         out = Path(tmp) / "obs.json"
         cmd = [str(python), "-m", "trueup.runner.child", *args, str(out)]
         t0 = time.monotonic()
         try:
-            p = subprocess.run(cmd, env=child_env(), cwd=tmp, capture_output=True, text=True, timeout=timeout)
+            p = subprocess.run(cmd, env=env or child_env(), cwd=tmp, capture_output=True, text=True, timeout=timeout)
         except subprocess.TimeoutExpired:
             return not_run(label, library, f"timed out after {timeout:.0f} s", time.monotonic() - t0)
         except OSError as e:
@@ -80,3 +82,27 @@ def _run_child(python: Path, library: str, label: str, args: list[str], timeout:
                        detail=payload["error"])
     return {"scenario": label, "library": library, "status": RAN, "reason": None,
             "seconds": round(seconds, 3), "observation": payload["observation"]}
+
+
+def run_record_audit(python: Path, library: str, script: Path, provider: str, base_url: str,
+                     recording: Path, timeout: float = 180) -> dict[str, Any]:
+    """Run one explicitly opted-in real-provider audit through RecordingProxy."""
+    from trueup.recording import read_recordings, truth_log
+
+    key_name = "OPENAI_API_KEY" if provider == "openai" else "ANTHROPIC_API_KEY"
+    if not os.environ.get(key_name):
+        return not_run("record", library, f"{key_name} is not set")
+    env = child_env()
+    env[key_name] = os.environ[key_name]
+    if provider == "openai":
+        env["OPENAI_BASE_URL"] = base_url.rstrip("/") + "/v1"
+    else:
+        env["ANTHROPIC_BASE_URL"] = base_url.rstrip("/")
+    result = _run_child(python, library, "record", ["--record-audit", library, str(script.resolve())], timeout, env)
+    if result["status"] == RAN:
+        log = truth_log(read_recordings(recording))
+        app = result["observation"].pop("app")
+        result["observation"]["truth"] = {**truth.derive(log, app), "app": app,
+                                             "recording": str(recording), "fake_log": log,
+                                             "source": "recording_proxy"}
+    return result

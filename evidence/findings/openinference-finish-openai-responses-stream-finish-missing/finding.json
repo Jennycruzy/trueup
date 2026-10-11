@@ -1,0 +1,91 @@
+{
+ "check": "finish",
+ "code_path": "openai responses stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:34:15+00:00",
+    "hits": 2,
+    "include_prs": true,
+    "query": "responses finish reason stream",
+    "repo": "Arize-ai/openinference",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:34:18+00:00",
+    "hits": 25,
+    "include_prs": true,
+    "query": "finish reason stream",
+    "repo": "Arize-ai/openinference",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "finish",
+  "field": "call 1 finish",
+  "kind": "lead",
+  "library": "openinference",
+  "scenario": "oa-resp-stream",
+  "severity": "medium",
+  "trace": null,
+  "truth": [
+   "completed"
+  ]
+ },
+ "example_run": "20261010T203600Z-openinference",
+ "field": "finish",
+ "fixed": false,
+ "found_in": [
+  "20261010T203600Z-openinference"
+ ],
+ "id": "openinference-finish-openai-responses-stream-finish-missing",
+ "leads": [
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "openinference",
+   "scenario": "oa-resp-stream",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  },
+  {
+   "check": "finish",
+   "field": "call 1 finish",
+   "kind": "lead",
+   "library": "openinference",
+   "scenario": "oa-resp-stream-tool",
+   "severity": "medium",
+   "trace": null,
+   "truth": [
+    "completed"
+   ]
+  }
+ ],
+ "library": "openinference",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main c364180e5b",
+  "recommended_setup": "the OpenInference instrumentor for the SDK or framework; framework none",
+  "reference": "openllmetry record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203600Z-openinference/repros/openinference-oa-resp-stream.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "oa-resp-stream",
+  "oa-resp-stream-tool"
+ ],
+ "severity": "medium",
+ "title": "openinference, openai responses stream: finish not recorded",
+ "trace": "missing",
+ "upstream": null
+}

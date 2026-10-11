@@ -1,0 +1,97 @@
+{
+ "check": "call_status",
+ "code_path": "openai chat stream",
+ "dedupe": {
+  "links": [],
+  "matched": [],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:38:12+00:00",
+    "hits": 0,
+    "include_prs": true,
+    "query": "openai exception event stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:38:15+00:00",
+    "hits": 9,
+    "include_prs": true,
+    "query": "exception event stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   }
+  ],
+  "status": "not found"
+ },
+ "example": {
+  "check": "call_status",
+  "field": "call 1 span status",
+  "kind": "lead",
+  "library": "openllmetry",
+  "scenario": "oa-chat-stream-error-event",
+  "severity": "medium",
+  "trace": "OK, no exception event",
+  "truth": "ERROR with exception event (error_event)"
+ },
+ "example_run": "20261010T203755Z-openllmetry",
+ "field": "span status",
+ "fixed": false,
+ "found_in": [
+  "20261010T203755Z-openllmetry",
+  "20261010T235010Z-openllmetry-proposed"
+ ],
+ "id": "openllmetry-call_status-openai-chat-stream-span-status-ok-no-exception-event",
+ "leads": [
+  {
+   "check": "call_status",
+   "field": "call 1 span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "oa-chat-stream-error-event",
+   "severity": "medium",
+   "trace": "OK, no exception event",
+   "truth": "ERROR with exception event (error_event)"
+  },
+  {
+   "check": "call_status",
+   "field": "call 1 span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "oa-chat-stream-cut",
+   "severity": "medium",
+   "trace": "OK, no exception event",
+   "truth": "ERROR with exception event (cut)"
+  },
+  {
+   "check": "call_status",
+   "field": "call 1 span status",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "p-oa-chat-async-stream-error",
+   "severity": "medium",
+   "trace": "OK, no exception event",
+   "truth": "ERROR with exception event (error_event)"
+  }
+ ],
+ "library": "openllmetry",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main df4921a409",
+  "recommended_setup": "Traceloop.init(); framework none",
+  "reference": "neatlogs, openinference record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203755Z-openllmetry/repros/openllmetry-oa-chat-stream-error-event.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "oa-chat-stream-cut",
+  "oa-chat-stream-error-event",
+  "p-oa-chat-async-stream-error"
+ ],
+ "severity": "medium",
+ "title": "openllmetry, openai chat stream: span status is OK, no exception event",
+ "trace": "OK, no exception event",
+ "upstream": null
+}

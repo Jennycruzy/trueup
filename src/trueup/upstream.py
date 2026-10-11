@@ -234,6 +234,15 @@ def upstream(root: Path, finding_id: str, out: Any = print) -> Path:
     if after:
         out(f"repro after the patch: {after['stdout'] or after['stderr'][-200:]}")
     out(f"wrote {up_dir} (nothing posted)")
+    from trueup.state import State
+    with State(root) as state:
+        state.save_upstream(finding_id, "drafted", {
+            "finding_id": finding_id,
+            "directory": str(up_dir.relative_to(root)),
+            "issue": str((up_dir / "issue.md").relative_to(root)),
+            "pr": str((up_dir / "pr.md").relative_to(root)),
+            "posted": False,
+        })
     return up_dir
 
 

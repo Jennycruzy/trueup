@@ -1,0 +1,33 @@
+{
+ "api": "responses",
+ "app": "resp_create",
+ "does": "Returns one function call.",
+ "expected": {
+  "calls": 1,
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "completed"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ]
+  ]
+ },
+ "framework": "none",
+ "id": "oa-resp-tool",
+ "model": "resp-tool",
+ "provider": "openai",
+ "status": "built"
+}

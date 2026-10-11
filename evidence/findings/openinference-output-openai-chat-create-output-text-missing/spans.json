@@ -1,0 +1,28 @@
+[
+ {
+  "attributes": {
+   "llm.finish_reason": "stop",
+   "llm.model_name": "chat-refusal",
+   "llm.output_messages.0.message.role": "assistant",
+   "llm.system": "openai",
+   "llm.token_count.completion": 7,
+   "llm.token_count.prompt": 11,
+   "llm.token_count.total": 18,
+   "openinference.span.kind": "LLM",
+   "output.mime_type": "application/json",
+   "output.value": "{\"id\":\"chatcmpl-e3a1358c0001\",\"choices\":[{\"finish_reason\":\"stop\",\"index\":0,\"message\":{\"content\":null,\"refusal\":\"I can't help with that.\",\"role\":\"assistant\"}}],\"created\":0,\"model\":\"chat-refusal\",\"object\":\"chat.completion\",\"usage\":{\"completion_tokens\":7,\"prompt_tokens\":11,\"total_tokens\":18}}"
+  },
+  "end_ns": 1791664572864891479,
+  "events": [],
+  "kind": "INTERNAL",
+  "name": "ChatCompletion",
+  "parent_id": null,
+  "scope": "openinference.instrumentation.openai",
+  "span_id": "83ce805f46e74ee9",
+  "start_ns": 1791664572848162641,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

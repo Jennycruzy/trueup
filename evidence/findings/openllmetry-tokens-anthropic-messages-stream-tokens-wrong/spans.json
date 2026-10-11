@@ -1,0 +1,33 @@
+[
+ {
+  "attributes": {
+   "gen_ai.operation.name": "chat",
+   "gen_ai.output.messages": "[{\"role\": \"assistant\", \"parts\": [{\"type\": \"text\", \"content\": \"hello\"}], \"finish_reason\": \"stop\"}]",
+   "gen_ai.provider.name": "anthropic",
+   "gen_ai.request.max_tokens": 64,
+   "gen_ai.request.model": "anth-plain",
+   "gen_ai.response.finish_reasons": [
+    "stop"
+   ],
+   "gen_ai.response.id": "msg_190e19b60001",
+   "gen_ai.response.model": "anth-plain",
+   "gen_ai.usage.cache_creation.input_tokens": 0,
+   "gen_ai.usage.cache_read.input_tokens": 0,
+   "gen_ai.usage.input_tokens": 5,
+   "gen_ai.usage.output_tokens": 4,
+   "gen_ai.usage.total_tokens": 9
+  },
+  "end_ns": 1791664818242213431,
+  "events": [],
+  "kind": "CLIENT",
+  "name": "anthropic.chat",
+  "parent_id": null,
+  "scope": "opentelemetry.instrumentation.anthropic",
+  "span_id": "8138953689b6de4b",
+  "start_ns": 1791664818186285356,
+  "status": {
+   "code": "OK",
+   "description": null
+  }
+ }
+]

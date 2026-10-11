@@ -82,8 +82,14 @@ def span_summary(run_dirs: list[Path], finding: dict[str, Any]) -> dict[str, Any
     return out
 
 
+# v2: the reply must start with "{". v1's fixer replies sometimes opened with prose ("Let me look more
+# carefully at the exact import text ...", session 20261011T000336Z-fix-openllmetry in neatlogs), and each
+# one cost a full re-send of a ~25k-token prompt: 14 of v1's 40 fixer calls were JSON retries.
+JSON_ONLY = "\n\nThe first character of your reply is \"{\". No text before or after the JSON."
+
+
 def first_prompt(finding: dict[str, Any], target: Target, located: dict[str, Any], source: str,
-                 style: str, spans: dict[str, Any] | None = None) -> list[dict[str, str]]:
+                 style: str, spans: dict[str, Any] | None = None, variant: str = "v1") -> list[dict[str, str]]:
     d = finding["details"]
     leads = [{k: x.get(k) for k in ("scenario", "field", "truth", "trace")} for x in d.get("leads", [])]
     user = (f"Library: {target.library} (repo commit {located['commit'][:10]}).\n"
@@ -99,7 +105,21 @@ def first_prompt(finding: dict[str, Any], target: Target, located: dict[str, Any
             f"Located definitions:\n{json.dumps(located['definitions'])}\n"
             f"Callers:\n{json.dumps(located['callers'][:60])}\n\n"
             f"Source:\n{source}\n\nTest style of {target.packages[0].path}:\n{style}")
-    return [{"role": "system", "content": SYSTEM}, {"role": "user", "content": user}]
+    return [{"role": "system", "content": SYSTEM + (JSON_ONLY if variant == "v2" else "")},
+            {"role": "user", "content": user}]
+
+
+def revision_prompt_v2(first: list[dict[str, str]], draft: Any, reason: str,
+                       earlier: list[str]) -> list[dict[str, str]]:
+    """v2: the first prompt, the last draft and why it failed, and one line per earlier failed try.
+    v1 sent every earlier draft back each time, so a third try's prompt carried two full drafts
+    (session 20261011T003256Z-fix-openinference: 140,607 input tokens over 6 calls)."""
+    past = "".join(f"\n- try {i}: {r[:300]}" for i, r in enumerate(earlier, 1))
+    return [*first, {"role": "assistant", "content": json.dumps(draft)},
+            {"role": "user", "content": "That patch was rejected:\n" + reason +
+             (f"\n\nEarlier tries were rejected too:{past}" if past else "") +
+             "\n\nRevise it. Reply with the whole JSON again (edits against the ORIGINAL files, the full test "
+             "file)." + JSON_ONLY}]
 
 
 def revision_prompt(messages: list[dict[str, str]], draft: Any, reason: str) -> list[dict[str, str]]:

@@ -1,0 +1,21 @@
+{
+ "api": "chat",
+ "app": "chat_stream",
+ "does": "An error event arrives mid-stream.",
+ "expected": {
+  "calls": 1,
+  "exception": "APIError",
+  "fake": [
+   "error_event"
+  ],
+  "outcome": "exception",
+  "tokens": [
+   null
+  ]
+ },
+ "framework": "none",
+ "id": "oa-chat-stream-error-event",
+ "model": "chat-error-event",
+ "provider": "openai",
+ "status": "built"
+}

@@ -19,6 +19,7 @@ FAKE_NEATLOGS = textwrap.dedent('''
         _w("init " + ",".join(sorted(kw)) + " " + " ".join(kw["tags"]) + " " + ",".join(kw["instrumentations"]))
     def flush(*a, **k):
         _w("flush")
+        return True
     @contextlib.contextmanager
     def trace(name, **kw):
         _w("trace " + name + " session=" + kw["session_id"] + " lib=" + kw["trueup.library"])
@@ -55,13 +56,16 @@ def test_one_session_tags_and_worker_names(fake_neatlogs):
         pass
     with tracing.worker("trueup-runner"):
         pass
+    with tracing.worker("trueup-reporter"):
+        pass
     tracing.flush()
     tracing.flush()
     log = fake_neatlogs.read_text().splitlines()
     assert log[0].startswith("init api_key,") and "run_id:r1 library:openllmetry trueup:" in log[0]
     assert log[0].endswith(" openai")
     assert log[1:] == ["trace trueup-planner session=r1 lib=openllmetry",
-                       "trace trueup-runner session=r1 lib=openllmetry", "flush"]
+                       "trace trueup-runner session=r1 lib=openllmetry",
+                       "trace trueup-reporter session=r1 lib=openllmetry", "flush"]
     assert "nl-secret" not in "\n".join(lines)
     with pytest.raises(ValueError):
         with tracing.worker("trueup-dancer"):
@@ -74,6 +78,16 @@ def test_flush_on_crash_in_process(fake_neatlogs):
     with pytest.raises(RuntimeError):
         tracing.run_traced("r2", "neatlogs", "plan", body, out=lambda s: None)
     assert fake_neatlogs.read_text().splitlines()[-1] == "flush"
+
+
+def test_flush_records_failed_delivery(fake_neatlogs, monkeypatch, capsys):
+    import neatlogs
+
+    tracing.start("r-failed", "neatlogs", "verify", out=lambda _: None)
+    monkeypatch.setattr(neatlogs, "flush", lambda: False)
+    assert tracing.flush() is False
+    assert tracing.delivery() == "failed"
+    assert "did not confirm trace delivery" in capsys.readouterr().err
 
 
 def test_flush_on_uncaught_crash_in_subprocess(tmp_path):

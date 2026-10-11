@@ -1,0 +1,731 @@
+{
+ "answer_key": {
+  "neatlogs": [
+   [
+    "run_status",
+    "top-level span status",
+    "openai-agents",
+    "OK"
+   ],
+   [
+    "run_status",
+    "top-level span status",
+    "openai responses stream",
+    "UNSET"
+   ],
+   [
+    "tokens",
+    "tokens",
+    "anthropic messages stream",
+    "wrong"
+   ],
+   [
+    "call_status",
+    "span status",
+    "openai responses stream",
+    "UNSET, no exception event"
+   ],
+   [
+    "finish",
+    "finish",
+    "anthropic messages stream",
+    "missing"
+   ],
+   [
+    "finish",
+    "finish",
+    "openai responses create",
+    "missing"
+   ],
+   [
+    "finish",
+    "finish",
+    "openai responses stream",
+    "missing"
+   ],
+   [
+    "output",
+    "output text",
+    "anthropic messages stream",
+    "missing"
+   ],
+   [
+    "output",
+    "tool calls",
+    "anthropic messages stream",
+    "missing"
+   ],
+   [
+    "output",
+    "output text",
+    "openai chat create",
+    "missing"
+   ],
+   [
+    "output",
+    "tool calls",
+    "openai responses create",
+    "missing"
+   ],
+   [
+    "output",
+    "tool calls",
+    "openai responses stream",
+    "missing"
+   ],
+   [
+    "run_status",
+    "top-level span status",
+    "anthropic messages stream",
+    "OK"
+   ],
+   [
+    "call_status",
+    "span status",
+    "anthropic messages stream",
+    "OK, no exception event"
+   ]
+  ],
+  "openinference": [
+   [
+    "run_status",
+    "top-level span status",
+    "openai-agents",
+    "OK"
+   ],
+   [
+    "span_closed",
+    "span",
+    "openai chat stream",
+    "missing"
+   ],
+   [
+    "span_closed",
+    "span",
+    "openai responses stream",
+    "missing"
+   ],
+   [
+    "finish",
+    "finish",
+    "openai responses create",
+    "missing"
+   ],
+   [
+    "finish",
+    "finish",
+    "openai responses stream",
+    "missing"
+   ],
+   [
+    "output",
+    "output text",
+    "openai chat create",
+    "missing"
+   ]
+  ],
+  "openllmetry": [
+   [
+    "call_count",
+    "LLM spans",
+    "openai-agents",
+    "wrong"
+   ],
+   [
+    "run_status",
+    "top-level span status",
+    "openai-agents",
+    "OK"
+   ],
+   [
+    "run_status",
+    "top-level span status",
+    "openai chat stream",
+    "OK"
+   ],
+   [
+    "run_status",
+    "top-level span status",
+    "openai responses stream",
+    "OK"
+   ],
+   [
+    "span_closed",
+    "span",
+    "anthropic messages stream",
+    "missing"
+   ],
+   [
+    "tokens",
+    "tokens",
+    "anthropic messages stream",
+    "wrong"
+   ],
+   [
+    "call_status",
+    "span status",
+    "openai chat stream",
+    "OK, no exception event"
+   ],
+   [
+    "call_status",
+    "span status",
+    "openai responses stream",
+    "OK, no exception event"
+   ],
+   [
+    "error_recorded",
+    "any span",
+    "openai-agents",
+    "missing"
+   ]
+  ]
+ },
+ "fix": [
+  {
+   "finding": "openinference-run_status-openai-agents-top-level-span-status-ok",
+   "fixed": true,
+   "run_id": "20261011T013927Z-fix-openinference",
+   "traces_opened": 6,
+   "traces_received": 1,
+   "tries": [
+    {
+     "ok": false,
+     "reason": "still wrong after the patch: ag-bad-tool, ag-llm-fails, ag-max-turns, ag-streamed-cut, ag-streamed-error. With the patch installed and the real scenario run, top-level span status: ag-bad-tool: truth ERROR (app raised ModelBehaviorError), trace OK; ag-llm-fails: truth ERROR (app raised InternalServe",
+     "stage": "verify",
+     "try": 1
+    },
+    {
+     "ok": true,
+     "reason": "all 5 scenario(s) of the finding now match truth here",
+     "stage": "verified",
+     "try": 2
+    }
+   ],
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 4,
+      "input_tokens": 108886,
+      "output_tokens": 13389
+     }
+    },
+    "calls": 4,
+    "input_tokens": 108886,
+    "json_retries": 2,
+    "key_spend_delta_usd": 0.580242,
+    "output_tokens": 13389,
+    "truncated": 0
+   },
+   "variant": "v1",
+   "wall_s": 253.2
+  },
+  {
+   "finding": "openinference-run_status-openai-agents-top-level-span-status-ok",
+   "fixed": true,
+   "run_id": "20261011T014344Z-fix-openinference",
+   "traces_opened": 6,
+   "traces_received": 1,
+   "tries": [
+    {
+     "ok": false,
+     "reason": "1 new mismatch(es) in the full scenario library: ag-tool-raises run_status top-level span status: truth not ERROR (app got a result), trace ERROR",
+     "stage": "verify",
+     "try": 1
+    },
+    {
+     "ok": true,
+     "reason": "all 5 scenario(s) of the finding now match truth here",
+     "stage": "verified",
+     "try": 2
+    }
+   ],
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 2,
+      "input_tokens": 49438,
+      "output_tokens": 4900
+     }
+    },
+    "calls": 2,
+    "input_tokens": 49438,
+    "json_retries": 0,
+    "key_spend_delta_usd": 0.243995,
+    "output_tokens": 4900,
+    "truncated": 0
+   },
+   "variant": "v2",
+   "wall_s": 333.7
+  }
+ ],
+ "fix_history": [
+  {
+   "calls": 5,
+   "fixed": false,
+   "input_tokens": 110618,
+   "run_id": "20261011T002549Z-fix-openinference",
+   "tries": 3
+  },
+  {
+   "calls": 6,
+   "fixed": false,
+   "input_tokens": 140607,
+   "run_id": "20261011T003256Z-fix-openinference",
+   "tries": 3
+  },
+  {
+   "calls": 6,
+   "fixed": false,
+   "input_tokens": 142508,
+   "run_id": "20261011T003533Z-fix-openinference",
+   "tries": 3
+  },
+  {
+   "calls": 5,
+   "fixed": true,
+   "input_tokens": 118415,
+   "run_id": "20261011T004013Z-fix-openinference",
+   "tries": 3
+  }
+ ],
+ "note": "cost_usd = tokens at list price; key_spend_delta_usd = the proxy's spend before/after, which lags (hackathon.md).",
+ "plan": [
+  {
+   "leads": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "kind": "lead",
+     "scenario": "p-an-529-stream",
+     "severity": "high",
+     "trace": "no span",
+     "truth": "ended and exported (http_error)"
+    }
+   ],
+   "library": "openllmetry",
+   "proposals": [
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-an-529-stream",
+     "revisions": 0,
+     "tries": 1
+    },
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-lc-stream-tools",
+     "revisions": 1,
+     "tries": 2
+    },
+    {
+     "accepted": false,
+     "id": "p-an-async-tools",
+     "reasons": [
+      "expected.exception (a class name) is required exactly when outcome is exception"
+     ],
+     "revisions": 3,
+     "tries": 3
+    }
+   ],
+   "run_id": "20261011T013638Z-plan-openllmetry",
+   "scenarios": {
+    "p-an-529-stream": {
+     "api": "messages",
+     "app": "an_create_stream",
+     "framework": "none",
+     "model": "anth-529",
+     "provider": "anthropic"
+    },
+    "p-lc-stream-tools": {
+     "api": "chat",
+     "app": "lc_stream",
+     "framework": "langchain",
+     "model": "chat-tools",
+     "provider": "openai"
+    }
+   },
+   "sweep_run": "20261011T013824Z-openllmetry-proposed",
+   "traces_opened": 1,
+   "traces_received": 0,
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 4,
+      "input_tokens": 29552,
+      "output_tokens": 1366
+     }
+    },
+    "calls": 4,
+    "input_tokens": 29552,
+    "json_retries": 0,
+    "key_spend_delta_usd": 0.093707,
+    "output_tokens": 1366,
+    "truncated": 0
+   },
+   "variant": "v1",
+   "wall_s": 21.7
+  },
+  {
+   "leads": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "kind": "lead",
+     "scenario": "p-chat-async-stream-cut",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised APIConnectionError)"
+    },
+    {
+     "check": "call_status",
+     "field": "call 1 span status",
+     "kind": "lead",
+     "scenario": "p-chat-async-stream-cut",
+     "severity": "medium",
+     "trace": "OK, no exception event",
+     "truth": "ERROR with exception event (cut)"
+    }
+   ],
+   "library": "openllmetry",
+   "proposals": [
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-chat-async-stream-cut",
+     "revisions": 0,
+     "tries": 1
+    },
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-lc-stream-500",
+     "revisions": 0,
+     "tries": 1
+    },
+    {
+     "accepted": false,
+     "id": "p-an-async-stream-tools",
+     "reasons": [
+      "withdrawn by the model after: expected.outcome is \"ok\" but the untraced run gives \"exception\""
+     ],
+     "revisions": 2,
+     "tries": 2
+    }
+   ],
+   "run_id": "20261011T013704Z-plan-openllmetry",
+   "scenarios": {
+    "p-chat-async-stream-cut": {
+     "api": "chat",
+     "app": "chat_async_stream",
+     "framework": "none",
+     "model": "chat-cut",
+     "provider": "openai"
+    },
+    "p-lc-stream-500": {
+     "api": "chat",
+     "app": "lc_stream",
+     "framework": "langchain",
+     "model": "chat-500",
+     "provider": "openai"
+    }
+   },
+   "sweep_run": "20261011T013847Z-openllmetry-proposed",
+   "traces_opened": 1,
+   "traces_received": 0,
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 2,
+      "input_tokens": 26163,
+      "output_tokens": 810
+     }
+    },
+    "calls": 2,
+    "input_tokens": 26163,
+    "json_retries": 0,
+    "key_spend_delta_usd": 0.126057,
+    "output_tokens": 810,
+    "truncated": 0
+   },
+   "variant": "v2",
+   "wall_s": 16.2
+  },
+  {
+   "leads": [
+    {
+     "check": "span_closed",
+     "field": "call 1 span",
+     "kind": "lead",
+     "scenario": "p-an-529-stream",
+     "severity": "high",
+     "trace": "no span",
+     "truth": "ended and exported (http_error)"
+    },
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "kind": "lead",
+     "scenario": "p-resp-stream-failed",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised RuntimeError)"
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "kind": "lead",
+     "scenario": "p-resp-stream-failed",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "failed"
+     ]
+    },
+    {
+     "check": "error_recorded",
+     "field": "any span",
+     "kind": "lead",
+     "scenario": "p-resp-stream-failed",
+     "severity": "medium",
+     "trace": "no span records an error",
+     "truth": "ERROR or exception event (RuntimeError)"
+    }
+   ],
+   "library": "neatlogs",
+   "proposals": [
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-an-529-stream",
+     "revisions": 0,
+     "tries": 1
+    },
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-chat-stream-usage-tools",
+     "revisions": 1,
+     "tries": 2
+    },
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-resp-stream-failed",
+     "revisions": 1,
+     "tries": 2
+    }
+   ],
+   "run_id": "20261011T013725Z-plan-neatlogs",
+   "scenarios": {
+    "p-an-529-stream": {
+     "api": "messages",
+     "app": "an_stream_helper",
+     "framework": "none",
+     "model": "anth-529",
+     "provider": "anthropic"
+    },
+    "p-chat-stream-usage-tools": {
+     "api": "chat",
+     "app": "chat_stream_usage",
+     "framework": "none",
+     "model": "chat-tools",
+     "provider": "openai"
+    },
+    "p-resp-stream-failed": {
+     "api": "responses",
+     "app": "resp_stream",
+     "framework": "none",
+     "model": "resp-failed",
+     "provider": "openai"
+    }
+   },
+   "sweep_run": "20261011T013836Z-neatlogs-proposed",
+   "traces_opened": 1,
+   "traces_received": 0,
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 3,
+      "input_tokens": 28134,
+      "output_tokens": 1305
+     }
+    },
+    "calls": 3,
+    "input_tokens": 28134,
+    "json_retries": 0,
+    "key_spend_delta_usd": 0.100756,
+    "output_tokens": 1305,
+    "truncated": 0
+   },
+   "variant": "v1",
+   "wall_s": 20.7
+  },
+  {
+   "leads": [
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "kind": "lead",
+     "scenario": "p-an-async-stream-tools",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised AttributeError)"
+    },
+    {
+     "check": "error_recorded",
+     "field": "any span",
+     "kind": "lead",
+     "scenario": "p-an-async-stream-tools",
+     "severity": "medium",
+     "trace": "no span records an error",
+     "truth": "ERROR or exception event (AttributeError)"
+    },
+    {
+     "check": "run_status",
+     "field": "top-level span status",
+     "kind": "lead",
+     "scenario": "p-resp-stream-failed",
+     "severity": "high",
+     "trace": "OK",
+     "truth": "ERROR (app raised RuntimeError)"
+    },
+    {
+     "check": "finish",
+     "field": "call 1 finish",
+     "kind": "lead",
+     "scenario": "p-resp-stream-failed",
+     "severity": "medium",
+     "trace": null,
+     "truth": [
+      "failed"
+     ]
+    },
+    {
+     "check": "error_recorded",
+     "field": "any span",
+     "kind": "lead",
+     "scenario": "p-resp-stream-failed",
+     "severity": "medium",
+     "trace": "no span records an error",
+     "truth": "ERROR or exception event (RuntimeError)"
+    }
+   ],
+   "library": "neatlogs",
+   "proposals": [
+    {
+     "accepted": true,
+     "app_crashed": true,
+     "id": "p-an-async-stream-tools",
+     "revisions": 2,
+     "tries": 3
+    },
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-chat-stream-usage-error-event",
+     "revisions": 0,
+     "tries": 1
+    },
+    {
+     "accepted": true,
+     "app_crashed": false,
+     "id": "p-resp-stream-failed",
+     "revisions": 1,
+     "tries": 2
+    }
+   ],
+   "run_id": "20261011T013748Z-plan-neatlogs",
+   "scenarios": {
+    "p-an-async-stream-tools": {
+     "api": "messages",
+     "app": "an_async_create",
+     "framework": "none",
+     "model": "anth-tools",
+     "provider": "anthropic"
+    },
+    "p-chat-stream-usage-error-event": {
+     "api": "chat",
+     "app": "chat_stream_usage",
+     "framework": "none",
+     "model": "chat-error-event",
+     "provider": "openai"
+    },
+    "p-resp-stream-failed": {
+     "api": "responses",
+     "app": "resp_stream",
+     "framework": "none",
+     "model": "resp-failed",
+     "provider": "openai"
+    }
+   },
+   "sweep_run": "20261011T013900Z-neatlogs-proposed",
+   "traces_opened": 1,
+   "traces_received": 0,
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 4,
+      "input_tokens": 33518,
+      "output_tokens": 1471
+     }
+    },
+    "calls": 4,
+    "input_tokens": 33518,
+    "json_retries": 0,
+    "key_spend_delta_usd": 0.135458,
+    "output_tokens": 1471,
+    "truncated": 0
+   },
+   "variant": "v2",
+   "wall_s": 23.3
+  }
+ ],
+ "plan_history": [
+  {
+   "first_try": 0,
+   "library": "openllmetry",
+   "note": "v1 before its prompt was corrected (exception required, real app descriptions)",
+   "proposals": 3,
+   "run_id": "20261010T234842Z-plan-openllmetry",
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 5,
+      "input_tokens": 29329,
+      "output_tokens": 1729
+     }
+    },
+    "calls": 5,
+    "input_tokens": 29329,
+    "key_spend_delta_usd": 0.090892,
+    "output_tokens": 1729
+   }
+  },
+  {
+   "first_try": 1,
+   "library": "neatlogs",
+   "note": "v1 before its prompt was corrected (exception required, real app descriptions)",
+   "proposals": 3,
+   "run_id": "20261010T235208Z-plan-neatlogs",
+   "usage": {
+    "by_model": {
+     "claude-sonnet-4.6": {
+      "calls": 4,
+      "input_tokens": 30972,
+      "output_tokens": 1529
+     }
+    },
+    "calls": 4,
+    "input_tokens": 30972,
+    "key_spend_delta_usd": 0.099957,
+    "output_tokens": 1529
+   }
+  }
+ ],
+ "price_per_million": {
+  "input": 3.0,
+  "output": 15.0
+ }
+}

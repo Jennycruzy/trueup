@@ -1,0 +1,163 @@
+{
+ "check": "tokens",
+ "code_path": "anthropic messages stream",
+ "dedupe": {
+  "links": [
+   "https://github.com/traceloop/openllmetry/pull/4377",
+   "https://github.com/traceloop/openllmetry/pull/3976",
+   "https://github.com/traceloop/openllmetry/issues/4449",
+   "https://github.com/traceloop/openllmetry/pull/3975"
+  ],
+  "matched": [
+   {
+    "state": "open",
+    "title": "fix(anthropic): stop double-counting output tokens on streamed messages",
+    "url": "https://github.com/traceloop/openllmetry/pull/4377"
+   },
+   {
+    "state": "merged",
+    "title": "fix(anthropic): always set streaming token usage from API data (#3949)",
+    "url": "https://github.com/traceloop/openllmetry/pull/3976"
+   },
+   {
+    "state": "open",
+    "title": "Same cached Claude call via anthropic vs bedrock packages emits different gen_ai.usage.input_tokens \u2014 which is intended?",
+    "url": "https://github.com/traceloop/openllmetry/issues/4449"
+   },
+   {
+    "state": "open",
+    "title": "fix(anthropic): streaming base64 images inflate input token count",
+    "url": "https://github.com/traceloop/openllmetry/pull/3975"
+   }
+  ],
+  "related": [],
+  "searches": [
+   {
+    "date": "2026-10-10T23:38:05+00:00",
+    "hits": 4,
+    "include_prs": true,
+    "query": "anthropic token usage stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   },
+   {
+    "date": "2026-10-10T23:38:08+00:00",
+    "hits": 30,
+    "include_prs": true,
+    "query": "token usage stream",
+    "repo": "traceloop/openllmetry",
+    "states": "all"
+   }
+  ],
+  "status": "already known"
+ },
+ "example": {
+  "check": "tokens",
+  "field": "call 1 tokens",
+  "kind": "lead",
+  "library": "openllmetry",
+  "scenario": "an-stream-helper",
+  "severity": "high",
+  "trace": {
+   "input": 5,
+   "output": 4
+  },
+  "truth": {
+   "input": 5,
+   "output": 3
+  }
+ },
+ "example_run": "20261010T203755Z-openllmetry",
+ "field": "tokens",
+ "fixed": false,
+ "found_in": [
+  "20261010T203755Z-openllmetry"
+ ],
+ "id": "openllmetry-tokens-anthropic-messages-stream-tokens-wrong",
+ "leads": [
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-helper",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-thinking",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-stream-tools",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  },
+  {
+   "check": "tokens",
+   "field": "call 1 tokens",
+   "kind": "lead",
+   "library": "openllmetry",
+   "scenario": "an-create-stream",
+   "severity": "high",
+   "trace": {
+    "input": 5,
+    "output": 4
+   },
+   "truth": {
+    "input": 5,
+    "output": 3
+   }
+  }
+ ],
+ "library": "openllmetry",
+ "rules": {
+  "fake_truthful": "1 call(s), unique response ids; usage was sent",
+  "fresh_process": "same lead with the same values in 2 fresh processes",
+  "harness_sane": "own client per event loop; export off, no endpoint; reruns fast",
+  "latest_and_main": "latest release and main df4921a409",
+  "recommended_setup": "Traceloop.init(); framework none",
+  "reference": "openinference record(s) it correctly on the same scenario",
+  "repro": ".trueup/runs/20261010T203755Z-openllmetry/repros/openllmetry-an-stream-helper.py: 31 lines, no keys, shows the lead"
+ },
+ "scenarios": [
+  "an-create-stream",
+  "an-stream-helper",
+  "an-stream-thinking",
+  "an-stream-tools"
+ ],
+ "severity": "high",
+ "title": "openllmetry, anthropic messages stream: tokens recorded wrong",
+ "trace": "wrong",
+ "upstream": null
+}

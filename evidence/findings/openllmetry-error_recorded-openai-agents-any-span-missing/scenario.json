@@ -1,0 +1,35 @@
+{
+ "api": "responses",
+ "app": "ag_run",
+ "does": "The model calls a tool the agent does not have; the SDK raises.",
+ "expected": {
+  "calls": 1,
+  "exception": "ModelBehaviorError",
+  "fake": [
+   "complete"
+  ],
+  "finish": [
+   [
+    "completed"
+   ]
+  ],
+  "outcome": "exception",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   [
+    "no_such_tool"
+   ]
+  ],
+  "tool_runs": []
+ },
+ "framework": "openai-agents",
+ "id": "ag-bad-tool",
+ "model": "agent-resp-badtool",
+ "provider": "openai",
+ "status": "built"
+}

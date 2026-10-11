@@ -1,0 +1,48 @@
+{
+ "api": "responses",
+ "app": "ag_run",
+ "does": "Runner.run_sync: tool call, tool runs, then the answer.",
+ "expected": {
+  "calls": 2,
+  "fake": [
+   "complete",
+   "complete"
+  ],
+  "finish": [
+   [
+    "completed"
+   ],
+   [
+    "completed"
+   ]
+  ],
+  "outcome": "ok",
+  "tokens": [
+   {
+    "input": 11,
+    "output": 7
+   },
+   {
+    "input": 11,
+    "output": 7
+   }
+  ],
+  "tool_calls": [
+   [
+    "get_weather"
+   ],
+   []
+  ],
+  "tool_runs": [
+   {
+    "name": "get_weather",
+    "outcome": "ok"
+   }
+  ]
+ },
+ "framework": "openai-agents",
+ "id": "ag-run",
+ "model": "agent-resp",
+ "provider": "openai",
+ "status": "built"
+}
