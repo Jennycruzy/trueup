@@ -175,7 +175,8 @@ def _finding(sid="oa-resp-plain", path_app="resp_create"):
 
 def test_dedupe_queries_and_matches():
     f = _finding()
-    assert dedupe.queries(f) == ["responses finish reason", "finish reason"]
+    assert dedupe.queries(f) == ["responses finish reason", "finish reason", "responses responses.create",
+                                  "responses Responses", "responses openai.py"]
     items = [{"title": "Responses API spans miss finish_reason", "url": "u1"},
              {"title": "finish reason for anthropic", "url": "u2"},
              {"title": "Responses API support", "url": "u3"}]
@@ -194,10 +195,36 @@ def test_dedupe_records_searches_and_never_writes():
     f = _finding()
     out = dedupe.dedupe("neatlogs", [f], fake_search)[f.id]
     assert out["status"] == "already known" and out["links"] == ["https://x/7"]
-    assert {s["query"] for s in out["searches"]} == {"responses finish reason", "finish reason"}
+    assert {s["query"] for s in out["searches"]} == set(dedupe.queries(f))
     assert all(s["date"] and s["states"] == "all" for s in out["searches"])
+    assert all(s["hits"][0]["url"] == "https://x/7" for s in out["searches"])
     assert out["integration_titles"]["titles"] == ["#7 responses: finish_reason missing (open)"]
-    assert len(calls) == 3
+    assert len(calls) == len(dedupe.queries(f)) + 1
+
+
+def test_dedupe_finds_differently_worded_wrapper_fix_and_lists_patch_file_prs():
+    f = group.group([_item("an-stream-helper", check="run_status", field="top-level span status",
+                           app="messages_stream")])[0]
+    f.details["code_path"] = "anthropic messages stream"
+
+    def search(args):
+        if "SyncStreamManagerWrapper" in args[0]:
+            return json.dumps([{"number": 179, "title": "anthropic messages.stream loses output and reports OK on mid-stream errors",
+                                "url": "https://example/179", "state": "open", "isPullRequest": True,
+                                "createdAt": "2026-01-01"}])
+        return "[]"
+
+    def prs(repo):
+        assert repo == "neatlogs/neatlogs"
+        return json.dumps({"data": {"repository": {"pullRequests": {"nodes": [{
+            "number": 179, "title": "anthropic messages.stream loses output and reports OK on mid-stream errors",
+            "url": "https://example/179", "state": "OPEN",
+            "files": {"nodes": [{"path": "neatlogs/anthropic.py"}]}}]}}}})
+
+    out = dedupe.dedupe("neatlogs", [f], search, prs)[f.id]
+    assert out["status"] == "already known" and out["links"] == ["https://example/179"]
+    assert "anthropic SyncStreamManagerWrapper" in {s["query"] for s in out["searches"]}
+    assert out["open_prs_touching_patch_files"][0]["number"] == 179
 
 
 def test_dedupe_search_error_is_recorded_not_raised():

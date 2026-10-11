@@ -172,13 +172,19 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
     fix_dir = out_dir or root / "fixes" / finding_id
     run_dir.mkdir(parents=True, exist_ok=True)
     fix_dir.mkdir(parents=True, exist_ok=True)
+    # Once a fix has proof artifacts, a later failed experiment may only add a
+    # runs/<id>.json record.  All temporary locate/baseline files live with the
+    # run, so the proven directory remains byte-for-byte unchanged.
+    proven = all((fix_dir / name).exists() for name in ("patch.diff", "before-after.json", "before-after.md"))
+    work_dir = run_dir / "candidate" if proven and out_dir is None else fix_dir
+    work_dir.mkdir(parents=True, exist_ok=True)
     with State(root) as state:
         state.begin_run(run_id, "fix", finding_id)
     cached = root / "fixes" / finding_id / "baseline.json"
     if out_dir and cached.exists() and not (fix_dir / "baseline.json").exists():
         (fix_dir / "baseline.json").write_text(cached.read_text())
     t0 = time.monotonic()
-    for stale in [fix_dir / "patch.diff", *fix_dir.glob("before-after.*"), *fix_dir.glob("test_trueup_*.py")]:
+    for stale in [work_dir / "patch.diff", *work_dir.glob("before-after.*"), *work_dir.glob("test_trueup_*.py")]:
         stale.unlink(missing_ok=True)  # a run that does not fix must not leave an earlier patch behind
     client = client or ModelClient()
     record_spend(run_dir, "before", client)
@@ -193,13 +199,15 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
             located = loc.locate(root, target, run_dir, finding=finding)
             clone = Path(located["clone"])
             loc.reset_clone(clone)
-            loc.save((fix_dir / "locate.json"), (run_dir / "locate.json").read_text())
+            loc.save((work_dir / "locate.json"), (run_dir / "locate.json").read_text())
             result["commit"], result["locate_method"] = located["commit"], located["method"]
             out(f"located with {located['method']}: {len(located['definitions'])} definitions, "
                 f"{len(located['callers'])} callers ({located['graph'].get('reason', '')[:160]})")
             tracing.set_verdict(span, located["method"])
         with tracing.worker("trueup-verifier", step="baseline") as span:
-            base = baseline(root, clone, located["commit"], target, fix_dir, out)
+            if proven and (fix_dir / "baseline.json").exists() and not (work_dir / "baseline.json").exists():
+                loc.save(work_dir / "baseline.json", (fix_dir / "baseline.json").read_text())
+            base = baseline(root, clone, located["commit"], target, work_dir, out)
             tracing.set_verdict(span, f"baseline: {vf.totals(base['sweep'])['leads']} leads")
         result["suites_before"] = {k: {x: v.get(x) for x in ("total", "passed", "failed", "errors", "skipped",
                                                               "failing", "exit")} for k, v in base["suites"].items()}
@@ -282,7 +290,7 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
         result["spend_after_usd"] = spend.get("after", {}).get("spend_usd")
         result["wall_s"] = round(time.monotonic() - t0, 1)
         result["traces_opened"] = tracing.opened()
-        write_log(fix_dir, run_dir, result)
+        write_log(fix_dir, run_dir, result, publish=bool(result["fixed"] or not proven))
         with State(root) as state:
             state.finish_run(run_id, "fixed" if result["fixed"] else "error" if result["error"] else "not_fixed")
     out(f"{finding_id}: {'fixed, verified' if result['fixed'] else 'NOT fixed'} after {len(result['tries'])} "
@@ -378,17 +386,19 @@ def write_fix(fix_dir: Path, finding: dict[str, Any], target: tg.Target, base: d
     loc.save((fix_dir / "before-after.md"), vf.table_md(rows, tb, ta))
 
 
-def write_log(fix_dir: Path, run_dir: Path, result: dict[str, Any]) -> None:
+def write_log(fix_dir: Path, run_dir: Path, result: dict[str, Any], *, publish: bool = True) -> None:
     tries = []
     for t in result["tries"]:
         t = {k: v for k, v in t.items() if k != "sweep_after"}
         tries.append(t)
     log = {**result, "tries": tries}
-    loc.save((fix_dir / "tries.json"), json.dumps(log, indent=1, default=str))
     loc.save((run_dir / "fix.json"), json.dumps(log, indent=1, default=str))
     # Every run's tries are kept, also the runs that did not fix it.
     (fix_dir / "runs").mkdir(exist_ok=True)
     loc.save((fix_dir / "runs" / f"{result['run_id']}.json"), json.dumps(log, indent=1, default=str))
+    if not publish:
+        return
+    loc.save((fix_dir / "tries.json"), json.dumps(log, indent=1, default=str))
     suites = {"before": result.get("suites_before", {}),
               "after": {n: {p: {x: s["after"].get(x) for x in ("total", "passed", "failed", "errors", "skipped",
                                                                   "failing", "exit")} | {"verdict": s["reason"]}

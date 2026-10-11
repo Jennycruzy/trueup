@@ -188,8 +188,7 @@ def new_test_verdict(before: dict[str, Any], after: dict[str, Any], variant: str
     if after.get("total", 0) == 0 or after["failing"]:
         return False, f"the new test fails with the patch (exit {after['exit']}): {after['tail'][-1200:]}"
     weak = [t.rsplit("::", 1)[-1] for t in before.get("tests", []) if t not in before["failing"]]
-    note = (f"; {len(weak)} of {before['total']} new test functions also pass before the patch, so they do not "
-            f"show the bug: {', '.join(weak)}") if weak else ""
+    note = (f"; guards (pass before, so they do not show the bug): {', '.join(weak)}") if weak else ""
     return True, (f"new test: fails before ({len(before['failing'])} of {before['total']} failing), passes after "
                   f"({after['total']} passed){note}")
 

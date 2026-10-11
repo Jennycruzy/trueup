@@ -10,7 +10,7 @@ import pytest
 from trueup import tracing
 from trueup.cli import build_parser
 from trueup.core.repro import line_count
-from trueup.fix import checkpointed_draft, find_finding
+from trueup.fix import checkpointed_draft, find_finding, write_log
 from trueup.state import State
 from trueup.fixer import locate as loc
 from trueup.fixer import patch as pt
@@ -245,10 +245,35 @@ def test_baseline_must_really_run() -> None:
 def test_new_test_verdict_and_weak_tests() -> None:
     before = {"total": 2, "failing": ["m::test_a"], "tests": ["m::test_a", "m::test_b"], "exit": 1, "tail": ""}
     ok, why = vf.new_test_verdict(before, {"total": 2, "failing": [], "exit": 0, "tail": ""})
-    assert ok and "test_b" in why and "do not show the bug" in why
+    assert ok and "test_b" in why and "guards" in why and "do not show the bug" in why
     assert not vf.new_test_verdict({**before, "failing": []}, {"total": 2, "failing": [], "exit": 0, "tail": ""})[0]
     assert not vf.new_test_verdict(before, {"total": 2, "failing": ["m::test_a"], "exit": 1, "tail": ""})[0]
     assert not vf.new_test_verdict({"total": 0, "exit": 4, "tail": ""}, {"total": 1, "failing": []})[0]
+
+
+def test_magicmock_style_all_pass_test_is_rejected_as_guard_only() -> None:
+    before = {"total": 2, "failing": [], "tests": ["m::test_mock_called", "m::test_shape"],
+              "exit": 0, "tail": "2 passed"}
+    ok, why = vf.new_test_verdict(before, {**before, "tail": "2 passed"})
+    assert not ok and "does not show the bug" in why
+
+
+def test_failed_fix_log_preserves_proven_artifacts_byte_for_byte(tmp_path: Path) -> None:
+    fix_dir, run_dir = tmp_path / "fixes" / "f", tmp_path / "runs" / "r2"
+    fix_dir.mkdir(parents=True)
+    run_dir.mkdir(parents=True)
+    names = ["patch.diff", "test_trueup_fix.py", "before-after.json", "before-after.md",
+             "tries.json", "suites.json", "summary.md"]
+    before = {}
+    for i, name in enumerate(names):
+        payload = (f"proven-{i}\n").encode()
+        (fix_dir / name).write_bytes(payload)
+        before[name] = payload
+    result = {"run_id": "r2", "tries": [], "finding": "f", "title": "failed rerun",
+              "model": "m", "cost_usd": 0, "fixed": False, "error": None}
+    write_log(fix_dir, run_dir, result, publish=False)
+    assert {name: (fix_dir / name).read_bytes() for name in names} == before
+    assert (fix_dir / "runs" / "r2.json").exists()
 
 
 FINDING = {"id": "f", "details": {"check": "run_status", "field": "status", "scenarios": ["ag-a", "ag-b"]}}

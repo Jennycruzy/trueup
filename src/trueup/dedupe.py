@@ -16,6 +16,7 @@ import json
 import subprocess
 import time
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Callable
 
 from trueup.core.model import Finding
@@ -36,11 +37,11 @@ INTEGRATION = {
 # Search words, and title phrases any of which counts as the same behaviour, per check.
 BEHAVIOUR: dict[str, tuple[str, tuple[str, ...]]] = {
     "run_status": ("span status error", ("span status", "error status", "status error", "status to error", "status ok", "marked as error",
-                                         "set_status")),
+                                         "set_status", "reports ok")),
     "call_status": ("exception event", ("exception event", "record_exception", "record exception", "span status",
                                          "error status")),
     "span_closed": ("span not ended stream", ("not ended", "never ended", "not closed", "missing span", "no span",
-                                              "span leak", "not exported", "unfinished")),
+                                              "span leak", "not exported", "unfinished", "streaming context")),
     "call_count": ("duplicate spans", ("duplicate", "double", "twice")),
     "tokens": ("token usage", ("token", "usage")),
     "finish": ("finish reason", ("finish reason", "finish_reason", "stop reason", "stop_reason")),
@@ -69,6 +70,16 @@ REVIEWED_NOT_COVERING: dict[tuple[str, str], str] = {
 # Title words that mean a different subject even when the behaviour words match.
 EXCLUDE = {"tokens": ("reasoning",)}
 
+# Concrete implementation terms make differently-worded fixes discoverable.  A
+# symptom-only search missed neatlogs #179 even though it changed this wrapper.
+CODE_HINTS: dict[str, tuple[tuple[str, ...], tuple[str, ...]]] = {
+    "anthropic messages stream": (("messages.stream", "SyncStreamManagerWrapper",
+                                    "AsyncStreamManagerWrapper"), ("anthropic.py",)),
+    "openai responses create": (("responses.create", "Responses"), ("openai.py",)),
+    "openai responses stream": (("responses.stream", "Responses"), ("openai.py",)),
+    "openai-agents": (("Runner.run", "AgentSpanData"), ("processor.py",)),
+}
+
 
 def queries(f: Finding) -> list[str]:
     path, check, field = f.details["code_path"], f.details["check"], f.details["field"]
@@ -77,7 +88,12 @@ def queries(f: Finding) -> list[str]:
     if check == "output":
         words = "refusal" if "text" in field and _is_refusal(f) else ("tool calls" if "tool" in field else "output")
     stream = " stream" if path.endswith("stream") and "stream" not in words else ""
-    return [f"{integ} {words}{stream}", words + stream]
+    symptom = words + stream
+    methods, files = CODE_HINTS.get(path, ((), ()))
+    candidates = [f"{integ} {symptom}", symptom]
+    candidates += [f"{integ} {method}" for method in methods]
+    candidates += [f"{integ} {filename}" for filename in files]
+    return list(dict.fromkeys(candidates))
 
 
 def _is_refusal(f: Finding) -> bool:
@@ -109,6 +125,26 @@ def gh_search(args: list[str]) -> str:
     return p.stdout
 
 
+def gh_open_pr_files(repo: str) -> str:
+    """Every open PR and its files, fetched independently of title wording."""
+    owner, name = repo.split("/", 1)
+    query = """query($owner:String!,$name:String!){repository(owner:$owner,name:$name){pullRequests(
+      states:OPEN,first:100){nodes{number title url state files(first:100){nodes{path}}}}}}"""
+    p = subprocess.run(["gh", "api", "graphql", "-f", f"query={query}", "-F", f"owner={owner}",
+                        "-F", f"name={name}"], capture_output=True, text=True, timeout=60)
+    if p.returncode != 0:
+        raise RuntimeError((p.stderr or p.stdout).strip()[-300:])
+    return p.stdout
+
+
+def _open_prs(repo: str, get: Callable[[str], str]) -> tuple[list[dict[str, Any]], str | None]:
+    try:
+        data = json.loads(get(repo))
+        return data.get("data", {}).get("repository", {}).get("pullRequests", {}).get("nodes", []), None
+    except (RuntimeError, ValueError, subprocess.TimeoutExpired, OSError) as e:
+        return [], str(e)
+
+
 def _search(search: Callable[[list[str]], str], repo: str, query: str, limit: int,
             cache: dict[str, Any]) -> dict[str, Any]:
     if query in cache:
@@ -127,10 +163,12 @@ def _search(search: Callable[[list[str]], str], repo: str, query: str, limit: in
 
 
 def dedupe(library: str, findings: list[Finding], search: Callable[[list[str]], str] = gh_search,
+           pr_files: Callable[[str], str] | None = None,
            ) -> dict[str, dict[str, Any]]:
     repo = REPOS[library]
     cache: dict[str, Any] = {}
     out = {}
+    prs, pr_error = _open_prs(repo, pr_files or gh_open_pr_files) if pr_files or search is gh_search else ([], None)
     for f in findings:
         searches = [_search(search, repo, q, 30, cache) for q in queries(f)]
         integ = INTEGRATION.get(f.details["code_path"], (f.details["code_path"],))[0]
@@ -140,6 +178,12 @@ def dedupe(library: str, findings: list[Finding], search: Callable[[list[str]], 
             for it in s["results"]:
                 seen.setdefault(it["url"], it)
         found = matches(f, list(seen.values()))
+        filenames = set(CODE_HINTS.get(f.details["code_path"], ((), ()))[1])
+        touching = [{"number": p["number"], "title": p["title"], "url": p["url"],
+                     "files": [x["path"] for x in p.get("files", {}).get("nodes", [])
+                               if Path(x["path"]).name in filenames]}
+                    for p in prs if any(Path(x["path"]).name in filenames
+                                        for x in p.get("files", {}).get("nodes", []))]
         related = [{"title": h["title"], "url": h["url"], "why_not": REVIEWED_NOT_COVERING[(f.id, h["url"])]}
                    for h in found if (f.id, h["url"]) in REVIEWED_NOT_COVERING]
         hits = [h for h in found if (f.id, h["url"]) not in REVIEWED_NOT_COVERING]
@@ -148,11 +192,15 @@ def dedupe(library: str, findings: list[Finding], search: Callable[[list[str]], 
             "links": [h["url"] for h in hits],
             "matched": [{"title": h["title"], "url": h["url"], "state": h["state"]} for h in hits],
             "related": related,
-            "searches": [{k: v for k, v in s.items() if k != "results"} | {"hits": len(s["results"])}
+            "searches": [{k: v for k, v in s.items() if k != "results"} |
+                         {"hits": [{"number": it["number"], "title": it["title"], "url": it["url"],
+                                    "state": it["state"]} for it in s["results"]]}
                          for s in searches],
             "integration_titles": {"query": integ, "date": listing["date"],
                                    "titles": [f"#{it['number']} {it['title']} ({it['state']})"
                                               for it in listing["results"]]},
-            "errors": [s["error"] for s in [*searches, listing] if s.get("error")],
+            "open_prs_touching_patch_files": touching,
+            "errors": [s["error"] for s in [*searches, listing] if s.get("error")] +
+                      ([pr_error] if pr_error else []),
         }
     return out

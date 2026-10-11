@@ -31,6 +31,16 @@ Three patches are proven against their target cases, package suites, and the ful
 new mismatches. Five findings match an existing upstream issue or pull request. A “finding” here means every
 checker rule passed; leads that failed or could not complete a rule remain visible separately.
 
+### Trueup's own mistakes, and the fix for each
+
+| Mistake | What changed |
+|---|---|
+| 27 adapter failures were presented as library leads | The runner now verifies the framework import and active instrumentor before accepting a scenario; the withdrawn leads remain counted in the [build record](hackathon.md#2026-10-11-neatlogs-evidence-and-the-last-harness-fix). |
+| A narrow deduper missed differently worded neatlogs #179 | Searches now include symptom variants, SDK methods, wrapper functions and filenames, and GraphQL lists every open PR touching the candidate patch file; see the [failure account](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
+| An incompatible old dependency was called a regression | Historical checks now install matching dependency versions before comparing behaviour; the corrected conclusion is in the [upstream record](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
+| Two generated tests passed without the fix | Every test function is classified from the before run: at least one must fail, and any that pass are explicitly reported as guards that do not demonstrate the bug; see the [test investigation](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
+| A failed rerun overwrote an already proven fix | A rerun against proven artifacts works in its run directory; on failure it adds only `runs/<run-id>.json` beneath the fix, covered by a byte-for-byte regression test and documented in the [failed run account](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
+
 ### One finding, start to finish
 
 An OpenAI Agents run raised an error, but OpenInference ended its top-level `Agent workflow` span as OK. Trueup
