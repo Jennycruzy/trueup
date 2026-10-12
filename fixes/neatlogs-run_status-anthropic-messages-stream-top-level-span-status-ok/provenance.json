@@ -1,0 +1,37 @@
+{
+ "finding": "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+ "commit": {
+  "sha": "79210a45418246ceb95e2990d1c003b5fbc7b3d9",
+  "date": "2026-10-11",
+  "subject": "Add fixer, verifier and upstream drafts",
+  "checkpoint": "01M4M8M1GSQ2BM1RX2JKDJHPD6",
+  "entire_url": "https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9"
+ },
+ "session_summary": [
+  "● Checkpoint 01M4M8M1GSQ2BM1RX2JKDJHPD6",
+  "  session  46884b07-6b3f-4c42-8278-37fcc40e87a6",
+  "  created  2026-10-11 01:18:18",
+  "  author   Jennycruzy <jennycruzy@users.noreply.github.com>",
+  "  tokens   13674k",
+  "  commits  79210a4 Add fixer, verifier and upstream drafts",
+  "────────────────────────────────────────────────────────────",
+  "## Intent",
+  "",
+  "Continue building Trueup in this repository. Read README.md, hackathon.md, CH..."
+ ],
+ "tries": {
+  "count": 1,
+  "failed": [],
+  "model": "claude-sonnet-4.6",
+  "cost_usd": 0.400501
+ },
+ "proof": {
+  "leads_before": 35,
+  "leads_after": 31,
+  "new_mismatches": 0
+ },
+ "upstream": {
+  "posted": false,
+  "path": "upstream/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/"
+ }
+}

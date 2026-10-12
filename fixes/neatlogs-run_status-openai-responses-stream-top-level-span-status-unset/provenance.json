@@ -1,0 +1,31 @@
+{
+ "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+ "commit": {
+  "sha": "25557659e151daf3c57cdd57da233fa287674cef",
+  "date": "2026-10-12",
+  "subject": "Prepare more neatlogs fixes",
+  "checkpoint": null,
+  "entire_url": null
+ },
+ "session_summary": [],
+ "tries": {
+  "count": 2,
+  "failed": [
+   {
+    "try": 1,
+    "reason": "still wrong after the patch: oa-resp-stream-error-event. With the patch installed and the real scenario run, top-level span status: oa-resp-stream-error-event: truth ERROR (app raised RuntimeError), …"
+   }
+  ],
+  "model": "claude-sonnet-4.6",
+  "cost_usd": 0.35972
+ },
+ "proof": {
+  "leads_before": 35,
+  "leads_after": 33,
+  "new_mismatches": 0
+ },
+ "upstream": {
+  "posted": false,
+  "path": "upstream/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/"
+ }
+}

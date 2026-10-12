@@ -159,6 +159,10 @@ def build_parser() -> argparse.ArgumentParser:
                     help="only re-run the locate step and compare it with fixes/<id>/patch.diff (no model call)")
     up = sub.add_parser("upstream", help="draft issue and PR text for a finding into upstream/<id>/ (never posts)")
     up.add_argument("finding_id", help="a finding id from findings.json")
+    pv = sub.add_parser("provenance", help="write fixes/<id>/PROVENANCE.md: the commit, Entire record, tries, "
+                                           "proof and upstream link of each fix")
+    pv.add_argument("finding_id", nargs="?", help="one fix id under fixes/")
+    pv.add_argument("--all", action="store_true", help="every fix that has a proof.json")
     ck = sub.add_parser("check", help="run the checker and dedupe over a sweep's leads")
     ck.add_argument("run_id", help="a run id under .trueup/runs, or latest")
     ck.add_argument("--library", choices=LIBRARIES, help="with latest: the newest sweep of this library")
@@ -376,6 +380,22 @@ def dispatch(args: argparse.Namespace) -> int:
 
             return traced_worker_command("locate", args.finding_id, "trueup-fixer", locate_body)
         return fix_command(args.finding_id, args.tries, args.variant, args.out_dir)
+    if args.command == "provenance":
+        from trueup.provenance import NO_RECORD, write_all
+
+        if bool(args.finding_id) == bool(args.all):
+            print("trueup provenance: give one finding id or --all", file=sys.stderr)
+            return EXIT_ERROR
+        try:
+            results = write_all(Path.cwd(), None if args.all else args.finding_id)
+        except (ValueError, OSError, json.JSONDecodeError) as e:
+            print(f"trueup provenance: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        for p in results:
+            c = p["commit"]
+            record = c["entire_url"] if c and c["entire_url"] else NO_RECORD
+            print(f"{p['finding']}: {record}")
+        return EXIT_OK
     if args.command == "upstream":
         from trueup.upstream import upstream
 

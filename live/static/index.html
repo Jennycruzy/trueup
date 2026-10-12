@@ -145,6 +145,7 @@ h2{font-size:clamp(1.6rem,3.6vw,2.4rem);margin:64px 0 8px;letter-spacing:-.01em}
 .proof:hover{transform:translateY(-4px);border-color:var(--line2)}
 .proof h3{margin:6px 0 8px;font-size:1.2rem}
 .proof p{color:var(--muted);font-size:15px;margin:0 0 12px}
+.proof .prov{display:block;margin-top:8px;font-size:13px;color:var(--dim)}
 .proof img{width:100%;border-radius:12px;border:1px solid var(--line);display:block;margin-bottom:12px}
 .big{font:800 2.6rem/1 var(--mono)}
 .big .r{color:var(--red)}.big .g{color:var(--amber)}
@@ -239,8 +240,8 @@ h2{font-size:clamp(1.6rem,3.6vw,2.4rem);margin:64px 0 8px;letter-spacing:-.01em}
     <h2>Where the fixes went</h2>
     <p class="sec">Trueup found the cause in the tracing code, wrote each fix with tests, and sent them upstream. "With Trueup's fixes" above runs exactly these. They are proposals until merged.</p>
     <div class="cards">
-      <div class="proof"><div class="label">Arize · OpenInference #4024</div><img src="/x/1-arize-review.png" alt="Arize's head of open source reviewing the pull request" loading="lazy"><h3>Reviewed by Arize's head of open source</h3><p>"Making a failed run show up on the root span is the right goal." We applied his changes; 300 tests pass. neatlogs runs this same code for AI agents, so one fix repairs both.</p><a href="https://github.com/Arize-ai/openinference/pull/4024" target="_blank" rel="noopener">Open the pull request →</a></div>
-      <div class="proof"><div class="label">neatlogs #207</div><img src="/x/3-neatlogs-pr.png" alt="The pull request sent to neatlogs" loading="lazy"><h3>Sent to neatlogs</h3><p>neatlogs' own agent recorder had the same bug. The fix comes with 6 tests: 2 fail without it, all pass with it. Their full test suite still passes.</p><a href="https://github.com/neatlogs/neatlogs/pull/207" target="_blank" rel="noopener">Open the pull request →</a></div>
+      <div class="proof"><div class="label">Arize · OpenInference #4024</div><img src="/x/1-arize-review.png" alt="Arize's head of open source reviewing the pull request" loading="lazy"><h3>Reviewed by Arize's head of open source</h3><p>"Making a failed run show up on the root span is the right goal." We applied his changes; 300 tests pass. neatlogs runs this same code for AI agents, so one fix repairs both.</p><a href="https://github.com/Arize-ai/openinference/pull/4024" target="_blank" rel="noopener">Open the pull request →</a><span class="prov">How this fix was made: <a href="https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9" target="_blank" rel="noopener">Entire record →</a></span></div>
+      <div class="proof"><div class="label">neatlogs #207</div><img src="/x/3-neatlogs-pr.png" alt="The pull request sent to neatlogs" loading="lazy"><h3>Sent to neatlogs</h3><p>neatlogs' own agent recorder had the same bug. The fix comes with 6 tests: 2 fail without it, all pass with it. Their full test suite still passes.</p><a href="https://github.com/neatlogs/neatlogs/pull/207" target="_blank" rel="noopener">Open the pull request →</a><span class="prov">Recorded build: <a href="https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9" target="_blank" rel="noopener">Entire record →</a></span></div>
       <div class="proof"><div class="label">neatlogs' own email</div><div class="big"><span class="g" id="c1">0.0</span>% <span style="color:var(--dim)">→</span> <span class="r" id="c2">0.0</span>%</div><h3>The daily email got it wrong</h3><p>neatlogs' email said 6.2% of our runs failed. We checked all 81: 9 had crashed, 11.1%. These were test runs we crashed on purpose; the tracing code missed the crashes, and the email added up what it was given.</p><a href="https://github.com/Jennycruzy/trueup/blob/main/docs/neatlogs-email.md" target="_blank" rel="noopener">Every run, by ID →</a></div>
     </div>
   </section>
@@ -255,7 +256,7 @@ trueup.witness.<span class="f">watch</span>()</div>
   </section>
 
   <div class="foot reveal">
-    <b>What this is, plainly.</b> The cut and the crash are real failures we cause on purpose: a small relay drops the connection halfway through a real Claude reply, and the agent asks the real server for a model it refuses. Only these three buttons exist; nothing you type reaches the model. One run at a time, a daily cap. Built for neatHack 2026 with neatlogs, Entire and cfo.ai · <a href="https://github.com/Jennycruzy/trueup">github.com/Jennycruzy/trueup</a>
+    <b>What this is, plainly.</b> The cut and the crash are real failures we cause on purpose: a small relay drops the connection halfway through a real Claude reply, and the agent asks the real server for a model it refuses. Only these three buttons exist; nothing you type reaches the model. One run at a time, a daily cap. Built for neatHack 2026 with neatlogs, Entire and cfo.ai · <a href="https://github.com/Jennycruzy/trueup">github.com/Jennycruzy/trueup</a><br>Build history recorded with Entire: <a href="https://entire.io/gh/Jennycruzy/trueup/commit/7c92dc427efd873f9351a45364c2f815e942a3cf" target="_blank" rel="noopener">latest recorded commit →</a>
   </div>
 </div>
 
