@@ -16,6 +16,7 @@ import logging
 import sys
 import time
 import traceback
+import contextlib
 from importlib import metadata
 from typing import Any
 
@@ -73,7 +74,11 @@ def run(library: str, scenario_id: str) -> dict[str, Any]:
         quiet_agents_sdk()
     app_fn = APPS[scenario.app]
     framework_apps.TOOL_RUNS.clear()
-    with FakeProvider() as fake:
+    identity = contextlib.nullcontext()
+    if os.environ.get("TRUEUP_DEMO_EXPORT") == "1":
+        import neatlogs
+        identity = neatlogs.identify(session_id=os.environ["TRUEUP_DEMO_SESSION"])
+    with identity, FakeProvider() as fake:
         t0 = time.monotonic()
         try:
             result = app_fn(fake.base_url, scenario.model)

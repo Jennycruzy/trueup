@@ -40,7 +40,7 @@ def _last_line(text: str) -> str:
 
 
 def run_scenario(python: Path, library: str, scenario_id: str, timeout: float = 90,
-                 proposed_dir: Path | None = None) -> dict[str, Any]:
+                 proposed_dir: Path | None = None, export_session: str | None = None) -> dict[str, Any]:
     """Returns {scenario, library, status, reason, seconds, observation}."""
     try:
         if proposed_dir is None:
@@ -64,6 +64,12 @@ def run_scenario(python: Path, library: str, scenario_id: str, timeout: float = 
     if scenario.status != BUILT:
         return not_run(scenario_id, library, f"scenario is {scenario.status}")
     env = child_env()
+    if export_session:
+        env["TRUEUP_DEMO_EXPORT"] = "1"
+        env["TRUEUP_DEMO_SESSION"] = export_session
+        env.pop("NEATLOGS_DISABLE_EXPORT", None)
+        if os.environ.get("NEATLOGS_API_KEY"):
+            env["NEATLOGS_API_KEY"] = os.environ["NEATLOGS_API_KEY"]
     if proposed_dir is not None:
         env["TRUEUP_PROPOSED_DIR"] = str(proposed_dir)
     return _run_child(python, library, scenario_id, [library, scenario_id], timeout, env)

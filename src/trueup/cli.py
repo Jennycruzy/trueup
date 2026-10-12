@@ -110,6 +110,11 @@ def build_parser() -> argparse.ArgumentParser:
     rp.add_argument("--out", type=Path, default=Path("docs/index.html"), help="output (default docs/index.html)")
     tr = sub.add_parser("traces", help="read a run's own traces back from neatlogs (MCP server, read only)")
     tr.add_argument("session_id", help="a run id (= neatlogs session id)")
+    nd = sub.add_parser("detections", help="install or list Trueup's Neatlogs trace-truth detections")
+    nd.add_argument("detections_command", choices=("install", "list"))
+    de = sub.add_parser("demo-export", help="export selected fake-provider scenario traces to Neatlogs")
+    de.add_argument("library", choices=LIBRARIES)
+    de.add_argument("--yes-export-fake-traces", action="store_true")
     sw = sub.add_parser("sweep", help="run the scenarios against one tracing library")
     sw.add_argument("library", choices=LIBRARIES)
     sw.add_argument("--framework", default="all", choices=("all", "none", "langchain", "openai-agents"),
@@ -250,6 +255,27 @@ def dispatch(args: argparse.Namespace) -> int:
             print(f"trueup traces: {e}", file=sys.stderr)
             return EXIT_ERROR
         print(json.dumps(s, indent=1))
+        return EXIT_OK
+    if args.command == "detections":
+        from trueup.neatlogs_detections import Writer, install, list_pack
+        from trueup.neatlogs_read import NeatlogsReadError, Reader
+
+        try:
+            result = install(Writer()) if args.detections_command == "install" else list_pack(Reader())
+        except (NeatlogsReadError, OSError, RuntimeError, ValueError) as e:
+            print(f"trueup detections: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        print(json.dumps(result, indent=1))
+        return EXIT_OK
+    if args.command == "demo-export":
+        from trueup.demo_export import demo_export
+
+        try:
+            result = demo_export(Path.cwd(), args.library, approved=args.yes_export_fake_traces)
+        except (OSError, RuntimeError, ValueError) as e:
+            print(f"trueup demo-export: {e}", file=sys.stderr)
+            return EXIT_ERROR
+        print(json.dumps(result, indent=1))
         return EXIT_OK
     if args.command == "sweep":
         from trueup import tracing

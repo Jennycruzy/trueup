@@ -28,6 +28,11 @@ These cannot be created with the project ingest credential or the available read
    scenarios, and full sweep.”
 4. Capture screenshots of workflow `trueup`, worker names, v1/v2 filters, the four prompt histories, detection
    hits, and the failed-then-passed trace replay.
+5. In **Detections**, filter to group `Trace truth (by Trueup)` and capture the list showing all three active
+   conditional rules.
+6. Open detection `neatlogs: LLM output was not recorded`, select a 12 October occurrence, and capture the detection
+   beside demo trace `6041090c2877aa7d78861796ee052fcb` (`anth-plain`, empty output). Also capture the zero-token
+   rule's trend showing six occurrences on 12 October.
 
 Neatlogs returned no fix suggestions in draft, open, in-progress, resolved, or archived states, so there was no
 suggestion to accept or reject. No investigation was spent because no fix card or investigation-creation MCP tool

@@ -29,6 +29,16 @@ The commands assume the clone has a `Jennycruzy` remote pointing to the owner's 
 
 ## 2. Existing presentation and account actions
 
+Before the presentation, add the two trace-level code detections in Neatlogs. In **Detections → New detection →
+Code**, name the first `Trueup: crashed run shown as OK`, paste the complete contents of
+`detections/crashed_run_ok.py`, preview it, save only if the preview matches a known demo trace, and place it in
+`Trace truth (by Trueup)`. Repeat with name `Trueup: duplicate LLM call`, file
+`detections/duplicate_llm_calls.py`, and the same group. The available MCP write surface cannot create code-engine
+detections, so these are deliberately owner actions.
+
+Then run the exact screenshot checks in `docs/neatlogs.md`; capture the detection list and the hit on trace
+`6041090c2877aa7d78861796ee052fcb`.
+
 - Capture the Neatlogs dashboard views listed in `docs/neatlogs.md`.
 - Review and publish the video; `docs/video-script.md` remains local and excluded from git.
 - Enable GitHub Pages for `docs/` if the public evidence page is wanted.

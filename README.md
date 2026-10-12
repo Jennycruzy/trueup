@@ -124,8 +124,22 @@ one trace per worker, with workflow, library, command, run, and v1/v2 tags. True
 before exit. `trueup evidence pull` reads detections, trends, analytics, and fix suggestions through Neatlogs MCP.
 `audit --neatlogs` adds one `Trueup mismatch` child span per mismatch and enables the SDK's PII redaction.
 
-Scenario subprocesses deliberately send nothing to Neatlogs. This protects user prompts and code and avoids using
-the project's span allowance for the trace data Trueup is testing; children receive no key and have export off.
+Scenario subprocesses send nothing to Neatlogs by default. The sole exception is the explicit `demo-export` command:
+it uses only the local fake provider, counts spans locally before export, enforces a 30-span ceiling, tags traces `demo`, and refuses to
+run without `--yes-export-fake-traces`.
+
+### Spot bad traces in your Neatlogs project today
+
+`trueup detections install` previews and idempotently installs three single-span rules in `Trace truth (by Trueup)`:
+missing model output, zero recorded tokens, and an OK LLM span with no output. `trueup detections list` shows only
+this pack. Trace-level rules for a successful root with an errored child and duplicate LLM calls are in
+[`detections/`](detections/); the owner paste steps are in [`docs/owner-actions.md`](docs/owner-actions.md).
+
+To create safe demo traffic, run `trueup demo-export <library> --yes-export-fake-traces`. It executes three affected
+scenarios against the fake provider in an isolated `demo-<library>-<time>` session as user `jenny-builds`. See the
+[signature map and trace IDs](docs/detections.md).
+
+Screenshot placeholder: detection list and one detection hit on a `demo-*` trace (owner fills).
 
 Planner and fixer system prompts are managed in Neatlogs under versioned names with label `production`.
 Exact offline copies and hashes live in [`prompts/`](prompts/), so the judge path needs no Neatlogs account.
@@ -149,7 +163,8 @@ so read evidence uses MCP instead.
 Not used, with reason:
 
 - TypeScript, Go, and browser SDKs: Trueup's command line and test harness are Python.
-- HTTP injection and direct OTLP: the supported SDK exporter already owns delivery.
+- HTTP injection: the supported SDK exporter owns normal delivery. The opt-in OpenLLMetry demo fans its existing
+  OTel spans to Neatlogs over OTLP because Neatlogs correctly refuses to attach to OpenLLMetry's global provider.
 - Imported traces: Trueup compares traces captured during its own controlled runs.
 - End-user identity and secondary clients: Trueup has build runs, not product end users.
 - Fix dispatch: patches remain reviewable local drafts; no Cursor or cloud agent is authorized to apply them.
@@ -172,6 +187,9 @@ uv run trueup demo             # offline before/after proof for the featured fix
 uv run trueup verify           # recompute and validate the committed evidence
 uv run trueup report           # rebuild docs/index.html
 uv run trueup evidence pull    # authenticated, read-only Neatlogs evidence
+uv run trueup detections install
+uv run trueup detections list
+uv run trueup demo-export neatlogs --yes-export-fake-traces
 uv run pytest -q               # offline unit tests
 uv run trueup sweep openllmetry --case ag-run   # the double-span case
 uv run pytest -q -m e2e  # builds per-library venvs, runs subprocesses

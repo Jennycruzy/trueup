@@ -15,6 +15,7 @@ NOT RUN instead of a quiet, empty trace.
 from __future__ import annotations
 
 import importlib
+import os
 from typing import Any, Callable
 
 # Environment for every child. Content capture on, all outbound telemetry off.
@@ -66,6 +67,7 @@ PACKAGES: dict[str, list[str]] = {
     # stores (chromadb, qdrant), so we install the framework packages directly.
     "neatlogs": ["neatlogs", "openai", "anthropic", "opentelemetry-sdk", *FRAMEWORK_PACKAGES],
     "openinference": [
+        "neatlogs",
         "openinference-instrumentation-openai",
         "openinference-instrumentation-anthropic",
         "openinference-instrumentation-langchain",
@@ -77,7 +79,7 @@ PACKAGES: dict[str, list[str]] = {
     ],
     # traceloop-sdk imports httpx without declaring it; openai no longer pulls it in.
     # It already depends on its LangChain and OpenAI Agents instrumentations.
-    "openllmetry": ["traceloop-sdk", "httpx", "openai", "anthropic", *FRAMEWORK_PACKAGES],
+    "openllmetry": ["neatlogs", "traceloop-sdk", "httpx", "openai", "anthropic", *FRAMEWORK_PACKAGES],
 }
 # Distributions whose versions are recorded with each observation.
 VERSIONED: dict[str, list[str]] = {
@@ -179,12 +181,16 @@ def quiet_agents_sdk() -> None:
 
 def neatlogs_init_kwargs(tracer_provider: Any, framework: str = "none") -> dict[str, Any]:
     """neatlogs.init arguments. Export is off and no endpoint is given."""
+    exporting = os.environ.get("TRUEUP_DEMO_EXPORT") == "1"
     return {
-        "api_key": "trueup-fake",
+        "api_key": os.environ.get("NEATLOGS_API_KEY", "trueup-fake"),
         "instrumentations": neatlogs_instrumentations(framework),
-        "disable_export": True,
+        "disable_export": not exporting,
         "tracer_provider": tracer_provider,
         "register_shutdown_handlers": False,
+        "workflow_name": "trueup-demo" if exporting else None,
+        "user_id": "jenny-builds" if exporting else None,
+        "tags": ["demo"] if exporting else None,
     }
 
 
@@ -230,7 +236,20 @@ def setup_openinference(framework: str = "none"):
 
         OpenAIInstrumentor().instrument(tracer_provider=provider)
         AnthropicInstrumentor().instrument(tracer_provider=provider)
-    return exporter, lambda: provider.force_flush(5000)
+    if os.environ.get("TRUEUP_DEMO_EXPORT") == "1":
+        import neatlogs
+
+        kwargs = neatlogs_init_kwargs(provider, framework)
+        kwargs["instrumentations"] = []
+        neatlogs.init(**kwargs)
+
+    def flush() -> None:
+        if os.environ.get("TRUEUP_DEMO_EXPORT") == "1":
+            import neatlogs
+            neatlogs.flush(timeout_millis=5000)
+        provider.force_flush(5000)
+
+    return exporter, flush
 
 
 def setup_openllmetry(framework: str = "none"):
@@ -238,8 +257,60 @@ def setup_openllmetry(framework: str = "none"):
     from traceloop.sdk import Traceloop
 
     exporter = InMemorySpanExporter()
+    active_exporter: Any = exporter
+    resource_attributes = {}
+    session_processor = None
+    if os.environ.get("TRUEUP_DEMO_EXPORT") == "1":
+        from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+        from opentelemetry.sdk.trace.export import SpanExporter, SpanExportResult
+
+        class FanoutExporter(SpanExporter):
+            def __init__(self, *targets: Any) -> None:
+                self.targets = targets
+
+            def export(self, spans: Any) -> SpanExportResult:
+                results = [target.export(spans) for target in self.targets]
+                return SpanExportResult.SUCCESS if all(x == SpanExportResult.SUCCESS for x in results) \
+                    else SpanExportResult.FAILURE
+
+            def shutdown(self) -> None:
+                for target in self.targets:
+                    target.shutdown()
+
+            def force_flush(self, timeout_millis: int = 30000) -> bool:
+                return all(getattr(target, "force_flush", lambda _timeout: True)(timeout_millis)
+                           for target in self.targets)
+
+        from opentelemetry.sdk.trace import SpanProcessor
+
+        class DemoSessionProcessor(SpanProcessor):
+            def on_start(self, span: Any, parent_context: Any = None) -> None:
+                # Some OpenLLMetry roots have a remote/non-recording parent, so make the
+                # explicit demo identity available on every exported span.
+                span.set_attribute("neatlogs.session.id", os.environ["TRUEUP_DEMO_SESSION"])
+
+            def on_end(self, span: Any) -> None:
+                pass
+
+        endpoint = os.environ.get("NEATLOGS_ENDPOINT", "https://ingest.neatlogs.com").rstrip("/") + "/v1/traces"
+        remote = OTLPSpanExporter(endpoint=endpoint, headers={"x-api-key": os.environ["NEATLOGS_API_KEY"]})
+        active_exporter = FanoutExporter(exporter, remote)
+        session_processor = DemoSessionProcessor()
+        resource_attributes = {
+            "service.name": "trueup-demo",
+            "neatlogs.workflow_name": "trueup-demo",
+            "neatlogs.tags": "demo",
+            "user.id": "jenny-builds",
+        }
     # Same call for every framework: Traceloop.init instruments whatever it can import.
-    Traceloop.init(app_name="trueup", exporter=exporter, disable_batch=True, telemetry_enabled=False)
+    init_kwargs: dict[str, Any] = {"app_name": "trueup", "disable_batch": True, "telemetry_enabled": False,
+                                   "resource_attributes": resource_attributes}
+    if session_processor is None:
+        init_kwargs["exporter"] = active_exporter
+    else:
+        from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+        init_kwargs["processor"] = [session_processor, SimpleSpanProcessor(active_exporter)]
+    Traceloop.init(**init_kwargs)
 
     def flush() -> None:
         from opentelemetry import trace

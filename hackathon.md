@@ -2,6 +2,15 @@
 
 neatHack, 10-12 Oct 2026.
 
+## 2026-10-12: findings became Neatlogs detections
+
+- OBSERVED: added an idempotent three-rule conditional pack and two trace-level code detections. Each live conditional rule
+  was previewed before creation; their 30-day trends are 25, 25, and 6 occurrences.
+- OBSERVED: added an explicit fake-only demo exporter with a 30-span ceiling. Neatlogs and OpenInference each persisted three
+  queryable demo traces. OpenLLMetry delivered its spans but Neatlogs did not group them under the requested session;
+  that limitation is recorded instead of counted as a successful demo.
+- OBSERVED: model spend was unchanged; this milestone made no model calls.
+
 ## 2026-10-10: skeleton
 
 - Set up the uv project (Python 3.12, src layout) with the `trueup` command.
