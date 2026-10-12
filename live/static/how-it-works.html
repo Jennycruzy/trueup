@@ -74,7 +74,7 @@
 
 <section class="container section reveal">
   <p class="eyebrow">Step by step</p>
-  <h2>From a wrong record to a fix upstream.</h2>
+  <h2>From a wrong record to a proven fix.</h2>
   <div class="longsteps" style="margin-top:28px">
     <div class="panel longstep"><div class="bubble">1</div><div>
       <h3>Witness watches the real AI traffic</h3>
@@ -119,10 +119,10 @@
   <div class="grid3">
     <div class="panel lift"><div class="brandmark c-a"><i style="background:var(--amber)"></i>1 · The lab</div><h3>A practice AI server that fails on purpose</h3><p>It fails in 57 ways: cut replies, errors halfway through, refusals, agents that loop until they give up, tools that raise. Because the server knows exactly what it sent, there is a true answer to check against.</p></div>
     <div class="panel lift"><div class="brandmark c-c"><i style="background:var(--cyan)"></i>2 · Compare</div><h3>Every tool, every failure</h3><p>Each tracing tool runs the same 57 failures. Trueup compares each record with what the server really sent and lists every mismatch.</p></div>
-    <div class="panel lift"><div class="brandmark c-v"><i style="background:var(--violet)"></i>3 · Checker</div><h3>Seven rules before anything counts</h3><p>A mismatch is only confirmed if it shows up twice in fresh runs, on the latest release and the main branch, with the recommended setup, and with a short stand-alone repro. Anything that fails a rule is withdrawn and kept on file.</p></div>
-    <div class="panel lift"><div class="brandmark c-g"><i style="background:var(--green)"></i>4 · Fixer</div><h3>Writes the fix and its test</h3><p>Trueup's AI agent finds the code that wrote the wrong record, writes a fix, and writes a new test that shows the problem.</p></div>
-    <div class="panel lift"><div class="brandmark c-r"><i style="background:var(--red)"></i>5 · Verifier</div><h3>Proves it, or throws it out</h3><p>The new test must fail before the fix and pass after. The library's full test suite must still pass. The whole 57-failure sweep must show no new mismatch.</p></div>
-    <div class="panel lift"><div class="brandmark c-d"><i style="background:var(--dim)"></i>6 · Honest record</div><h3>Failed tries are kept and shown</h3><p>The Arize fix took three tries; the two that failed are kept next to it. When all three tries fail, Trueup says "not fixed" and offers no patch.</p></div>
+    <div class="panel lift"><div class="brandmark c-v"><i style="background:var(--violet)"></i>3 · Checks</div><h3>Seven rules before anything counts</h3><p>A mismatch is only confirmed if it shows up twice in fresh runs, on the latest release and the main branch, with the recommended setup, and with a short stand-alone repro. Anything that fails a rule is set aside and kept on file.</p></div>
+    <div class="panel lift"><div class="brandmark c-g"><i style="background:var(--green)"></i>4 · Fix</div><h3>Writes the fix and its test</h3><p>Trueup's AI agent finds the code that wrote the wrong record, writes a fix, and writes a new test that shows the problem.</p></div>
+    <div class="panel lift"><div class="brandmark c-r"><i style="background:var(--red)"></i>5 · Proof</div><h3>Proves it, or throws it out</h3><p>The new test must fail before the fix and pass after. The library's full test suite must still pass. A full run of all 57 test failures must show no new mismatch.</p></div>
+    <div class="panel lift"><div class="brandmark c-d"><i style="background:var(--dim)"></i>6 · Honest record</div><h3>Failed tries are kept and shown</h3><p>The Arize fix passed on its third try; the two failed tries are kept next to it. When all three tries fail, Trueup says "not fixed" and offers no patch.</p></div>
   </div>
   <div class="kv">
     <div><b>32</b><span>confirmed record errors in 3 tracing tools</span></div>
@@ -134,9 +134,9 @@
 
 <section class="container section reveal">
   <div class="limits">
-    <h3>What it does not do yet</h3>
+    <h3>Where it stops today</h3>
     <ul>
-      <li>Neither upstream fix has been merged yet. "With Trueup's fixes" means proposed fixes.</li>
+      <li>The fixes sent to Arize, Traceloop and neatlogs are under review, not merged yet. "With Trueup's fixes" means proposed fixes.</li>
       <li>Witness reads OpenAI and Anthropic calls made through their Python SDKs.</li>
       <li>In the failed agent run, the fixed record marks the AI step ERROR, but without the error details.</li>
       <li>It has been tested with neatlogs as the dashboard.</li>

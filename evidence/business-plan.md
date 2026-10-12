@@ -6,14 +6,14 @@ financial assumptions are strategy to validate—not current traction.
 
 ## One-line pitch
 
-Trueup makes AI-agent traces trustworthy by detecting incorrect traces, locating the instrumentation bug,
+Trueup makes AI-agent traces trustworthy by detecting incorrect traces, locating the tracing-code bug,
 repairing it, and verifying the corrected trace.
 
 ## Problem and solution
 
-AI-agent developers rely on traces to understand what their systems did, but instrumentation can record a failed
+AI-agent developers rely on traces to understand what their systems did, but tracing code can record a failed
 run as successful or record behavior that differs from execution. Trueup checks trace data against execution
-evidence, identifies the instrumentation issue, repairs the recording code, and verifies the corrected trace.
+evidence, identifies the tracing-code issue, repairs the recording code, and verifies the corrected trace.
 
 Trueup is positioned as trace correctness, not another monitoring dashboard. Its evidence-backed corrections
 complement existing observability products.
@@ -23,7 +23,7 @@ complement existing observability products.
 Individual agent developers discover and use the open-source tool. The initial paid customers are engineering
 leads and platform teams shipping AI agents whose debugging and release decisions depend on accurate traces.
 The key commercial question is whether teams will pay for recurring protection from misleading traces rather
-than only a one-time instrumentation repair.
+than only a one-time tracing-code repair.
 
 ## Product, pricing, and revenue model
 
@@ -33,13 +33,13 @@ than only a one-time instrumentation repair.
 - **Recommended packaging:** a base team subscription with an included check allowance, with explicit limits or
   usage pricing for additional checks, longer evidence retention, and higher support levels.
 
-Trueup has just launched and has no revenue. Final prices are not presented as validated: willingness to pay and
-the cost of each code-change check must be measured through design-partner pilots first.
+Final prices will come from design-partner pilots, which measure willingness to pay and the cost of each
+code-change check. Trueup has just launched and has no revenue yet.
 
 ## Costs and unit economics
 
 Delivery costs include verification compute, model usage, evidence storage, integration maintenance, and support.
-The evidence bundle currently measures planner/fixer model spend; Trueup should add measured compute and storage
+The evidence bundle currently measures model spend for planning tests and writing fixes; Trueup should add measured compute and storage
 cost per audit before offering unlimited checks. Gross margin should be evaluated per paying team at its included
 check allowance.
 
@@ -47,18 +47,18 @@ Measured model cost from Trueup's verified v1/v2 evidence:
 
 | Work | Measured list-price cost | Worker traces opened |
 |---|---:|---:|
-| Planner v1, two runs | $0.21 | 2 (one per run) |
-| Planner v2, two runs | $0.21 | 2 (one per run) |
-| OpenInference fixer v1, one run | $0.53 | 6 |
-| OpenInference fixer v2, one run | $0.22 | 6 |
+| Test planning v1, two runs | $0.21 | 2 (one per run) |
+| Test planning v2, two runs | $0.21 | 2 (one per run) |
+| OpenInference fix writing v1, one run | $0.53 | 6 |
+| OpenInference fix writing v2, one run | $0.22 | 6 |
 
-The model key's total reported spend after the measured build session was **$7.28**. These are observed build
+The model key's total reported spend after the measured build session was **$7.28**. These are measured build
 costs, not proposed customer prices. Compute, storage, support, and repeated team usage still need measurement.
 
 The cfo.ai forecast uses an illustrative **$150,000 starting cash balance**. This is a hypothetical planning input,
 not a statement of Trueup's actual cash.
 
-## Revenue and runway scenarios
+## Revenue and runway cases
 
 The cfo.ai live adoption and check-cost simulator connects free-developer adoption to paying teams, subscription
 revenue, delivery costs, hiring, and cash. Under its current illustrative assumptions:
@@ -67,7 +67,7 @@ revenue, delivery costs, hiring, and cash. Under its current illustrative assump
 - The slower-adoption case exhausts the hypothetical $150,000 starting cash in **January 2028** if the same hiring
   plan is retained.
 
-These dates are scenario outputs, not predictions. The largest modeled cash risk is hiring before team demand is
+These dates are outputs of the planning cases, not predictions. The largest modeled cash risk is hiring before team demand is
 proven. The operating rule is therefore to validate willingness to pay and cost per check before committing to a
 hire, and to revise the forecast with actual cash, spending, active-developer, conversion, and retention data.
 
@@ -78,7 +78,7 @@ Its first answer counted our own 44 test calls as a cost per customer check; we 
 plan:
 
 - **Per Witness check: $0.** Witness makes no AI calls; it watches the customer's own calls.
-- **Checking a tracing-library release:** $0 on the practice AI server, plus about $0.10 (planner) and about $0.52
+- **Checking a tracing-library release:** $0 on the practice AI server, plus about $0.10 (planning tests) and about $0.52
   per fix needed: $0.10 with no fix, $0.62 with one. At 10 releases a month with one fix each: $6.20 a month.
 - **Contribution per team** (price less 3% payment fees and $15 support): $178.03 at $199, $566.03 at $599.
 - **Break-even teams:** 38 at $199 and 12 at $599 before the planned engineer hire; 94 and 30 after it
@@ -100,7 +100,7 @@ and willingness to pay. Prioritize paid pilots and retention over download count
 ## Differentiation and defensibility
 
 Trueup closes the loop: identify an inaccurate record, locate the recording defect, repair it, and verify the
-correction. Potential defensibility comes from a growing library of instrumentation failure cases, reproducible
+correction. Potential defensibility comes from a growing library of tracing-code failure cases, reproducible
 verification tests, reliable repair patterns, and workflow integrations. These are advantages to build and
 measure, not claims of an established moat.
 

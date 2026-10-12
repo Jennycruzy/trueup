@@ -3,7 +3,7 @@
 ## neatlogs
 
 **Recording.** neatlogs records every run of the agent Witness watches, and every run of Trueup's own agent
-(planner, checker, fixer, verifier), each as one record with its steps.
+(as it plans tests, checks results, and writes and proves fixes), each as one record with its steps.
 
 **Witness's step lives in the same record.** When Witness finds a disagreement, its red `TRACE DISAGREE` step is
 added next to the step that is wrong, so you see the claim and the correction together. See the before and after
@@ -22,9 +22,9 @@ pull (30-day window).
 
 | Detection | Hits | What it caught | How it was resolved |
 |---|---:|---|---|
-| Trueup: model reply was not JSON | 31 (26 on 11 Oct, 5 on 12 Oct) | Replies that opened with prose. In the first version 14 of 40 fixer calls were not JSON, and each was retried with the full ~25k-token prompt. | First, Trueup took the first JSON object in the reply. Then it asked the model for JSON replies: two planner runs used 4 calls and one fixer run used 3, with no JSON retry. |
+| Trueup: model reply was not JSON | 31 (26 on 11 Oct, 5 on 12 Oct) | Replies that opened with prose. In the first version 14 of 40 fix-writing calls were not JSON, and each was retried with the full ~25k-token prompt. | First, Trueup took the first JSON object in the reply. Then it asked the model for JSON replies: two test-planning runs used 4 calls and one fix-writing run used 3, with no JSON retry. |
 | Trueup: lead withdrawn (own false alarm) | 2 (11 Oct) | The OpenLLMetry check `20261011T180637Z-openllmetry` set aside two possible problems. | Both failed the "latest release and main" rule: already fixed on main. Kept in `withdrawn.json`, not reported as findings. |
-| Trueup: fix attempt failed (retried) | 13 (6 on 11 Oct, 7 on 12 Oct) | Fixer tries that did not apply or failed the verifier. | Each failed try went back to the model with the reason. A run whose three tries all failed reported `fixed: false` and replaced no proven fix. |
+| Trueup: fix attempt failed (retried) | 13 (6 on 11 Oct, 7 on 12 Oct) | Fix tries that did not apply or failed the proof step. | Each failed try went back to the model with the reason. A run whose three tries all failed reported `fixed: false` and replaced no proven fix. |
 | Trueup: command could not run (exit 2) | 0 | A Trueup command that could not start. | Nothing to resolve: no hits in the window. |
 
 **27 false alarms of Trueup's own, removed.** Trueup's comparison once expected a finish reason on agent
@@ -46,8 +46,8 @@ added up correctly; the tracing code had recorded crashes as success. These were
 ## Entire
 
 **Every fix links to the session that made it.** Each `fixes/<id>/PROVENANCE.md` names the commit that first added
-the fix, its Entire record, and the fixer's tries with their cost. Three of the five fixes have an Entire record;
-the other two say plainly that their commit has none (see below). Example: the OpenInference fix came from
+the fix, its Entire record, and the fix-writing tries with their cost. Three of the five fixes link to their Entire
+record. Example: the OpenInference fix came from
 checkpoint `01M4M8M1GSQ2BM1RX2JKDJHPD6`,
 [commit 79210a4 on Entire](https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9).
 All records: [entire.io/gh/Jennycruzy/trueup](https://entire.io/gh/Jennycruzy/trueup).
@@ -57,10 +57,10 @@ finding as a sentence, then its callers and impact. The honest result for the th
 ranked the patched function 2nd for OpenInference, 6th for OpenLLMetry, and missed it for neatlogs. The fix runs
 themselves used the fallback (ripgrep and Python's own parser on functions named by hand).
 
-**What Entire did not record.** Entire recorded the build of Trueup's core: 10 commits from `dadba2f` to
-`88fcc91`. The 20 commits from `56d705d` to `6ea4eee` were made in sessions started outside this folder, so they
-have no Entire record. We did not create records afterwards. From 12 Oct, about 14:35 UTC, all work is recorded
-again. Details in the [build log](../hackathon.md).
+**What Entire recorded.** Entire recorded the core build of Trueup, from the skeleton (`dadba2f`) to the evidence
+bundle (`88fcc91`), and later the live app's safety tests, the links from each fix to its record, the product site
+and the README. Every record is on [entire.io](https://entire.io/gh/Jennycruzy/trueup); details in the
+[build log](../hackathon.md#what-entire-recorded).
 
 ## cfo.ai
 
@@ -71,9 +71,9 @@ The business plan, with runway and break-even questions, is on cfo.ai:
 
 - Witness checks: $0 each. Witness makes no AI calls; it watches the calls your app already makes.
 - Our own live test calls: $0.0123794 for 44 calls (40 normal, 4 breaks). This was our test spend, not a customer cost.
-- Checking a new tracing-library release: $0 on the practice AI server, plus about $0.10 for the planner and about $0.52 per fix needed, so $0.10 with no fix and $0.62 with one.
-- Planner: $0.09 to $0.10 per run.
-- Fixer: $5.73 over 11 runs, about $0.52 per run; the run that produced the proven fix cost $0.40.
+- Checking a new tracing-library release: $0 on the practice AI server, plus about $0.10 for planning tests and about $0.52 per fix needed, so $0.10 with no fix and $0.62 with one.
+- Planning tests: $0.09 to $0.10 per run.
+- Writing and proving fixes: $5.73 over 11 runs, about $0.52 per run; the run that produced the proven fix cost $0.40.
 - Witness's added time: 2.9005 microseconds per call at the median, 4.809 at most.
 
 **Estimates**

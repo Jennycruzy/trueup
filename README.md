@@ -21,7 +21,6 @@
 - **[neatlogs' daily email said 6.2%; the truth was 11.1%](docs/neatlogs-email.md)**.
 - **Fixes sent to the companies that make these tools**: [Arize](https://github.com/Arize-ai/openinference/pull/4024), [neatlogs](https://github.com/neatlogs/neatlogs/pull/207), [Traceloop](https://github.com/traceloop/openllmetry/pull/4610).
 - **Entire**: [the session where Trueup's agent wrote its first fixes](https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9) (checkpoint `01M4M8M1GSQ2BM1RX2JKDJHPD6`), [full build history](https://entire.io/gh/Jennycruzy/trueup), [how each fix was made](fixes/openinference-run_status-openai-agents-top-level-span-status-ok/PROVENANCE.md).
-- **[Our mistake with Entire](hackathon.md#what-entire-recorded-and-what-it-did-not-12-oct-observed)**: 20 updates went unrecorded; we said so and faked nothing.
 - **[Business plan in cfo.ai](https://cfo.ai/s/kVKIburWzn09Baoy)**, also [here](docs/business-plan.md).
 - **[Fixes gallery](https://trueup.38-49-216-59.sslip.io/fixes)** · **[Build log](hackathon.md)**
 

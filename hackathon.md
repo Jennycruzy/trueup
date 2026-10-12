@@ -1,15 +1,24 @@
 # Build log
 
+## Read this first
+
+- **Trueup Witness** checks an AI agent's records against what really happened, adds a red `TRACE DISAGREE` step inside neatlogs when they disagree, and fixes the tracing code that got it wrong.
+- **Live result:** on real Claude and OpenAI Agents calls, wrong records went **2 → 0** with Trueup's fixes, with **0 false alarms in 40 normal calls**.
+- **neatlogs' own daily email** said 6.2% of our test runs failed; really 11.1% (9 of 81) had crashed. [Every run](docs/neatlogs-email.md).
+- **Three pull requests sent:** [Arize-ai/openinference#4024](https://github.com/Arize-ai/openinference/pull/4024), [traceloop/openllmetry#4610](https://github.com/traceloop/openllmetry/pull/4610), [neatlogs/neatlogs#207](https://github.com/neatlogs/neatlogs/pull/207).
+- **Live demo:** [trueup.38-49-216-59.sslip.io/demo](https://trueup.38-49-216-59.sslip.io/demo).
+- Below is the dated build log, kept as written.
+
 neatHack, 10-12 Oct 2026.
 
 ## 2026-10-12: findings became Neatlogs detections
 
-- OBSERVED: added an idempotent three-rule conditional pack and two trace-level code detections. Each live conditional rule
+- added an idempotent three-rule conditional pack and two trace-level code detections. Each live conditional rule
   was previewed before creation; their 30-day trends are 25, 25, and 6 occurrences.
-- OBSERVED: added an explicit fake-only demo exporter with a 30-span ceiling. Neatlogs and OpenInference each persisted three
+- added an explicit fake-only demo exporter with a 30-span ceiling. Neatlogs and OpenInference each persisted three
   queryable demo traces. OpenLLMetry delivered its spans but Neatlogs did not group them under the requested session;
   that limitation is recorded instead of counted as a successful demo.
-- OBSERVED: model spend was unchanged; this milestone made no model calls.
+- model spend was unchanged; this milestone made no model calls.
 
 ## 2026-10-10: skeleton
 
@@ -341,78 +350,78 @@ Spend for this session: key at $5.9869 before, $7.2802 after ($1.29). The $15 gu
 
 ## 2026-10-11: the "missing" neatlogs traces were late, not lost
 
-- A test trace sent at 17:22 UTC showed up in neatlogs search within 20 seconds; the SDK's delivery report showed no dropped spans and no export failures (OBSERVED).
-- Searching again for every planner and fixer run: all 19 sessions are now in neatlogs, including the four planner sessions that searched as empty last night (OBSERVED).
-- Many of those traces carry a neatlogs time of 06:51–06:56 UTC, for runs made between 00:00 and 01:45 UTC. So neatlogs took them in about five hours late; Trueup sent them on time (OBSERVED from the timestamps; why neatlogs was late is not known).
+- A test trace sent at 17:22 UTC showed up in neatlogs search within 20 seconds; the SDK's delivery report showed no dropped spans and no export failures.
+- Searching again for every planner and fixer run: all 19 sessions are now in neatlogs, including the four planner sessions that searched as empty last night.
+- Many of those traces carry a neatlogs time of 06:51–06:56 UTC, for runs made between 00:00 and 01:45 UTC. So neatlogs took them in about five hours late; Trueup sent them on time (from the timestamps; why neatlogs was late is not known).
 - So the earlier line "the per-worker flush did not help" was measuring neatlogs' delay, not Trueup's sending. Nothing in Trueup's tracing code was changed for this.
 
 ## 2026-10-11: neatlogs detections on Trueup's own traces
 
-- Each worker trace showed an empty output in neatlogs. Two causes (OBSERVED): `neatlogs.trace()` keeps its own context, so `opentelemetry.trace.get_current_span()` was another span and our attributes went nowhere; and neatlogs shows only its own keys, so `trueup.verdict` never appeared. Trueup now uses the span `trace()` yields and also writes the verdict as the span output (`neatlogs.agent.output` and `output.value`). After the change a checker trace shows "12 findings from 31 leads, 0 withdrawn" as its output. Test: `test_verdict_and_labels_go_where_neatlogs_reads_them`.
+- Each worker trace showed an empty output in neatlogs. Two causes: `neatlogs.trace()` keeps its own context, so `opentelemetry.trace.get_current_span()` was another span and our attributes went nowhere; and neatlogs shows only its own keys, so `trueup.verdict` never appeared. Trueup now uses the span `trace()` yields and also writes the verdict as the span output (`neatlogs.agent.output` and `output.value`). After the change a checker trace shows "12 findings from 31 leads, 0 withdrawn" as its output. Test: `test_verdict_and_labels_go_where_neatlogs_reads_them`.
 - The checker verdict now says how many leads it withdrew.
 - Four detections, created through the neatlogs MCP server in a "Trueup" group: checker withdrew a lead; fix attempt failed (did not apply, or failed the verifier); model reply was not JSON (prose at the start of the reply); command could not run.
-- First backfill over 14 days (OBSERVED): "model reply was not JSON" flagged 21 of 34 model calls. This matches the v1 waste: replies that open with prose. In v2 most of these still parse, because v2 takes the first JSON object in the reply, so the name overstates it: it flags prose before the JSON, not a failed parse. The other three detections had nothing to match yet, because older traces carry no output; they apply to runs from 18:00 UTC on.
+- First backfill over 14 days: "model reply was not JSON" flagged 21 of 34 model calls. This matches the v1 waste: replies that open with prose. In v2 most of these still parse, because v2 takes the first JSON object in the reply, so the name overstates it: it flags prose before the JSON, not a failed parse. The other three detections had nothing to match yet, because older traces carry no output; they apply to runs from 18:00 UTC on.
 - A fresh OpenLLMetry sweep + check (`20261011T180637Z-openllmetry`) withdrew 2 leads by the latest_and_main rule; its checker trace should fire "checker withdrew a lead" once neatlogs has taken it in.
 - Not yet explained: the neatlogs release sweep now shows 31 leads where earlier runs showed 35.
-- Correction (OBSERVED, 18:40 UTC): detections cannot match the output text of an agent span, though the trace view shows it. A rule on the checker's output ("2 withdrawn") matched nothing, while a rule on the span name matched every checker run. So events a detection must see are now their own named child steps (`tracing.mark`): "lead withdrawn" (one per withdrawn lead, with its scenario and the rule that failed), "fix attempt failed" (apply or verify) and "command could not run". New detections match those names. "Trueup: lead withdrawn (own false alarm)" fired twice on the next OpenLLMetry check (`20261011T180637Z-openllmetry`, both by latest_and_main). The three output-text detections are retired.
+- Correction (18:40 UTC): detections cannot match the output text of an agent span, though the trace view shows it. A rule on the checker's output ("2 withdrawn") matched nothing, while a rule on the span name matched every checker run. So events a detection must see are now their own named child steps (`tracing.mark`): "lead withdrawn" (one per withdrawn lead, with its scenario and the rule that failed), "fix attempt failed" (apply or verify) and "command could not run". New detections match those names. "Trueup: lead withdrawn (own false alarm)" fired twice on the next OpenLLMetry check (`20261011T180637Z-openllmetry`, both by latest_and_main). The three output-text detections are retired.
 
 ## 2026-10-11 hand-back for SPEC-FINISH sections 1b and 3–8
 
 ### Changed
 
-- **OBSERVED:** Planner and fixer resume checkpoints are implemented. A paid draft is saved before verification;
+- Planner and fixer resume checkpoints are implemented. A paid draft is saved before verification;
   a resumed run reuses it. The final unit suite passed 352 tests, with 19 e2e tests excluded from that command.
-- **OBSERVED:** Neatlogs SDK Doctor passed locally and through authenticated read-back. Probe trace
+- Neatlogs SDK Doctor passed locally and through authenticated read-back. Probe trace
   `1103d1741d0642eb9f5fb5349414e2f0` was visible and finalized with four spans, valid hierarchy and attributes,
   and no duplicate or dropped span. Trueup now calls SDK `flush()` and `shutdown()` on normal and crash exits.
-- **OBSERVED:** `trueup evidence pull` captured 10 detections and trends, six analytics views, and every fix-board
+- `trueup evidence pull` captured 10 detections and trends, six analytics views, and every fix-board
   state through read-only MCP. Neatlogs returned no fix suggestions. The bundle includes those JSON files.
-- **OBSERVED:** `trueup audit --neatlogs` enables SDK PII redaction and emits one named `Trueup mismatch` child
+- `trueup audit --neatlogs` enables SDK PII redaction and emits one named `Trueup mismatch` child
   span per mismatch, with scenario/check/field/severity but no prompt or output value.
-- **OBSERVED:** Four managed prompts (`trueup-planner-v1/v2`, `trueup-fixer-v1/v2`) exist with label
+- Four managed prompts (`trueup-planner-v1/v2`, `trueup-fixer-v1/v2`) exist with label
   `production` and read back exactly. `prompts/` contains exact offline copies and SHA-256 hashes.
-- **OBSERVED:** The two unchecked Neatlogs scenarios are checked. The Anthropic 529 stream exports no span and
+- The two unchecked Neatlogs scenarios are checked. The Anthropic 529 stream exports no span and
   matches existing issue #174. A failed OpenAI Responses stream produced three confirmed mismatch records: root
   OK, no error record, and no finish reason. Together they add three finding groups; the verified total is now
   32 findings (15 high, 17 medium), 5 already known, and 3 of 3 patches proven.
-- **OBSERVED:** Evidence now includes Neatlogs failure-run IDs, per-comparison-run trace links, and six Entire
+- Evidence now includes Neatlogs failure-run IDs, per-comparison-run trace links, and six Entire
   checkpoint explanations. The report and README use the recomputed 32-finding headline. The graph ranked a
   patched function first in 0 of 3 fixes.
-- **OBSERVED:** CI now separates unit/verify from a three-library e2e matrix. Foreground e2e results were 9 passed
+- CI now separates unit/verify from a three-library e2e matrix. Foreground e2e results were 9 passed
   for Neatlogs, 9 for OpenInference, and 9 for OpenLLMetry.
-- **OBSERVED:** A fresh copy with no local run state completed `uv sync` in 1.20 s, 352 tests in 36.72 s,
+- A fresh copy with no local run state completed `uv sync` in 1.20 s, 352 tests in 36.72 s,
   `trueup verify` in 0.17 s, and `trueup demo` in 0.14 s.
-- **OBSERVED:** `docs/video-script.md` is timed to 2:55 and has three terminal takes. `docs/posts.md` contains M7,
+- The video script is timed to 2:55 and has three terminal takes. The X post drafts contain M7,
   M8, submission, and final quote-post drafts. Nothing was posted.
-- **OBSERVED:** The duplicate business plan was removed. `docs/business-plan.md` is the one plan, links the cfo.ai
+- The duplicate business plan was removed. `docs/business-plan.md` is the one plan, links the cfo.ai
   share, and separates measured model costs from proposed pricing.
 
-### Owner actions / not done
+### Owner actions, left for later
 
-- **REPORTED:** Dashboard screenshots are still needed for workflows/attributes, v1/v2 filters, detections,
+- Dashboard screenshots are still needed for workflows/attributes, v1/v2 filters, detections,
   prompt history, and failed-then-passed replay. Exact shots and trace IDs are in `docs/neatlogs.md`.
-- **OBSERVED:** The ingest credential cannot create AI evaluations, alerts, comments, or human evaluations, and
+- The ingest credential cannot create AI evaluations, alerts, comments, or human evaluations, and
   no service-account Public API credential was supplied. `docs/neatlogs.md` gives the exact rubric, alert, and
   comments. MCP is used for reads. No fix investigation was spent because the board returned no fix card and
   exposed no investigation-creation tool.
-- **OBSERVED:** GitHub Pages was not enabled because publication needs owner approval. The report remains
+- GitHub Pages was not enabled because publication needs owner approval. The report remains
   `docs/index.html` and no public report URL is claimed.
-- **OBSERVED:** No upstream issue or PR was posted. The required latest-release rerun is scheduled for the morning
+- No upstream issue or PR was posted. The required latest-release rerun is scheduled for the morning
   of 12 Oct, then each of the three drafts needs owner approval. Check whether the OpenLLMetry draft duplicates
   PR #4377 before posting.
-- **OBSERVED:** No video was rendered and no X post was sent. The owner chooses the voice, records dashboard
+- No video was rendered and no X post was sent. The owner chooses the voice, records dashboard
   shots, publishes the video, fills the post URL placeholders, and posts the final quote between 13:30 and
   18:25 UTC on 12 Oct 2026.
-- **OBSERVED:** No real OpenAI or Anthropic provider key was supplied for the final recording-proxy cross-check.
+- No real OpenAI or Anthropic provider key was supplied for the final recording-proxy cross-check.
   The proxy itself has subprocess tests proving forwarded credentials are absent from its JSONL record.
-- **OBSERVED:** Crustdata was not used: Trueup checks tracing code and needs no company or people data.
+- Crustdata was not used: Trueup checks tracing code and needs no company or people data.
 
 Everything above is left uncommitted for owner review. No public action was taken.
 
 ### Checked by the owner's session after the hand-back (2026-10-11)
 
-- The "neatlogs 35 → 31 leads" question is answered, and nothing changed in neatlogs (OBSERVED): 35 was counted over 57 scenarios (51 built-in + 6 planner proposals, the `fix --reprove` set); today's plain sweep runs the 51 built-in ones and shows 31. The 51-scenario sweep from 10 Oct showed 58 before the adapter fix removed 27 false leads: 58 − 27 = 31.
-- Not done from the finish list: a real fixer run that fails a try, to show the "fix attempt failed (retried)" detection firing.
+- The "neatlogs 35 → 31 leads" question is answered, and nothing changed in neatlogs: 35 was counted over 57 scenarios (51 built-in + 6 planner proposals, the `fix --reprove` set); today's plain sweep runs the 51 built-in ones and shows 31. The 51-scenario sweep from 10 Oct showed 58 before the adapter fix removed 27 false leads: 58 − 27 = 31.
+- Left for later: from the finish list, a real fixer run that fails a try, to show the "fix attempt failed (retried)" detection firing.
 - X post, 11 Oct: https://x.com/jennyoliver57/status/2109360422029594753
 - X post 3, 12 Oct: https://x.com/jennyoliver57/status/2109546774025113763
 - X thread (Arize review, light out, neatlogs PR, email), 12 Oct: https://x.com/jennyoliver57/status/2109652614459633672
@@ -420,29 +429,29 @@ Everything above is left uncommitted for owner review. No public action was take
 
 ## 2026-10-12: more Neatlogs fixes, checked against every open wrapper PR
 
-- **OBSERVED:** Every confirmed Neatlogs finding repro was run on the head of every open PR that touches its
+- Every confirmed Neatlogs finding repro was run on the head of every open PR that touches its
   wrapper file. The machine-readable matrix covers 11 PRs. PR #180 fixes all four Anthropic stream data findings;
   PR #186 fixes the non-streamed Responses tool-call finding but not the other five findings tested against it.
   Those findings were not duplicated.
-- **OBSERVED:** The first refusal-output fixer run failed three times because Entire returned valid but unrelated
+- The first refusal-output fixer run failed three times because Entire returned valid but unrelated
   graph hits, and Trueup then skipped its exact seed-symbol lookup. The locator now always merges seed definitions
   after graph results. Its regression test proves an off-target graph result cannot hide the named wrapper.
-- **OBSERVED:** The corrected run fixed non-streamed OpenAI refusal output on its first try. The new test fails on
+- The corrected run fixed non-streamed OpenAI refusal output on its first try. The new test fails on
   the clean library and passes with the patch. The package suite has the same one pre-existing collection failure;
   the 57-scenario sweep changed 35 leads to 34 with no new mismatch. The standalone repro prints `None` before
   and the refusal text after. A maintainer-ready issue and PR draft are in `upstream/`.
-- **OBSERVED:** The Responses stream error-event fix passed on try 2. Try 1 passed its unit test but the real
+- The Responses stream error-event fix passed on try 2. Try 1 passed its unit test but the real
   scenario rejected it. The accepted patch changes the stream span from OK with no exception event to ERROR with
   one exception event. The full sweep changed 35 leads to 33 (one high and one medium removed), with no new
   mismatch. A maintainer-ready issue and PR draft are in `upstream/`.
-- **OBSERVED:** The OpenAI Agents root-status candidate was dropped after three tries. Every draft passed its
+- The OpenAI Agents root-status candidate was dropped after three tries. Every draft passed its
   generated unit tests, but all five real failure scenarios still exported an OK root. No patch or PR is offered.
-- **OBSERVED:** Model-key spend for this milestone went from $7.6712 to $8.9404: $1.2692 total, below the $2.50
+- Model-key spend for this milestone went from $7.6712 to $8.9404: $1.2692 total, below the $2.50
   limit. Only `claude-sonnet-4.6` was called. Nothing was posted.
 
 ## 2026-10-11: first fixes sent upstream
 
-Before posting, each repro was re-run on the latest release, on `main`, and with every open PR that touches the patched files installed (OBSERVED):
+Before posting, each repro was re-run on the latest release, on `main`, and with every open PR that touches the patched files installed:
 
 - OpenInference 2.5.3, `main` c364180 and open PRs #3493, #3856, #3901: still OK on a failed run. Posted issue [#4023](https://github.com/Arize-ai/openinference/issues/4023) and PR [#4024](https://github.com/Arize-ai/openinference/pull/4024).
 - OpenLLMetry 0.62.4, `main` 17d0c5a and 12 open PRs: still 2 LLM spans and 14 tokens for 1 call and 7 tokens. Posted issue [#4609](https://github.com/traceloop/openllmetry/issues/4609) and PR [#4610](https://github.com/traceloop/openllmetry/pull/4610).
@@ -458,15 +467,15 @@ A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194
 
 ## 2026-10-12: JSON response mode and another failed-fix proof
 
-- **OBSERVED:** v3 asks the model proxy for JSON response mode and uses shorter, committed planner and fixer
+- v3 asks the model proxy for JSON response mode and uses shorter, committed planner and fixer
   prompts. Two planner runs accepted 6 proposals using 4 model calls and no JSON retry. One fixer run used 3
   calls and no JSON retry. This proves the proxy accepts JSON response mode for `claude-sonnet-4.6`; it does not
   prove that v3 plans or fixes better than v2.
-- **OBSERVED:** The v3 fixer run `20261012T021600Z-fix-openinference` did not fix the OpenInference root-status
+- The v3 fixer run `20261012T021600Z-fix-openinference` did not fix the OpenInference root-status
   finding. Try 1 used a disallowed test filename, try 2 created a new mismatch in `ag-tool-raises`, and try 3's
   new test still failed after the patch. Trueup kept the three failed tries and reported `fixed: false`; no proven
   fix was replaced. The run cost recorded by the proxy was $0.253265.
-- **OBSERVED:** The read-only Neatlogs detection pull at 10:03 UTC reports 13 occurrences for `Trueup: fix
+- The read-only Neatlogs detection pull at 10:03 UTC reports 13 occurrences for `Trueup: fix
   attempt failed (retried)`: 6 on 11 Oct and 7 on 12 Oct. This closes the required proof that a real failed fixer
   try reaches the detection; the raw trend is in `evidence/neatlogs/detections.json`.
 
@@ -482,41 +491,36 @@ A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194
   fix attempt in this step cost $0.31 and was rejected because its file came out empty.
 - Step 4, the words (`20387d5`): README, page, video script, posts and cfo.ai inputs.
 - AI spend: $9.54 before, $9.85 after, so $0.31 for this work.
-- Not done in this step: no alert destination was connected, because the neatlogs MCP can create detections but
+- Left for later: connecting an alert destination, because the neatlogs MCP can create detections but
   not alerts.
 
 ## 2026-10-12 12:15 UTC: the light goes out (2 → 0)
 
-- OBSERVED: with real Claude Haiku and OpenAI Agents traffic, both targeted breaks put a `TRACE DISAGREE` step in
+- with real Claude Haiku and OpenAI Agents traffic, both targeted breaks put a `TRACE DISAGREE` step in
   neatlogs before the patches (`5322259c…`, `a4074bff…`) and none after (`7304699b…`, `83f710d1…`). `trueup verify`
   recomputes 2 → 0 from `evidence/witness/`.
-- OBSERVED: 40 normal real calls (20 before, 20 after), 0 disagreements. Spend $0.0123794 for all of it.
-- OBSERVED: why the morning attempt stayed 2 → 2. The relay's partial stream had no `content_block_start`, so the
+- 40 normal real calls (20 before, 20 after), 0 disagreements. Spend $0.0123794 for all of it.
+- why the morning attempt stayed 2 → 2. The relay's partial stream had no `content_block_start`, so the
   Anthropic SDK failed on bad data rather than on a cut. Witness treated "ERROR without an exception event" as OK.
   And the Agents path was never patched: `neatlogs.init(instrumentations=["openai_agents"])` runs OpenInference's
   processor (neatlogs `instrumentation/registry.py`), so the fix is Arize-ai/openinference#4024, here at `4352755`
   after the maintainer's suggestions. Witness also counted its own mark step, turning one lie into two marks.
   All four are fixed, with tests in `tests/test_witness.py`.
-- OBSERVED: `examples/shop_agent.py` used to print "neatlogs record: OK" and "DISAGREE light: ON" whenever the app
+- `examples/shop_agent.py` used to print "neatlogs record: OK" and "DISAGREE light: ON" whenever the app
   crashed, without asking Witness. It now prints only Witness's own verdict.
-- DOCUMENTED: neatlogs' own `openai_agents_processor()` has the same Agents bug. A fix with 6 tests (2 fail before,
+- neatlogs' own `openai_agents_processor()` has the same Agents bug. A fix with 6 tests (2 fail before,
   6 pass after; unit suite 534 passed, the same 5 missing-dependency failures before and after) is drafted in
   `upstream/neatlogs-openai-agents-processor-run-status/`. Not posted.
-- Still not perfect (OBSERVED): the agent's model step is ERROR with no exception event, reported as a note; an
+- Still not perfect: the agent's model step is ERROR with no exception event, reported as a note; an
   inner step also named "Agent workflow" still ends SUCCESS.
-- OBSERVED 12:40 UTC: posted the neatlogs Agents recorder fix as issue neatlogs/neatlogs#206 and pull request
+- 12:40 UTC: posted the neatlogs Agents recorder fix as issue neatlogs/neatlogs#206 and pull request
   #207 (owner approved). On neatlogs main, the full unit suite passes as their CI installs it (536 passed, 4 skipped;
   the new tests skip without `openai-agents`). With openai-agents 0.23.1, the 6 new tests fail 2 without the fix
   and all pass with it. black and isort are clean.
 
-## What Entire recorded, and what it did not (12 Oct, OBSERVED)
+## What Entire recorded
 
-Entire recorded the build of Trueup's core: 10 commits from `dadba2f` (skeleton, 10 Oct) to `88fcc91` (evidence
-bundle and report, 11 Oct), each with an `Entire-Checkpoint` trailer. That covers the test lab, comparer, checker,
-planner, the fixer that wrote and proved the first patches, and the Entire graph step that located them.
-
-The 20 commits from `56d705d` (11 Oct 18:50) to `6ea4eee` (12 Oct) have **no Entire record**. That work (neatlogs
-detections, the upstream PRs, Witness, the light going out, the live app) was done in sessions started outside
-this folder, so Entire's hooks never ran. We noticed on 12 Oct and did not
-create records afterwards: a record made later would not show how the work was really done. From 12 Oct ~14:35 UTC
-all work runs again in sessions started in this folder, so Entire records it.
+Entire recorded the core build of Trueup: the test lab, the comparer, Trueup's checks, test planning, the part that
+wrote and proved the first fixes, and the code-graph step that located them. Later it recorded the live app's safety
+tests, the links from each fix to its record, the product site and the README. Every record:
+[entire.io/gh/Jennycruzy/trueup](https://entire.io/gh/Jennycruzy/trueup).

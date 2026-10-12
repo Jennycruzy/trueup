@@ -46,7 +46,7 @@ record id.
 | OpenLLMetry | `demo-openllmetry-20261012T020143Z` | `83a4fc673acfe9816accd168dd7e5bf2` | `029b630bada8d07d95ca231831a98e18` | `de77ae4cb62008d961f134034ea8c2e1` |
 | OpenLLMetry | `demo-openllmetry-20261012T020238Z` | `f2a92448caa40bfe294b9c6f35f85aaa` | `19abad72c41b7c8d480d05d1496c3638` | `fde3d2e15d302506f5f45820e5612df6` |
 
-The other 68 runs in the window are Trueup's own working steps (planner, fixer, checks). neatlogs recorded all of
+The other 68 runs in the window are Trueup's own working steps (planning tests, writing fixes, checks). neatlogs recorded all of
 them as success. They are not test crashes, and we did not check them one by one.
 
 How we counted: neatlogs' search tool (`search_traces`) over the window, with several keywords, with repeats

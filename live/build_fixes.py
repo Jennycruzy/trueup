@@ -127,9 +127,9 @@ def _fix(fix: Path) -> dict | None:
         prov = {}
     if not fixed:
         tries = len(re.findall(r"^\d+\. FAIL", summary, re.M))
-        card["facts"] = [f"{tries} tries by Trueup's fixer; none passed the verifier, so no fix is offered.",
-                         "The failed tries are kept in the repo. The same bug in neatlogs' own Agents recorder is "
-                         "fixed in neatlogs #207."]
+        card["facts"] = ["The same bug in neatlogs' own Agents recorder is fixed in neatlogs #207.",
+                         f"{tries} tries by Trueup here; none passed the proof step, so no fix is offered. "
+                         "The failed tries are kept in the repo."]
         card["state"] = "not fixed"
         return card
     tests = sorted(p.name for p in fix.glob("test_*.py"))
@@ -159,7 +159,7 @@ def _fix(fix: Path) -> dict | None:
 
 
 def _card(c: dict) -> str:
-    tag = {"sent": '<span class="tag ok">Sent upstream</span>', "ready": '<span class="tag wait">Ready to send</span>',
+    tag = {"sent": '<span class="tag ok">Sent</span>', "ready": '<span class="tag wait">Ready to send</span>',
            "not fixed": '<span class="tag bad">Not fixed</span>'}[c["state"]]
     out = [f'<article class="panel fix lift"><div class="head"><span class="tag">{_e(c["library"])}</span>{tag}</div>',
            f'<h3>{_e(c["title"])}</h3>']
@@ -212,8 +212,8 @@ def build() -> str:
   <p class="eyebrow">Fixes</p>
   <h1 style="font-size:clamp(2.2rem,6vw,4.4rem)">Every fix, with its proof.</h1>
   <p class="sub intro">Each fix repairs tracing code that wrote a wrong record. Each one comes with a new test that fails
-  before and passes after, and the library's own tests still pass. <b>{len(done)} fixes</b>, <b>{n_sent} sent
-  upstream</b>, the rest ready to send. Sent fixes are proposals until the maintainers merge them.</p>
+  before and passes after, and the library's own tests still pass. <b>{len(done)} fixes</b>, <b>{n_sent} sent</b> to
+  the companies that make these tools, the rest ready to send. Sent fixes are proposals until the maintainers merge them.</p>
 </section>
 <section class="container reveal" style="padding-top:24px">
   <div class="grid2">{"".join(_card(c) for c in done)}</div>
@@ -222,8 +222,8 @@ def build() -> str:
     if tried:
         main += f"""<section class="container section reveal">
   <p class="eyebrow">Tried, not fixed</p>
-  <h2>When the fixer fails, we say so.</h2>
-  <p class="intro">A try only counts if it passes the verifier. These did not, so no fix is offered.</p>
+  <h2>When a fix fails, we say so.</h2>
+  <p class="intro">A try only counts if it passes the proof step. These did not, so no fix is offered.</p>
   <div class="grid2">{"".join(_card(c) for c in tried)}</div>
 </section>
 """

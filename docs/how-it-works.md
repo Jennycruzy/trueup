@@ -55,7 +55,7 @@ against neatlogs, OpenInference (Arize) and OpenLLMetry (Traceloop).
 For each case, Trueup compares what really happened (the server's log and whether the app raised) with what the
 tracing library recorded. Every difference is a possible problem.
 
-### Checker rules
+### Trueup's checks
 
 A possible problem becomes a confirmed **finding** only if it passes seven rules:
 
@@ -71,13 +71,13 @@ A possible problem becomes a confirmed **finding** only if it passes seven rules
 Anything that fails a rule is set aside with the reason, never deleted. The result so far: 32 confirmed findings
 across the three libraries.
 
-### Fixer
+### Writing the fix
 
 For a finding, Trueup clones the library, finds the code most likely at fault, and asks a model for a small
 change plus one new test. Code, not the model, rejects edits outside the library, in its tests, or that do not
 compile.
 
-### Verifier
+### Proving the fix
 
 A fix counts only if:
 
@@ -88,10 +88,11 @@ A fix counts only if:
 
 Up to three tries per run; a failed try goes back to the model with the reason. Five fixes have passed so far.
 
-### Upstream drafts
+### Sending fixes to the companies that make these tools
 
-`trueup upstream` writes the issue and pull-request text for a proven fix into `upstream/`. It never posts.
-A person re-checks the latest release, main and open pull requests, then posts. Three have been posted:
+`trueup upstream` writes the issue and pull-request text for a proven fix into `upstream/`. A person re-checks
+the latest release, main and open pull requests, then posts; Trueup itself never posts. Three have been sent to
+Arize, Traceloop and neatlogs:
 [Arize-ai/openinference#4024](https://github.com/Arize-ai/openinference/pull/4024),
 [traceloop/openllmetry#4610](https://github.com/traceloop/openllmetry/pull/4610) and
 [neatlogs/neatlogs#207](https://github.com/neatlogs/neatlogs/pull/207).

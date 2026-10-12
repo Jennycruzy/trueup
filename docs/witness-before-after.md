@@ -4,7 +4,7 @@
 
 These are real AI calls: Claude Haiku and the OpenAI Agents SDK, through the event's LiteLLM endpoint (an address
 that speaks the OpenAI format and forwards to Claude). No practice server was used. "After" means Trueup's proposed
-fixes, not merged upstream fixes.
+fixes, not fixes already merged by the companies that make these tools.
 
 | Kind of break | neatlogs before | neatlogs after Trueup's proposed fixes | Really |
 |---|---|---|---|
@@ -34,16 +34,17 @@ the fix, with 6 tests (2 fail before, all pass after): issue
 [neatlogs/neatlogs#206](https://github.com/neatlogs/neatlogs/issues/206), pull request
 [#207](https://github.com/neatlogs/neatlogs/pull/207).
 
-## What is still not perfect
+## Two details left for later
 
 - In the agent run, the AI step is marked ERROR but carries no error details. Witness reports this as a note, not
   a disagreement: the record no longer says the opposite of what happened.
 - An inner step that is also named "Agent workflow" still ends SUCCESS under the failed workflow.
 
-## Why our first attempt stayed 2 → 2
+## How we got there
 
-An earlier run the same morning applied only the three neatlogs fixes and reported 2 → 2. It was right not to
-claim a fix. Three things were wrong, all now corrected and covered by tests:
+The 2 → 0 result came after an earlier run the same morning, which applied only the three neatlogs fixes and
+reported 2 → 2. It was right not to claim a fix then. Three things were wrong, all now corrected and covered by
+tests:
 
 1. **The test relay sent a broken reply.** It skipped the stream's `content_block_start`, so the app crashed on
    bad data instead of on a real cut. The relay now sends a well-formed partial reply, then cuts the connection.

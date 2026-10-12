@@ -39,9 +39,9 @@
   <div class="brandmark c-c"><i style="background:var(--cyan)"></i>neatlogs</div>
   <h2>The record Witness checks, and the place it warns you.</h2>
   <div class="grid2" style="margin-top:24px">
-    <div class="panel"><h3>Every run is recorded</h3><p>Every Trueup run (planner, checker, fixer) and every live demo run is recorded in neatlogs. Each demo run is read straight back from neatlogs, so the page shows exactly what neatlogs stored.</p></div>
+    <div class="panel"><h3>Every run is recorded</h3><p>Every Trueup run (planning tests, checking results, writing fixes) and every live demo run is recorded in neatlogs. Each demo run is read straight back from neatlogs, so the page shows exactly what neatlogs stored.</p></div>
     <div class="panel"><h3>The warning lives inside the record</h3><p>Witness writes its red <b>TRACE DISAGREE</b> step into the same neatlogs record, under the step that is wrong. A neatlogs detection, "TRACE DISAGREE light", counts every one.</p></div>
-    <div class="panel"><h3>The model key powered Trueup</h3><p>neatlogs gave every team a model key. It powered Trueup's planner, its fixer and every call in the live demo. All 44 real calls behind the live result cost <b>$0.0124</b>.</p></div>
+    <div class="panel"><h3>The model key powered Trueup</h3><p>neatlogs gave every team a model key. It powered the part of Trueup that plans tests, the part that writes fixes, and every call in the live demo. All 44 real calls behind the live result cost <b>$0.0124</b>.</p></div>
     <div class="panel"><h3>neatlogs' daily email got it wrong</h3><p>The email said <b>6.2%</b> of our runs failed. We read all 81 back and checked each one: 9 had crashed, <b>11.1%</b>. These were test runs we crashed on purpose; the tracing code missed the crashes. <a href="https://github.com/Jennycruzy/trueup/blob/main/docs/neatlogs-email.md" target="_blank" rel="noopener">Every run, by ID →</a></p></div>
   </div>
 
@@ -51,25 +51,25 @@
   <div class="panel" style="margin-top:20px">
     <h3>The AI replied in prose, not data</h3>
     <div class="incident">
-      <div><div class="k c-r">Incident</div><p>The fixer expects a structured reply. Many replies opened with a sentence like "Let me look more carefully at the exact import text..." instead.</p></div>
-      <div><div class="k c-c">What neatlogs showed</div><p>The "model reply was not JSON" detection fired <b>26</b> times on 11 Oct. The records showed 14 of 40 fixer calls were retried, each resending a prompt of about 25,000 tokens.</p></div>
-      <div><div class="k c-g">How we fixed it</div><p>Trueup now reads the first data object in the reply, and then asks the AI for structured replies directly. The detection fell to <b>5</b> on 12 Oct, and later planner and fixer runs needed no retry.</p></div>
+      <div><div class="k c-r">Incident</div><p>The part that writes fixes expects a structured reply. Many replies opened with a sentence like "Let me look more carefully at the exact import text..." instead.</p></div>
+      <div><div class="k c-c">What neatlogs showed</div><p>The "model reply was not JSON" detection fired <b>26</b> times on 11 Oct. The records showed 14 of 40 fix-writing calls were retried, each resending a prompt of about 25,000 tokens.</p></div>
+      <div><div class="k c-g">How we fixed it</div><p>Trueup now reads the first data object in the reply, and then asks the AI for structured replies directly. The detection fell to <b>5</b> on 12 Oct, and later test-planning and fix-writing runs needed no retry.</p></div>
     </div>
   </div>
 
   <div class="panel" style="margin-top:18px">
     <h3>Trueup raised false alarms of its own</h3>
     <div class="incident">
-      <div><div class="k c-r">Incident</div><p>Trueup's checker flagged problems that were not real. 27 came from Trueup itself: it looked for one detail of the record in only one place.</p></div>
-      <div><div class="k c-c">What neatlogs showed</div><p>The record held the detail in a second place. Later, the "own false alarm" detection fired <b>2</b> times on 11 Oct, when the checker withdrew two problems already fixed on the library's main branch.</p></div>
-      <div><div class="k c-g">How we fixed it</div><p>Trueup now reads both places: the suspected problems fell from <b>58 to 31</b>. Withdrawn problems are kept on file with the rule that removed them, and never reported as findings.</p></div>
+      <div><div class="k c-r">Incident</div><p>Trueup's checks flagged problems that were not real. 27 came from Trueup itself: it looked for one detail of the record in only one place.</p></div>
+      <div><div class="k c-c">What neatlogs showed</div><p>The record held the detail in a second place. Later, the "own false alarm" detection fired <b>2</b> times on 11 Oct, when Trueup's checks set aside two problems already fixed on the library's main branch.</p></div>
+      <div><div class="k c-g">How we fixed it</div><p>Trueup now reads both places: the suspected problems fell from <b>58 to 31</b>. Problems set aside are kept on file with the rule that removed them, and never reported as findings.</p></div>
     </div>
   </div>
 
   <div class="panel" style="margin-top:18px">
     <h3>Fix attempts failed, and were retried</h3>
     <div class="incident">
-      <div><div class="k c-r">Incident</div><p>Some drafted fixes did not apply, or failed the verifier: the new test still failed, or another test broke.</p></div>
+      <div><div class="k c-r">Incident</div><p>Some drafted fixes did not apply, or failed the proof step: the new test still failed, or another test broke.</p></div>
       <div><div class="k c-c">What neatlogs showed</div><p>The "fix attempt failed (retried)" detection counted <b>13</b> failed tries: 6 on 11 Oct and 7 on 12 Oct. Each record shows the failing test sent back to the AI.</p></div>
       <div><div class="k c-g">How we fixed it</div><p>Failed tries are kept and shown next to each fix. After one failed run overwrote a proven fix's files, Trueup was changed so a failed run can never replace a proven fix.</p></div>
     </div>
@@ -83,16 +83,16 @@
   <h2>Every fix links to the session that made it.</h2>
   <div class="grid2" style="margin-top:24px">
     <div>
-      <img class="shot" src="/x/5-entire-record.png" alt="The Entire record of the session that built Trueup's fixer" loading="lazy">
+      <img class="shot" src="/x/5-entire-record.png" alt="The Entire record of the session that built the part of Trueup that writes fixes" loading="lazy">
     </div>
     <div class="longsteps">
-      <div class="panel"><h3>A record for every fix</h3><p>Each fix in Trueup has a "How this fix was made" note linking to the Entire record of the AI session that built it. The key one is checkpoint <code>01M4M8M1GSQ2BM1RX2JKDJHPD6</code>, the session that added the fixer, the verifier and the first upstream drafts.</p><a class="card-link" href="https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9" target="_blank" rel="noopener">Open the Entire record →</a></div>
+      <div class="panel"><h3>A record for every fix</h3><p>Each fix in Trueup has a "How this fix was made" note linking to the Entire record of the AI session that built it. The key one is checkpoint <code>01M4M8M1GSQ2BM1RX2JKDJHPD6</code>, the session that added the parts that write and prove fixes, and the first drafts for Arize, Traceloop and neatlogs.</p><a class="card-link" href="https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9" target="_blank" rel="noopener">Open the Entire record →</a></div>
       <div class="panel"><h3>The build history is public</h3><p>Anyone can follow how Trueup was built, session by session.</p><a class="card-link" href="https://entire.io/gh/Jennycruzy/trueup" target="_blank" rel="noopener">entire.io/gh/Jennycruzy/trueup →</a></div>
     </div>
   </div>
   <div class="panel" style="margin-top:18px">
     <h3>Entire's code graph finds the code to fix</h3>
-    <p>Before the fixer writes anything, Trueup asks Entire's code graph where the faulty tracing code lives: a search, then who calls it, then what a change would affect. Plain text search with code parsing always runs next to it, so a search that lands in the wrong place cannot hide the right code.</p>
+    <p>Before Trueup writes a fix, it asks Entire's code graph where the faulty tracing code lives: a search, then who calls it, then what a change would affect. Plain text search with code parsing always runs next to it, so a search that lands in the wrong place cannot hide the right code.</p>
     <p><b>The honest result.</b> We re-ran the search on the shipped fixes. The graph found <b>3 of the 12</b> functions the fixes changed, and on the Arize fix ranked one of them second. Text search found every one of them, or its class. So the graph helps, and the fallback still does most of the work.</p>
   </div>
 </section>
@@ -105,7 +105,7 @@
   <div class="kv">
     <div><b>$0</b><span>per Witness check: it makes no AI calls, it watches yours</span></div>
     <div><b>≈ $0.52</b><span>AI cost of one fix run (11 runs, $5.73)</span></div>
-    <div><b>≈ $0.10</b><span>AI cost of one planner run</span></div>
+    <div><b>≈ $0.10</b><span>AI cost of one test-planning run</span></div>
     <div><b>≤ $2.53</b><span>a month for the live demo, at its daily cap of 300 runs</span></div>
   </div>
   <div class="grid3">
