@@ -1,0 +1,41 @@
+You are working in the Trueup repository (this folder). Foreground commands only. Do not commit, push or post. Never print or write a key. No other project names, no private paths. Finish within 30 minutes. Another session is editing live/ and tests/test_live_server.py at the same time: do NOT touch live/ or that test file.
+
+# Goal: README and docs that read like a product
+
+Rewrite README.md and the reader-facing docs so they lead with what Trueup does, how to use it, and what it proved. Clean, confident, plain words. Limits are stated honestly but briefly, in one place, not first.
+
+## Banned words in README and docs pages people read
+span, trace (say "record"), lead, scenario, harness, adapter, fixture, OBSERVED, DOCUMENTED, REPORTED, ASSUMED, root span, instrumentation, OTel, payload, evidence-first, deterministic, boundary, seamless, leverage, robust. If a technical word is unavoidable (e.g. "OpenTelemetry"), explain it in the same sentence.
+
+## README.md (at most 320 words, product style)
+1. `# Trueup Witness` + one line: "Checks your AI agent's records against what really happened, and fixes the tracing code when they disagree."
+2. Badges line: CI badge (keep the existing one) and "Live demo" link https://trueup.38-49-216-59.sslip.io/demo.
+3. A 2-sentence "Why": the dashboard said OK, the agent crashed; the tracing code that feeds the dashboard can record a crash as success.
+4. **Install** and **Quick start** with high-quality, copy-paste code that really works with this repo. Verify it: create a temp venv, `pip install` this folder, run the snippet's imports. Show:
+   ```python
+   import trueup.witness
+   trueup.witness.watch()          # once, at start-up, before neatlogs.init()
+
+   with trueup.witness.run("order-1042") as run:   # one unit of work
+       answer = agent.handle(order_id="1042")
+
+   run.disagreements   # [] when the record matches what really happened
+   ```
+   Check the real API in src/trueup/witness/core.py and match it exactly (names, where watch() must be called relative to neatlogs.init, what run yields). Also `TRUEUP_WITNESS=0` to turn it off.
+5. **What you see in neatlogs**: one short paragraph + the before/after table (2 → 0, 40 normal calls, 0 false alarms) with links to docs/witness-before-after.md.
+6. **How it works** (4 numbered lines) and a link to docs/how-it-works.md.
+7. **Fixes sent upstream**: Arize-ai/openinference#4024 (reviewed by Arize's head of open source), traceloop/openllmetry#4610, neatlogs/neatlogs#207; "proposed until merged" in one short clause.
+8. **Built with neatlogs, Entire and cfo.ai**: one line each with a link (docs/built-with.md).
+9. **Docs** list and **License**.
+Do not put the 2 → 2 story or the limits in the README beyond one link "Known limits" to docs/limits.md.
+
+## docs/
+- docs/getting-started.md (new): install, quick start, reading the TRACE DISAGREE step in neatlogs, the neatlogs detection to create, turning it off, running the demo agent (examples/shop_agent.py) and examples/witness_normal.py, `trueup audit` for checking your own script against the practice AI server. Verify every command you list runs (use --help where a real run needs keys).
+- docs/how-it-works.md (new): Witness (what it reads from the connection, what it compares, when it lights, notes vs disagreements), the lab (practice AI server, comparison, checker rules, fixer, verifier, upstream drafts), with plain words.
+- docs/built-with.md (new): neatlogs (recording, Witness's step in the same record, detections, how neatlogs caught incidents in Trueup's own agent and how each was resolved — read docs/neatlogs.md, docs/detections.md and hackathon.md for "model reply was not JSON", "lead withdrawn (own false alarm)", "fix attempt failed (retried)", "command could not run (exit 2)", the 27 false leads removed; give real numbers), the model key neatlogs gave every team, the email finding; Entire (fixes/*/PROVENANCE.md, the code graph in src/trueup/fixer/locate.py with its honest result, entire.io/gh/Jennycruzy/trueup, checkpoint 01M4M8M1GSQ2BM1RX2JKDJHPD6 https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9); cfo.ai (https://cfo.ai/s/a9JKll8UYmSHs7-F, measured costs from docs/cfo-inputs.md, proposals labelled).
+- docs/limits.md (new): what it does not do yet, calmly: neither upstream fix merged yet; Witness reads OpenAI and Anthropic calls made through their Python SDKs (httpx); agent case AI step ERROR without error details; tested with neatlogs as the dashboard; our first live attempt stayed 2 → 2 and why (link docs/witness-before-after.md).
+- docs/witness-before-after.md and docs/neatlogs-email.md: keep facts and numbers, remove banned words, lead with the result.
+- Leave hackathon.md as the dated build log (do not rewrite it), but make sure README links it as "Build log".
+- Keep every number exactly as in the repo files; `uv run trueup verify` must still pass, and `uv run pytest -q` must be green (some tests read docs; update a test only if it checks wording you changed, never weaken a number check).
+
+Print a short summary at the end: files changed, README word count, verified commands.
