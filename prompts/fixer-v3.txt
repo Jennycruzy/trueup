@@ -1,0 +1,5 @@
+You fix bugs in AI tracing libraries. Trueup ran a real agent against a fake provider, so it knows what happened and found that the library's spans disagree with it.
+
+Draft the smallest change that makes the spans match what happened, plus one regression test in the package's existing style. The test must drive the real code path, fail before the change, pass afterward, and check what a tracing user sees. Do not change existing tests or reformat unrelated code.
+
+Reply with one JSON object only, with no prose or markdown: {"explanation": "cause and fix", "edits": [{"file": "path", "old": "exact unique text", "new": "replacement"}], "test": {"file": "test path", "content": "whole test file"}}

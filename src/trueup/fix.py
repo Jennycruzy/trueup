@@ -228,7 +228,7 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
                         write_fix(fix_dir, finding, target, base, rec)
                     break
                 draft = rec.get("draft")
-                if variant == "v2":
+                if variant in ("v2", "v3"):
                     messages = pt.revision_prompt_v2(first, draft, rec["reason"],
                                                      [t["reason"] for t in result["tries"][:-1]])
                 else:
@@ -273,7 +273,7 @@ def fix(root: Path, finding_id: str, *, client: ModelClient | None = None, run_i
                 break
             with State(root) as state:
                 state.save_observation(run_id, f"fixer:try:{n}", {"status": "complete", "result": rec})
-            if variant == "v2":
+            if variant in ("v2", "v3"):
                 messages = pt.revision_prompt_v2(first, draft, rec["reason"],
                                                  [t["reason"] for t in result["tries"][:-1]])
             else:
@@ -309,7 +309,8 @@ def checkpointed_draft(root: Path, run_id: str, number: int, client: ModelClient
         saved = state.observation(run_id, step)
     if saved:
         return saved["draft"]
-    draft = client.chat_json(PLAN_MODEL, messages, max_tokens=12000, lenient=variant == "v2")
+    draft = client.chat_json(PLAN_MODEL, messages, max_tokens=12000, lenient=variant in ("v2", "v3"),
+                             strict=variant == "v3")
     with State(root) as state:
         state.save_observation(run_id, step, {"status": "complete", "draft": draft})
     return draft

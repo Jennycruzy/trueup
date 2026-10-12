@@ -125,7 +125,8 @@ class ModelClient:
     def spend(self) -> float:
         return get_spend(self.base_url, self.key, self.http_get)
 
-    def chat(self, model: str, messages: list[dict[str, Any]], max_tokens: int = 4000) -> str:
+    def chat(self, model: str, messages: list[dict[str, Any]], max_tokens: int = 4000,
+             response_format: dict[str, Any] | None = None) -> str:
         """One completion, after the spend guard, with retries and backoff on API errors."""
         import openai
 
@@ -134,8 +135,10 @@ class ModelClient:
         for attempt in range(self.retries + 1):
             guard(self.spend(), self.limit)
             try:
-                r = self.client.chat.completions.create(model=model, messages=messages, max_tokens=max_tokens,
-                                                        temperature=0.2)
+                kwargs = {"model": model, "messages": messages, "max_tokens": max_tokens, "temperature": 0.2}
+                if response_format is not None:
+                    kwargs["response_format"] = response_format
+                r = self.client.chat.completions.create(**kwargs)
             except (openai.APIConnectionError, openai.APITimeoutError, openai.RateLimitError,
                     openai.InternalServerError) as e:
                 last = e
@@ -152,13 +155,14 @@ class ModelClient:
         raise ModelError(f"model call failed after {self.retries + 1} tries: {type(last).__name__}")
 
     def chat_json(self, model: str, messages: list[dict[str, Any]], max_tokens: int = 4000,
-                  lenient: bool = False) -> Any:
+                  lenient: bool = False, strict: bool = False) -> Any:
         """Like chat, but the reply must be JSON. Invalid JSON is retried, then raises ModelError."""
         msgs = list(messages)
         for attempt in range(self.json_retries + 1):
             if attempt:
                 self.usage.json_retries += 1
-            text = self.chat(model, msgs, max_tokens)
+            text = self.chat(model, msgs, max_tokens,
+                             response_format={"type": "json_object"} if strict else None)
             try:
                 return parse_json(text, lenient)
             except json.JSONDecodeError as e:

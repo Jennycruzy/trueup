@@ -130,7 +130,7 @@ def build_parser() -> argparse.ArgumentParser:
     pl = sub.add_parser("plan", help="ask the model for new scenarios (data only), keep the ones code accepts")
     pl.add_argument("library", choices=LIBRARIES)
     pl.add_argument("--max", type=int, default=5, help="most proposals to ask for (default 5)")
-    pl.add_argument("--variant", choices=("v1", "v2"), default="v2", help="planner version (default v2)")
+    pl.add_argument("--variant", choices=("v1", "v2", "v3"), default="v2", help="planner version (default v2)")
     pl.add_argument("--save-dir", type=Path, help="save accepted proposals under DIR/<lib>/ instead of "
                                                   "scenarios/proposed/")
     au = sub.add_parser("audit", help="run your script's main() against the fake provider and compare its trace")
@@ -150,7 +150,7 @@ def build_parser() -> argparse.ArgumentParser:
     fx = sub.add_parser("fix", help="draft a patch and a test for a finding, verify it, write fixes/<id>/")
     fx.add_argument("finding_id", help="a finding id from findings.json")
     fx.add_argument("--tries", type=int, default=3, help="most patch tries (default 3)")
-    fx.add_argument("--variant", choices=("v1", "v2"), default="v2", help="fixer version (default v2)")
+    fx.add_argument("--variant", choices=("v1", "v2", "v3"), default="v2", help="fixer version (default v2)")
     fx.add_argument("--reprove", action="store_true",
                     help="apply fixes/<id>/patch.diff to the clean clone, sweep every scenario again and write "
                          "proof.json (no model call)")

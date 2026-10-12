@@ -95,7 +95,7 @@ def library_summary() -> list[dict[str, Any]]:
         for s in prop.load()]
 
 
-VARIANTS = ("v1", "v2")
+VARIANTS = ("v1", "v2", "v3")
 
 
 def seen_outcomes() -> list[dict[str, Any]]:
@@ -118,7 +118,7 @@ def first_prompt(library: str, source: str, findings: list[dict[str, Any]], n: i
     from trueup.managed_prompts import production
 
     seen = ""
-    if variant == "v2":
+    if variant in ("v2", "v3"):
         seen = ("What really happened in the existing scenarios (untraced runs). The same fake model gives "
                 "the same fake outcome and the same exception class on another app of the same provider, api "
                 "and streaming style; an app that does not stream gets HTTP 400 (http_error, BadRequestError) "
@@ -127,7 +127,9 @@ def first_prompt(library: str, source: str, findings: list[dict[str, Any]], n: i
             f"Existing scenarios (do not repeat an app + model pair):\n{json.dumps(library_summary())}\n\n{seen}"
             f"Current findings for {library}:\n{json.dumps(findings)}\n\n"
             f"Wrapper source of {library} as installed:\n{source}\n\nPropose at most {n} new scenarios.")
-    system = production(f"trueup-planner-{variant}", SYSTEM, enabled=tracing.active())
+    local_v3 = Path(__file__).resolve().parents[2] / "prompts" / "planner-v3.txt"
+    fallback = local_v3.read_text() if variant == "v3" and local_v3.exists() else SYSTEM
+    system = production(f"trueup-planner-{variant}", fallback, enabled=tracing.active())
     return [{"role": "system", "content": system}, {"role": "user", "content": user}]
 
 
@@ -213,7 +215,7 @@ def _plan(root: Path, library: str, max_n: int, client: ModelClient, result: dic
         out("resumed initial proposal batch from state.db")
     else:
         reply = client.chat_json(PLAN_MODEL, first_prompt(library, source, findings, max_n, variant),
-                                 lenient=variant == "v2")
+                                 lenient=variant in ("v2", "v3"), strict=variant == "v3")
         props = reply.get("proposals") if isinstance(reply, dict) else None
         if isinstance(props, list) and run_id:
             with State(root) as state:
@@ -248,7 +250,8 @@ def _plan(root: Path, library: str, max_n: int, client: ModelClient, result: dic
             out(f"  {pid}: rejected ({'; '.join(reasons)[:200]})")
             if attempt == REVISIONS:
                 break
-            rev = client.chat_json(PLAN_MODEL, revision_prompt(p, reasons), lenient=variant == "v2")
+            rev = client.chat_json(PLAN_MODEL, revision_prompt(p, reasons), lenient=variant in ("v2", "v3"),
+                                   strict=variant == "v3")
             revised = rev.get("proposals") if isinstance(rev, dict) else None
             if not revised:
                 history.append({"proposal": None, "reasons": ["withdrawn by the model"]})

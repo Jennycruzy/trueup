@@ -89,6 +89,12 @@ def test_guard_allows_under_limit():
     assert c.usage.calls == 1 and c.usage.input_tokens == 100
 
 
+def test_strict_json_uses_proxy_json_mode():
+    c = client(['{"ok": 1}'])
+    assert c.chat_json(PLAN_MODEL, [], strict=True) == {"ok": 1}
+    assert c.client.sent[0]["response_format"] == {"type": "json_object"}
+
+
 def test_guard_unreadable_spend_stops():
     c = ModelClient("k", "http://proxy.test/v1", http_get=lambda *a, **k: FakeResp(500),
                     openai_client=FakeOpenAI(["{}"]))
@@ -302,3 +308,9 @@ def test_v2_prompt_shows_what_the_fake_really_did():
     v1 = first_prompt("neatlogs", "src", [], 3, "v1")[1]["content"]
     v2 = first_prompt("neatlogs", "src", [], 3, "v2")[1]["content"]
     assert "What really happened in the existing scenarios" in v2 and "What really happened" not in v1
+
+
+def test_v3_planner_uses_the_committed_json_only_prompt():
+    messages = planner.first_prompt("neatlogs", "src", [], 3, "v3")
+    assert messages[0]["content"] == (Path(__file__).parents[1] / "prompts/planner-v3.txt").read_text()
+    assert "What really happened in the existing scenarios" in messages[1]["content"]

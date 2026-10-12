@@ -108,7 +108,9 @@ def first_prompt(finding: dict[str, Any], target: Target, located: dict[str, Any
             f"Located definitions:\n{json.dumps(located['definitions'])}\n"
             f"Callers:\n{json.dumps(located['callers'][:60])}\n\n"
             f"Source:\n{source}\n\nTest style of {target.packages[0].path}:\n{style}")
-    fallback = SYSTEM + (JSON_ONLY if variant == "v2" else "")
+    local_v3 = Path(__file__).resolve().parents[3] / "prompts" / "fixer-v3.txt"
+    fallback = local_v3.read_text() if variant == "v3" and local_v3.exists() \
+        else SYSTEM + (JSON_ONLY if variant == "v2" else "")
     system = production(f"trueup-fixer-{variant}", fallback, enabled=tracing.active())
     return [{"role": "system", "content": system},
             {"role": "user", "content": user}]

@@ -452,3 +452,17 @@ Three mistakes caught on the way, each one now a lesson for Trueup:
 3. **Two of the fixer's unit tests passed without the fix.** They used `MagicMock` responses, which the Responses wrapper never turns into a span, fix or no fix. They also lived in a package whose test environment does not install the OpenAI instrumentation. The posted PR moves them to the OpenAI package and uses a real client with `httpx.MockTransport` and a new response id per call (the wrapper keeps responses by id, so a repeated id also hid the span). They now fail without the fix (2 of 3) and pass with it. Next change: the verifier must require that every new test fails before the patch, not just one.
 
 A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194424Z-fix-openinference.json`, $0.39): all 3 tries failed (two tests failed with the patch; the third broke `ag-tool-raises`), and Trueup reported "NOT fixed". It also overwrote the earlier proven fix's files in `fixes/`; they were restored from git. Next change: a failed run must never replace a proven fix.
+
+## 2026-10-12: JSON response mode and another failed-fix proof
+
+- **OBSERVED:** v3 asks the model proxy for JSON response mode and uses shorter, committed planner and fixer
+  prompts. Two planner runs accepted 6 proposals using 4 model calls and no JSON retry. One fixer run used 3
+  calls and no JSON retry. This proves the proxy accepts JSON response mode for `claude-sonnet-4.6`; it does not
+  prove that v3 plans or fixes better than v2.
+- **OBSERVED:** The v3 fixer run `20261012T021600Z-fix-openinference` did not fix the OpenInference root-status
+  finding. Try 1 used a disallowed test filename, try 2 created a new mismatch in `ag-tool-raises`, and try 3's
+  new test still failed after the patch. Trueup kept the three failed tries and reported `fixed: false`; no proven
+  fix was replaced. The run cost recorded by the proxy was $0.253265.
+- **OBSERVED:** The read-only Neatlogs detection pull at 10:03 UTC reports 13 occurrences for `Trueup: fix
+  attempt failed (retried)`: 6 on 11 Oct and 7 on 12 Oct. This closes the required proof that a real failed fixer
+  try reaches the detection; the raw trend is in `evidence/neatlogs/detections.json`.

@@ -59,6 +59,31 @@ def test_paid_fixer_draft_is_reused_after_restart(tmp_path: Path) -> None:
     assert first.calls == 1 and second.calls == 0
 
 
+def test_v3_fixer_requests_proxy_json_mode(tmp_path: Path) -> None:
+    class Client:
+        def __init__(self):
+            self.kwargs = None
+
+        def chat_json(self, *args, **kwargs):
+            self.kwargs = kwargs
+            return {"edits": [], "test": {}}
+
+    with State(tmp_path) as state:
+        state.begin_run("fix-v3", "fix", "finding")
+    client = Client()
+    checkpointed_draft(tmp_path, "fix-v3", 1, client, [], "v3")
+    assert client.kwargs["lenient"] is True
+    assert client.kwargs["strict"] is True
+
+
+def test_v3_fixer_uses_the_committed_json_only_prompt(repo: Path) -> None:
+    finding = {"id": "f", "title": "wrong trace", "severity": "high", "details": {
+        "check": "run_status", "field": "status", "leads": [], "scenarios": ["s"], "rules": {}}}
+    located = {"commit": "abcdef012345", "definitions": [], "callers": []}
+    messages = pt.first_prompt(finding, TARGET, located, "source", "style", variant="v3")
+    assert messages[0]["content"] == (Path(__file__).parents[1] / "prompts/fixer-v3.txt").read_text()
+
+
 def test_check_draft_applies_and_returns_writes(repo: Path) -> None:
     writes = pt.check_draft(draft(), repo, TARGET)
     assert writes == [{"file": "pkg/lib/w.py", "content": (repo / "pkg/lib/w.py").read_text().replace(
