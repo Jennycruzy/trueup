@@ -476,3 +476,23 @@ A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194
 - W4 words: this commit. README, page, video, posts and cfo.ai inputs lead with Witness and retain the failed after result.
 - Model-key spend: $9.53811870 before the gate; $9.85278360 after the live work and fixer; increase $0.31466490. The gate itself cost $0.00626780; the later fixer and probes account for the rest.
 - Not done: no alert destination was connected because MCP exposes detection creation but no alert-rule write tool. No patch was called fixed. Nothing was pushed or posted.
+
+## 2026-10-12 12:15 UTC: the light goes out (2 → 0)
+
+- OBSERVED: with real Claude Haiku and OpenAI Agents traffic, both targeted breaks put a `TRACE DISAGREE` step in
+  neatlogs before the patches (`5322259c…`, `a4074bff…`) and none after (`7304699b…`, `83f710d1…`). `trueup verify`
+  recomputes 2 → 0 from `evidence/witness/`.
+- OBSERVED: 40 normal real calls (20 before, 20 after), 0 disagreements. Spend $0.0123794 for all of it.
+- OBSERVED: why the morning attempt stayed 2 → 2. The relay's partial stream had no `content_block_start`, so the
+  Anthropic SDK failed on bad data rather than on a cut. Witness treated "ERROR without an exception event" as OK.
+  And the Agents path was never patched: `neatlogs.init(instrumentations=["openai_agents"])` runs OpenInference's
+  processor (neatlogs `instrumentation/registry.py`), so the fix is Arize-ai/openinference#4024, here at `4352755`
+  after the maintainer's suggestions. Witness also counted its own mark step, turning one lie into two marks.
+  All four are fixed, with tests in `tests/test_witness.py`.
+- OBSERVED: `examples/shop_agent.py` used to print "neatlogs record: OK" and "DISAGREE light: ON" whenever the app
+  crashed, without asking Witness. It now prints only Witness's own verdict.
+- DOCUMENTED: neatlogs' own `openai_agents_processor()` has the same Agents bug. A fix with 6 tests (2 fail before,
+  6 pass after; unit suite 534 passed, the same 5 missing-dependency failures before and after) is drafted in
+  `upstream/neatlogs-openai-agents-processor-run-status/`. Not posted.
+- Still not perfect (OBSERVED): the agent's model step is ERROR with no exception event, reported as a note; an
+  inner step also named "Agent workflow" still ends SUCCESS.

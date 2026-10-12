@@ -22,21 +22,21 @@ Run the shop agent through the local cable-cut relay. Show the real provider res
 
 ## 0:35–0:55
 
-Show `TRACE DISAGREE` inside trace `ee29b411c99a70a09545342dd6e4b6b4`, then the detection.
+Show `TRACE DISAGREE` inside trace `5322259c536eae9651b3f0819bfade85` (the AI step says SUCCESS right above it), then the detection.
 
 “Witness watches the wire independently. It writes the disagreement into that same neatlogs trace. The detection fires.”
 
 ## 0:55–1:30
 
-Show the located neatlogs function, the proposed patch and verifier. Then show the honest after trace.
+Show the proposed patches (the three neatlogs patches, then Arize PR #4024 with the maintainer's review), then rerun both breaks and open the two after traces: `7304699be40a6194bafc2a45478bcd4f` (cut, AI step ERROR) and `83f710d188f00e206a8b2339e0560443` (agent, workflow ERROR).
 
-“Trueup found the cause and applied all three proven neatlogs patches together. The Anthropic span improved from OK to ERROR, but still lacked an exception event. The Agents workflow still said OK. The light stayed on: two before, two after. We do not call a partial repair fixed.”
+“Trueup found the cause. For the cut stream it was in neatlogs' own code. For the agent run it was in Arize's code, which neatlogs uses underneath, so we sent the fix to Arize, and their maintainer reviewed it. Same breaks, run again: both records now say the run failed. The light goes out: two before, zero after. Our first try did not get there, and we kept that record.”
 
 ## 1:30–1:50
 
-Show the two-line install, `TRUEUP_WITNESS=0`, and the 20-call normal trace.
+Show the two-line install, `TRUEUP_WITNESS=0`, and the normal-call sessions (`witness-normal-before-1212`, `witness-normal-after-1212`).
 
-“Add the second sensor in two lines. It never changes the app's result and fails open. Twenty normal real calls produced zero false disagreements.”
+“Add the second sensor in two lines. It never changes the app's result. Forty normal real calls, zero false alarms.”
 
 ## 1:50–2:20
 

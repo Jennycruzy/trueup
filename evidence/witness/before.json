@@ -1,48 +1,120 @@
 {
-  "schema": 1,
-  "tested_at": "2026-10-12T11:26:54Z",
-  "model": "claude-haiku",
-  "provider": "configured LiteLLM endpoint",
-  "fake_provider_used": false,
-  "spend_before_usd": 9.5381187,
-  "spend_after_usd": 9.5443865,
-  "gate_spend_usd": 0.0062678,
-  "normal_calls": {
-    "total": 20,
-    "plain_sync": 7,
-    "stream_sync": 6,
-    "tool_sync": 6,
-    "plain_async": 1,
-    "disagreements": 0,
-    "session_id": "disagree-normal-5a8e83b13e",
-    "trace_url": "https://app.neatlogs.com/traces/b71aa3d85e982cbdadb6abed13256332"
-  },
-  "breaks": [
+ "schema": 2,
+ "tested_at": "2026-10-12T12:12:51Z",
+ "model": "claude-haiku",
+ "provider": "configured LiteLLM endpoint",
+ "fake_provider_used": false,
+ "versions": {
+  "neatlogs": "1.4.26 (PyPI)",
+  "openinference-instrumentation-openai-agents": "2.5.3 (PyPI)",
+  "openai-agents": "0.23.1",
+  "anthropic": "1.13.0"
+ },
+ "spend_before_usd": 9.853052,
+ "spend_after_usd": 9.8654314,
+ "gate_spend_usd": 0.0123794,
+ "normal_calls": {
+  "total": 20,
+  "plain_sync": 7,
+  "stream_sync": 6,
+  "tool_sync": 6,
+  "plain_async": 1,
+  "disagreements": 0,
+  "session_id": "witness-normal-before-1212",
+  "after_patches": {
+   "total": 20,
+   "plain_sync": 7,
+   "stream_sync": 6,
+   "tool_sync": 6,
+   "plain_async": 1,
+   "disagreements": 0,
+   "session_id": "witness-normal-after-1212"
+  }
+ },
+ "breaks": [
+  {
+   "kind": "anthropic stream cable cut",
+   "application": "RemoteProtocolError",
+   "record": "LLM step SUCCESS; trace status success",
+   "really": "stream cut; app raised",
+   "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
+   "witness": [
     {
-      "kind": "openai-agents server rejection",
-      "application": "PermissionDeniedError",
-      "record": "Agent workflow OK",
-      "really": "run failed",
-      "finding": "neatlogs-run_status-openai-agents-top-level-span-status-ok",
-      "session_id": "disagree-agent-6b711a7bfa",
-      "trace_url": "https://app.neatlogs.com/traces/37521f9ae60a6454de0433dbd24f322a"
-    },
-    {
-      "kind": "anthropic stream cable cut",
-      "application": "RemoteProtocolError",
-      "record": "LLM span OK; trace success",
-      "really": "stream cut",
-      "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
-      "session_id": "disagree-an-cut-f584cabea1",
-      "trace_url": "https://app.neatlogs.com/traces/ee29b411c99a70a09545342dd6e4b6b4"
+     "field": "call_status",
+     "record": "OK",
+     "really": "ERROR",
+     "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event"
     }
-  ],
-  "detection": {
-    "name": "TRACE DISAGREE light",
-    "id": "fda0b843-0a39-4e08-9307-db526f7ba197",
-    "occurrences": 4,
-    "qualifying_real_reproductions": 2,
-    "preliminary_probe_marks": 2
+   ],
+   "session_id": "witness-before-anthropic-cut-1212",
+   "trace_url": "https://app.neatlogs.com/traces/5322259c536eae9651b3f0819bfade85"
   },
-  "wrapper_overhead_microseconds": {"median": 2.9005, "maximum": 4.809}
+  {
+   "kind": "openai-agents run fails (server refuses the model)",
+   "application": "PermissionDeniedError",
+   "record": "Agent workflow SUCCESS",
+   "really": "run failed; app raised",
+   "finding": "neatlogs-run_status-openai-agents-top-level-span-status-ok",
+   "witness": [
+    {
+     "field": "run_status",
+     "record": "OK",
+     "really": "ERROR (PermissionDeniedError)",
+     "finding": "neatlogs-run_status-openai-agents-top-level-span-status-ok"
+    }
+   ],
+   "notes": [
+    {
+     "field": "call_status",
+     "note": "the step is marked ERROR but carries no error details (exception event)"
+    }
+   ],
+   "session_id": "witness-before-agent-fail-1212",
+   "trace_url": "https://app.neatlogs.com/traces/a4074bff1ff4af7caa62e015cae9c3f5"
+  }
+ ],
+ "detection": {
+  "name": "TRACE DISAGREE light",
+  "id": "fda0b843-0a39-4e08-9307-db526f7ba197",
+  "occurrences": 4,
+  "qualifying_real_reproductions": 2,
+  "preliminary_probe_marks": 2
+ },
+ "wrapper_overhead_microseconds": {
+  "median": 2.9005,
+  "maximum": 4.809
+ },
+ "earlier_run": {
+  "tested_at": "2026-10-12T11:26:54Z",
+  "breaks": [
+   {
+    "kind": "openai-agents server rejection",
+    "application": "PermissionDeniedError",
+    "record": "Agent workflow OK",
+    "really": "run failed",
+    "finding": "neatlogs-run_status-openai-agents-top-level-span-status-ok",
+    "session_id": "disagree-agent-6b711a7bfa",
+    "trace_url": "https://app.neatlogs.com/traces/37521f9ae60a6454de0433dbd24f322a"
+   },
+   {
+    "kind": "anthropic stream cable cut",
+    "application": "RemoteProtocolError",
+    "record": "LLM span OK; trace success",
+    "really": "stream cut",
+    "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
+    "session_id": "disagree-an-cut-f584cabea1",
+    "trace_url": "https://app.neatlogs.com/traces/ee29b411c99a70a09545342dd6e4b6b4"
+   }
+  ],
+  "normal_calls": {
+   "total": 20,
+   "plain_sync": 7,
+   "stream_sync": 6,
+   "tool_sync": 6,
+   "plain_async": 1,
+   "disagreements": 0,
+   "session_id": "disagree-normal-5a8e83b13e",
+   "trace_url": "https://app.neatlogs.com/traces/b71aa3d85e982cbdadb6abed13256332"
+  }
+ }
 }

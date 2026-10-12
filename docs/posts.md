@@ -8,13 +8,13 @@ Trueup Witness watches the provider wire independently, compares it with the tra
 
 We reproduced two real trace lies. 20 normal real calls raised 0 false disagreements. #neatHack
 
-## 2 — publish the failure
+## 2 — the light goes out
 
-We applied all 3 of Trueup's proven @neatlogs patches together and reran the live failures.
+We cut the connection mid-reply and crashed an agent run, with real Claude calls. @neatlogs showed both as success.
 
-Anthropic improved from OK to ERROR, but still missed the exception event. OpenAI Agents still showed an OK workflow.
+Trueup found the causes, one in neatlogs' code and one in Arize's code that neatlogs uses for agents (our fix is under review: github.com/Arize-ai/openinference/pull/4024).
 
-DISAGREE light: 2 → 2. We are publishing the failure, not painting it green. #neatHack
+Same breaks with the fixes: both records say the run failed. DISAGREE light 2 → 0, and 0 false alarms on 40 normal calls. #neatHack
 
 ## 3 — install
 

@@ -47,6 +47,6 @@ Then run the exact screenshot checks in `docs/neatlogs.md`; capture the detectio
 # Witness owner actions
 
 1. In neatlogs, open Alerts and create a rule for detection `TRACE DISAGREE light`, threshold at least one occurrence. Choose a notification destination and enable the rule.
-2. Record the 2:30 script in `docs/video-script.md`. Use a drawn cockpit panel, no crash footage, and keep the 2 → 2 negative result on screen.
+2. Record the 2:30 script in `docs/video-script.md`. Use a drawn cockpit panel, no crash footage, and show the 2 → 0 result with the before and after traces. Say once that our first try stayed 2 → 2.
 3. Replace `[VIDEO_URL]` only after uploading the final video.
 4. Post the drafts in `docs/posts.md` yourself. Trueup has not posted them.

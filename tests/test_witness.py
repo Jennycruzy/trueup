@@ -59,3 +59,73 @@ def test_disabled_and_run_preserves_exception(monkeypatch):
     monkeypatch.setattr(core,"watch",lambda: True); monkeypatch.setattr(core,"_compare",lambda x: None)
     with pytest.raises(ValueError):
         with core.run("x"): raise ValueError("same")
+
+
+class Ctx:
+    def __init__(self, span_id): self.span_id = span_id
+
+
+def _span(sid, parent, status="OK", kind="agent", events=()):
+    sp = Span(status, {"neatlogs.span.kind": kind}, parent=Ctx(parent) if parent else None, events=events)
+    sp.context = Ctx(sid)
+    return sp
+
+
+def test_failed_run_under_the_apps_own_open_span_lights_up():
+    # The app's own outer span (id 1) is still open when the run ends, so the workflow (2) is the top step.
+    spans = [_span(4, 3, "ERROR", "llm", ("exception",)), _span(3, 2, "ERROR"), _span(2, 1, "OK", "workflow")]
+    active = core.Run("x", [], spans, "NotFoundError")
+    core._compare(active)
+    assert [d["field"] for d in active.disagreements] == ["run_status"]
+    assert active.disagreements[0]["record"] == "OK"
+
+
+def test_failed_run_shown_as_error_stays_dark():
+    spans = [_span(3, 2, "ERROR"), _span(2, 1, "ERROR", "workflow")]
+    active = core.Run("x", [], spans, "NotFoundError")
+    core._compare(active)
+    assert active.disagreements == []
+
+
+def test_cut_stream_shown_as_error_with_exception_stays_dark():
+    call = core.Call("/v1/messages", status=200, stream=True, stream_done=False, exception="RemoteProtocolError")
+    active = core.Run("x", [call], [_span(2, 1, "ERROR", "llm", ("exception",))], "RemoteProtocolError")
+    core._compare(active)
+    assert active.disagreements == []
+
+
+def test_cut_stream_shown_as_ok_lights_up():
+    call = core.Call("/v1/messages", status=200, stream=True, stream_done=False, exception="RemoteProtocolError")
+    active = core.Run("x", [call], [_span(2, 1, "OK", "llm")], "RemoteProtocolError")
+    core._compare(active)
+    assert [d["field"] for d in active.disagreements] == ["call_status"]
+
+
+def test_error_without_details_is_a_note_not_a_disagreement():
+    call = core.Call("/v1/responses", status=403)
+    active = core.Run("x", [call], [_span(2, 1, "ERROR", "llm")], "PermissionDeniedError")
+    core._compare(active)
+    assert active.disagreements == []
+    assert [n["field"] for n in active.notes] == ["call_status"]
+
+
+def test_witness_own_marks_are_not_compared():
+    call = core.Call("/v1/messages", status=200, stream=True, stream_done=False, exception="RemoteProtocolError")
+    mark = _span(9, 1, "UNSET", "tool"); mark.name = "TRACE DISAGREE"
+    llm = _span(2, 1, "OK", "llm"); llm.name = "anthropic.messages.create"
+    active = core.Run("x", [call], [llm, mark], "RemoteProtocolError")
+    core._compare(active)
+    assert [d["field"] for d in active.disagreements] == ["call_status"]
+
+
+def test_a_mark_made_during_the_comparison_is_not_compared(monkeypatch):
+    call = core.Call("/v1/messages", status=200, stream=True, stream_done=False, exception="RemoteProtocolError")
+    llm = _span(2, 1, "OK", "llm"); llm.name = "anthropic.messages.create"
+    active = core.Run("x", [call], [llm], "RemoteProtocolError")
+    real_mark = core._mark
+    def mark_and_end_a_span(*a, **k):
+        real_mark(*a, **k)
+        m = _span(9, 1, "UNSET", "tool"); m.name = "TRACE DISAGREE"; active.spans.append(m)
+    monkeypatch.setattr(core, "_mark", mark_and_end_a_span)
+    core._compare(active)
+    assert [d["field"] for d in active.disagreements] == ["call_status"]

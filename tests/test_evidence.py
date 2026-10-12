@@ -132,7 +132,8 @@ def test_committed_witness_page_and_generated_lab_report(tmp_path):
     main(["report", "--evidence", str(EVIDENCE), "--out", str(out)])
     assert "<b>32</b>" in out.read_text()
     page = (EVIDENCE.parent / "docs" / "index.html").read_text()
-    assert "TRACE DISAGREE" in page and "2 → 2" in page and "20 normal calls" in page
+    assert "TRACE DISAGREE" in page and "2 → 0" in page and "40 normal calls" in page
+    assert "first attempt stayed 2 → 2" in page  # the failed first try stays visible
 
 
 def test_no_machine_paths_in_bundle():

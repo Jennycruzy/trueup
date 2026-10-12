@@ -30,6 +30,7 @@ class _CutRelay(http.server.BaseHTTPRequestHandler):
         with httpx.Client(timeout=30).stream("POST", url, headers=headers, json=payload) as response:
             next(response.iter_bytes())  # prove the real upstream started before cutting our cable
         partial = (b'event: message_start\ndata: {"type":"message_start","message":{"id":"msg_cut","type":"message","role":"assistant","content":[],"model":"claude-haiku","stop_reason":null,"stop_sequence":null,"usage":{"input_tokens":1,"output_tokens":0}}}\n\n'
+                   b'event: content_block_start\ndata: {"type":"content_block_start","index":0,"content_block":{"type":"text","text":""}}\n\n'
                    b'event: content_block_delta\ndata: {"type":"content_block_delta","index":0,"delta":{"type":"text_delta","text":"partial"}}\n\n')
         self.send_response(200)
         self.send_header("Content-Type", "text/event-stream")
@@ -74,6 +75,7 @@ def main() -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--break", dest="break_kind", choices=("anthropic-cut", "agent-fail"))
     parser.add_argument("--session")
+    parser.add_argument("--json-out", help="write Witness's verdict to this file")
     args = parser.parse_args()
     for name in ("TRUEUP_MODEL_KEY", "TRUEUP_MODEL_BASE_URL", "NEATLOGS_API_KEY"):
         if not os.environ.get(name): parser.error(f"{name} is required")
@@ -84,23 +86,34 @@ def main() -> int:
     neatlogs.init(api_key=os.environ["NEATLOGS_API_KEY"], workflow_name="trueup-witness-shop",
                   instrumentations=instruments, pii_enabled=False, user_id="jenny-builds",
                   tags=["witness", f"break:{args.break_kind or 'none'}"])
-    app, record, really, light = "result", "OK", "OK", "OFF"
+    app, really = "result", "OK"
+    witness = None
     try:
         with neatlogs.trace(name="shop-agent", kind="AGENT", session_id=session):
             try:
-                with trueup.witness.run("order-1042"):
+                with trueup.witness.run("order-1042") as witness:
                     app = _cut() if args.break_kind == "anthropic-cut" else (_agent_failure() if args.break_kind == "agent-fail" else _normal())
             except Exception as error:
                 app, really = type(error).__name__, "crashed"
-                # These are the two known neatlogs findings demonstrated by this script.
-                record, light = "OK", "ON"
     finally:
         neatlogs.flush(); neatlogs.shutdown()
+    # Everything below comes from Witness's own comparison, not from this script.
+    found = witness.disagreements if witness is not None else []
     print(f"what the app saw: {app}")
-    print(f"neatlogs record: {record}")
     print(f"really: {really}")
-    print(f"DISAGREE light: {light}")
+    for d in found:
+        print(f"neatlogs record ({d['field']}): {d['record']}   really: {d['really']}")
+    if not found:
+        print("neatlogs record: matches what really happened")
+    notes = witness.notes if witness is not None else []
+    for n in notes:
+        print(f"note ({n['field']}): {n['note']}")
+    print(f"DISAGREE light: {'ON' if found else 'OFF'}")
     print(f"session: {session}")
+    if args.json_out:
+        with open(args.json_out, "w") as f:
+            json.dump({"break": args.break_kind or "none", "session": session, "app": app, "really": really,
+                       "disagreements": found, "notes": notes}, f, indent=1)
     return 0
 
 

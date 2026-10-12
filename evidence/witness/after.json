@@ -1,47 +1,99 @@
 {
-  "schema": 1,
+ "schema": 2,
+ "tested_at": "2026-10-12T12:12:59Z",
+ "patches_applied_together": [
+  "neatlogs-output-openai-chat-create-output-text-missing",
+  "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+  "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+  "openinference: Arize-ai/openinference#4024 at 4352755 (review suggestions applied)"
+ ],
+ "why_openinference": "neatlogs.init(instrumentations=['openai_agents']) runs OpenInference's OpenAI Agents processor, so the Agents fix for neatlogs users is the OpenInference fix under review in #4024.",
+ "result": "light out",
+ "breaks": [
+  {
+   "kind": "anthropic stream cable cut",
+   "record_before": "LLM step SUCCESS",
+   "record_after_proposed_patch": "LLM step ERROR with the exception",
+   "really": "stream cut",
+   "disagree_marks_after": 0,
+   "notes_after": [],
+   "session_id": "witness-after-anthropic-cut-1212",
+   "trace_url": "https://app.neatlogs.com/traces/7304699be40a6194bafc2a45478bcd4f"
+  },
+  {
+   "kind": "openai-agents run fails (server refuses the model)",
+   "record_before": "Agent workflow SUCCESS",
+   "record_after_proposed_patch": "Agent workflow ERROR",
+   "really": "run failed",
+   "disagree_marks_after": 0,
+   "notes_after": [
+    {
+     "field": "call_status",
+     "note": "the step is marked ERROR but carries no error details (exception event)"
+    }
+   ],
+   "session_id": "witness-after-agent-fail-1212",
+   "trace_url": "https://app.neatlogs.com/traces/83f710d188f00e206a8b2339e0560443"
+  }
+ ],
+ "targeted_before_marks": 2,
+ "targeted_after_marks": 0,
+ "remaining": [
+  "In the Agents run the model step is ERROR but has no exception event (error details missing). Witness reports this as a note, not a disagreement: the record no longer says the opposite of what happened.",
+  "An inner step also named 'Agent workflow' (a chain step under the failed workflow) still ends SUCCESS."
+ ],
+ "earlier_attempt": {
   "tested_at": "2026-10-12T11:43:19Z",
   "patches_applied_together": [
-    "neatlogs-output-openai-chat-create-output-text-missing",
-    "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
-    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset"
+   "neatlogs-output-openai-chat-create-output-text-missing",
+   "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+   "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset"
   ],
   "result": "disagreements remain",
   "breaks": [
-    {
-      "kind": "anthropic stream cable cut",
-      "record_before": "LLM span OK; no exception event",
-      "record_after_proposed_patch": "LLM span ERROR; no exception event",
-      "really": "stream cut",
-      "disagree_marks_after": 1,
-      "reason": "The proven patch corrects status but does not add the required exception event.",
-      "session_id": "witness-after-anthropic-20261012-v2",
-      "trace_url": "https://app.neatlogs.com/traces/845e5c3c3e9fa2cca12b25e7e524be9a"
-    },
-    {
-      "kind": "openai-agents server rejection",
-      "record_before": "Agent workflow OK",
-      "record_after_proposed_patch": "Agent workflow OK",
-      "really": "run failed",
-      "disagree_marks_after": 1,
-      "reason": "None of the three proven neatlogs patches targets OpenAI Agents workflow status.",
-      "session_id": "witness-after-agent-20261012",
-      "trace_url": "https://app.neatlogs.com/traces/ae9a41d4476106029c272bfd507d4dab"
-    }
+   {
+    "kind": "anthropic stream cable cut",
+    "record_before": "LLM span OK; no exception event",
+    "record_after_proposed_patch": "LLM span ERROR; no exception event",
+    "really": "stream cut",
+    "disagree_marks_after": 1,
+    "reason": "The proven patch corrects status but does not add the required exception event.",
+    "session_id": "witness-after-anthropic-20261012-v2",
+    "trace_url": "https://app.neatlogs.com/traces/845e5c3c3e9fa2cca12b25e7e524be9a"
+   },
+   {
+    "kind": "openai-agents server rejection",
+    "record_before": "Agent workflow OK",
+    "record_after_proposed_patch": "Agent workflow OK",
+    "really": "run failed",
+    "disagree_marks_after": 1,
+    "reason": "None of the three proven neatlogs patches targets OpenAI Agents workflow status.",
+    "session_id": "witness-after-agent-20261012",
+    "trace_url": "https://app.neatlogs.com/traces/ae9a41d4476106029c272bfd507d4dab"
+   }
   ],
   "targeted_before_marks": 2,
   "targeted_after_marks": 2,
   "detection_total_after_all_gate_and_rerun_traffic": 8,
   "new_fixer_attempt": {
-    "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
-    "max_tries": 1,
-    "outcome": "rejected artifact",
-    "stage": "artifact check",
-    "model_calls": 1,
-    "spend_before_usd": 9.5445207,
-    "spend_after_usd": 9.8527836,
-    "patch_created": false,
-    "reason": "The verifier reported a passing candidate, but concurrent resume processes left patch.diff empty. An empty patch cannot be applied or accepted, so no after claim uses it.",
-    "run_ids": ["20261012T113843Z-fix-neatlogs", "20261012T114013Z-fix-neatlogs"]
+   "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
+   "max_tries": 1,
+   "outcome": "rejected artifact",
+   "stage": "artifact check",
+   "model_calls": 1,
+   "spend_before_usd": 9.5445207,
+   "spend_after_usd": 9.8527836,
+   "patch_created": false,
+   "reason": "The verifier reported a passing candidate, but concurrent resume processes left patch.diff empty. An empty patch cannot be applied or accepted, so no after claim uses it.",
+   "run_ids": [
+    "20261012T113843Z-fix-neatlogs",
+    "20261012T114013Z-fix-neatlogs"
+   ]
   }
+ },
+ "why_the_earlier_attempt_stayed_2_to_2": [
+  "The demo relay sent a malformed stream (no content_block_start), so the app crashed on bad data (an SDK parse error), not on a real cut; the relay now sends a well-formed partial stream before cutting.",
+  "Witness counted 'ERROR without an exception event' as OK; it now reports the status exactly and lists missing error details as a note.",
+  "None of the three neatlogs patches covers the Agents path, because neatlogs uses OpenInference's processor there; #4024 is that fix."
+ ]
 }

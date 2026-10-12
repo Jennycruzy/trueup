@@ -35,6 +35,8 @@ class Run:
     calls: list[Call] = field(default_factory=list)
     spans: list[ReadableSpan] = field(default_factory=list)
     app_exception: str | None = None
+    disagreements: list[dict[str, str]] = field(default_factory=list)
+    notes: list[dict[str, str]] = field(default_factory=list)
 
 
 class _Processor(SpanProcessor):
@@ -257,11 +259,14 @@ def _record(span: ReadableSpan) -> dict[str, Any]:
         usage = {"prompt_tokens": a.get("neatlogs.llm.token_count.prompt"),
                  "completion_tokens": a.get("neatlogs.llm.token_count.completion")}
     refusals = tuple(v for k, v in a.items() if ".refusal" in k and isinstance(v, str) and v)
-    return {"error": span.status.status_code.name == "ERROR" and _has_exception(span),
+    return {"error": span.status.status_code.name == "ERROR", "details": _has_exception(span),
             "refusal": refusals, "tools": tool_names, "usage": usage}
 
 
-def _mark(field: str, record: Any, really: Any, finding: str | None = None) -> None:
+def _mark(field: str, record: Any, really: Any, finding: str | None = None, active: Run | None = None) -> None:
+    if active is not None:
+        active.disagreements.append({"field": str(field), "record": str(record), "really": str(really),
+                                     "finding": finding or ""})
     try:
         import neatlogs
         attrs = {"field": str(field), "record": str(record), "really": str(really)}
@@ -272,24 +277,43 @@ def _mark(field: str, record: Any, really: Any, finding: str | None = None) -> N
         return
 
 
+def _top(spans: list[ReadableSpan]) -> list[ReadableSpan]:
+    """The run's top steps: spans whose parent is not one of the run's own spans (the app's own outer
+    span is still open when the run ends, so it is not in the list)."""
+    ids = {getattr(getattr(s, "context", None), "span_id", None) for s in spans} - {None}
+    return [s for s in spans if s.parent is None or getattr(s.parent, "span_id", None) not in ids]
+
+
+def _note(active: Run, field: str, text: str) -> None:
+    """Something the record is missing that does not make it say the opposite of what happened.
+    Kept on the run (and printed by the demo); it does not turn the light on."""
+    active.notes.append({"field": field, "note": text})
+
+
 def _compare(active: Run) -> None:
-    llm = _llm_spans(active.spans)
+    # Witness's own TRACE DISAGREE steps end inside the run; they are not part of what is compared.
+    spans = [s for s in active.spans if getattr(s, "name", "") != "TRACE DISAGREE"]
+    llm = _llm_spans(spans)
     for index, call in enumerate(active.calls):
         if index >= len(llm):
-            _mark("span", "missing", "provider call completed")
+            _mark("span", "missing", "provider call completed", active=active)
             continue
         truth, record = _truth(call), _record(llm[index])
         if truth["error"] != record["error"]:
             finding = "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event" if "messages" in call.route else None
-            _mark("call_status", "ERROR" if record["error"] else "OK", "ERROR" if truth["error"] else "OK", finding)
+            shown = llm[index].status.status_code.name
+            _mark("call_status", shown, "ERROR" if truth["error"] else "OK", finding, active=active)
+        elif truth["error"] and not record["details"]:
+            _note(active, "call_status", "the step is marked ERROR but carries no error details (exception event)")
         for field in ("refusal", "tools"):
             if truth[field] and truth[field] != record[field]:
-                _mark(field, record[field] or "missing", truth[field])
+                _mark(field, record[field] or "missing", truth[field], active=active)
     if active.app_exception:
-        roots = [s for s in active.spans if s.parent is None]
+        # A run that is a single model call is already covered by call_status above.
+        roots = [s for s in _top(spans) if _attrs(s).get("neatlogs.span.kind") != "llm"]
         if roots and all(s.status.status_code.name != "ERROR" for s in roots):
             _mark("run_status", "/".join(s.status.status_code.name for s in roots), f"ERROR ({active.app_exception})",
-                  "neatlogs-run_status-openai-agents-top-level-span-status-ok")
+                  "neatlogs-run_status-openai-agents-top-level-span-status-ok", active=active)
 
 
 @contextlib.contextmanager
