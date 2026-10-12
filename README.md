@@ -1,219 +1,25 @@
-Trueup finds where your AI agent's traces disagree with what really happened, fixes the tracing code, and proves the fix.
+# Trueup Witness
 
-Demo video (coming 12 Oct) · [Evidence page](docs/index.html) · [Verify it yourself](#run-it) · [Technical report](hackathon.md)
+**Your dashboard said OK. Your agent crashed. Trueup turns on the DISAGREE light.**
 
-[![CI](https://github.com/Jennycruzy/trueup/actions/workflows/ci.yml/badge.svg)](https://github.com/Jennycruzy/trueup/actions/workflows/ci.yml)
+Aircraft use two readings and warn pilots when they disagree. AI teams usually trust one instrument: the tracing record. Witness independently watches provider traffic and compares what happened with what neatlogs recorded.
 
-The [neatHack business plan](docs/business-plan.md) documents the free-to-paid product strategy, target customer,
-risks, measured model costs, and validation milestones. Its [cfo.ai workspace](https://cfo.ai/s/a9JKll8UYmSHs7-F)
-keeps illustrative prices and forecasts separate from launch-stage facts.
-
-## What it does
-
-Teams watch their AI agents through tracing libraries such as neatlogs, OpenInference and OpenLLMetry. These libraries wrap the AI provider's SDK and record each call. When a wrapper gets a case wrong, the dashboard can show a crashed run as OK, miss a refusal, or show twice the real cost.
-
-Trueup runs the agent against a fake provider, so it knows what really happened. It captures what the trace says and compares the two. When they disagree, it looks for the cause in the tracing library, writes a fix with a test, and checks that the fix works.
-
-The work is split into small workers: planner, runner, comparer, checker, deduper, fixer, verifier and reporter. A language model proposes; plain code decides.
-
-## Verified result
-
-`trueup verify` currently recomputes this headline from the committed evidence:
-
-| Library | Confirmed findings | High | Medium |
-|---|---:|---:|---:|
-| neatlogs | 17 | 6 | 11 |
-| OpenInference | 6 | 3 | 3 |
-| OpenLLMetry | 9 | 6 | 3 |
-| **Total** | **32** | **15** | **17** |
-
-Five patches are proven against their target cases, package suites, and the full 57-scenario library, with zero
-new mismatches. Five findings match an existing upstream issue or pull request. A “finding” here means every
-checker rule passed; leads that failed or could not complete a rule remain visible separately.
-
-### Trueup's own mistakes, and the fix for each
-
-| Mistake | What changed |
-|---|---|
-| 27 adapter failures were presented as library leads | The runner now verifies the framework import and active instrumentor before accepting a scenario; the withdrawn leads remain counted in the [build record](hackathon.md#2026-10-11-neatlogs-evidence-and-the-last-harness-fix). |
-| A narrow deduper missed differently worded neatlogs #179 | Searches now include symptom variants, SDK methods, wrapper functions and filenames, and GraphQL lists every open PR touching the candidate patch file; see the [failure account](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
-| An incompatible old dependency was called a regression | Historical checks now install matching dependency versions before comparing behaviour; the corrected conclusion is in the [upstream record](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
-| Two generated tests passed without the fix | Every test function is classified from the before run: at least one must fail, and any that pass are explicitly reported as guards that do not demonstrate the bug; see the [test investigation](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
-| A failed rerun overwrote an already proven fix | A rerun against proven artifacts works in its run directory; on failure it adds only `runs/<run-id>.json` beneath the fix, covered by a byte-for-byte regression test and documented in the [failed run account](hackathon.md#2026-10-11-first-fixes-sent-upstream). |
-
-### One finding, start to finish
-
-An OpenAI Agents run raised an error, but OpenInference ended its top-level `Agent workflow` span as OK. Trueup
-reproduced that disagreement twice, checked the latest release and main branch, verified the fake and harness,
-compared the OpenTelemetry rule, and ran a 30-line repro. The first drafted patch incorrectly turned a recovered
-tool error into a failed run; the full scenario sweep rejected it. The second draft passed: 5 affected scenarios
-changed from OK to ERROR, the package suite went from 295 to 298 passing tests, and the full-library lead count
-fell from 19 to 14 with no new mismatch. See the [before/after proof](fixes/openinference-run_status-openai-agents-top-level-span-status-ok/before-after.md)
-and [failed-then-passed Neatlogs traces](docs/neatlogs.md).
-
-### Proven repair cards
-
-| Finding | Before → after | Proof |
-|---|---|---|
-| OpenInference failed agent root shown OK | 5 affected scenarios corrected | [proof](fixes/openinference-run_status-openai-agents-top-level-span-status-ok/summary.md) |
-| OpenLLMetry duplicate Agents LLM spans | `ag-run` 4 → 2 spans for 2 calls | [proof](fixes/openllmetry-call_count-openai-agents-llm-spans-wrong/summary.md) |
-| neatlogs failed `messages.stream()` shown OK | 2 affected scenarios corrected | [proof](fixes/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/summary.md) |
-| neatlogs OpenAI refusal output missing | output `None` → refusal text | [proof](fixes/neatlogs-output-openai-chat-create-output-text-missing/summary.md) |
-| neatlogs Responses error event shown OK | OK with 0 exception events → ERROR with 1 | [proof](fixes/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/summary.md) |
-
-### Guarantees and boundaries
-
-| Guarantee | Implementation | Test or evidence |
-|---|---|---|
-| Model output cannot confirm a finding | `src/trueup/core/checker.py` | `tests/test_checker.py` |
-| A patch must fail before and pass after | `src/trueup/fixer/verify.py` | `tests/test_fixer.py`; each `proof.json` |
-| Full-library regressions reject a patch | `src/trueup/fix.py` | all 5 fixed findings report 0 new mismatches |
-| Evidence numbers and bytes are reproducible | `src/trueup/evidence.py` | `uv run trueup verify` |
-| Scenario children cannot export user traces | `src/trueup/runner/run.py` | `test_inner_spans_never_leave_the_machine` |
-
-Real: controlled fake-provider truth, 32 checked findings, 5 locally proven patches, read-back Neatlogs evidence,
-two upstream issues with fix PRs, two additional Neatlogs drafts, and one confirmation of an existing fix. Partial: provider recording supports opted-in OpenAI/Anthropic calls, but no real provider
-key was supplied for the final cross-check. Not claimed: universal agent correctness, safe automatic merging,
-upstream acceptance, customer traction, or public deployment of the report/video.
-
-Entire checkpoint explanations for the six build stages are saved in
-[`evidence/entire/checkpoints.json`](evidence/entire/checkpoints.json). Per-fix graph evidence is beside each fixed
-finding. Across the three proven patches, the graph ranked a patched function first in 0 of 3 cases; it ranked an
-OpenInference patched function second, found an OpenLLMetry patched function sixth, and missed the neatlogs wrapper.
-
-### Upstream status
-
-Posted 11 Oct 2026, after re-running each repro on the latest release, on `main` and on every open PR that touches
-the patched files:
-
-| Finding | Issue | PR | Status |
-|---|---|---|---|
-| OpenInference: a failed agent run is exported with an OK root span | [Arize-ai/openinference#4023](https://github.com/Arize-ai/openinference/issues/4023) | [#4024](https://github.com/Arize-ai/openinference/pull/4024) | open, waiting for maintainer review |
-| OpenLLMetry: every Agents SDK model call is recorded as two LLM spans | [traceloop/openllmetry#4609](https://github.com/traceloop/openllmetry/issues/4609) | [#4610](https://github.com/traceloop/openllmetry/pull/4610) | open, waiting for maintainer review |
-| neatlogs: a failed `messages.stream()` is recorded as OK | already reported by the neatlogs team, [#179](https://github.com/neatlogs/neatlogs/issues/179) | their fix [#180](https://github.com/neatlogs/neatlogs/pull/180); [our check that it fixes our case](https://github.com/neatlogs/neatlogs/pull/180#issuecomment-6113318503) | no duplicate filed |
-| neatlogs: OpenAI refusal text is missing | [draft](upstream/neatlogs-output-openai-chat-create-output-text-missing/issue.md) | [draft](upstream/neatlogs-output-openai-chat-create-output-text-missing/pr.md) | proven locally; awaiting owner approval |
-| neatlogs: Responses error event leaves status unset | [draft](upstream/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/issue.md) | [draft](upstream/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/pr.md) | proven locally; awaiting owner approval |
-
-## Status: working vertical slice
-
-`trueup doctor`, `trueup demo`, `trueup bundle`, `trueup verify`, `trueup report`, `trueup evidence pull`,
-`trueup traces <session-id>`, `trueup sweep <neatlogs|openinference|openllmetry>`,
-`trueup audit <script> --library <lib>`, `trueup check <run_id|latest> --library <lib>`,
-`trueup plan <lib> [--max N]`, `trueup fix <finding-id>` and `trueup upstream <finding-id>` work.
-
-The judge-facing proof is available in the [static evidence report](docs/index.html). `trueup demo` replays one complete verified finding locally; it needs no API keys, network access or model call. `trueup verify` recomputes the report's numbers and checks every evidence hash.
-
-`bundle` writes `evidence/` from the local runs, fixes and upstream drafts. `verify` needs only `evidence/`: no keys, no network; it fails if any byte changed. `report` builds `docs/index.html` from a bundle that verifies. `traces <session-id>` reads a run's own traces back from neatlogs through its MCP server. `fix <id> --reprove` re-applies a committed patch and sweeps every scenario again (no model call). `plan` and `fix` take `--variant v1|v2`; the comparison is in `hackathon.md`.
-
-In CI: `uses: Jennycruzy/trueup@main` with `script` and `library` inputs runs `trueup audit` (see `action.yml`). As an Entire plugin: `entire-trueup` is installed with the package, so `entire trueup verify` works when it is on PATH.
-
-`sweep` runs the scenarios (plain SDK, LangChain/LangGraph and the OpenAI Agents SDK; pick with `--framework`) against a fake provider, compares truth with the trace, prints a table of leads and writes truth, trace and `leads.json` to `.trueup/runs/<run_id>/`. A lead is a disagreement between truth and trace; it is not a confirmed bug.
-
-`audit` runs your script's `main()` against the fake (through `OPENAI_BASE_URL` / `ANTHROPIC_BASE_URL`) under the chosen library, once per fake scenario on each provider route the script calls, and compares the same way. It needs a `main()` with no arguments that uses the `openai` or `anthropic` SDK; see `src/trueup/audit.py` for its limits.
-
-`check` runs the checker over a sweep's leads. A lead becomes a finding only if it reproduces twice in fresh processes, on the recommended setup, on the latest release and on the library's main branch, the fake really sent what truth says, the harness is sane, another library or the OpenTelemetry conventions show the right behaviour, and a repro under 40 lines shows it. Otherwise it is withdrawn with the rule that failed (kept and counted). Findings that share a cause are grouped, then searched for in the library's GitHub issues and PRs (read only). It writes `findings.json` and `withdrawn.json` in the run dir.
-
-`plan` asks a model (`claude-sonnet-4.6` through an OpenAI-compatible proxy) for new scenarios, given the library's wrapper source, the scenario library and the latest findings. A proposal is JSON data: an existing app plus an existing fake behaviour, with the truth it expects. Code checks the schema, that the app and fake behaviour exist and fit, that the pair is new, and runs the app untraced to confirm the truth. A rejected proposal goes back to the model with the reason, twice at most. Accepted ones are saved to `scenarios/proposed/<lib>/`; `trueup sweep <lib> --proposed [FROM]` runs them. Before every model call Trueup reads the key's spend from the proxy and stops at $15. It needs `TRUEUP_MODEL_KEY` and `TRUEUP_MODEL_BASE_URL`.
-
-`fix` works on one finding. It shallow-clones the library into `.trueup/clones/<lib>` and finds the wrapper and its callers (Entire's code graph first: `entire graph search`, `neighbors` and `impact`; exact seed symbols are always merged so an off-target graph result cannot hide the named wrapper; `locate.json` records both sources). The model drafts the smallest change and a unit test in the package's own style; code applies it to the clone. A try is kept only if the new test fails before and passes after, the package's own test suite shows no new failure, the finding's scenarios now match truth, and the full scenario library (run in `.trueup/venvs/<lib>-fix` with the patched package) has no new mismatch. A failed try goes back to the model with the reason, 3 tries at most; then the finding stays unfixed and says so. It writes `fixes/<finding-id>/`: `patch.diff`, the test file, `before-after.md`, `suites.json`, `locate.json`, `tries.json`, `summary.md`, and every run's tries in `runs/`. Exit 0 fixed, 1 not fixed, 2 could not run. Fixes exist for five findings; see `fixes/`.
-
-`upstream` drafts `issue.md` and `pr.md` into `upstream/<finding-id>/`, following the library's issue and PR templates. The text says what goes wrong, which cases are affected and which are not, the before/after table and the environment. It includes a repro under 40 lines that needs only the library and the provider SDK. The repro is run on the latest release and on the patched clone, and both outputs go into the text. Nothing is posted by Trueup; a person posts after re-checking.
-
-Commands trace Trueup itself to neatlogs when `NEATLOGS_API_KEY` is set: one session per run (session id = run id),
-one trace per worker, with workflow, library, command, run, and v1/v2 tags. Trueup flushes and shuts down the SDK
-before exit. `trueup evidence pull` reads detections, trends, analytics, and fix suggestions through Neatlogs MCP.
-`audit --neatlogs` adds one `Trueup mismatch` child span per mismatch and enables the SDK's PII redaction.
-
-Scenario subprocesses send nothing to Neatlogs by default. The sole exception is the explicit `demo-export` command:
-it uses only the local fake provider, counts spans locally before export, enforces a 30-span ceiling, tags traces `demo`, and refuses to
-run without `--yes-export-fake-traces`.
-
-### Spot bad traces in your Neatlogs project today
-
-`trueup detections install` previews and idempotently installs three single-span rules in `Trace truth (by Trueup)`:
-missing model output, zero recorded tokens, and an OK LLM span with no output. `trueup detections list` shows only
-this pack. Trace-level rules for a successful root with an errored child and duplicate LLM calls are in
-[`detections/`](detections/); the owner paste steps are in [`docs/owner-actions.md`](docs/owner-actions.md).
-
-To create safe demo traffic, run `trueup demo-export <library> --yes-export-fake-traces`. It executes three affected
-scenarios against the fake provider in an isolated `demo-<library>-<time>` session as user `jenny-builds`. See the
-[signature map and trace IDs](docs/detections.md).
-
-Screenshot placeholder: detection list and one detection hit on a `demo-*` trace (owner fills).
-
-Planner and fixer system prompts are managed in Neatlogs under versioned names with label `production`.
-Exact offline copies and hashes live in [`prompts/`](prompts/), so the judge path needs no Neatlogs account.
-
-`doctor` also makes one GET each to neatlogs and the model proxy (no model call).
-
-### Neatlogs features used and not used
-
-Used: Python SDK traces, worker attributes, v1/v2 tags, detections, failure-run evidence, managed prompts, MCP
-trace/detection/analytics/fix reads, and opt-in PII-redacted audit mismatch spans. The machine-readable pull is in
-`evidence/neatlogs/` after `trueup bundle`; the [failure links and exact dashboard hand-back](docs/neatlogs.md)
-are kept together.
-
-Dashboard hand-back: the owner still needs to create the AI evaluation and alert, add comments, and capture the
-workflow/tag/prompt-history screenshots. The evaluation question is: “Is every confirmed finding backed by all
-seven passing checker rules and a runnable reproduction?” Score 1 only when both are present; otherwise 0. It is
-advisory and never changes Trueup's code verdict. Alert on `Trueup: lead withdrawn (own false alarm)` with one hit
-in 15 minutes. A service-account Public API credential was not supplied; the ingest key correctly returned 401,
-so read evidence uses MCP instead.
-
-Not used, with reason:
-
-- TypeScript, Go, and browser SDKs: Trueup's command line and test harness are Python.
-- HTTP injection: the supported SDK exporter owns normal delivery. The opt-in OpenLLMetry demo fans its existing
-  OTel spans to Neatlogs over OTLP because Neatlogs correctly refuses to attach to OpenLLMetry's global provider.
-- Imported traces: Trueup compares traces captured during its own controlled runs.
-- End-user identity and secondary clients: Trueup has build runs, not product end users.
-- Fix dispatch: patches remain reviewable local drafts; no Cursor or cloud agent is authorized to apply them.
-- Distributed scenario tracing: disabled for privacy and span allowance as described above.
-- Neatlogs plugin: not installed because it records broadly without Trueup's child-process redaction boundary on a
-  shared machine.
-- neatroots: used only as visual evidence of the original crashed-run-shown-OK problem, not as a runtime dependency.
-- Crustdata: Trueup checks tracing code; it needs no company or people data.
-
-Exit codes: 0 no leads, 1 leads found, 2 could not run.
-
-## Run it
-
-Needs Python 3.12 and [uv](https://docs.astral.sh/uv/).
-
-```sh
-uv sync
-uv run trueup doctor
-uv run trueup demo             # offline before/after proof for the featured fix
-uv run trueup verify           # recompute and validate the committed evidence
-uv run trueup report           # rebuild docs/index.html
-uv run trueup evidence pull    # authenticated, read-only Neatlogs evidence
-uv run trueup detections install
-uv run trueup detections list
-uv run trueup demo-export neatlogs --yes-export-fake-traces
-uv run pytest -q               # offline unit tests
-uv run trueup sweep openllmetry --case ag-run   # the double-span case
-uv run pytest -q -m e2e  # builds per-library venvs, runs subprocesses
-uv run trueup sweep neatlogs
-uv run trueup sweep openllmetry --framework openai-agents
-uv run trueup audit examples/agent.py --library openinference
-uv run trueup audit examples/agent.py --library openinference --neatlogs
-uv run trueup check latest --library neatlogs
-uv run trueup plan openllmetry --max 3
-uv run trueup sweep openllmetry --proposed
-uv run trueup fix openllmetry-call_count-openai-agents-llm-spans-wrong
-uv run trueup upstream openllmetry-call_count-openai-agents-llm-spans-wrong
+```python
+import trueup.witness
+trueup.witness.watch()
 ```
 
-`audit --cases mine` loads `.trueup/cases/*.json`. Each reviewed data file has exactly an `id`, a provider
-`route` (`/v1/chat/completions`, `/v1/responses`, or `/v1/messages`), and a `scenario` supported by that route.
-It combines existing fake wire behaviors with the user's agent; custom executable code is never loaded.
+When the record is wrong, Witness adds a `TRACE DISAGREE` step to the same neatlogs trace. It records status, exceptions, stream completion, refusals, tool names and usage. It never sends prompt or reply text beyond what neatlogs already records, never raises into the application, and can be disabled with `TRUEUP_WITNESS=0`.
 
-## Building in public
+## Live result
 
-Posts on X during the event (#neatHack):
+| Real break | neatlogs before | After Trueup's proposed patches | Really |
+|---|---|---|---|
+| Anthropic stream cable cut | OK, no exception | ERROR, no exception | Crashed |
+| OpenAI Agents server rejection | Workflow OK | Workflow OK | Crashed |
 
-- 11 Oct: Trueup flags its own mistakes in neatlogs: https://x.com/jennyoliver57/status/2109360422029594753
+The light remained **2 → 2**. That negative result matters: the existing patches did not fully repair these production cases. Across 20 normal real calls, Witness raised **0** disagreements. The gate traffic cost **$0.00626780**.
 
-## License
+[Live traces and method](docs/witness-before-after.md) · [Evidence page](docs/index.html) · [Build record](hackathon.md) · [cfo.ai plan](https://cfo.ai/s/a9JKll8UYmSHs7-F)
 
-MIT. See [LICENSE](LICENSE).
+The offline lab separately contains 32 confirmed findings and five locally proven patches across neatlogs, OpenInference and OpenLLMetry. Proposed patches are not upstream fixes until merged.

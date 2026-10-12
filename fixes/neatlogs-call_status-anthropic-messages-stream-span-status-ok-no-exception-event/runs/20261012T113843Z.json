@@ -1,11 +1,11 @@
 {
   "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
   "requested_tries": 1,
-  "outcome": "could_not_run",
-  "stage": "baseline",
-  "model_calls": 0,
+  "outcome": "rejected_artifact",
+  "stage": "artifact_check",
+  "model_calls": 1,
   "spend_before_usd": 9.5445207,
-  "spend_after_usd": 9.5445207,
+  "spend_after_usd": 9.8527836,
   "patch_created": false,
-  "note": "The process stopped during baseline preparation after locate.json and spend.json were written. It produced no model response or candidate patch. A second resume reached the same point."
+  "note": "The verifier reported a passing candidate, but overlapping resume processes left patch.diff empty. Because the proposed change cannot be applied, it is rejected and no fixed claim is made."
 }

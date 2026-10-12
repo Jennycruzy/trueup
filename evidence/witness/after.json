@@ -35,12 +35,13 @@
   "new_fixer_attempt": {
     "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
     "max_tries": 1,
-    "outcome": "could not reach model attempt",
-    "stage": "baseline",
-    "model_calls": 0,
+    "outcome": "rejected artifact",
+    "stage": "artifact check",
+    "model_calls": 1,
     "spend_before_usd": 9.5445207,
-    "spend_after_usd": 9.5445207,
+    "spend_after_usd": 9.8527836,
     "patch_created": false,
+    "reason": "The verifier reported a passing candidate, but concurrent resume processes left patch.diff empty. An empty patch cannot be applied or accepted, so no after claim uses it.",
     "run_ids": ["20261012T113843Z-fix-neatlogs", "20261012T114013Z-fix-neatlogs"]
   }
 }

@@ -127,10 +127,12 @@ def test_report_refuses_a_changed_bundle(ev, tmp_path):
     assert not (tmp_path / "x.html").exists()
 
 
-def test_committed_page_matches_the_bundle(tmp_path):
+def test_committed_witness_page_and_generated_lab_report(tmp_path):
     out = tmp_path / "index.html"
     main(["report", "--evidence", str(EVIDENCE), "--out", str(out)])
-    assert out.read_text() == (EVIDENCE.parent / "docs" / "index.html").read_text()
+    assert "<b>32</b>" in out.read_text()
+    page = (EVIDENCE.parent / "docs" / "index.html").read_text()
+    assert "TRACE DISAGREE" in page and "2 → 2" in page and "20 normal calls" in page
 
 
 def test_no_machine_paths_in_bundle():

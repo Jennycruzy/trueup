@@ -14,4 +14,5 @@ def test_witness_evidence_is_honest_about_failed_after_run():
     after = json.loads(Path("evidence/witness/after.json").read_text())
     assert before["normal_calls"]["disagreements"] == 0
     assert after["targeted_before_marks"] == after["targeted_after_marks"] == 2
-    assert after["new_fixer_attempt"]["model_calls"] == 0
+    assert after["new_fixer_attempt"]["model_calls"] == 1
+    assert after["new_fixer_attempt"]["patch_created"] is False
