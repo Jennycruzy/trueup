@@ -13,6 +13,7 @@
 
 ## For judges, start here
 
+- **[Demo video and submission post](https://x.com/jennyoliver57/status/2109706895699157023)**: the 2:41 walkthrough.
 - **[Live demo](https://trueup.38-49-216-59.sslip.io/demo)**: break a real AI bot yourself.
 - **[Product site](https://trueup.38-49-216-59.sslip.io)**: what Trueup is, in one page.
 - **neatlogs records, [before](https://app.neatlogs.com/traces/5322259c536eae9651b3f0819bfade85) and [after](https://app.neatlogs.com/traces/7304699be40a6194bafc2a45478bcd4f) the fix**: also shown step by step on the demo page.
