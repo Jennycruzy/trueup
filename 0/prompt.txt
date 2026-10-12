@@ -1,0 +1,30 @@
+You are working in the Trueup repository (this folder). Run every command in the foreground. Do not commit, push or post anything. Never print or write any key; keys are only in the environment. Do not mention any other project. Use plain words in anything a person reads.
+
+Two jobs.
+
+## Job 1: tests for the live demo server (live/server.py)
+
+The live demo at live/server.py runs examples/shop_agent.py when a visitor presses one of three buttons. Write tests/test_live_server.py that exercise its safety rules WITHOUT making real calls or starting the real subprocess:
+
+- Only the three breaks (normal, cut, agent) and the two modes (released, fixed) are accepted; anything else gets 400. The body is capped (Content-Length is limited when read).
+- A second request from the same visitor inside the cool-down gets 429.
+- While a run is in progress (_run_lock held), a new run gets 429.
+- When today's count reaches the daily cap, a run gets 429, and _count refuses to count past the cap.
+- The state file counts runs and "light on" per mode:break, and a new day starts at zero.
+- /api/job/<id> never returns the visitor's IP.
+- /download/<name>.png sends Content-Disposition: attachment, and a path outside docs/x is not served (try ../ tricks).
+
+Start the server's Handler on a ThreadingHTTPServer on 127.0.0.1 port 0 inside the test, point LIVE_STATE at a tmp file (set the module's STATE_FILE), and monkeypatch threading/subprocess so no real run happens. Import the module from live/server.py by path (it is not a package). If a rule above turns out NOT to hold in the code, fix the code minimally and say so. Keep the server behaviour otherwise unchanged. Run `uv run pytest -q` until it is fully green.
+
+## Job 2: cfo.ai inputs from today's measured costs
+
+Update docs/cfo-inputs.md so every number traces to a file in the repo:
+
+- Live real-traffic cost: evidence/witness/before.json `gate_spend_usd` for 40 normal calls + 4 breaks (state the call count).
+- Model cost per fix, per planner run: from hackathon.md / evidence (cite the file and the line or key).
+- Live demo cost per visitor run: estimate from the above (label it ESTIMATE and show the arithmetic), and the daily cap of 300 runs in live/server.py.
+- Witness overhead per call: evidence/witness/before.json wrapper_overhead_microseconds.
+- Proposed prices clearly labelled PROPOSAL: free for small teams; a team plan priced per traced run volume; a vendor plan for tracing companies (the lab re-run on every SDK release, with fixes).
+- The questions for cfo.ai's assistant (Ari): runway at 3 price levels, break-even customers, and how cost per audit changes with volume.
+
+Keep it under 400 words, plain words. When both jobs are done, print a short summary: files changed, tests passing, any code fix you made in live/server.py.
