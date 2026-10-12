@@ -108,6 +108,30 @@ def _patch_http(module: Any) -> None:
         return
     sync_original, async_original = module.Client.send, module.AsyncClient.send
 
+    class SyncStream(module.SyncByteStream):
+        def __init__(self, inner: Any, call: Call) -> None:
+            self.inner, self.call = inner, call
+        def __iter__(self):
+            try:
+                for chunk in self.inner:
+                    _observe(chunk, self.call); yield chunk
+            except Exception as error:
+                self.call.exception = type(error).__name__; self.call.stream_done = False; raise
+        def close(self) -> Any:
+            return self.inner.close()
+
+    class AsyncStream(module.AsyncByteStream):
+        def __init__(self, inner: Any, call: Call) -> None:
+            self.inner, self.call = inner, call
+        async def __aiter__(self):
+            try:
+                async for chunk in self.inner:
+                    _observe(chunk, self.call); yield chunk
+            except Exception as error:
+                self.call.exception = type(error).__name__; self.call.stream_done = False; raise
+        async def aclose(self) -> Any:
+            return await self.inner.aclose()
+
     def send(client: Any, request: Any, *args: Any, **kwargs: Any):
         active = _current.get()
         if active is None or not _provider_path(request.url):
@@ -118,7 +142,7 @@ def _patch_http(module: Any) -> None:
         try:
             response = sync_original(client, request, *args, **kwargs)
             call.status = response.status_code
-            response.stream = _SyncStream(response.stream, call)
+            response.stream = SyncStream(response.stream, call)
             return response
         except Exception as error:
             call.exception = type(error).__name__
@@ -136,7 +160,7 @@ def _patch_http(module: Any) -> None:
         try:
             response = await async_original(client, request, *args, **kwargs)
             call.status = response.status_code
-            response.stream = _AsyncStream(response.stream, call)
+            response.stream = AsyncStream(response.stream, call)
             return response
         except Exception as error:
             call.exception = type(error).__name__

@@ -1,0 +1,46 @@
+{
+  "schema": 1,
+  "tested_at": "2026-10-12T11:43:19Z",
+  "patches_applied_together": [
+    "neatlogs-output-openai-chat-create-output-text-missing",
+    "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok",
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset"
+  ],
+  "result": "disagreements remain",
+  "breaks": [
+    {
+      "kind": "anthropic stream cable cut",
+      "record_before": "LLM span OK; no exception event",
+      "record_after_proposed_patch": "LLM span ERROR; no exception event",
+      "really": "stream cut",
+      "disagree_marks_after": 1,
+      "reason": "The proven patch corrects status but does not add the required exception event.",
+      "session_id": "witness-after-anthropic-20261012-v2",
+      "trace_url": "https://app.neatlogs.com/traces/845e5c3c3e9fa2cca12b25e7e524be9a"
+    },
+    {
+      "kind": "openai-agents server rejection",
+      "record_before": "Agent workflow OK",
+      "record_after_proposed_patch": "Agent workflow OK",
+      "really": "run failed",
+      "disagree_marks_after": 1,
+      "reason": "None of the three proven neatlogs patches targets OpenAI Agents workflow status.",
+      "session_id": "witness-after-agent-20261012",
+      "trace_url": "https://app.neatlogs.com/traces/ae9a41d4476106029c272bfd507d4dab"
+    }
+  ],
+  "targeted_before_marks": 2,
+  "targeted_after_marks": 2,
+  "detection_total_after_all_gate_and_rerun_traffic": 8,
+  "new_fixer_attempt": {
+    "finding": "neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event",
+    "max_tries": 1,
+    "outcome": "could not reach model attempt",
+    "stage": "baseline",
+    "model_calls": 0,
+    "spend_before_usd": 9.5445207,
+    "spend_after_usd": 9.5445207,
+    "patch_created": false,
+    "run_ids": ["20261012T113843Z-fix-neatlogs", "20261012T114013Z-fix-neatlogs"]
+  }
+}
