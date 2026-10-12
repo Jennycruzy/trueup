@@ -1,0 +1,42 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4RC9QCY1VBJCSKT1CEDDRGB",
+  "session_id": "3550cecb-6ee1-4b3a-87f6-462ddab55169",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-12T15:39:31.458693852Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/built-with.md",
+    "docs/business-plan.md",
+    "docs/cfo-inputs.md",
+    "evidence/business-plan.md",
+    "evidence/manifest.json",
+    "live/static/built-with.html"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "682fe7013c32",
+  "checkpoint_transcript_start": 74,
+  "transcript_lines_at_start": 74,
+  "compact_transcript_start": 11,
+  "token_usage": {
+    "input_tokens": 0,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 0,
+    "output_tokens": 0,
+    "api_call_count": 0
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-12T15:39:31.43755996Z",
+    "agent_lines": 51,
+    "agent_removed": 7,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 51,
+    "total_lines_changed": 58,
+    "agent_percentage": 100,
+    "metric_version": 2
+  }
+}
