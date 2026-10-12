@@ -502,3 +502,15 @@ A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194
   #207 (owner approved). On neatlogs main, the full unit suite passes as their CI installs it (536 passed, 4 skipped;
   the new tests skip without `openai-agents`). With openai-agents 0.23.1, the 6 new tests fail 2 without the fix
   and all pass with it. black and isort are clean.
+
+## What Entire recorded, and what it did not (12 Oct, OBSERVED)
+
+Entire recorded the build of Trueup's core: 10 commits from `dadba2f` (skeleton, 10 Oct) to `88fcc91` (evidence
+bundle and report, 11 Oct), each with an `Entire-Checkpoint` trailer. That covers the test lab, comparer, checker,
+planner, the fixer that wrote and proved the first patches, and the Entire graph step that located them.
+
+The 20 commits from `56d705d` (11 Oct 18:50) to `6ea4eee` (12 Oct) have **no Entire record**. That work (neatlogs
+detections, the upstream PRs, Witness, the light going out, the live app) was done in sessions started outside
+this folder, so Entire's hooks never ran. We noticed on 12 Oct and did not
+create records afterwards: a record made later would not show how the work was really done. From 12 Oct ~14:35 UTC
+all work runs again in sessions started in this folder, so Entire records it.

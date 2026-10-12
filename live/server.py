@@ -199,10 +199,12 @@ class Handler(BaseHTTPRequestHandler):
         if self.path != "/api/run":
             return self._json(404, {"error": "not found"})
         try:
-            body = json.loads(self.rfile.read(min(int(self.headers.get("Content-Length", "0")), 200)) or b"{}")
+            body = json.loads(self.rfile.read(max(0, min(int(self.headers.get("Content-Length", "0")), 200))) or b"{}")
         except ValueError:
             body = {}
-        brk, mode = body.get("break"), body.get("mode")
+        if not isinstance(body, dict):
+            body = {}
+        brk, mode = str(body.get("break")), str(body.get("mode"))
         if brk not in BREAKS or mode not in PYTHONS:
             return self._json(400, {"error": "Pick one of the three buttons."})
         ip = self._ip()
