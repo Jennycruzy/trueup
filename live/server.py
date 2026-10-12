@@ -207,6 +207,10 @@ class Handler(BaseHTTPRequestHandler):
             f = REPO / ".trueup" / "live" / "submission.html"
             if f.is_file():
                 return self._file(f, "text/html; charset=utf-8")
+        if path == "/download/trueup-demo.mp4":
+            f = REPO / ".trueup" / "live" / "trueup-demo.mp4"
+            if f.is_file():
+                return self._file(f, "video/mp4", download=True)
         if path == "/download/submission.txt":
             f = REPO / ".trueup" / "live" / "submission.txt"
             if f.is_file():
