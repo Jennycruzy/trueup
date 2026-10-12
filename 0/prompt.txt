@@ -1,0 +1,22 @@
+You are working in the Trueup repository (this folder). Foreground only. Do not commit, push or post. Edit README.md only. Finish within 8 minutes.
+
+Make README.md lead with what makes Trueup strong, and remove every internal word and bit of jargon.
+
+1. Right under `# Trueup Witness`, before the CI badge, put:
+   **Your dashboard said OK. Your agent crashed.** Then one sentence: Trueup Witness checks your AI agent's records against what really happened, warns you inside neatlogs when they disagree, and fixes the tracing code that got it wrong.
+   Then a short "Why it matters" list of 4 bullets, plain and punchy, facts only from the repo:
+   - Proven live with real Claude calls: 2 wrong records before Trueup's fixes, 0 after, and 0 false alarms in 40 normal calls.
+   - neatlogs' own daily email said 6.2% of our test runs failed; really 11.1% had crashed (test runs we crashed on purpose).
+   - The fix we sent Arize was reviewed by their head of open source, and neatlogs runs that same code for agents, so one fix repairs both.
+   - Built with all three tools: neatlogs recorded every run and caught our own agent's mistakes, Entire recorded how each fix was made, cfo.ai built the business plan from measured costs.
+   Keep the CI badge after this block.
+2. Keep the "For judges, start here" link list, but plain words: "Fixes sent upstream" -> "Fixes sent to the companies that make these tools"; "the fixer session" -> "the session where Trueup's agent wrote its first fixes"; "checkpoint" may stay (it is Entire's own word) but add nothing else technical.
+3. Quick start code: replace the comment "# one unit of work" with "# one job your agent does"; keep the code exactly working (check src/trueup/witness/core.py). Change the command block to:
+   ```
+   uv run entire trueup --help                               # Trueup as an Entire command
+   uv run trueup audit examples/agent.py --library neatlogs  # check your own script safely
+   ```
+   and say above it: "From the project folder:".
+4. How it works: replace "status, errors, stream end" with "did the call fail, did the reply finish". "Trueup's lab" -> "Trueup's test lab".
+5. Search the whole README for: span, upstream, stream, unit of work, payload, instrumentation, lead, scenario, harness, adapter, fixture, root, OTel, deterministic, evidence. Rewrite any you find in plain words (product names TRACE DISAGREE, "AI step", "Agent workflow" in the result table may stay: they are what neatlogs shows).
+Keep it under about 480 words. Run `uv run pytest -q`; fix only README wording if a test needs it. Print the word count, the test result, and any word from step 5 still present.
