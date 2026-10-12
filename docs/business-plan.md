@@ -71,6 +71,25 @@ These dates are scenario outputs, not predictions. The largest modeled cash risk
 proven. The operating rule is therefore to validate willingness to pay and cost per check before committing to a
 hire, and to revise the forecast with actual cash, spending, active-developer, conversion, and retention data.
 
+## cfo.ai results with measured costs (12 Oct 2026)
+
+cfo.ai's assistant, Ari, updated the plan with Trueup's measured costs ([shared plan](https://cfo.ai/s/kVKIburWzn09Baoy)).
+Its first answer counted our own 44 test calls as a cost per customer check; we corrected that, and Ari re-ran the
+plan:
+
+- **Per Witness check: $0.** Witness makes no AI calls; it watches the customer's own calls.
+- **Checking a tracing-library release:** $0 on the practice AI server, plus about $0.10 (planner) and about $0.52
+  per fix needed: $0.10 with no fix, $0.62 with one. At 10 releases a month with one fix each: $6.20 a month.
+- **Contribution per team** (price less 3% payment fees and $15 support): $178.03 at $199, $566.03 at $599.
+- **Break-even teams:** 38 at $199 and 12 at $599 before the planned engineer hire; 94 and 30 after it
+  ($16,608.73 a month fixed spending).
+- **Cash, from a hypothetical $150,000 start, October 2026 to September 2028:** at $99 the cash runs out in
+  January 2028; at $199 the lowest point is about $31,246 (February 2028); at $599 about $114,386 (July 2027).
+- **Ari's recommendation:** test $199 entry pricing and a $599 higher-touch plan with explicit repair allowances,
+  and sell continuous assurance, integrations and support rather than AI-call volume.
+
+The starting cash, adoption, hiring and support figures are planning assumptions, not facts about Trueup.
+
 ## Go-to-market
 
 Start with developers who have encountered a concrete trace mismatch. Demonstrate reproducible before/after

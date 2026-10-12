@@ -9,6 +9,10 @@ Every number below comes from a file in this repo.
 - **Model cost per fix run (MEASURED):** $5.73 over 11 fix runs, about $0.52 per run (`hackathon.md` line 204). Single runs ranged from $0.22 to $0.73 (lines 213–242). The run that produced the proven fix cost $0.40 (line 242).
 - **Witness overhead per call (MEASURED):** 2.9005 microseconds median, 4.809 microseconds maximum. Source: `evidence/witness/before.json` key `wrapper_overhead_microseconds`.
 
+## Correction (12 Oct)
+
+The 44 live calls are our own test spend, not a per-customer cost: Witness makes no AI calls, so a check costs $0. cfo.ai's corrected results are in [business-plan.md](business-plan.md#cfoai-results-with-measured-costs-12-oct-2026).
+
 ## Live demo cost
 
 - **Daily cap:** 300 runs a day (`live/server.py`, `DAILY_CAP`, default `LIVE_DAILY_CAP=300`).

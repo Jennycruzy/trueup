@@ -69,7 +69,9 @@ The business plan, with runway and break-even questions, is on cfo.ai:
 
 **Measured costs**
 
-- Live real calls: $0.0123794 for 44 calls (40 normal, 4 breaks).
+- Witness checks: $0 each. Witness makes no AI calls; it watches the calls your app already makes.
+- Our own live test calls: $0.0123794 for 44 calls (40 normal, 4 breaks). This was our test spend, not a customer cost.
+- Checking a new tracing-library release: $0 on the practice AI server, plus about $0.10 for the planner and about $0.52 per fix needed, so $0.10 with no fix and $0.62 with one.
 - Planner: $0.09 to $0.10 per run.
 - Fixer: $5.73 over 11 runs, about $0.52 per run; the run that produced the proven fix cost $0.40.
 - Witness's added time: 2.9005 microseconds per call at the median, 4.809 at most.
@@ -81,6 +83,6 @@ The business plan, with runway and break-even questions, is on cfo.ai:
 **Proposals (no customer has paid)**
 
 - Free: run Witness locally, with a small monthly allowance.
-- Team: priced by recorded runs per month, with history, alerts and CI reports.
+- Team: $199 a team per month, with history, alerts and CI reports. cfo.ai's forecast: 94 paying teams to break even after the planned engineer hire, 38 before. A higher-touch $599 plan needs 30 (12 before). The forecast starts from a hypothetical $150,000.
 - Vendor: for tracing companies. Trueup re-runs its lab on every release and delivers what it finds, with tested
   fixes.
