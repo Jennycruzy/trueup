@@ -34,3 +34,4 @@ It watches status, exceptions, stream completion, refusals, tools and usage. It 
 1. `1-arize-review.png`: Arize PR #4024 and the review by Arize's head of open source (GitHub screenshot, 12 Oct).
 2. `2-light-out.png`: before/after from the neatlogs records (real Claude Haiku calls through the event's model key).
 3. `3-neatlogs-pr.png`: neatlogs PR #207 (GitHub screenshot, 12 Oct).
+4. `4-neatlogs-email.png`: the daily email (6.2%) next to the real crash rate (11.1%).

@@ -167,10 +167,12 @@ class Handler(BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(data)
 
-    def _file(self, path: Path, ctype: str) -> None:
+    def _file(self, path: Path, ctype: str, download: bool = False) -> None:
         data = path.read_bytes()
         self.send_response(200)
         self.send_header("Content-Type", ctype)
+        if download:
+            self.send_header("Content-Disposition", f'attachment; filename="{path.name}"')
         self.send_header("Content-Length", str(len(data)))
         self.send_header("Cache-Control", "no-cache")
         self.end_headers()
@@ -187,10 +189,10 @@ class Handler(BaseHTTPRequestHandler):
             if not job:
                 return self._json(404, {"error": "unknown run"})
             return self._json(200, {k: v for k, v in job.items() if k != "ip"})
-        if path.startswith("/x/") and path.endswith(".png"):
+        if (path.startswith("/x/") or path.startswith("/download/")) and path.endswith(".png"):
             f = REPO / "docs" / "x" / Path(path).name
             if f.is_file():
-                return self._file(f, "image/png")
+                return self._file(f, "image/png", download=path.startswith("/download/"))
         self._json(404, {"error": "not found"})
 
     def do_POST(self) -> None:  # noqa: N802
