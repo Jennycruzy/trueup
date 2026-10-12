@@ -28,6 +28,7 @@ It watches status, exceptions, stream completion, refusals, tools and usage. It 
 ## Posted
 
 - Post 3 (owner): https://x.com/jennyoliver57/status/2109546774025113763
+- Thread, 4 posts (owner): https://x.com/jennyoliver57/status/2109652614459633672
 
 ## Thread images (docs/x/)
 

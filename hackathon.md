@@ -415,6 +415,7 @@ Everything above is left uncommitted for owner review. No public action was take
 - Not done from the finish list: a real fixer run that fails a try, to show the "fix attempt failed (retried)" detection firing.
 - X post, 11 Oct: https://x.com/jennyoliver57/status/2109360422029594753
 - X post 3, 12 Oct: https://x.com/jennyoliver57/status/2109546774025113763
+- X thread (Arize review, light out, neatlogs PR, email), 12 Oct: https://x.com/jennyoliver57/status/2109652614459633672
 
 ## 2026-10-12: more Neatlogs fixes, checked against every open wrapper PR
 
