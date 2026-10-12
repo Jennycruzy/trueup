@@ -414,6 +414,7 @@ Everything above is left uncommitted for owner review. No public action was take
 - The "neatlogs 35 → 31 leads" question is answered, and nothing changed in neatlogs (OBSERVED): 35 was counted over 57 scenarios (51 built-in + 6 planner proposals, the `fix --reprove` set); today's plain sweep runs the 51 built-in ones and shows 31. The 51-scenario sweep from 10 Oct showed 58 before the adapter fix removed 27 false leads: 58 − 27 = 31.
 - Not done from the finish list: a real fixer run that fails a try, to show the "fix attempt failed (retried)" detection firing.
 - X post, 11 Oct: https://x.com/jennyoliver57/status/2109360422029594753
+- X post 3, 12 Oct: https://x.com/jennyoliver57/status/2109546774025113763
 
 ## 2026-10-12: more Neatlogs fixes, checked against every open wrapper PR
 
