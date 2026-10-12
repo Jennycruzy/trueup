@@ -1,0 +1,190 @@
+<!doctype html>
+<html lang="en" class="no-js">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>How it works · Trueup</title>
+<meta name="description" content="How Trueup Witness checks your AI agent's records against what really happened, and how Trueup fixes the tracing code that got it wrong.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/site.css">
+</head>
+<body class="site">
+<!-- nav -->
+<nav class="nav" aria-label="Main">
+  <div class="nav-in">
+    <a class="logo" href="/"><i></i>Trueup</a>
+    <button class="nav-toggle" aria-expanded="false" aria-controls="nav-links">Menu</button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="/how-it-works" data-path="/how-it-works">How it works</a></li>
+      <li><a href="/demo" data-path="/demo">Live demo</a></li>
+      <li><a href="/fixes" data-path="/fixes">Fixes</a></li>
+      <li><a href="/built-with" data-path="/built-with">Built with</a></li>
+      <li><a href="https://github.com/Jennycruzy/trueup" target="_blank" rel="noopener">GitHub</a></li>
+    </ul>
+  </div>
+</nav>
+<!-- /nav -->
+
+<main>
+<section class="page-hero container">
+  <p class="eyebrow">How it works</p>
+  <h1 style="font-size:clamp(2.2rem,6vw,4.4rem)">Two readings.<br>One warning light.</h1>
+  <p class="sub intro">Witness watches what your agent really does, compares it with what neatlogs recorded, and warns you inside neatlogs when they disagree. Then Trueup's agent repairs the tracing code that wrote the wrong record.</p>
+</section>
+
+<section class="container reveal" style="padding-top:24px">
+  <div class="panel diagram">
+    <svg class="dg-wide" viewBox="0 0 960 440" role="img" aria-labelledby="dg1">
+      <title id="dg1">Your app talks to the AI provider. Witness reads the same connection. The tracing code in your app writes to neatlogs. Witness compares the two and adds a red TRACE DISAGREE step to the neatlogs record.</title>
+      <path class="dg-wire" d="M240 82 H720"/><path class="dg-flow" d="M240 82 H720"/>
+      <path class="dg-wire" d="M130 124 V300"/>
+      <path class="dg-wire" d="M480 82 V170"/><path class="dg-flow a" d="M480 82 V170"/>
+      <path class="dg-wire" d="M240 342 H720"/><path class="dg-flow v" d="M240 342 H720"/>
+      <path class="dg-wire" d="M590 212 C 660 212, 650 300, 720 300"/><path class="dg-flow a" d="M590 212 C 660 212, 650 300, 720 300"/>
+      <rect class="dg-box" x="20" y="40" width="220" height="84" rx="14"/><text class="dg-t" x="40" y="76">Your app</text><text class="dg-s" x="40" y="102">your AI agent</text>
+      <rect class="dg-box p" x="720" y="40" width="220" height="84" rx="14"/><text class="dg-t" x="740" y="76">AI provider</text><text class="dg-s" x="740" y="102">Claude, OpenAI</text>
+      <rect class="dg-box w" x="370" y="170" width="220" height="84" rx="14"/><text class="dg-t" x="390" y="206">Witness</text><text class="dg-s" x="390" y="232">reads the same connection</text>
+      <rect class="dg-box" x="20" y="300" width="220" height="84" rx="14"/><text class="dg-t" x="40" y="336">Tracing code</text><text class="dg-s" x="40" y="362">inside your app</text>
+      <rect class="dg-box n" x="720" y="270" width="220" height="150" rx="14"/><text class="dg-t" x="740" y="302">neatlogs record</text>
+      <text class="dg-s" x="740" y="338">AI call</text><text class="dg-s" x="922" y="338" text-anchor="end" style="fill:#2bf0a0">SUCCESS</text>
+      <rect class="dg-dis" x="736" y="358" width="188" height="44" rx="10"/><text class="dg-dis-t" x="830" y="385" text-anchor="middle">TRACE DISAGREE</text>
+      <text class="dg-s" x="480" y="70" text-anchor="middle">the real AI traffic</text>
+      <text class="dg-s" x="480" y="330" text-anchor="middle">what the tracing code writes down</text>
+      <text class="dg-s" x="640" y="196" style="fill:#ffb547">compares</text>
+    </svg>
+    <svg class="dg-mobile" viewBox="0 0 360 420" role="img" aria-labelledby="dg2">
+      <title id="dg2">Your app talks to the AI provider. Witness reads the same connection. The tracing code writes to neatlogs. Witness compares and adds a red DISAGREE step to the record.</title>
+      <path class="dg-wire" d="M160 52 H200"/><path class="dg-flow" d="M160 52 H200"/>
+      <path class="dg-wire" d="M180 52 V140"/><path class="dg-flow a" d="M180 52 V140"/>
+      <path class="dg-wire" d="M90 84 V250"/>
+      <path class="dg-wire" d="M160 282 H200"/><path class="dg-flow v" d="M160 282 H200"/>
+      <path class="dg-wire" d="M250 204 V250"/><path class="dg-flow a" d="M250 204 V250"/>
+      <rect class="dg-box" x="20" y="20" width="140" height="64" rx="12"/><text class="dg-t" x="34" y="50">Your app</text><text class="dg-s" x="34" y="70">your AI agent</text>
+      <rect class="dg-box p" x="200" y="20" width="140" height="64" rx="12"/><text class="dg-t" x="214" y="50">AI provider</text><text class="dg-s" x="214" y="70">Claude, OpenAI</text>
+      <rect class="dg-box w" x="110" y="140" width="160" height="64" rx="12"/><text class="dg-t" x="124" y="170">Witness</text><text class="dg-s" x="124" y="190">reads the connection</text>
+      <rect class="dg-box" x="20" y="250" width="140" height="64" rx="12"/><text class="dg-t" x="34" y="280">Tracing code</text><text class="dg-s" x="34" y="300">inside your app</text>
+      <rect class="dg-box n" x="200" y="250" width="140" height="150" rx="12"/><text class="dg-t" x="214" y="280">neatlogs</text>
+      <text class="dg-s" x="214" y="312">AI call</text><text class="dg-s" x="328" y="312" text-anchor="end" style="fill:#2bf0a0">SUCCESS</text>
+      <rect class="dg-dis" x="210" y="336" width="120" height="44" rx="10"/><text class="dg-dis-t" x="270" y="363" text-anchor="middle">DISAGREE</text>
+    </svg>
+  </div>
+</section>
+
+<section class="container section reveal">
+  <p class="eyebrow">Step by step</p>
+  <h2>From a wrong record to a fix upstream.</h2>
+  <div class="longsteps" style="margin-top:28px">
+    <div class="panel longstep"><div class="bubble">1</div><div>
+      <h3>Witness watches the real AI traffic</h3>
+      <p>Add two lines to your agent. Witness reads the calls your app makes to the AI provider and notes what really happened: did the call succeed, was the reply cut, did the app raise an error, how many AI calls were made, did a reply come back.</p>
+      <ul><li>It never changes what your app gets back. Measured cost: about <b>3 microseconds</b> per call.</li><li>It never sends prompt or reply text beyond what neatlogs already records.</li><li>Turn it off with <code>TRUEUP_WITNESS=0</code>.</li></ul>
+    </div></div>
+    <div class="panel longstep"><div class="bubble">2</div><div>
+      <h3>It compares that with the neatlogs record</h3>
+      <p>At the end of each run, Witness puts its own reading next to what the tracing code wrote: the status of each AI call, the status of the whole run, the reply, and the number of AI calls.</p>
+    </div></div>
+    <div class="panel longstep"><div class="bubble" style="color:var(--red)">3</div><div>
+      <h3>It lights DISAGREE inside neatlogs</h3>
+      <p>When the record says the opposite of what happened, Witness writes a red <b>TRACE DISAGREE</b> step into the same neatlogs record, right under the step that is wrong. A neatlogs detection, "TRACE DISAGREE light", picks it up, so it can drive a neatlogs alert.</p>
+      <ul><li>On real Claude and OpenAI Agents calls it lit up for both crashes Trueup tested, and went out after the fixes: <b>2 → 0</b>.</li><li>Across <b>40 normal real calls</b> it raised <b>0 false alarms</b>.</li></ul>
+    </div></div>
+    <div class="panel longstep"><div class="bubble" style="color:var(--green)">4</div><div>
+      <h3>Trueup's agent fixes the tracing code</h3>
+      <p>A warning tells you something is wrong. Trueup goes further: it finds the line in the tracing code that wrote the wrong record, writes a fix with tests, proves the fix in its lab, and sends it to the people who maintain that code. <a href="/fixes">See every fix →</a></p>
+    </div></div>
+  </div>
+</section>
+
+<section class="container section reveal">
+  <div class="grid2">
+    <div>
+      <p class="eyebrow">Where the wrong record comes from</p>
+      <h2>Not the dashboard. The tracing code.</h2>
+      <p class="intro">A dashboard adds up what it is given. The record itself is written by tracing code inside your app: neatlogs' own SDK, or code from Arize (OpenInference) and Traceloop (OpenLLMetry). When that code misses a failure, every view built on it misses it too.</p>
+    </div>
+    <div class="panel">
+      <p><b>A cut Claude reply.</b> When the reply stream broke off, neatlogs' code still closed the AI step as OK. The app had raised an error.</p>
+      <p><b>A failed agent run.</b> The OpenAI Agents tracing code set the top step of every run to OK at the end, even when the run had crashed. neatlogs runs Arize's code for this, so one fix repairs the record for both.</p>
+      <p><b>A refused answer.</b> When the AI declined to answer, neatlogs' code left the reply text empty.</p>
+    </div>
+  </div>
+</section>
+
+<section class="container section reveal">
+  <p class="eyebrow">How Trueup fixes it</p>
+  <h2>A crash-test lab for tracing code.</h2>
+  <p class="intro">Car makers crash cars on purpose to see what the instruments report. Trueup does the same for tracing code, then only keeps a fix that survives every check.</p>
+  <div class="grid3">
+    <div class="panel lift"><div class="brandmark c-a"><i style="background:var(--amber)"></i>1 · The lab</div><h3>A practice AI server that fails on purpose</h3><p>It fails in 57 ways: cut replies, errors halfway through, refusals, agents that loop until they give up, tools that raise. Because the server knows exactly what it sent, there is a true answer to check against.</p></div>
+    <div class="panel lift"><div class="brandmark c-c"><i style="background:var(--cyan)"></i>2 · Compare</div><h3>Every tool, every failure</h3><p>Each tracing tool runs the same 57 failures. Trueup compares each record with what the server really sent and lists every mismatch.</p></div>
+    <div class="panel lift"><div class="brandmark c-v"><i style="background:var(--violet)"></i>3 · Checker</div><h3>Seven rules before anything counts</h3><p>A mismatch is only confirmed if it shows up twice in fresh runs, on the latest release and the main branch, with the recommended setup, and with a short stand-alone repro. Anything that fails a rule is withdrawn and kept on file.</p></div>
+    <div class="panel lift"><div class="brandmark c-g"><i style="background:var(--green)"></i>4 · Fixer</div><h3>Writes the fix and its test</h3><p>Trueup's AI agent finds the code that wrote the wrong record, writes a fix, and writes a new test that shows the problem.</p></div>
+    <div class="panel lift"><div class="brandmark c-r"><i style="background:var(--red)"></i>5 · Verifier</div><h3>Proves it, or throws it out</h3><p>The new test must fail before the fix and pass after. The library's full test suite must still pass. The whole 57-failure sweep must show no new mismatch.</p></div>
+    <div class="panel lift"><div class="brandmark c-d"><i style="background:var(--dim)"></i>6 · Honest record</div><h3>Failed tries are kept and shown</h3><p>The Arize fix took three tries; the two that failed are kept next to it. When all three tries fail, Trueup says "not fixed" and offers no patch.</p></div>
+  </div>
+  <div class="kv">
+    <div><b>32</b><span>confirmed record errors in 3 tracing tools</span></div>
+    <div><b>5</b><span>proven fixes</span></div>
+    <div><b>0</b><span>new mismatches from any proven fix</span></div>
+    <div><b>≈ $0.52</b><span>AI cost of one fix run</span></div>
+  </div>
+</section>
+
+<section class="container section reveal">
+  <div class="limits">
+    <h3>What it does not do yet</h3>
+    <ul>
+      <li>Neither upstream fix has been merged yet. "With Trueup's fixes" means proposed fixes.</li>
+      <li>Witness reads OpenAI and Anthropic calls made through their Python SDKs.</li>
+      <li>In the failed agent run, the fixed record marks the AI step ERROR, but without the error details.</li>
+      <li>It has been tested with neatlogs as the dashboard.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="container reveal">
+  <div class="cta-band">
+    <h2>See it light up.</h2>
+    <p>Cut a real Claude reply or crash a real agent, and watch the record and the warning light side by side.</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="/demo">Try the live demo <span aria-hidden="true">→</span></a>
+      <a class="btn btn-ghost" href="https://github.com/Jennycruzy/trueup" target="_blank" rel="noopener">View on GitHub</a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- footer -->
+<footer class="site-foot">
+  <div class="site-foot-in">
+    <div>
+      <a class="logo" href="/"><i></i>Trueup</a>
+      <p>Trueup Witness checks your AI agent's records against what really happened. Built for neatHack 2026 with neatlogs, Entire and cfo.ai.</p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="/how-it-works">How it works</a></li>
+        <li><a href="/demo">Live demo</a></li>
+        <li><a href="/fixes">Fixes</a></li>
+        <li><a href="/built-with">Built with</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Proof</h4>
+      <ul>
+        <li><a href="https://github.com/Jennycruzy/trueup" target="_blank" rel="noopener">GitHub</a></li>
+        <li><a href="https://github.com/Arize-ai/openinference/pull/4024" target="_blank" rel="noopener">Arize #4024</a></li>
+        <li><a href="https://github.com/traceloop/openllmetry/pull/4610" target="_blank" rel="noopener">Traceloop #4610</a></li>
+        <li><a href="https://github.com/neatlogs/neatlogs/pull/207" target="_blank" rel="noopener">neatlogs #207</a></li>
+        <li><a href="https://entire.io/gh/Jennycruzy/trueup" target="_blank" rel="noopener">Build history on Entire</a></li>
+      </ul>
+    </div>
+  </div>
+</footer>
+<!-- /footer -->
+<script src="/site.js"></script>
+</body>
+</html>

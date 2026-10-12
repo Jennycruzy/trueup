@@ -247,3 +247,59 @@ def test_paths_outside_docs_x_are_not_served(server, images, path):
     resp, data = _request(server, "GET", path)
     assert resp.status == 404
     assert b"secret" not in data
+
+
+@pytest.fixture
+def site(tmp_path, monkeypatch):
+    static = tmp_path / "static"
+    static.mkdir()
+    for name in ("index", "demo", "how-it-works", "fixes", "built-with"):
+        (static / f"{name}.html").write_text(f"<!doctype html><title>{name}</title>")
+    (static / "site.css").write_text("body{}")
+    (static / "site.js").write_text("// js")
+    (static / "notes.txt").write_text("secret")
+    (tmp_path / "secret.html").write_text("secret")
+    monkeypatch.setattr(live, "STATIC", static)
+    return static
+
+
+@pytest.mark.parametrize("path,name", [
+    ("/", "index"), ("/index.html", "index"), ("/demo", "demo"), ("/demo.html", "demo"),
+    ("/how-it-works", "how-it-works"), ("/how-it-works.html", "how-it-works"), ("/fixes", "fixes"),
+    ("/fixes.html", "fixes"), ("/built-with", "built-with"), ("/built-with.html", "built-with"),
+    ("/demo?from=nav", "demo"),
+])
+def test_site_pages_are_served(server, site, path, name):
+    resp, data = _request(server, "GET", path)
+    assert resp.status == 200
+    assert resp.getheader("Content-Type") == "text/html; charset=utf-8"
+    assert f"<title>{name}</title>".encode() in data
+
+
+@pytest.mark.parametrize("path,ctype", [("/site.css", "text/css"), ("/site.js", "text/javascript")])
+def test_site_assets_are_served(server, site, path, ctype):
+    resp, _ = _request(server, "GET", path)
+    assert resp.status == 200
+    assert resp.getheader("Content-Type").startswith(ctype)
+
+
+def test_a_missing_page_is_not_found(server, site):
+    (site / "fixes.html").unlink()
+    assert _request(server, "GET", "/fixes")[0].status == 404
+
+
+@pytest.mark.parametrize("path", [
+    "/nope", "/notes.txt", "/static/index.html", "/demo/", "/Demo", "/../secret.html", "/..%2fsecret.html",
+    "/%2e%2e/secret.html", "/demo/../../secret.html", "/./demo", "/site.css/../secret.html",
+    "/server.py", "/../live/server.py", "/x/../../live/server.py", "/fixes.html/..",
+])
+def test_unknown_and_escaping_paths_are_not_found(server, site, path):
+    resp, data = _request(server, "GET", path)
+    assert resp.status == 404
+    assert b"secret" not in data
+
+
+def test_api_routes_still_answer_beside_the_site(server, site):
+    assert _request(server, "GET", "/api/stats")[0].status == 200
+    assert _request(server, "GET", "/api/job/nope")[0].status == 404
+    assert _run(server, ip="8.8.8.8")[0].status == 202

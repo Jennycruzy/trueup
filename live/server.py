@@ -7,6 +7,9 @@ from neatlogs and returns both, so the page can show what really happened next t
 Safety: only the three fixed breaks exist (no visitor text reaches the model); one run at a time; a short
 cool-down per visitor; a daily cap. Keys come from the environment and never reach the page.
 
+It also serves the product site: / /demo /how-it-works /fixes /built-with, site.css and site.js
+(live/build_fixes.py writes fixes.html).
+
 Run: python live/server.py  (reads TRUEUP_MODEL_KEY, TRUEUP_MODEL_BASE_URL, NEATLOGS_API_KEY,
 LIVE_PY_RELEASED, LIVE_PY_FIXED, optional LIVE_PORT, LIVE_DAILY_CAP, LIVE_STATE).
 """
@@ -30,6 +33,13 @@ sys.path.insert(0, str(REPO / "src"))
 from trueup.neatlogs_read import Reader  # noqa: E402
 
 STATIC = Path(__file__).resolve().parent / "static"
+# Only these names are ever served from STATIC: a fixed list, so no path can reach another file.
+PAGES = {"/": "index.html"}
+for _page in ("index", "demo", "how-it-works", "fixes", "built-with"):
+    PAGES.setdefault(f"/{_page}", f"{_page}.html")
+    PAGES[f"/{_page}.html"] = f"{_page}.html"
+ASSETS = {"/site.css": ("site.css", "text/css; charset=utf-8"),
+          "/site.js": ("site.js", "text/javascript; charset=utf-8")}
 BREAKS = {"normal": None, "cut": "anthropic-cut", "agent": "agent-fail"}
 PYTHONS = {"released": os.environ.get("LIVE_PY_RELEASED", str(REPO / ".venv" / "bin" / "python")),
            "fixed": os.environ.get("LIVE_PY_FIXED", str(REPO / ".trueup" / "live" / "venv-fixed" / "bin" / "python"))}
@@ -180,8 +190,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self) -> None:  # noqa: N802
         path = self.path.split("?")[0]
-        if path in ("/", "/index.html"):
-            return self._file(STATIC / "index.html", "text/html; charset=utf-8")
+        if path in PAGES or path in ASSETS:
+            name, ctype = ASSETS[path] if path in ASSETS else (PAGES[path], "text/html; charset=utf-8")
+            f = STATIC / name
+            if f.is_file():
+                return self._file(f, ctype)
+            return self._json(404, {"error": "not found"})
         if path == "/api/stats":
             return self._json(200, dict(_stats(), busy=_run_lock.locked()))
         if path.startswith("/api/job/"):

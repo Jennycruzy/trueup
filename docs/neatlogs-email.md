@@ -1,12 +1,15 @@
 # neatlogs' own daily email got the error rate wrong
 
+**The email said 6.2% of runs failed. The real number was 11.1% (9 of 81).** Four crashes never showed up.
+
 On 12 October neatlogs sent its automatic daily summary for the Trueup project
 (11 Oct 09:00 → 12 Oct 09:00 UTC). It said:
 
 > 81 recorded requests. Recorded errors rose to 6.2%.
 
-We read every one of those 81 runs back from neatlogs (through its MCP server) and checked each against what
-really happened. The email's own numbers add up: 81 runs, 5 marked as errors. But 9 of the runs really crashed.
+We read every one of those 81 runs back from neatlogs (through its MCP server, the read access neatlogs offers to
+tools) and checked each against what really happened. The email's own numbers add up: 81 runs, 5 marked as
+errors. But 9 of the runs really crashed.
 
 | Test run | How many | What really happened | What neatlogs recorded |
 |---|---:|---|---|
@@ -14,13 +17,11 @@ really happened. The email's own numbers add up: 81 runs, 5 marked as errors. Bu
 | The AI sends an error halfway through its reply (`oa-resp-stream-error-event`) | 4 | Crashed | Success, 0 errors, so not counted at all |
 | A normal reply (`an-stream-helper`) | 4 | Fine | Success (correct) |
 
-**The email said 6.2% of runs failed. The real number was 11.1% (9 of 81).** Four crashes never showed up.
-
 ## What this does and does not show
 
-- **These were test runs we crashed on purpose.** They came from Trueup's practice AI server (the fake
-  provider), not from real customers or a real AI provider. Car safety tests work the same way: you crash the
-  car on purpose to see what the instruments report.
+- **These were test runs we crashed on purpose.** They came from Trueup's practice AI server, not from real
+  customers or a real AI provider. Car safety tests work the same way: you crash the car on purpose to see what
+  the instruments report.
 - **The tracing code caused it, not the email.** Some runs were recorded by neatlogs' own SDK, the others by
   Arize's OpenInference and Traceloop's OpenLLMetry, all sending into neatlogs. The email added up the records
   it was given; the records were wrong.
@@ -34,7 +35,8 @@ really happened. The email's own numbers add up: 81 runs, 5 marked as errors. Bu
 
 ## The runs, so anyone with access can check
 
-All were sent on 12 Oct 2026 between 01:55 and 02:03 UTC by `trueup demo-export`.
+All were sent on 12 Oct 2026 between 01:55 and 02:03 UTC by `trueup demo-export`. Each id below is a neatlogs
+record id.
 
 | Library | neatlogs session | Crashed, counted as error (top step SUCCESS) | Crashed, recorded as success | Fine |
 |---|---|---|---|---|
@@ -47,5 +49,6 @@ All were sent on 12 Oct 2026 between 01:55 and 02:03 UTC by `trueup demo-export`
 The other 68 runs in the window are Trueup's own working steps (planner, fixer, checks). neatlogs recorded all of
 them as success. They are not test crashes, and we did not check them one by one.
 
-Method: `search_traces` over the window, with several keywords, de-duplicated by trace id (81 found, matching
-the email). Then `get_trace_context` for each test run to read its step statuses.
+How we counted: neatlogs' search tool (`search_traces`) over the window, with several keywords, with repeats
+removed by record id (81 found, matching the email). Then its record-reading tool (`get_trace_context`) for each
+test run, to read the status of every step.

@@ -1,7 +1,7 @@
 {
  "algorithm": "sha256",
  "files": {
-  "business-plan.md": "8a31b0de51f5cea0d1cb8a4fb71260553905d6eaf210d7490f2fdb0d8dcf792c",
+  "business-plan.md": "d0601c8a508fc6f30eb6f475eb7ccf829c64f8be396b451a317278115a841811",
   "entire/checkpoints.json": "e19c5cbdc21d963e1f9bacef425e5c11bd160d84a040f24fcb09038522cc4fba",
   "findings/neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event/finding.json": "8dce6d5c31275c665618e8ee708bdaf0e403054028faf89440b1585620c1e549",
   "findings/neatlogs-call_status-anthropic-messages-stream-span-status-ok-no-exception-event/repro.py": "12be24032465f615e4a338c942f2538f62e5d5245c3ba6dd3445de5892a6d3ba",

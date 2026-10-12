@@ -1,35 +1,69 @@
 # Trueup Witness
 
-**Your dashboard said OK. Your agent crashed. Trueup turns on the DISAGREE light.**
+Checks your AI agent's records against what really happened, and fixes the tracing code when they disagree.
 
-**[Crash it yourself, live →](https://trueup.38-49-216-59.sslip.io)** Break a real AI bot with one click.
+[![CI](https://github.com/Jennycruzy/trueup/actions/workflows/ci.yml/badge.svg)](https://github.com/Jennycruzy/trueup/actions/workflows/ci.yml) · **[Live demo](https://trueup.38-49-216-59.sslip.io/demo)**
 
-Every fix links to the Entire record of the session that made it: see fixes/<id>/PROVENANCE.md.
+**Why.** The dashboard said OK; the agent had crashed. The tracing code that feeds the dashboard can record a crash as success.
 
-Planes warn pilots when two readings disagree. AI teams trust one instrument: the tracing record. Witness watches what really happened and compares it with what neatlogs recorded.
+## Install
+
+```
+git clone https://github.com/Jennycruzy/trueup && pip install ./trueup
+```
+
+## Quick start
 
 ```python
 import trueup.witness
-trueup.witness.watch()
+trueup.witness.watch()          # once, at start-up, before neatlogs.init()
+
+with trueup.witness.run("order-1042") as run:   # one unit of work
+    answer = agent.handle(order_id="1042")
+
+run.disagreements   # [] when the record matches what really happened
 ```
 
-When the record is wrong, Witness adds a red `TRACE DISAGREE` step to the same neatlogs trace. It never sends prompt or reply text beyond what neatlogs already records, never breaks your app, and turns off with `TRUEUP_WITNESS=0`.
+`TRUEUP_WITNESS=0` turns it off.
 
-## Live result
+## What you see in neatlogs
 
-Real Claude Haiku and OpenAI Agents calls, before and after Trueup's patches:
+When the record is wrong, Witness adds a red `TRACE DISAGREE` step to that same record. It never adds prompt or reply text neatlogs lacks, and never breaks your app.
 
-| Real break | neatlogs before | After Trueup's patches | Really |
+Real crashes:
+
+| Real break | neatlogs before | After Trueup's fixes | Really |
 |---|---|---|---|
 | Connection cut mid-reply | AI step SUCCESS | AI step ERROR, with the error | Crashed |
 | Agent run fails | Agent workflow SUCCESS | Agent workflow ERROR | Crashed |
 
-DISAGREE light: **2 → 0**, and it stayed off on 40 normal real calls. "After" means proposed patches, not merged fixes. neatlogs runs Arize's code for OpenAI Agents, so that fix is [our pull request to Arize](https://github.com/Arize-ai/openinference/pull/4024), with their maintainer's changes. Our first try stayed 2 → 2: [why, and the traces](docs/witness-before-after.md).
+**DISAGREE light: 2 → 0.** 40 normal calls, 0 false alarms. [Details](docs/witness-before-after.md).
 
-## neatlogs' own email got it wrong
+neatlogs' own daily email said 6.2% of our test runs failed; really 11.1% had crashed, because the tracing code recorded crashes as success. [Every run](docs/neatlogs-email.md).
 
-neatlogs' daily email said 6.2% of our runs failed. We checked all 81: 9 had crashed, **11.1%**. These were test runs we crashed on purpose, recorded by released neatlogs, Arize and Traceloop code. The tracing code missed the crashes; the email only added up what it was given. [Every run](docs/neatlogs-email.md).
+## How it works
 
-[Evidence page](docs/index.html) · [Build record](hackathon.md) · [cfo.ai plan](https://cfo.ai/s/a9JKll8UYmSHs7-F)
+1. Witness reads each AI call off the connection: status, errors, stream end.
+2. It compares that with the step neatlogs recorded.
+3. On disagreement, it adds `TRACE DISAGREE`.
+4. Trueup's lab finds the faulty tracing code, writes a fix and proves it.
 
-Trueup's offline lab: 32 confirmed findings, five proven patches across neatlogs, OpenInference and OpenLLMetry.
+[More](docs/how-it-works.md)
+
+## Fixes sent upstream
+
+Proposed until merged: [Arize-ai/openinference#4024](https://github.com/Arize-ai/openinference/pull/4024) (reviewed by Arize's head of open source), [traceloop/openllmetry#4610](https://github.com/traceloop/openllmetry/pull/4610), [neatlogs/neatlogs#207](https://github.com/neatlogs/neatlogs/pull/207). neatlogs runs Arize's code for OpenAI Agents, so the Arize fix repairs both.
+
+## Built with neatlogs, Entire and cfo.ai
+
+- **[neatlogs](docs/built-with.md#neatlogs)**: records every run, Witness's step included.
+- **[Entire](docs/built-with.md#entire)**: every fix links to the session that made it.
+- **[cfo.ai](docs/built-with.md#cfoai)**: [the plan](https://cfo.ai/s/kVKIburWzn09Baoy), from measured costs.
+
+## Docs
+
+[Getting started](docs/getting-started.md) · [How it works](docs/how-it-works.md) · [Built with](docs/built-with.md) · [Before and after](docs/witness-before-after.md) · [neatlogs' email](docs/neatlogs-email.md) · [Known limits](docs/limits.md) · [Build log](hackathon.md)
+
+## License
+
+[MIT](LICENSE)

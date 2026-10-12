@@ -101,7 +101,7 @@ Next commercial milestones:
 
 ## cfo.ai evidence status
 
-- Shared cfo.ai report containing the workspace artifacts: <https://cfo.ai/s/a9JKll8UYmSHs7-F>
+- Shared cfo.ai report containing the workspace artifacts: <https://cfo.ai/s/kVKIburWzn09Baoy>
 - Strategy artifact: **“Trueup · neatHack business plan”** — supplied from the cfo.ai workspace.
 - Financial artifact: **“Trueup · Launch assumptions”** and its live adoption/check-cost simulator — numerical
   outputs summarized above and available through the shared report.
