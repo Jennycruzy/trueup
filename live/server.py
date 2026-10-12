@@ -203,6 +203,14 @@ class Handler(BaseHTTPRequestHandler):
             if not job:
                 return self._json(404, {"error": "unknown run"})
             return self._json(200, {k: v for k, v in job.items() if k != "ip"})
+        if path == "/submission-kit":
+            f = REPO / ".trueup" / "live" / "submission.html"
+            if f.is_file():
+                return self._file(f, "text/html; charset=utf-8")
+        if path == "/download/submission.txt":
+            f = REPO / ".trueup" / "live" / "submission.txt"
+            if f.is_file():
+                return self._file(f, "text/plain; charset=utf-8", download=True)
         if (path.startswith("/x/") or path.startswith("/download/")) and path.endswith(".png"):
             f = REPO / "docs" / "x" / Path(path).name
             if f.is_file():
