@@ -1,0 +1,30 @@
+You are working in the Trueup repository (this folder). Foreground only. Do not commit, push or post. Never print a key. Take up to 30 minutes; careful beats fast. Work carefully: keep every number and fact exactly; change words, not facts.
+
+Goal: remove internal words, internal notes and weakness-first phrasing from everything a judge reads.
+
+1. Delete these internal files with `git rm`: docs/owner-actions.md, docs/posts.md, docs/video-script.md. Remove any links to them (grep the repo: README.md, docs/*, live/static/*, hackathon.md). If a test reads one of them, update that test to stop reading it (never weaken a number check).
+
+2. Plain words on the site pages (live/static/index.html, demo.html, how-it-works.html, fixes.html, built-with.html, and the generator live/build_fixes.py which writes fixes.html; run it after) and in README.md and docs/getting-started.md, docs/how-it-works.md, docs/built-with.md, docs/limits.md, docs/witness-before-after.md, docs/neatlogs-email.md, docs/business-plan.md. Visible text only (never break HTML tags, code, file paths, URLs, or code identifiers like `instrumentations=[...]`). Replace:
+   - "upstream" -> "to the companies that make these tools" / "sent to Arize, Traceloop and neatlogs" (as fits); "Sent upstream" tag -> "Sent"
+   - "planner, checker, fixer, verifier" -> describe what they do: "the part that plans tests", "the part that checks results", "the part that writes fixes", "the part that proves fixes" (or "plans tests, checks results, writes and proves fixes")
+   - "checker" alone -> "Trueup's checks"; "verifier" -> "the proof step"; "withdrawn" -> "set aside"; "sweep" -> "full run of all 57 test failures"; "root span" quote -> say Arize's head of open source said fixing it was "the right goal"
+   - "instrumentation" in prose -> "tracing code"; "leads" meaning possible problems -> "possible problems" ("engineering leads" meaning people is fine)
+   - "scenario(s)" in prose -> "test case(s)" or "plan(s)" for cfo.ai scenarios -> "cases"
+   - "observed"/"reported" as audit labels -> drop
+   Keep product names: Trueup Witness, TRACE DISAGREE, neatlogs, Entire, cfo.ai, Arize, Traceloop, OpenInference, OpenLLMetry, and neatlogs detection names quoted exactly as they are named in neatlogs (e.g. "Trueup: lead withdrawn (own false alarm)") because those are real names.
+
+3. Weakness-first phrasing: in the files above, any sentence that leads with a failure or "not done" should lead with what works, keeping the honest fact after it. Example: "Our first attempt stayed 2 → 2" -> keep, but only after the 2 → 0 result and framed as "how we got there".
+
+4. hackathon.md is the dated build log; do NOT rewrite its history. But:
+   - Add at the very top, under the title, a short "Read this first" block (5-7 plain lines): what Trueup is, the 2 → 0 live result with 0 false alarms in 40 calls, the neatlogs email finding, the three pull requests (links), the live demo link, and one line: "Below is the dated build log, kept as written, including the mistakes and how we fixed them."
+   - Rephrase lines that start with "Not done" into "Left for later:" with the same facts.
+   - Remove the audit labels OBSERVED / DOCUMENTED / REPORTED / ASSUMED from the log (keep the sentences), but keep heading anchors working: the README links `hackathon.md#what-entire-recorded-and-what-it-did-not-12-oct-observed`; if you change that heading, update the README link to the new anchor.
+
+5. Run `uv run pytest -q` and `uv run trueup bundle && uv run trueup verify` until green. Print: files changed, files deleted, any test you changed and why, and a list of any banned word still present in visible text with its reason.
+
+6. Entire wording. The hackathon rule only asked us to give the coding agent context through Entire checkpoints or the entire-graph, with checkpoints as evidence. It never asked for every commit to be recorded. So nothing here is a mistake and must not be called one. Never write "mistake", "gap", "unrecorded", "did not record" or "no Entire record" about Entire anywhere a judge reads. Never claim every commit was recorded, and never invent or change a number.
+   - README.md: delete the whole bullet that starts `- **[Our mistake with Entire]`. Keep the Entire bullet above it.
+   - hackathon.md: replace the section "## What Entire recorded, and what it did not (12 Oct, OBSERVED)" (heading plus its two paragraphs) with "## What Entire recorded" and one positive paragraph: Entire recorded the core build (the test lab, comparer, checks, test planning, the part that wrote and proved the first fixes, the code-graph step that located them) and later the live app's safety tests, the links from each fix to its record, the product site and the README. Give the number of commits that carry an `Entire-Checkpoint` trailer, counted with `git log --format='%(trailers:key=Entire-Checkpoint,valueonly)' | grep -c .` (state it as "N commits carry an Entire record"), and link https://entire.io/gh/Jennycruzy/trueup. Also grep hackathon.md for any other sentence saying work had no Entire record and rephrase it positively or drop it, without changing other facts.
+   - docs/built-with.md: replace the "**What Entire did not record.**" paragraph with a short "**What Entire recorded.**" paragraph in the same positive style (same count, link to the build log). In the "Every fix links to the session that made it" paragraph, change "Three of the five fixes have an Entire record; the other two say plainly that their commit has none (see below)." to "Three of the five fixes link to their Entire record."
+   - Same changes on live/static/built-with.html (and any other site page) if the text appears there.
+   - Finally grep the whole repo (excluding .venv, .trueup and fixes/*/PROVENANCE.md) for: "Our mistake", "what-entire-recorded-and-what-it-did-not", "did not record", "unrecorded", "no Entire record". Fix any link to the old anchor; report every remaining hit.
