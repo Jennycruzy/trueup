@@ -1,0 +1,27 @@
+You are working in the Trueup repository (this folder). Run every command in the foreground. Do not commit, push or post anything. Never print or write any key. Do not mention any other project. Plain words in anything a person reads. Work fast: finish within 25 minutes.
+
+Goal: every fix Trueup made carries its own Entire record ("how this fix was made"), and the live demo shows it.
+
+## 1. `trueup provenance`
+
+Add a CLI command `trueup provenance [<finding-id>|--all]` (src/trueup/provenance.py + cli wiring + tests) that, for each folder in fixes/ that has a proof.json, writes fixes/<id>/PROVENANCE.md and fixes/<id>/provenance.json:
+
+- the commit that first added fixes/<id>/patch.diff (`git log --diff-filter=A --format=%H -- fixes/<id>/patch.diff`, oldest), its date and subject;
+- its `Entire-Checkpoint` trailer if present (`git log -1 --format='%(trailers:key=Entire-Checkpoint,valueonly)' <sha>`), and the Entire link `https://entire.io/gh/Jennycruzy/trueup/commit/<full sha>`. If the commit has no trailer, say plainly "no Entire record for this commit" and do not invent one;
+- the fixer's tries from fixes/<id>/tries.json if present: how many, which failed and the one-line reason, model and cost if recorded;
+- the verifier result from proof.json: before/after lead totals and new mismatches;
+- the upstream link if one exists (upstream/<id>/ or the finding's upstream field; the posted PRs are Arize-ai/openinference#4024, traceloop/openllmetry#4610, neatlogs/neatlogs#207).
+
+Also run `entire explain` for each checkpoint found (try `entire explain --help` / `entire checkpoint --help` first and use the read-only command that prints a checkpoint's summary; pass </dev/null) and include its first ~15 lines as "What the session did" when available. Never include anything that looks like a key or a private path; scrub /root and /home.
+
+Run it with --all and commit nothing. Tests: one with a temporary git repo containing a commit with and without the trailer (assert the link and the "no Entire record" wording), and one that the scrub removes private paths.
+
+## 2. Show it in the live demo
+
+In live/static/index.html, the three "Where the fixes went" cards: add a small line under each, "How this fix was made: Entire record →", linking the Entire commit page for the fix it describes, ONLY if provenance.json for that fix has a trailer. Cards and fixes: Arize card → fixes/openinference-run_status-openai-agents-top-level-span-status-ok; neatlogs card → the neatlogs Responses/Anthropic stream fixes if they have trailers (else say "recorded build: Entire record" linking the commit 79210a4 "Add fixer, verifier and upstream drafts" which has a trailer). Read the facts from the provenance files; do not hard-code a trailer you have not seen. Add a footer line "Build history recorded with Entire: <link to the latest commit with a trailer>".
+
+## 3. README
+
+One line under the live link: "Every fix links to the Entire record of the session that made it: see fixes/<id>/PROVENANCE.md." Keep README at or under 305 words.
+
+Run `uv run pytest -q` until green, then `uv run trueup bundle` and `uv run trueup verify`. Print a short summary: files changed, which fixes have Entire records, tests passing.

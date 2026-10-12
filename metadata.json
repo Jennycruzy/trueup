@@ -1,0 +1,40 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4R98B1V06FTJH456YHHDW72",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "README.md",
+    "fixes/neatlogs-output-openai-chat-create-output-text-missing/PROVENANCE.md",
+    "fixes/neatlogs-output-openai-chat-create-output-text-missing/provenance.json",
+    "fixes/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/PROVENANCE.md",
+    "fixes/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/provenance.json",
+    "fixes/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/PROVENANCE.md",
+    "fixes/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/provenance.json",
+    "fixes/openinference-run_status-openai-agents-top-level-span-status-ok/PROVENANCE.md",
+    "fixes/openinference-run_status-openai-agents-top-level-span-status-ok/provenance.json",
+    "fixes/openllmetry-call_count-openai-agents-llm-spans-wrong/PROVENANCE.md",
+    "fixes/openllmetry-call_count-openai-agents-llm-spans-wrong/provenance.json",
+    "live/static/index.html",
+    "src/trueup/cli.py",
+    "src/trueup/provenance.py",
+    "tests/test_provenance.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 46,
+    "cache_creation_tokens": 52792,
+    "cache_read_tokens": 1018875,
+    "output_tokens": 14883,
+    "api_call_count": 23
+  }
+}
