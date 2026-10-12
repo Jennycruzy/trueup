@@ -223,14 +223,13 @@ def images(tmp_path, monkeypatch):
     monkeypatch.setattr(live, "REPO", repo)
 
 
-def test_download_sends_attachment(server, images):
-    resp, data = _request(server, "GET", "/download/1-shot.png")
-    assert resp.status == 200
-    assert resp.getheader("Content-Disposition") == 'attachment; filename="1-shot.png"'
-    assert data == b"\x89PNG ok"
-    resp, _ = _request(server, "GET", "/x/1-shot.png")
-    assert resp.status == 200
+def test_images_are_served_and_downloads_are_gone(server, images):
+    resp, data = _request(server, "GET", "/x/1-shot.png")
+    assert resp.status == 200 and data == b"\x89PNG ok"
     assert resp.getheader("Content-Disposition") is None
+    for gone in ("/download/1-shot.png", "/download/trueup-demo.mp4", "/download/submission.txt", "/submission-kit"):
+        resp, _ = _request(server, "GET", gone)
+        assert resp.status == 404, gone
 
 
 @pytest.mark.parametrize("path", [

@@ -203,22 +203,10 @@ class Handler(BaseHTTPRequestHandler):
             if not job:
                 return self._json(404, {"error": "unknown run"})
             return self._json(200, {k: v for k, v in job.items() if k != "ip"})
-        if path == "/submission-kit":
-            f = REPO / ".trueup" / "live" / "submission.html"
-            if f.is_file():
-                return self._file(f, "text/html; charset=utf-8")
-        if path == "/download/trueup-demo.mp4":
-            f = REPO / ".trueup" / "live" / "trueup-demo.mp4"
-            if f.is_file():
-                return self._file(f, "video/mp4", download=True)
-        if path == "/download/submission.txt":
-            f = REPO / ".trueup" / "live" / "submission.txt"
-            if f.is_file():
-                return self._file(f, "text/plain; charset=utf-8", download=True)
-        if (path.startswith("/x/") or path.startswith("/download/")) and path.endswith(".png"):
+        if path.startswith("/x/") and path.endswith(".png"):
             f = REPO / "docs" / "x" / Path(path).name
             if f.is_file():
-                return self._file(f, "image/png", download=path.startswith("/download/"))
+                return self._file(f, "image/png")
         self._json(404, {"error": "not found"})
 
     def do_POST(self) -> None:  # noqa: N802
