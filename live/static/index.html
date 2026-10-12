@@ -1,0 +1,355 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Crash It Yourself · Trueup</title>
+<meta name="description" content="Break a real AI agent with one click and watch whether the dashboard tells the truth.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#04060c;--bg2:#0a1020;--panel:#0c1424cc;--panel2:#101a2e;--line:#1e2c47;--line2:#2a3d62;
+  --text:#eaf2ff;--muted:#8fa3c4;--dim:#5b6b8a;
+  --amber:#ffb547;--red:#ff3d57;--red2:#ff6b7f;--green:#2bf0a0;--cyan:#5cc8ff;--violet:#9d7bff;
+  --radius:20px;--mono:"JetBrains Mono",ui-monospace,Menlo,monospace;--sans:"Space Grotesk",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--text);font:17px/1.55 var(--sans);overflow-x:hidden;min-height:100vh}
+body:before{content:"";position:fixed;inset:-20%;z-index:-2;
+  background:radial-gradient(40% 35% at 15% 10%,#16305e55,transparent 70%),radial-gradient(35% 30% at 85% 20%,#3a165055,transparent 70%),radial-gradient(50% 40% at 50% 100%,#0d3a4a44,transparent 70%);
+  animation:drift 24s ease-in-out infinite alternate}
+body:after{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.35;
+  background-image:linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:44px 44px;
+  mask-image:radial-gradient(ellipse at 50% 30%,#000 30%,transparent 80%)}
+@keyframes drift{to{transform:translate(3%,-2%) rotate(3deg) scale(1.05)}}
+a{color:var(--cyan);text-decoration:none}a:hover{text-decoration:underline}
+.wrap{max-width:1180px;margin:0 auto;padding:28px 16px 80px}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:10px;font:600 14px var(--mono);letter-spacing:.18em;color:var(--muted);text-transform:uppercase}
+.brand i{width:10px;height:10px;border-radius:50%;background:var(--red);box-shadow:0 0 12px var(--red);animation:blink 2.4s infinite}
+@keyframes blink{0%,60%,100%{opacity:1}70%,90%{opacity:.25}}
+.live{font:600 13px var(--mono);color:var(--muted);border:1px solid var(--line);border-radius:999px;padding:6px 12px;background:#0b1222aa}
+.live b{color:var(--green)}
+h1{font-size:clamp(2.3rem,6.4vw,5rem);line-height:.98;letter-spacing:-.02em;margin:34px 0 14px;font-weight:700}
+h1 .ok{color:var(--green);text-shadow:0 0 28px #2bf0a055}
+h1 .bad{color:var(--red);text-shadow:0 0 28px #ff3d5766}
+.lead{font-size:clamp(1.05rem,2.2vw,1.35rem);color:var(--muted);max-width:780px;margin:0 0 28px}
+.lead b{color:var(--text)}
+
+/* cockpit */
+.cockpit{position:relative;border:1px solid var(--line);border-radius:28px;padding:22px;background:linear-gradient(180deg,#0c1528ee,#070c18ee);box-shadow:0 30px 80px #0008,inset 0 1px 0 #ffffff10;overflow:hidden}
+.cockpit:before{content:"";position:absolute;inset:0;border-radius:28px;pointer-events:none;background:linear-gradient(115deg,transparent 40%,#ffffff07 50%,transparent 60%);background-size:250% 100%;animation:sheen 9s linear infinite}
+@keyframes sheen{from{background-position:150% 0}to{background-position:-100% 0}}
+.grid{display:grid;grid-template-columns:1.05fr 1.25fr;gap:20px}
+@media(max-width:900px){.grid{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:18px;backdrop-filter:blur(8px)}
+.label{font:600 12px var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-bottom:10px}
+
+/* chat */
+.chat{display:flex;flex-direction:column;gap:10px;min-height:150px}
+.bubble{max-width:88%;padding:11px 14px;border-radius:16px;font-size:15.5px;animation:pop .45s cubic-bezier(.2,1.4,.4,1) both}
+.me{align-self:flex-end;background:linear-gradient(135deg,#2a4f9a,#3b2f8f);border-bottom-right-radius:5px}
+.bot{align-self:flex-start;background:var(--panel2);border:1px solid var(--line2);border-bottom-left-radius:5px}
+.bot.crash{border-color:var(--red);background:#2a0c16;color:#ffd3da}
+.typing span{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--muted);animation:dots 1s infinite}
+.typing span:nth-child(2){animation-delay:.15s}.typing span:nth-child(3){animation-delay:.3s}
+@keyframes dots{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
+@keyframes pop{from{opacity:0;transform:translateY(10px) scale(.96)}to{opacity:1;transform:none}}
+
+/* wire */
+.wire{position:relative;height:74px;margin:14px 0 4px}
+.wire svg{width:100%;height:100%;overflow:visible}
+.node{font:600 11px var(--mono);fill:var(--muted);letter-spacing:.08em}
+.cable{stroke:#2a3d62;stroke-width:3;fill:none;stroke-linecap:round}
+.flow{stroke:url(#flowGrad);stroke-width:3;fill:none;stroke-dasharray:6 14;stroke-linecap:round;opacity:0;transition:opacity .3s}
+.wire.on .flow{opacity:1;animation:flow .7s linear infinite}
+@keyframes flow{to{stroke-dashoffset:-40}}
+.spark{opacity:0}
+.wire.cut .flow{opacity:0}
+.wire.cut .cableR{transform:translate(8px,10px) rotate(6deg);transform-origin:60% 50%;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.wire.cut .cableL{transform:translate(-6px,8px) rotate(-5deg);transform-origin:40% 50%;transition:transform .5s cubic-bezier(.3,1.6,.5,1)}
+.wire.cut .spark{opacity:1;animation:spark .6s ease-out 2}
+@keyframes spark{0%{transform:scale(.2);opacity:1}100%{transform:scale(2.2);opacity:0}}
+
+/* controls */
+.btns{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+@media(max-width:560px){.btns{grid-template-columns:1fr}}
+button{font:inherit;cursor:pointer;border:0;color:inherit}
+.go{position:relative;padding:14px 12px;border-radius:16px;background:var(--panel2);border:1px solid var(--line2);text-align:left;transition:transform .15s,border-color .2s,box-shadow .2s;overflow:hidden}
+.go b{display:block;font-size:15.5px}.go small{color:var(--muted);font-size:13px}
+.go .ic{font-size:22px;display:block;margin-bottom:4px}
+.go:hover:not(:disabled){transform:translateY(-2px);border-color:var(--cyan);box-shadow:0 10px 30px #5cc8ff22}
+.go.danger:hover:not(:disabled){border-color:var(--red);box-shadow:0 10px 30px #ff3d5733}
+.go:active:not(:disabled){transform:translateY(1px) scale(.99)}
+.go:disabled{opacity:.45;cursor:not-allowed}
+.go.running:after{content:"";position:absolute;left:0;bottom:0;height:3px;width:100%;background:linear-gradient(90deg,transparent,var(--cyan),transparent);animation:scan 1.1s linear infinite}
+@keyframes scan{from{transform:translateX(-100%)}to{transform:translateX(100%)}}
+.switch{display:flex;align-items:center;gap:12px;margin-top:14px;padding:12px 14px;border:1px dashed var(--line2);border-radius:16px;flex-wrap:wrap}
+.switch .t{font-size:14.5px;color:var(--muted)}
+.toggle{position:relative;width:240px;height:40px;border-radius:999px;background:#060a14;border:1px solid var(--line2);display:grid;grid-template-columns:1fr 1fr;padding:3px}
+.toggle button{position:relative;z-index:1;font:600 13px var(--sans);border-radius:999px;background:transparent;color:var(--muted);transition:color .25s}
+.toggle button.sel{color:#04060c}
+.toggle .knob{position:absolute;top:3px;bottom:3px;left:3px;width:calc(50% - 3px);border-radius:999px;background:var(--amber);box-shadow:0 0 18px #ffb54766;transition:transform .45s cubic-bezier(.3,1.5,.5,1),background .3s}
+.toggle.fixed .knob{transform:translateX(100%);background:var(--green);box-shadow:0 0 18px #2bf0a066}
+
+/* readouts */
+.readouts{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:560px){.readouts{grid-template-columns:1fr}}
+.ro{position:relative;border-radius:18px;padding:16px;background:radial-gradient(120% 100% at 50% 0%,#0f1b33,#070c18);border:1px solid var(--line2);min-height:132px;overflow:hidden}
+.ro .val{font:800 clamp(1.7rem,4vw,2.4rem)/1.05 var(--mono);letter-spacing:.02em;margin-top:6px;transition:color .3s}
+.ro .sub{font-size:13.5px;color:var(--muted);margin-top:6px}
+.ro.idle .val{color:var(--dim)}
+.ro.ok .val{color:var(--green);text-shadow:0 0 20px #2bf0a055}
+.ro.bad .val{color:var(--red);text-shadow:0 0 22px #ff3d5766}
+.ro.wait .val{color:var(--cyan)}
+.ro.wait:after{content:"";position:absolute;left:0;right:0;height:40%;top:-40%;background:linear-gradient(transparent,#5cc8ff18,transparent);animation:sweep 1.4s linear infinite}
+@keyframes sweep{to{top:110%}}
+.flip{animation:flip .5s cubic-bezier(.2,1.3,.4,1)}
+@keyframes flip{from{transform:rotateX(70deg);opacity:0}to{transform:none;opacity:1}}
+
+/* annunciator */
+.annun{margin-top:14px;border-radius:20px;padding:18px 20px;display:flex;align-items:center;justify-content:space-between;gap:16px;border:2px solid #3a2a12;background:linear-gradient(180deg,#140f08,#0b0905);transition:all .35s;flex-wrap:wrap}
+.annun .lamp{font:800 clamp(1.6rem,5vw,3rem)/1 var(--mono);letter-spacing:.12em;color:#3b2c14;transition:color .3s,text-shadow .3s}
+.annun .why{font-size:14.5px;color:var(--muted);max-width:430px}
+.annun.on{border-color:var(--red);background:linear-gradient(180deg,#3a0a14,#1c0610);box-shadow:0 0 60px #ff3d5755,inset 0 0 40px #ff3d5733;animation:alarm 1s steps(2,end) infinite}
+.annun.on .lamp{color:#ffe1e6;text-shadow:0 0 18px var(--red),0 0 40px var(--red)}
+.annun.on .why{color:#ffd3da}
+@keyframes alarm{50%{box-shadow:0 0 20px #ff3d5722,inset 0 0 10px #ff3d5711;border-color:#7a1828}}
+.annun.agree{border-color:#1d6b52;background:linear-gradient(180deg,#07211a,#05130f)}
+.annun.agree .lamp{color:var(--green);text-shadow:0 0 18px #2bf0a088}
+.annun.agree .why{color:#bff7e2}
+
+/* steps */
+.steps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0 4px}
+@media(max-width:560px){.steps{grid-template-columns:1fr 1fr}}
+.st{font-size:12.5px;color:var(--dim);border-top:2px solid var(--line);padding-top:7px;transition:all .3s}
+.st.act{color:var(--cyan);border-color:var(--cyan)}
+.st.done{color:var(--text);border-color:var(--green)}
+.record{margin-top:12px}
+.rec{display:flex;justify-content:space-between;align-items:center;gap:10px;padding:9px 12px;border-radius:12px;background:#0a1222;border:1px solid var(--line);margin:6px 0;font:500 13.5px var(--mono);animation:pop .4s both}
+.chip{font:700 11.5px var(--mono);padding:3px 9px;border-radius:999px;letter-spacing:.06em}
+.chip.SUCCESS{background:#0f3b2c;color:var(--green)}.chip.ERROR{background:#3b0f19;color:var(--red2)}.chip.UNSET{background:#2a2a35;color:var(--muted)}
+.rec.disagree{border-color:var(--red);background:#2a0c16;box-shadow:0 0 22px #ff3d5733}
+.msg{margin-top:10px;font-size:14px;color:var(--amber);min-height:20px}
+.note{font-size:13px;color:var(--muted);margin-top:8px}
+
+/* below */
+h2{font-size:clamp(1.6rem,3.6vw,2.4rem);margin:64px 0 8px;letter-spacing:-.01em}
+.sec{color:var(--muted);max-width:760px;margin:0 0 22px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+@media(max-width:900px){.cards{grid-template-columns:1fr}}
+.proof{position:relative;border-radius:22px;padding:20px;background:var(--panel);border:1px solid var(--line);transition:transform .25s,border-color .25s;overflow:hidden}
+.proof:hover{transform:translateY(-4px);border-color:var(--line2)}
+.proof h3{margin:6px 0 8px;font-size:1.2rem}
+.proof p{color:var(--muted);font-size:15px;margin:0 0 12px}
+.proof img{width:100%;border-radius:12px;border:1px solid var(--line);display:block;margin-bottom:12px}
+.big{font:800 2.6rem/1 var(--mono)}
+.big .r{color:var(--red)}.big .g{color:var(--amber)}
+.code{position:relative;background:#050912;border:1px solid var(--line2);border-radius:16px;padding:18px 20px;font:500 15px/1.7 var(--mono);color:#cfe3ff;overflow:auto}
+.code .k{color:var(--violet)}.code .f{color:var(--cyan)}
+.copy{position:absolute;top:10px;right:10px;font:600 12px var(--mono);padding:6px 10px;border-radius:10px;background:var(--panel2);border:1px solid var(--line2);color:var(--muted)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}@media(max-width:900px){.two{grid-template-columns:1fr}}
+.foot{margin-top:56px;color:var(--dim);font-size:13.5px;border-top:1px solid var(--line);padding-top:18px}
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .8s,transform .8s cubic-bezier(.2,.8,.2,1)}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){*,*:before,*:after{animation:none!important;transition:none!important}.reveal{opacity:1;transform:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <div class="brand"><i></i>Trueup Witness · #neatHack</div>
+    <div class="live" id="live">Live · <b id="today">–</b> runs today</div>
+  </div>
+
+  <h1>Your dashboard said <span class="ok">OK</span>.<br>Your agent <span class="bad">crashed</span>.</h1>
+  <p class="lead">Break a real AI shop bot with one click. Each run is a <b>real Claude call</b> through the model key neatlogs gave every neatHack team, recorded in <b>neatlogs</b>. Trueup Witness watches what really happened and turns on the <b>DISAGREE light</b> when the record is wrong.</p>
+
+  <section class="cockpit" id="cockpit">
+    <div class="grid">
+      <div>
+        <div class="card">
+          <div class="label">The shop bot</div>
+          <div class="chat" id="chat">
+            <div class="bubble me">Where's my refund for order 1042?</div>
+            <div class="bubble bot" id="botMsg">Pick a button below to send it.</div>
+          </div>
+          <div class="wire" id="wire" aria-hidden="true">
+            <svg viewBox="0 0 400 74" preserveAspectRatio="none">
+              <defs><linearGradient id="flowGrad" x1="0" x2="1"><stop offset="0" stop-color="#5cc8ff"/><stop offset="1" stop-color="#9d7bff"/></linearGradient></defs>
+              <text class="node" x="0" y="14">SHOP BOT</text><text class="node" x="400" y="14" text-anchor="end">CLAUDE</text>
+              <g class="cableL"><path class="cable" d="M10 44 C 90 44, 130 30, 200 40"/></g>
+              <g class="cableR"><path class="cable" d="M200 40 C 270 50, 310 44, 390 44"/></g>
+              <path class="flow" d="M10 44 C 90 44, 130 30, 200 40 C 270 50, 310 44, 390 44"/>
+              <circle cx="10" cy="44" r="6" fill="#5cc8ff"/><circle cx="390" cy="44" r="6" fill="#9d7bff"/>
+              <g class="spark" style="transform-origin:200px 40px"><circle cx="200" cy="40" r="10" fill="none" stroke="#ffb547" stroke-width="2"/><circle cx="200" cy="40" r="4" fill="#ffb547"/></g>
+            </svg>
+          </div>
+          <div class="btns">
+            <button class="go" data-break="normal"><span class="ic">💬</span><b>Ask normally</b><small>Nothing breaks</small></button>
+            <button class="go danger" data-break="cut"><span class="ic">✂️</span><b>Cut the connection</b><small>Mid-reply</small></button>
+            <button class="go danger" data-break="agent"><span class="ic">💥</span><b>Crash the agent</b><small>The run fails</small></button>
+          </div>
+          <div class="switch">
+            <span class="t">Tracing code:</span>
+            <div class="toggle" id="toggle" role="radiogroup" aria-label="Tracing code version">
+              <div class="knob"></div>
+              <button class="sel" data-mode="released" role="radio" aria-checked="true">As released</button>
+              <button data-mode="fixed" role="radio" aria-checked="false">With Trueup's fixes</button>
+            </div>
+          </div>
+          <div class="msg" id="msg"></div>
+        </div>
+      </div>
+
+      <div>
+        <div class="readouts">
+          <div class="ro idle" id="roReal"><div class="label">What really happened</div><div class="val" id="realVal">—</div><div class="sub" id="realSub">Waiting for your click</div></div>
+          <div class="ro idle" id="roRec"><div class="label">What neatlogs recorded</div><div class="val" id="recVal">—</div><div class="sub" id="recSub">Read back from neatlogs</div></div>
+        </div>
+        <div class="annun" id="annun">
+          <div class="lamp" id="lamp">DISAGREE</div>
+          <div class="why" id="why">The light turns on when the record says the opposite of what really happened.</div>
+        </div>
+        <div class="steps" id="steps">
+          <div class="st" data-s="calling">1 · Real Claude call</div>
+          <div class="st" data-s="witness">2 · Witness compares</div>
+          <div class="st" data-s="reading">3 · neatlogs stores it</div>
+          <div class="st" data-s="done">4 · Record read back</div>
+        </div>
+        <div class="card record" id="recCard">
+          <div class="label">The record in neatlogs, step by step</div>
+          <div id="recList"><div class="note">Your run's steps appear here, read straight back from neatlogs.</div></div>
+          <div class="note" id="recLink"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="reveal">
+    <h2>Try it both ways</h2>
+    <p class="sec">With the tracing code as released, cutting the connection or crashing the agent lights the DISAGREE light: neatlogs records <b>SUCCESS</b> on a run that crashed. Flip the switch to Trueup's fixes and do it again: the record says <b>ERROR</b> and the light stays dark. Live tally from every visitor today and before:</p>
+    <div class="cards" id="tally"></div>
+  </section>
+
+  <section class="reveal">
+    <h2>Where the fixes went</h2>
+    <p class="sec">Trueup found the cause in the tracing code, wrote each fix with tests, and sent them upstream. "With Trueup's fixes" above runs exactly these. They are proposals until merged.</p>
+    <div class="cards">
+      <div class="proof"><div class="label">Arize · OpenInference #4024</div><img src="/x/1-arize-review.png" alt="Arize's head of open source reviewing the pull request" loading="lazy"><h3>Reviewed by Arize's head of open source</h3><p>"Making a failed run show up on the root span is the right goal." We applied his changes; 300 tests pass. neatlogs runs this same code for AI agents, so one fix repairs both.</p><a href="https://github.com/Arize-ai/openinference/pull/4024" target="_blank" rel="noopener">Open the pull request →</a></div>
+      <div class="proof"><div class="label">neatlogs #207</div><img src="/x/3-neatlogs-pr.png" alt="The pull request sent to neatlogs" loading="lazy"><h3>Sent to neatlogs</h3><p>neatlogs' own agent recorder had the same bug. The fix comes with 6 tests: 2 fail without it, all pass with it. Their full test suite still passes.</p><a href="https://github.com/neatlogs/neatlogs/pull/207" target="_blank" rel="noopener">Open the pull request →</a></div>
+      <div class="proof"><div class="label">neatlogs' own email</div><div class="big"><span class="g" id="c1">0.0</span>% <span style="color:var(--dim)">→</span> <span class="r" id="c2">0.0</span>%</div><h3>The daily email got it wrong</h3><p>neatlogs' email said 6.2% of our runs failed. We checked all 81: 9 had crashed, 11.1%. These were test runs we crashed on purpose; the tracing code missed the crashes, and the email added up what it was given.</p><a href="https://github.com/Jennycruzy/trueup/blob/main/docs/neatlogs-email.md" target="_blank" rel="noopener">Every run, by ID →</a></div>
+    </div>
+  </section>
+
+  <section class="reveal two" style="margin-top:64px">
+    <div>
+      <h2 style="margin-top:0">Add the second sensor</h2>
+      <p class="sec">Two lines in your agent. Witness never changes what your app does, never sends prompt or reply text beyond what neatlogs already records, and turns off with <code>TRUEUP_WITNESS=0</code>. Across 40 normal real calls it raised zero false alarms.</p>
+    </div>
+    <div class="code" id="code"><button class="copy" id="copy">Copy</button><span class="k">import</span> trueup.witness
+trueup.witness.<span class="f">watch</span>()</div>
+  </section>
+
+  <div class="foot reveal">
+    <b>What this is, plainly.</b> The cut and the crash are real failures we cause on purpose: a small relay drops the connection halfway through a real Claude reply, and the agent asks the real server for a model it refuses. Only these three buttons exist; nothing you type reaches the model. One run at a time, a daily cap. Built for neatHack 2026 with neatlogs, Entire and cfo.ai · <a href="https://github.com/Jennycruzy/trueup">github.com/Jennycruzy/trueup</a>
+  </div>
+</div>
+
+<script>
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+let mode="released", busy=false;
+const label={normal:"Ask normally",cut:"Cut the connection",agent:"Crash the agent"};
+
+$$("#toggle button").forEach(b=>b.onclick=()=>{ if(busy)return; mode=b.dataset.mode;
+  $$("#toggle button").forEach(x=>{x.classList.toggle("sel",x===b);x.setAttribute("aria-checked",x===b)});
+  $("#toggle").classList.toggle("fixed",mode==="fixed"); });
+
+function setRO(id,cls,val,sub){const el=$(id);el.className="ro "+cls;const v=el.querySelector(".val");v.textContent=val;v.classList.remove("flip");void v.offsetWidth;v.classList.add("flip");if(sub!==undefined)el.querySelector(".sub").textContent=sub;}
+function step(s){const order=["calling","witness","reading","done"];const i=order.indexOf(s);$$("#steps .st").forEach((e,j)=>{e.className="st"+(j<i?" done":j===i?" act":"")});if(s==="done")$$("#steps .st").forEach(e=>e.className="st done");}
+function annun(state,why){const a=$("#annun");a.className="annun"+(state==="on"?" on":state==="agree"?" agree":"");$("#lamp").textContent=state==="agree"?"AGREE":"DISAGREE";$("#why").textContent=why;}
+function bot(html,crash){const m=$("#botMsg");m.className="bubble bot"+(crash?" crash":"");m.innerHTML=html;m.style.animation="none";void m.offsetWidth;m.style.animation="";}
+const wire=$("#wire");
+
+$$(".go").forEach(b=>b.onclick=()=>run(b.dataset.break,b));
+
+async function run(brk,btn){
+  if(busy)return; busy=true; $("#msg").textContent="";
+  $$(".go").forEach(x=>x.disabled=true); btn.classList.add("running");
+  setRO("#roReal","wait","…","Asking Claude through neatlogs' model key");
+  setRO("#roRec","wait","…","Waiting for neatlogs");
+  annun("off","Watching the wire…"); step("calling");
+  $("#recList").innerHTML='<div class="note">Waiting for the run…</div>'; $("#recLink").textContent="";
+  bot('<span class="typing"><span></span><span></span><span></span></span>');
+  wire.className="wire on";
+  try{
+    const r=await fetch("/api/run",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({break:brk,mode})});
+    const j=await r.json(); if(!r.ok) throw new Error(j.error||"Try again in a moment.");
+    let job, shownResult=false;
+    for(let i=0;i<70;i++){
+      await new Promise(z=>setTimeout(z,1500));
+      job=await (await fetch("/api/job/"+j.id)).json();
+      if(job.stage==="failed") throw new Error(job.error||"The run failed.");
+      if(job.result && !shownResult){ shownResult=true; showResult(brk,job.result); step("reading"); setRO("#roRec","wait","…","neatlogs is storing the record"); }
+      if(job.stage==="done"){ showRecord(job.record, job.result); break; }
+    }
+    if(!job || job.stage!=="done") throw new Error("neatlogs is slow to store the record right now.");
+  }catch(e){ $("#msg").textContent=e.message; wire.className="wire"; setRO("#roReal","idle","—","Waiting for your click"); setRO("#roRec","idle","—","Read back from neatlogs"); annun("off","The light turns on when the record says the opposite of what really happened."); step(""); bot("Pick a button below to send it."); }
+  finally{ busy=false; $$(".go").forEach(x=>{x.disabled=false;x.classList.remove("running")}); refreshStats(); }
+}
+
+function showResult(brk,res){
+  step("witness");
+  const crashed=res.really==="crashed";
+  if(brk==="cut"){ wire.className="wire cut"; } else if(brk==="agent"){ wire.className="wire cut"; } else { wire.className="wire"; }
+  if(crashed){
+    bot(brk==="cut"?"⚠️ The reply stopped halfway: the connection was cut. I couldn't finish.":"⚠️ My agent run failed: the AI server refused the request.",true);
+    setRO("#roReal","bad","CRASHED",(brk==="cut"?"Connection cut mid-reply":"Agent run failed")+" · app saw "+res.app);
+  } else {
+    bot(String(res.app||"Your refund lookup is ready.").replace(/[<>&#*]/g,"").trim());
+    setRO("#roReal","ok","OK","The bot answered normally");
+  }
+  const d=res.disagreements||[];
+  if(d.length){ annun("on","Witness: neatlogs' "+(d[0].field==="run_status"?"agent workflow":"AI step")+" says "+nice(d[0].record)+", but the run really "+(crashed?"crashed":"failed")+"."); }
+  else { annun("agree",crashed?"The record says the run failed. It matches what really happened.":"Nothing broke, and the record says so."); }
+}
+function nice(s){return s==="OK"||s==="SUCCESS"?"SUCCESS":s}
+
+function showRecord(rec,res){
+  step("done");
+  const crashed=res.really==="crashed";
+  if(!rec){ setRO("#roRec","idle","?","neatlogs had not stored it yet"); return; }
+  const steps=rec.steps||[];
+  const main=steps.find(s=>s.name==="Agent workflow"&&s.status==="ERROR")||steps.find(s=>s.name==="Agent workflow")||steps.find(s=>(s.type||"").toLowerCase()==="llm"||/claude|haiku|response/i.test(s.name||""))||steps[0];
+  const st=main?main.status:rec.status;
+  const lie=crashed && st!=="ERROR";
+  setRO("#roRec",lie?"bad":(crashed?"ok":"ok"),st||"?",(main?main.name+" · ":"")+"trace "+(rec.trace_id||"").slice(0,8));
+  $("#recList").innerHTML="";
+  steps.forEach((s,i)=>{const row=document.createElement("div");row.className="rec"+(s.name==="TRACE DISAGREE"?" disagree":"");row.style.animationDelay=(i*90)+"ms";
+    row.innerHTML='<span>'+(s.name==="TRACE DISAGREE"?"🔴 ":"")+(s.name||"step").replace(/[<>&]/g,"")+'</span><span class="chip '+(s.name==="TRACE DISAGREE"?"ERROR":(s.status||"UNSET"))+'">'+(s.name==="TRACE DISAGREE"?"WITNESS":(s.status||"UNSET"))+'</span>';
+    $("#recList").appendChild(row);});
+  $("#recLink").innerHTML='Trace <code>'+rec.trace_id+'</code> in the Trueup neatlogs project (neatlogs login to the project needed to open it).';
+}
+
+async function refreshStats(){
+  try{const s=await (await fetch("/api/stats")).json(); $("#today").textContent=s.today+" / "+s.cap;
+    const t=s.totals||{}; const cell=(m,b)=>t[m+":"+b]||{runs:0,lit:0};
+    const rows=[["cut","Cut the connection"],["agent","Crash the agent"],["normal","Ask normally"]];
+    $("#tally").innerHTML=rows.map(([b,n])=>{const r=cell("released",b),f=cell("fixed",b);
+      return '<div class="proof"><div class="label">'+n+'</div><div style="display:flex;gap:18px;flex-wrap:wrap"><div><div class="big" style="font-size:2rem"><span class="'+(r.lit?'r':'')+'">'+r.lit+'</span><span style="color:var(--dim);font-size:1.2rem"> / '+r.runs+'</span></div><p>light on · as released</p></div><div><div class="big" style="font-size:2rem;color:var(--green)">'+f.lit+'<span style="color:var(--dim);font-size:1.2rem"> / '+f.runs+'</span></div><p>light on · with fixes</p></div></div></div>'}).join("");
+  }catch(e){}
+}
+refreshStats(); setInterval(refreshStats,15000);
+
+$("#copy").onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText("import trueup.witness\ntrueup.witness.watch()");$("#copy").textContent="Copied";setTimeout(()=>$("#copy").textContent="Copy",1500)};
+
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");if(e.target.querySelector("#c1"))count();io.unobserve(e.target)}}),{threshold:.15});
+$$(".reveal").forEach(e=>io.observe(e));
+let counted=false;function count(){if(counted)return;counted=true;const a=$("#c1"),b=$("#c2");const t0=performance.now();
+  (function f(t){const p=Math.min(1,(t-t0)/1400),e=1-Math.pow(1-p,3);a.textContent=(6.2*e).toFixed(1);b.textContent=(11.1*e).toFixed(1);if(p<1)requestAnimationFrame(f)})(t0);}
+</script>
+</body>
+</html>

@@ -2,7 +2,9 @@
 
 **Your dashboard said OK. Your agent crashed. Trueup turns on the DISAGREE light.**
 
-Aircraft use two readings and warn pilots when they disagree. AI teams usually trust one instrument: the tracing record. Witness independently watches provider traffic and compares what happened with what neatlogs recorded.
+**[Crash it yourself, live →](https://trueup.38-49-216-59.sslip.io)** Break a real AI bot with one click and watch the record.
+
+Planes warn pilots when two readings disagree. AI teams trust one instrument: the tracing record. Witness watches what really happened and compares it with what neatlogs recorded.
 
 ```python
 import trueup.witness
@@ -28,4 +30,4 @@ neatlogs' daily email said 6.2% of our runs failed. We checked all 81: 9 had cra
 
 [Evidence page](docs/index.html) · [Build record](hackathon.md) · [cfo.ai plan](https://cfo.ai/s/a9JKll8UYmSHs7-F)
 
-How we know these lies exist: Trueup's offline lab has 32 confirmed findings and five locally proven patches across neatlogs, OpenInference and OpenLLMetry.
+Trueup's offline lab: 32 confirmed findings, five proven patches across neatlogs, OpenInference and OpenLLMetry.
