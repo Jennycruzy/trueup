@@ -1,4 +1,4 @@
-<!-- Drafted by hand from Trueup's findings. Not posted. -->
+<!-- Posted 2026-10-12 as neatlogs/neatlogs#206 (issue) and #207 (pull request). -->
 
 # fix(openai-agents): mark the workflow span ERROR when the run fails
 

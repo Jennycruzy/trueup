@@ -496,3 +496,7 @@ A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194
   `upstream/neatlogs-openai-agents-processor-run-status/`. Not posted.
 - Still not perfect (OBSERVED): the agent's model step is ERROR with no exception event, reported as a note; an
   inner step also named "Agent workflow" still ends SUCCESS.
+- OBSERVED 12:40 UTC: posted the neatlogs Agents recorder fix as issue neatlogs/neatlogs#206 and pull request
+  #207 (owner approved). On neatlogs main, the full unit suite passes as their CI installs it (536 passed, 4 skipped;
+  the new tests skip without `openai-agents`). With openai-agents 0.23.1, the 6 new tests fail 2 without the fix
+  and all pass with it. black and isort are clean.

@@ -27,9 +27,10 @@ async each): 0 disagreements. All of this traffic cost $0.0124.
   maintainer's review suggestions applied. `neatlogs.init(instrumentations=["openai_agents"])` runs
   OpenInference's processor, so this one fix repairs the Agents record for neatlogs users and Arize users alike.
 
-neatlogs also has its own OpenAI Agents recorder (`neatlogs.openai_agents_processor()`), with the same bug. A fix
-for it, with 6 tests (2 fail before, all pass after), is drafted in
-[upstream/neatlogs-openai-agents-processor-run-status](../upstream/neatlogs-openai-agents-processor-run-status/pr.md).
+neatlogs also has its own OpenAI Agents recorder (`neatlogs.openai_agents_processor()`), with the same bug. We sent
+the fix, with 6 tests (2 fail before, all pass after): issue
+[neatlogs/neatlogs#206](https://github.com/neatlogs/neatlogs/issues/206), pull request
+[#207](https://github.com/neatlogs/neatlogs/pull/207).
 
 ## What is still not perfect
 

@@ -1,4 +1,4 @@
-<!-- Drafted by hand from Trueup's findings. Not posted. -->
+<!-- Posted 2026-10-12 as neatlogs/neatlogs#206 (issue) and #207 (pull request). -->
 
 # OpenAI Agents: a failed run is recorded as OK by `openai_agents_processor()`
 
