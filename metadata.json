@@ -1,0 +1,46 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4RBXANV46W0429HK35S7V4P",
+  "strategy": "manual-commit",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "README.md",
+    "docs/built-with.md",
+    "docs/business-plan.md",
+    "docs/getting-started.md",
+    "docs/how-it-works.md",
+    "docs/index.html",
+    "docs/limits.md",
+    "docs/neatlogs-email.md",
+    "docs/witness-before-after.md",
+    "evidence/business-plan.md",
+    "evidence/manifest.json",
+    "live/build_fixes.py",
+    "live/server.py",
+    "live/static/built-with.html",
+    "live/static/demo.html",
+    "live/static/fixes.html",
+    "live/static/how-it-works.html",
+    "live/static/index.html",
+    "live/static/site.css",
+    "live/static/site.js",
+    "tests/test_live_server.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/0/metadata.json",
+      "transcript": "/0/full.jsonl",
+      "compact_transcript": "/0/transcript.jsonl",
+      "content_hash": "/0/content_hash.txt",
+      "prompt": "/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 88,
+    "cache_creation_tokens": 135147,
+    "cache_read_tokens": 4509939,
+    "output_tokens": 53111,
+    "api_call_count": 45
+  }
+}

@@ -1,0 +1,45 @@
+You are working in the Trueup repository (this folder). Foreground commands only. Do not commit, push or post. Never print or write a key. No other project names, no private paths. Finish within 35 minutes. Another session is editing README.md and docs/*.md at the same time: do NOT touch README.md or docs/.
+
+# Goal: turn the live demo into a product website
+
+Today live/static/index.html is a single page (the "Crash it yourself" demo) served by live/server.py at https://trueup.38-49-216-59.sslip.io. Make it a product site with its own landing page and sub-pages:
+
+- `/` LANDING (new, live/static/index.html)
+- `/demo` the current demo page, unchanged in behaviour (move today's index.html to live/static/demo.html; keep every element id and the JS working)
+- `/how-it-works` (new)
+- `/fixes` (new)
+- `/built-with` (new): how neatlogs, Entire and cfo.ai were used
+
+Shared top nav on every page (logo "Trueup", links: How it works · Live demo · Fixes · Built with · GitHub) and a shared footer. Same visual language as the demo (the night-cockpit theme: deep navy background, amber/red/green instrument colours, Space Grotesk + JetBrains Mono, glass panels, subtle motion, prefers-reduced-motion respected, works at 390px wide with no horizontal scroll). Make it look like a real product, not a hackathon page: strong hero, clear sections, generous spacing, one primary call to action ("Try the live demo"), secondary "View on GitHub". Put shared CSS in live/static/site.css and shared JS (nav, reveal-on-scroll) in live/static/site.js; the demo keeps its own inline styles but adds the shared nav.
+
+## Words: plain, no internal jargon
+Write for a busy person. Never use: span, trace (say "record"), lead, scenario, harness, adapter, fixture, OBSERVED, DOCUMENTED, root span, instrumentation, OTel, payload. Say "record", "step", "tracing code", "the AI call". Lead with what Trueup does and what it proved. Limits go in one short, calm "What it does not do yet" box near the bottom of /how-it-works, not in the hero.
+
+## LANDING content (/)
+1. Hero: "Your dashboard said OK. Your agent crashed." Sub: "Trueup Witness checks your AI agent's records against what really happened, lights a DISAGREE warning inside neatlogs when they don't match, and fixes the tracing code that got it wrong." Buttons: Try the live demo → /demo; View on GitHub.
+2. Proof strip with 3-4 big numbers taken from the repo (see FACTS): 2 → 0 lies after the fixes; 0 false alarms in 40 real calls; 6.2% shown vs 11.1% real; 32 confirmed record errors across 3 tracing tools; 3 fixes sent to Arize, Traceloop and neatlogs (Arize reviewed by their head of open source).
+3. The problem (short): teams watch agents through a dashboard; the tracing code that feeds it can record a crashed run as SUCCESS; nobody checks the checker. Use the neatlogs email example and the cable-cut example.
+4. How it works (4 steps with small animated icons): Witness watches the real AI traffic → compares with the neatlogs record → writes a red TRACE DISAGREE step into the same record and fires a neatlogs alert → Trueup's agent finds the cause in the tracing code, writes the fix and tests, proves it, sends it upstream. Link to /how-it-works.
+5. Built with neatlogs, Entire and cfo.ai: three cards, one line each, link to /built-with.
+6. Install: the two lines, plus `with trueup.witness.run("order-1042"):` example. Link to GitHub.
+7. Footer.
+
+## /how-it-works
+Longer version of the 4 steps, with a simple animated diagram (SVG): your app → AI provider, Witness reading the same connection, the tracing code writing to neatlogs, Witness comparing, the DISAGREE step. Then "Where the lie comes from" (the tracing code, not the dashboard), "How Trueup fixes it" (the lab: a practice AI server that fails on purpose in 57 ways; compare; checker rules; fixer writes patch + test; verifier: the test must fail before and pass after, the full suite must still pass, no new mismatches; a second failed try is kept and shown). Then the "What it does not do yet" box (from FACTS).
+
+## /fixes
+A gallery generated from fixes/*/provenance.json and fixes/*/summary.md (write a small script live/build_fixes.py that renders live/static/fixes.html from those files; run it and commit nothing). One card per fix: plain title (what was wrong, in one sentence), before → after, the tests, the upstream link (Arize-ai/openinference#4024, traceloop/openllmetry#4610, neatlogs/neatlogs#207 are posted; others are "ready to send"), and "How this fix was made: Entire record →" ONLY when provenance.json has a checkpoint. Plus a card for the neatlogs Agents recorder fix (neatlogs/neatlogs#207, upstream/neatlogs-openai-agents-processor-run-status/).
+
+## /built-with
+Three sections, facts only from the files listed:
+- **neatlogs**: (a) every Trueup run and every live demo run is recorded in neatlogs; (b) Witness writes its TRACE DISAGREE step into the same neatlogs record, and a neatlogs detection counts it; (c) how neatlogs caught incidents in Trueup's OWN agent and how each was resolved: read docs/neatlogs.md, docs/detections.md and hackathon.md for the detections "model reply was not JSON", "lead withdrawn (own false alarm)", "fix attempt failed (retried)", "command could not run (exit 2)", the 27 false leads removed after an adapter fix, and the JSON retry; present 3-4 of them as incident → what neatlogs showed → how we fixed it, with the real numbers; (d) the model key neatlogs gave every team powered the planner, fixer and the live demo; (e) the daily email finding (docs/neatlogs-email.md).
+- **Entire**: every fix links to the Entire record of the session that made it (fixes/*/PROVENANCE.md); Entire's code graph was used to locate the code to fix (src/trueup/fixer/locate.py, fixes/*/graph-compare.md, report the honest result); the build history is public at entire.io/gh/Jennycruzy/trueup; the key checkpoint: https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9 (01M4M8M1GSQ2BM1RX2JKDJHPD6). Do not mention which sessions were not recorded here.
+- **cfo.ai**: the business plan https://cfo.ai/s/a9JKll8UYmSHs7-F, with the measured costs from docs/cfo-inputs.md (44 live calls $0.0124; a fix about $0.52; planner about $0.10; demo at most $2.53 a month) and the three plans (free, team, vendor) marked as proposals.
+
+## FACTS (use only these, or what you read in the repo; never invent)
+README.md, docs/witness-before-after.md, docs/neatlogs-email.md, docs/detections.md, docs/neatlogs.md, docs/cfo-inputs.md, evidence/headline.json, evidence/witness/*.json, fixes/*/, upstream/*/, hackathon.md. Limits for the box: neither upstream fix is merged yet; Witness reads OpenAI and Anthropic calls made through their Python SDKs; in the agent case the AI step is marked ERROR but without error details; it is tested with neatlogs as the dashboard.
+
+## Server
+Update live/server.py so clean paths serve the pages (/ /demo /how-it-works /fixes /built-with, with and without .html), plus /site.css, /site.js and /x/*.png; unknown paths 404; no path can escape live/static or docs/x. Keep every /api route and the safety rules exactly as they are. Extend tests/test_live_server.py for the new routes (and that ../ tricks fail). `uv run pytest -q` must be green.
+
+Check the pages render: start the server locally on a free port with dummy env vars only for the static routes (do not call /api/run), fetch each page with curl, and if the playwright headless shell at ~/.cache/ms-playwright/chromium_headless_shell-1243/chrome-headless-shell-linux64/chrome-headless-shell is usable from python, screenshot / and /built-with at 1280 and 390 wide into a temp dir and fix any layout problems you see. Print a short summary at the end.

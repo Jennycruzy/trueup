@@ -1,0 +1,64 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4RBXANV46W0429HK35S7V4P",
+  "session_id": "1c377859-3fa4-4a32-9cd7-9098fc8b6cb1",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-12T15:32:45.581403819Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "README.md",
+    "docs/built-with.md",
+    "docs/business-plan.md",
+    "docs/getting-started.md",
+    "docs/how-it-works.md",
+    "docs/index.html",
+    "docs/limits.md",
+    "docs/neatlogs-email.md",
+    "docs/witness-before-after.md",
+    "evidence/business-plan.md",
+    "evidence/manifest.json",
+    "live/build_fixes.py",
+    "live/server.py",
+    "live/static/built-with.html",
+    "live/static/demo.html",
+    "live/static/fixes.html",
+    "live/static/how-it-works.html",
+    "live/static/index.html",
+    "live/static/site.css",
+    "live/static/site.js",
+    "tests/test_live_server.py"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "bf9ffe11ba56",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 88,
+    "cache_creation_tokens": 135147,
+    "cache_read_tokens": 4509939,
+    "output_tokens": 53111,
+    "api_call_count": 45
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-12T15:32:45.467201991Z",
+    "agent_lines": 1874,
+    "agent_removed": 373,
+    "human_added": 88,
+    "human_modified": 18,
+    "human_removed": 0,
+    "total_committed": 1980,
+    "total_lines_changed": 2353,
+    "agent_percentage": 95.49511262218444,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
