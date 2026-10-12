@@ -64,7 +64,7 @@ When the record is wrong, Witness adds a red `TRACE DISAGREE` step to that recor
 From the project folder:
 
 ```
-uv run entire trueup --help                               # Trueup as an Entire command
+uv run entire trueup --help                               # Trueup as an Entire command (needs the Entire CLI)
 uv run trueup audit examples/agent.py --library neatlogs  # check your own script safely
 ```
 
