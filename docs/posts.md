@@ -36,3 +36,5 @@ It watches status, exceptions, stream completion, refusals, tools and usage. It 
 2. `2-light-out.png`: before/after from the neatlogs records (real Claude Haiku calls through the event's model key).
 3. `3-neatlogs-pr.png`: neatlogs PR #207 (GitHub screenshot, 12 Oct).
 4. `4-neatlogs-email.png`: the daily email (6.2%) next to the real crash rate (11.1%).
+5. `5-entire-record.png`: the Entire record of the session that built the fixer (public page, 12 Oct).
+6. `6-cfo-plan.png`: the cfo.ai plan (shared page, 12 Oct).
