@@ -1,31 +1,22 @@
-"""Repro: neatlogs on scenario oa-chat-refusal. The model refuses; content is null, refusal is set.
-Offline: a local fake provider answers; no API keys, no network.
-Run with neatlogs installed: PYTHONPATH=<trueup>/src python neatlogs-oa-chat-refusal.py
-"""
-import gc, json, os
-from trueup.runner.setups import CHILD_ENV, SETUPS, quiet_agents_sdk
-os.environ.update(CHILD_ENV)  # content capture on, export off, fake keys
-from trueup.core.compare import compare, leads
-from trueup.core.model import Observation
-from trueup.fake import FakeProvider
-from trueup.runner import framework_apps, truth
-from trueup.runner.apps import APPS
-from trueup.runner.child import span_to_dict
-from trueup.scenarios import get
+"""neatlogs + OpenAI Chat Completions: refusal text is not recorded.
+Offline: a small response object stands in for the provider; export is off."""
+from types import SimpleNamespace as NS
 
-s = get("oa-chat-refusal")
-exporter, flush = SETUPS["neatlogs"](s.framework)  # the library's recommended setup
-if s.framework == "openai-agents":
-    quiet_agents_sdk()  # drop the Agents SDK's own upload to api.openai.com
-with FakeProvider() as fake:
-    try:
-        app = {"outcome": "ok", "result": APPS[s.app](fake.base_url, s.model)}
-    except Exception as e:
-        app = {"outcome": "exception", "exception_type": type(e).__name__, "message": str(e)}
-    gc.collect()
-    flush()
-    log = fake.log.entries()
-t = {**truth.derive(log, app, framework_apps.TOOL_RUNS), "expected": s.expected, "app": app, "fake_log": log}
-spans = [span_to_dict(x) for x in exporter.get_finished_spans()]
-for m in leads(compare(Observation(t, {"library": "neatlogs", "spans": spans}))):
-    print(json.dumps(m.to_dict(), default=str))
+from neatlogs._wrap_utils import set_neatlogs_provider
+from neatlogs.openai import wrap_openai_client
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+class Completions:
+    def create(self, **kwargs):
+        message = NS(role="assistant", content=None, refusal="I can't help with that.", tool_calls=[])
+        return NS(id="r1", model="m", choices=[NS(index=0, message=message, finish_reason="stop")], usage=None)
+
+exporter, provider = InMemorySpanExporter(), TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+set_neatlogs_provider(provider)
+client = wrap_openai_client(NS(chat=NS(completions=Completions())))
+client.chat.completions.create(model="m", messages=[{"role": "user", "content": "hi"}])
+span = exporter.get_finished_spans()[0]
+print("recorded output:", span.attributes.get("neatlogs.llm.output_messages.0.content"))

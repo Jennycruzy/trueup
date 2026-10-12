@@ -305,6 +305,13 @@
    "input_tokens": 118415,
    "run_id": "20261011T004013Z-fix-openinference",
    "tries": 3
+  },
+  {
+   "calls": 3,
+   "fixed": false,
+   "input_tokens": 77377,
+   "run_id": "20261011T194424Z-fix-openinference",
+   "tries": 3
   }
  ],
  "note": "cost_usd = tokens at list price; key_spend_delta_usd = the proxy's spend before/after, which lags (hackathon.md).",

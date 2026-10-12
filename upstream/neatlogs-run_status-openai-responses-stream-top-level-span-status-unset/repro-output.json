@@ -1,0 +1,66 @@
+{
+ "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+ "repro_lines": 23,
+ "before": {
+  "exit": 0,
+  "stdout": "span status: OK; exception events: 0",
+  "stderr": ""
+ },
+ "after": {
+  "exit": 0,
+  "stdout": "span status: ERROR; exception events: 1",
+  "stderr": ""
+ },
+ "after_note": "patched",
+ "environment": {
+  "python": "3.12.3",
+  "os": "Linux x86_64",
+  "latest release": {
+   "neatlogs": "1.4.26",
+   "openinference-instrumentation-langchain": "0.1.79",
+   "openinference-instrumentation-openai-agents": "2.5.3",
+   "openai": "3.29.0",
+   "anthropic": "1.13.0",
+   "opentelemetry-sdk": "1.45.1",
+   "langchain-core": "1.6.9",
+   "langchain-openai": "1.7.0",
+   "langgraph": "1.2.14",
+   "openai-agents": "0.23.1"
+  },
+  "patched": {
+   "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+   "packages": [
+    "."
+   ]
+  }
+ },
+ "boundary": {
+  "affected": [
+   "oa-resp-stream-error-event"
+  ],
+  "right": [
+   "oa-chat-plain",
+   "oa-chat-stream-usage",
+   "oa-chat-stream-no-usage",
+   "oa-chat-tools",
+   "oa-chat-stream-tools",
+   "oa-chat-refusal",
+   "oa-chat-n2",
+   "oa-chat-500",
+   "oa-chat-stream-error-event",
+   "oa-chat-stream-cut",
+   "oa-chat-stream-break",
+   "oa-chat-async-stream",
+   "oa-resp-plain",
+   "oa-resp-tool",
+   "oa-resp-reasoning",
+   "oa-resp-failed",
+   "oa-resp-incomplete",
+   "oa-resp-stream",
+   "oa-resp-stream-tool",
+   "oa-resp-stream-cut"
+  ]
+ },
+ "fixed": true,
+ "posted": false
+}

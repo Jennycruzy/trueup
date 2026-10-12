@@ -1,31 +1,23 @@
-"""Repro: neatlogs on scenario oa-resp-stream-error-event. An error event arrives mid-stream. The SDK hands it to the app; the app raises RuntimeError.
-Offline: a local fake provider answers; no API keys, no network.
-Run with neatlogs installed: PYTHONPATH=<trueup>/src python neatlogs-oa-resp-stream-error-event.py
-"""
-import gc, json, os
-from trueup.runner.setups import CHILD_ENV, SETUPS, quiet_agents_sdk
-os.environ.update(CHILD_ENV)  # content capture on, export off, fake keys
-from trueup.core.compare import compare, leads
-from trueup.core.model import Observation
-from trueup.fake import FakeProvider
-from trueup.runner import framework_apps, truth
-from trueup.runner.apps import APPS
-from trueup.runner.child import span_to_dict
-from trueup.scenarios import get
+"""neatlogs + OpenAI Responses: a terminal error event leaves the span UNSET.
+Offline: a small event iterator stands in for the provider; export is off."""
+from types import SimpleNamespace as NS
 
-s = get("oa-resp-stream-error-event")
-exporter, flush = SETUPS["neatlogs"](s.framework)  # the library's recommended setup
-if s.framework == "openai-agents":
-    quiet_agents_sdk()  # drop the Agents SDK's own upload to api.openai.com
-with FakeProvider() as fake:
-    try:
-        app = {"outcome": "ok", "result": APPS[s.app](fake.base_url, s.model)}
-    except Exception as e:
-        app = {"outcome": "exception", "exception_type": type(e).__name__, "message": str(e)}
-    gc.collect()
-    flush()
-    log = fake.log.entries()
-t = {**truth.derive(log, app, framework_apps.TOOL_RUNS), "expected": s.expected, "app": app, "fake_log": log}
-spans = [span_to_dict(x) for x in exporter.get_finished_spans()]
-for m in leads(compare(Observation(t, {"library": "neatlogs", "spans": spans}))):
-    print(json.dumps(m.to_dict(), default=str))
+from neatlogs._wrap_utils import set_neatlogs_provider
+from neatlogs.openai import wrap_openai_client
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+class Responses:
+    def create(self, **kwargs):
+        return iter([NS(type="response.created", response=None),
+                     NS(type="error", message="server failed", code="server_error")])
+
+exporter, provider = InMemorySpanExporter(), TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+set_neatlogs_provider(provider)
+client = wrap_openai_client(NS(responses=Responses()))
+list(client.responses.create(model="m", input="hi", stream=True))
+span = exporter.get_finished_spans()[0]
+errors = sum(event.name == "exception" for event in span.events)
+print(f"span status: {span.status.status_code.name}; exception events: {errors}")

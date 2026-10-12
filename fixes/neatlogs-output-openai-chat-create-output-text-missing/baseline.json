@@ -1,0 +1,2219 @@
+{
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "suites": {
+  ".": {
+   "cmd": "pytest tests/unit",
+   "cwd": ".",
+   "exit": 1,
+   "tail": "........................................................................ [ 13%]\n........................................................................ [ 27%]\n........................................................................ [ 40%]\n........................................................................ [ 54%]\n........................................................................ [ 68%]\n........................................................................ [ 81%]\n........................................................................ [ 95%]\n.......................                                                  [100%]\n==================================== ERRORS ====================================\n________ ERROR collecting tests/unit/test_google_finish_reason_value.py ________\nImportError while importing test module '.trueup/clones/neatlogs/tests/unit/test_google_finish_reason_value.py'.\nHint: make sure your test modules/packages have valid Python names.\nTraceback:\n/usr/lib/python3.12/importlib/__init__.py:90: in import_module\n    return _bootstrap._gcd_import(name[level:], package, level)\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\ntests/unit/test_google_finish_reason_value.py:1: in <module>\n    from google.genai import types\nE   ModuleNotFoundError: No module named 'google.genai'\n=========================== short test summary info ============================\nERROR tests/unit/test_google_finish_reason_value.py\n527 passed, 4 skipped, 1 error in 12.51s",
+   "brief": "E   ModuleNotFoundError: No module named 'google.genai'\nERROR tests/unit/test_google_finish_reason_value.py",
+   "total": 532,
+   "passed": 527,
+   "failed": 0,
+   "errors": 1,
+   "skipped": 4,
+   "failing": [
+    "::tests.unit.test_google_finish_reason_value"
+   ],
+   "tests": [
+    "::tests.unit.test_google_adk_private_instrumentation",
+    "::tests.unit.test_google_finish_reason_value",
+    "::tests.unit.test_langchain_callback_usage",
+    "::tests.unit.test_pydantic_ai_native_instrumentation",
+    "::tests.unit.test_strands_private_instrumentation",
+    "tests.unit.test_attribute_processor_intermediate_steps::test_intermediate_steps_extracted_from_output_messages",
+    "tests.unit.test_attribute_processor_intermediate_steps::test_intermediate_steps_not_added_when_no_react_markers",
+    "tests.unit.test_attribute_processor_intermediate_steps::test_intermediate_steps_ignored_for_non_llm_spans",
+    "tests.unit.test_attribute_processor_intermediate_steps::test_tool_calls_normalized_and_source_keys_removed",
+    "tests.unit.test_attribute_processor_intermediate_steps::test_crewai_token_usage_fallback_parsed",
+    "tests.unit.test_byte_limited_exporter::test_splits_batches_using_encoded_protobuf_upper_bound",
+    "tests.unit.test_byte_limited_exporter::test_rejects_one_oversized_span_when_backend_upload_authority_is_unavailable",
+    "tests.unit.test_byte_limited_exporter::test_injectable_upload_authority_receives_complete_masked_envelope",
+    "tests.unit.test_byte_limited_exporter::test_upload_opt_in_keeps_phase3_limits_for_non_overflow_spans",
+    "tests.unit.test_byte_limited_exporter::test_oversized_upload_contains_the_complete_masked_span_and_is_not_sent_twice",
+    "tests.unit.test_byte_limited_exporter::test_upload_authority_boolean_does_not_falsely_claim_delivery",
+    "tests.unit.test_byte_limited_exporter::test_backend_oversize_is_rejected_before_allocating_serialized_payload",
+    "tests.unit.test_byte_limited_exporter::test_exposes_final_export_failure_count",
+    "tests.unit.test_byte_limited_exporter::test_exporter_exception_counts_current_and_unattempted_tail",
+    "tests.unit.test_byte_limited_exporter::test_split_failure_counts_failed_and_all_unattempted_tail_batches[results0-1-3]",
+    "tests.unit.test_byte_limited_exporter::test_split_failure_counts_failed_and_all_unattempted_tail_batches[results1-2-2]",
+    "tests.unit.test_byte_limited_exporter::test_split_failure_counts_failed_and_all_unattempted_tail_batches[results2-3-1]",
+    "tests.unit.test_byte_limited_log_exporter::test_splits_log_batches_using_encoded_protobuf_upper_bound",
+    "tests.unit.test_byte_limited_log_exporter::test_rejects_oversized_log_when_upload_authority_is_unavailable",
+    "tests.unit.test_byte_limited_log_exporter::test_log_split_failure_counts_failed_and_unattempted_tail[results0-1-3]",
+    "tests.unit.test_byte_limited_log_exporter::test_log_split_failure_counts_failed_and_unattempted_tail[results1-2-2]",
+    "tests.unit.test_byte_limited_log_exporter::test_log_split_failure_counts_failed_and_unattempted_tail[results2-3-1]",
+    "tests.unit.test_byte_limited_log_exporter::test_log_exporter_exception_counts_current_and_unattempted_tail",
+    "tests.unit.test_byte_limited_log_exporter::test_unsupported_log_overflow_exposes_a_safe_failure_reason",
+    "tests.unit.test_byte_limited_log_exporter::test_enabling_trace_uploads_does_not_remove_log_capture_bounds",
+    "tests.unit.test_capture_limits::test_serialize_has_a_byte_bound_and_self_describing_truncation",
+    "tests.unit.test_capture_limits::test_post_mask_span_capture_is_bounded_and_reported",
+    "tests.unit.test_capture_limits::test_post_mask_log_capture_is_bounded_and_reported",
+    "tests.unit.test_capture_limits::test_masking_precedes_injected_overflow_authority",
+    "tests.unit.test_capture_limits::test_span_capture_budget_covers_name_status_resource_and_mapping_keys",
+    "tests.unit.test_capture_limits::test_log_capture_bounds_bytes_resource_fields_and_collision_safe_mapping_keys",
+    "tests.unit.test_choice_accumulator::test_interleaved_choices_and_tool_fragments_are_preserved",
+    "tests.unit.test_choice_accumulator::test_sync_early_close_exports_partial_content_as_interrupted",
+    "tests.unit.test_choice_accumulator::test_sync_for_loop_break_finalizes_without_explicit_close",
+    "tests.unit.test_choice_accumulator::test_sync_iterator_break_does_not_close_provider_stream",
+    "tests.unit.test_choice_accumulator::test_legacy_provider_finalizer_preserves_unset_on_early_close",
+    "tests.unit.test_choice_accumulator::test_reasoning_content_uses_backend_thinking_selector_for_response_and_stream",
+    "tests.unit.test_choice_accumulator::test_incremental_choice_capture_is_memory_bounded_and_explicit",
+    "tests.unit.test_choice_accumulator::test_legacy_stream_keeps_terminal_usage_beyond_1024_small_events",
+    "tests.unit.test_choice_accumulator::test_legacy_stream_huge_chunk_is_not_retained_or_marked_successful",
+    "tests.unit.test_choice_accumulator::test_async_cancellation_exports_partial_content_as_interrupted",
+    "tests.unit.test_choice_accumulator::test_flattened_callback_can_report_capture_fidelity_explicitly",
+    "tests.unit.test_choice_accumulator::test_google_candidates_share_the_same_multi_choice_and_tool_schema",
+    "tests.unit.test_choice_accumulator::test_single_choice_flattened_family_reports_limitation_without_inventing_choices",
+    "tests.unit.test_choice_accumulator::test_google_stream_finalizer_is_incremental_and_preserves_partial_candidate",
+    "tests.unit.test_choice_accumulator::test_streamed_media_accumulation_is_deduplicated_and_bounded",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[gemini-2.5-pro-vertex_ai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[gemini-1.5-flash-vertex_ai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[publishers/google/models/gemini-2.0-flash-vertex_ai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[GEMINI-2.5-PRO-vertex_ai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[claude-sonnet-5-anthropic]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[claude-opus-4-8-anthropic]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[us.anthropic.claude-opus-4-8-v1:0-anthropic]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[CLAUDE-HAIKU-4-5-anthropic]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[gpt-4o-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[gpt-5-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[GPT-4O-MINI-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[gpt-oss-120b-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[o1-preview-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[o3-mini-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[o4-mini-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[azure/gpt-4o-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[mistral-large-latest-mistral]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[mixtral-8x7b-instruct-mistral]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[open-mistral-nemo-mistral]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[MISTRAL-SMALL-mistral]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[llama-3.1-70b-instruct-meta]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[meta-llama/Llama-3-8b-meta]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[LLAMA-4-SCOUT-meta]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[command-r-plus-unknown]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[deepseek-chat-unknown]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[qwen-2.5-72b-unknown]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_table[-unknown]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_handles_missing_model[None]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_handles_missing_model[]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_is_case_insensitive",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_rule_precedence[claude-proxy-via-gemini-vertex_ai-gemini rule precedes claude]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_rule_precedence[claude-gpt-bridge-anthropic-claude rule precedes openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_rule_precedence[claude-llama-router-anthropic-claude rule precedes meta]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_for_model_rule_precedence[mistral-llama-merge-mistral-mistral rule precedes meta]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_gateway_namespaced_openai_ids_resolve[azure/gpt-4o]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_gateway_namespaced_openai_ids_resolve[openai/gpt-4o]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_gateway_namespaced_openai_ids_resolve[litellm_proxy/gpt-4o]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_gateway_namespaced_openai_ids_resolve[my-gpt-4o-deployment]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_gateway_namespaced_openai_ids_resolve[openai.gpt-oss-120b-1:0]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_gateway_namespaced_openai_ids_resolve[bedrock/openai.gpt-oss-20b]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_openai_o_series_ids[o1-preview]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_openai_o_series_ids[o3]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_openai_o_series_ids[o4-mini]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_openai_o_series_ids[azure/o3-mini]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_openai_o_series_ids[litellm_proxy/o1]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_chatgpt_ids_resolve[chatgpt-4o-latest]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_chatgpt_ids_resolve[azure/chatgpt-4o-latest]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_o_series_does_not_overmatch_other_vendors[cohere-o1]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_o_series_does_not_overmatch_other_vendors[command-o1]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_o_series_does_not_overmatch_other_vendors[some-model-o3]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_llm_span_carries_resolved_provider[claude-sonnet-5-anthropic]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_llm_span_carries_resolved_provider[gemini-2.5-pro-vertex_ai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_llm_span_carries_resolved_provider[gpt-4o-openai]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_llm_span_carries_resolved_provider[llama-3.1-70b-meta]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_llm_span_carries_resolved_provider[some-unlisted-model-unknown]",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_llm_span_provider_is_not_hardcoded_anthropic",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_falls_back_to_system_message_model",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_unknown_when_no_model_anywhere",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_provider_resolved_per_turn_when_model_switches",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_subagent_llm_span_also_resolves_provider",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_failed_tool_result_sets_standard_error_attributes",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_successful_tool_result_sets_no_error_attributes",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_tool_result_without_is_error_flag_is_success",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_error_message_serialises_non_string_tool_output",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_error_message_tolerates_empty_tool_output",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_only_the_failing_tool_is_marked_in_a_mixed_turn",
+    "tests.unit.test_claude_agent_sdk_provider_and_errors::test_error_attributes_survive_full_async_iteration",
+    "tests.unit.test_code_params_capture::test_semantic_span_kinds_auto_capture_io[GUARDRAIL]",
+    "tests.unit.test_code_params_capture::test_semantic_span_kinds_auto_capture_io[EVALUATOR]",
+    "tests.unit.test_code_params_capture::test_semantic_span_kinds_auto_capture_io[MEMORY]",
+    "tests.unit.test_code_params_capture::test_sync_decorator_sets_code_file_path",
+    "tests.unit.test_code_params_capture::test_sync_decorator_sets_code_function_name",
+    "tests.unit.test_code_params_capture::test_sync_decorator_sets_code_line_number",
+    "tests.unit.test_code_params_capture::test_sync_decorator_sets_code_namespace",
+    "tests.unit.test_code_params_capture::test_async_decorator_sets_code_attributes",
+    "tests.unit.test_code_params_capture::test_caller_attributes_preserved_alongside_code_attrs",
+    "tests.unit.test_code_params_capture::test_user_supplied_code_attrs_take_precedence",
+    "tests.unit.test_code_params_capture::test_code_attrs_do_not_appear_on_plain_otel_span",
+    "tests.unit.test_code_params_capture::test_stacked_decorator_reports_inner_function_location",
+    "tests.unit.test_code_params_capture::test_parentless_tool_gets_one_root_with_identity",
+    "tests.unit.test_code_params_capture::test_parentless_llm_remains_the_backend_supported_root",
+    "tests.unit.test_code_params_capture::test_parentless_tool_context_gets_one_root_with_identity",
+    "tests.unit.test_code_params_capture::test_mcp_tool_decorator_sets_code_attributes",
+    "tests.unit.test_code_params_capture::test_mcp_tool_async_decorator_sets_code_attributes",
+    "tests.unit.test_crewai_prompt_fidelity::test_example_uses_generic_document_analysis_contract",
+    "tests.unit.test_crewai_prompt_fidelity::test_example_builds_deterministic_task_beyond_12000_characters",
+    "tests.unit.test_crewai_prompt_fidelity::test_example_uses_automatic_crewai_instrumentation",
+    "tests.unit.test_crewai_prompt_fidelity::test_crewai_string_input_preserves_content_after_10000_characters",
+    "tests.unit.test_crewai_prompt_fidelity::test_crewai_message_list_preserves_roles_history_and_long_prompts",
+    "tests.unit.test_crewai_prompt_fidelity_example::test_prompt_builder_places_configured_tail_after_100000",
+    "tests.unit.test_crewai_prompt_fidelity_example::test_tool_builder_returns_plain_string_with_tail_after_10000",
+    "tests.unit.test_crewai_prompt_fidelity_example::test_default_prompt_probe_remains_bounded",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_bounds_long_structured_input_output_without_changing_return_value",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_preserves_plain_string_output_without_json_quotes",
+    "tests.unit.test_crewai_tool_fidelity::test_structured_tool_matches_base_tool_fidelity",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_captures_empty_non_none_results[result0]",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_captures_empty_non_none_results[result1]",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_captures_empty_non_none_results[]",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_serializes_non_json_native_values_without_changing_return",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_serialization_failure_does_not_replace_business_result",
+    "tests.unit.test_crewai_tool_fidelity::test_base_tool_preserves_exception_and_records_error_span",
+    "tests.unit.test_crewai_tool_fidelity::test_representative_crewai_span_kinds_include_framework_identity",
+    "tests.unit.test_decorator_capture_policy::test_default_capture_records_input_and_output",
+    "tests.unit.test_decorator_capture_policy::test_explicit_capture_controls_remain_local_and_deterministic",
+    "tests.unit.test_decorator_streaming::test_sync_generator_span_stays_open_and_records_every_chunk",
+    "tests.unit.test_decorator_streaming::test_sync_generator_close_exports_partial_output",
+    "tests.unit.test_decorator_streaming::test_async_generator_span_stays_open_and_records_every_chunk",
+    "tests.unit.test_decorator_streaming::test_cancelled_coroutine_is_interrupted_not_error",
+    "tests.unit.test_decorator_streaming::test_shutdown_of_active_sync_generator_exports_partial_output_without_fake_status",
+    "tests.unit.test_decorator_streaming::test_shutdown_of_active_async_generator_exports_partial_output_without_fake_status",
+    "tests.unit.test_delivery_diagnostics::test_exposes_queue_saturation_before_otel_drops",
+    "tests.unit.test_delivery_diagnostics::test_default_diagnostics_report_backend_upload_contract_dependency",
+    "tests.unit.test_doctor_v2::test_canonical_digest_matches_cross_language_golden_value",
+    "tests.unit.test_doctor_v2::test_rich_digest_matches_cross_language_golden_with_top_level_tool_requests",
+    "tests.unit.test_doctor_v2::test_valid_envelope_conforms_to_doctor_v2_shape",
+    "tests.unit.test_doctor_v2::test_unknown_future_reason_uses_safe_support_remediation",
+    "tests.unit.test_doctor_v2::test_validation_reports_first_contract_order_failure",
+    "tests.unit.test_doctor_v2::test_ordinary_exporter_path_never_enters_doctor_retention",
+    "tests.unit.test_doctor_v2::test_explicit_doctor_exporter_captures_only_post_mask_data",
+    "tests.unit.test_doctor_v2::test_production_choice_and_media_paths_flow_into_doctor_capture",
+    "tests.unit.test_doctor_v2::test_public_google_genai_wrapper_flows_through_normalizer_and_doctor_capture",
+    "tests.unit.test_doctor_v2::test_emitted_span_capture_derives_choices_stream_tool_and_payload_fields",
+    "tests.unit.test_doctor_v2::test_capture_store_is_bounded_to_sixteen_traces",
+    "tests.unit.test_doctor_v2::test_capture_store_has_hard_span_and_byte_bounds",
+    "tests.unit.test_doctor_v2::test_probe_exports_and_reads_back_the_exact_trace",
+    "tests.unit.test_doctor_v2::test_ordinary_runtime_then_probe_fails_closed_without_disturbing_runtime",
+    "tests.unit.test_doctor_v2::test_probe_then_ordinary_runtime_starts_without_doctor_transport",
+    "tests.unit.test_doctor_v2::test_probe_rejects_wrong_materialized_input_output",
+    "tests.unit.test_doctor_v2::test_probe_reports_terminal_correlation_roots_and_duplicates",
+    "tests.unit.test_doctor_v2::test_probe_rejects_failed_or_error_terminal_readback",
+    "tests.unit.test_doctor_v2::test_probe_exporter_uses_normal_trace_route_and_versioned_header",
+    "tests.unit.test_doctor_v2::test_probe_missing_credential_never_echoes_environment",
+    "tests.unit.test_doctor_v2::test_probe_invalid_endpoint_returns_stable_configuration_failure",
+    "tests.unit.test_doctor_v2::test_standalone_local_runs_real_isolated_exporter_pipeline",
+    "tests.unit.test_doctor_v2::test_standalone_requires_an_explicit_doctor_mode",
+    "tests.unit.test_doctor_v2::test_probe_never_treats_processing_readback_as_success",
+    "tests.unit.test_doctor_v2::test_probe_retains_safe_diagnostics_from_not_found_until_timeout",
+    "tests.unit.test_doctor_v2::test_probe_stops_on_terminal_stage_receipt_with_safe_details",
+    "tests.unit.test_doctor_v2::test_probe_classifies_dlq_without_optional_diagnostics_as_pipeline_failure",
+    "tests.unit.test_doctor_v2::test_probe_rejects_dlq_without_required_error",
+    "tests.unit.test_doctor_v2::test_probe_ignores_unknown_or_malformed_stage_diagnostics",
+    "tests.unit.test_doctor_v2::test_probe_refuses_cross_origin_redirect_without_forwarding_credentials",
+    "tests.unit.test_doctor_v2::test_probe_caps_all_readback_status_bodies",
+    "tests.unit.test_doctor_v2::test_probe_success_uses_only_final_response_diagnostics",
+    "tests.unit.test_doctor_v2::test_probe_classifies_terminal_readback_failures_and_retains_only_safe_details",
+    "tests.unit.test_doctor_v2::test_probe_classifies_request_that_exhausts_deadline_as_readback_timeout",
+    "tests.unit.test_doctor_v2::test_probe_does_not_retain_stale_details_for_malformed_terminal_receipt",
+    "tests.unit.test_doctor_v2::test_probe_rejects_redacted_token_counts",
+    "tests.unit.test_doctor_v2::test_standalone_local_reports_missing_configuration",
+    "tests.unit.test_endpoint_normalization::test_normalize_traces_endpoint_accepts_base_or_traces_endpoint[https://ingest.neatlogs.com-https://ingest.neatlogs.com/v1/traces]",
+    "tests.unit.test_endpoint_normalization::test_normalize_traces_endpoint_accepts_base_or_traces_endpoint[https://ingest.neatlogs.com/-https://ingest.neatlogs.com/v1/traces]",
+    "tests.unit.test_endpoint_normalization::test_normalize_traces_endpoint_accepts_base_or_traces_endpoint[https://ingest.neatlogs.com/v1/traces-https://ingest.neatlogs.com/v1/traces]",
+    "tests.unit.test_endpoint_normalization::test_normalize_traces_endpoint_accepts_base_or_traces_endpoint[-https://ingest.neatlogs.com/v1/traces]",
+    "tests.unit.test_endpoint_normalization::test_normalize_traces_endpoint_rejects_path_endpoints[https://ingest.neatlogs.com/api/data/v4/batch]",
+    "tests.unit.test_endpoint_normalization::test_normalize_traces_endpoint_rejects_path_endpoints[https://ingest.neatlogs.com/api/data/v2]",
+    "tests.unit.test_endpoint_normalization::test_normalize_traces_endpoint_rejects_path_endpoints[ingest.neatlogs.com]",
+    "tests.unit.test_google_genai_content_roles::test_plain_string_is_user",
+    "tests.unit.test_google_genai_content_roles::test_dict_content_keeps_role_and_text",
+    "tests.unit.test_google_genai_content_roles::test_typed_content_user_role_and_text",
+    "tests.unit.test_google_genai_content_roles::test_typed_content_model_role_preserved",
+    "tests.unit.test_google_genai_content_roles::test_typed_content_multi_part_text_joined",
+    "tests.unit.test_google_genai_content_roles::test_typed_function_call_part_serialized",
+    "tests.unit.test_google_genai_content_roles::test_typed_function_response_part_serialized",
+    "tests.unit.test_google_genai_content_roles::test_text_from_parts_mixed",
+    "tests.unit.test_google_genai_tool_definitions::test_multiple_tool_groups_keep_every_function_declaration",
+    "tests.unit.test_google_stream_start_errors::test_sync_stream_start_failure_ends_error_span[wrap_google_genai_client]",
+    "tests.unit.test_google_stream_start_errors::test_sync_stream_start_failure_ends_error_span[wrap_vertex_ai_client]",
+    "tests.unit.test_google_stream_tool_call_positions::test_function_calls_in_separate_chunks_stay_separate",
+    "tests.unit.test_google_stream_tool_call_positions::test_id_less_function_calls_in_separate_chunks_stay_separate",
+    "tests.unit.test_google_stream_tool_call_positions::test_repeated_provider_id_updates_one_call_with_valid_arguments",
+    "tests.unit.test_google_stream_tool_call_positions::test_parallel_calls_in_one_chunk_keep_their_order",
+    "tests.unit.test_graceful_trace_shutdown::test_python_312_atexit_shutdown_never_starts_a_thread[default]",
+    "tests.unit.test_graceful_trace_shutdown::test_python_312_atexit_shutdown_never_starts_a_thread[client]",
+    "tests.unit.test_graceful_trace_shutdown::test_prestarted_deadline_worker_returns_at_deadline_without_starting_a_thread",
+    "tests.unit.test_graceful_trace_shutdown::test_mask_runner_uses_workers_started_before_atexit",
+    "tests.unit.test_graceful_trace_shutdown::test_atexit_flush_with_mask_uses_only_prestarted_workers",
+    "tests.unit.test_graceful_trace_shutdown::test_concurrent_client_shutdown_wait_is_deadline_bounded",
+    "tests.unit.test_graceful_trace_shutdown::test_concurrent_default_shutdown_wait_is_deadline_bounded",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_owns_wrapper_only_bootstrap_resources",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_closes_distinct_initialized_and_wrapper_providers",
+    "tests.unit.test_graceful_trace_shutdown::test_end_active_spans_closes_children_then_root_and_emits_completion_marker",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_signal_handler_returns_control_to_previous_callable[2-SIGINT]",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_signal_handler_returns_control_to_previous_callable[15-SIGTERM]",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_signal_handler_preserves_default_termination[2-KeyboardInterrupt-None]",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_signal_handler_preserves_default_termination[15-SystemExit-143]",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_signal_handler_honors_ignored_signal",
+    "tests.unit.test_graceful_trace_shutdown::test_batch_processor_receives_root_before_completion_marker",
+    "tests.unit.test_graceful_trace_shutdown::test_cached_tracer_span_started_during_shutdown_is_closed_and_sanitized",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_is_same_thread_reentrant",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_drains_logs_before_trace_completion",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_deadline_detaches_a_stuck_exporter_generation",
+    "tests.unit.test_graceful_trace_shutdown::test_completion_marker_is_deferred_until_requested",
+    "tests.unit.test_graceful_trace_shutdown::test_disabled_export_does_not_accumulate_completion_eligibility",
+    "tests.unit.test_graceful_trace_shutdown::test_deferred_boundary_does_not_strand_late_roots",
+    "tests.unit.test_graceful_trace_shutdown::test_shutdown_waits_for_root_already_inside_downstream_processors",
+    "tests.unit.test_graceful_trace_shutdown::test_root_io_backfill_preserves_full_payload_and_late_child_cannot_reopen_bucket",
+    "tests.unit.test_graceful_trace_shutdown::test_debug_off_does_not_materialize_event_dictionaries",
+    "tests.unit.test_http_instrumentation_activation::test_http_instrumentation_is_rejected[http]",
+    "tests.unit.test_http_instrumentation_activation::test_http_instrumentation_is_rejected[requests]",
+    "tests.unit.test_http_instrumentation_activation::test_http_instrumentation_is_rejected[httpx]",
+    "tests.unit.test_http_instrumentation_activation::test_http_instrumentation_is_rejected[urllib3]",
+    "tests.unit.test_http_instrumentation_activation::test_http_instrumentation_is_rejected[aiohttp]",
+    "tests.unit.test_http_instrumentation_activation::test_http_instrumentors_are_not_published_in_registry",
+    "tests.unit.test_http_instrumentation_activation::test_manual_trace_rejects_http_kind[HTTP-attributes0]",
+    "tests.unit.test_http_instrumentation_activation::test_manual_trace_rejects_http_kind[TOOL-attributes1]",
+    "tests.unit.test_http_instrumentation_activation::test_manual_trace_rejects_http_kind[TOOL-attributes2]",
+    "tests.unit.test_http_instrumentation_e2e::test_sdk_processor_does_not_backfill_from_nested_http_span",
+    "tests.unit.test_http_instrumentation_e2e::test_http_payloads_cannot_leak_through_workflow_root_backfill",
+    "tests.unit.test_http_instrumentation_e2e::test_raw_http_debug_log_is_sanitized",
+    "tests.unit.test_http_instrumentation_e2e::test_empty_instrumentation_list_emits_no_client_span",
+    "tests.unit.test_http_instrumentation_e2e::test_canonical_semantic_kind_wins_over_http_metadata",
+    "tests.unit.test_http_instrumentation_e2e::test_post_mask_http_root_does_not_emit_a_completion_marker",
+    "tests.unit.test_http_instrumentation_e2e::test_failed_root_export_does_not_emit_a_completion_marker",
+    "tests.unit.test_init_endpoint_env::test_explicit_endpoint_wins_over_env",
+    "tests.unit.test_init_endpoint_env::test_env_used_when_no_explicit_endpoint",
+    "tests.unit.test_init_endpoint_env::test_default_when_no_explicit_or_env",
+    "tests.unit.test_init_endpoint_env::test_init_with_env_endpoint_is_idempotent_with_explicit_same",
+    "tests.unit.test_init_endpoint_env::test_init_conflicting_endpoint_still_typed_error",
+    "tests.unit.test_init_endpoint_env::test_init_without_env_still_defaults_to_prod",
+    "tests.unit.test_init_identity::test_identical_init_is_idempotent_but_conflicting_init_is_typed_error",
+    "tests.unit.test_init_identity::test_explicit_shutdown_allows_a_new_configuration_generation",
+    "tests.unit.test_init_identity::test_uploads_are_default_off_and_explicit_opt_in_is_visible_in_diagnostics",
+    "tests.unit.test_init_identity::test_failed_init_does_not_publish_upload_resources",
+    "tests.unit.test_instrumentation_activation_aliases::test_autogen_uses_agentchat_adapter_and_class",
+    "tests.unit.test_instrumentation_activation_aliases::test_application_import_aliases_match_published_modules",
+    "tests.unit.test_instrumentation_activation_aliases::test_application_import_aliases_report_missing_dependencies",
+    "tests.unit.test_log_filter::test_is_external_module_empty_string",
+    "tests.unit.test_log_filter::test_is_external_module_user_logger",
+    "tests.unit.test_log_filter::test_is_external_module_neatlogs_itself",
+    "tests.unit.test_log_filter::test_is_external_module_stdlib",
+    "tests.unit.test_log_filter::test_is_external_module_site_packages",
+    "tests.unit.test_log_filter::test_filter_passes_normal_record",
+    "tests.unit.test_log_filter::test_filter_drops_no_trace_id_zero",
+    "tests.unit.test_log_filter::test_filter_drops_no_trace_id_none",
+    "tests.unit.test_log_filter::test_filter_drops_stdlib_scope",
+    "tests.unit.test_log_filter::test_filter_drops_site_packages_scope",
+    "tests.unit.test_log_filter::test_filter_drops_site_packages_filepath",
+    "tests.unit.test_log_filter::test_filter_drops_dist_packages_filepath",
+    "tests.unit.test_log_filter::test_filter_shutdown_delegates",
+    "tests.unit.test_log_filter::test_filter_force_flush_delegates",
+    "tests.unit.test_mask_application::test_optional_second_positional_parameter_keeps_legacy_value",
+    "tests.unit.test_mask_application::test_keyword_only_context_is_an_explicit_opt_in",
+    "tests.unit.test_mask_application::test_global_mask_applied_once_to_exported_clone",
+    "tests.unit.test_mask_application::test_per_span_mask_takes_precedence_and_internal_id_is_not_exported",
+    "tests.unit.test_mask_application::test_mask_covers_events_resources_and_name",
+    "tests.unit.test_mask_application::test_awaitable_mask_runs_and_callback_failure_fails_closed",
+    "tests.unit.test_mask_application::test_context_aware_mask_timeout_is_fail_closed_and_cancellable",
+    "tests.unit.test_mask_application::test_mask_batch_uses_bounded_parallel_workers",
+    "tests.unit.test_mask_application::test_global_mask_covers_logs_and_drops_failed_items",
+    "tests.unit.test_mask_application::test_masking_log_exporter_force_flush_delegates",
+    "tests.unit.test_mask_application::test_masking_log_exporter_force_flush_supports_legacy_exporters",
+    "tests.unit.test_mask_application::test_mask_returning_none_drops_the_span",
+    "tests.unit.test_mask_application::test_mask_returning_none_drops_the_log",
+    "tests.unit.test_mask_application::test_runner_returns_none_when_mask_returns_none",
+    "tests.unit.test_media_capture::test_inline_and_remote_media_preserve_type_source_digest_and_reference",
+    "tests.unit.test_media_capture::test_large_typed_media_reports_disabled_upload_instead_of_silent_hash_only",
+    "tests.unit.test_media_capture::test_binary_media_requires_explicit_type_and_arbitrary_strings_are_not_media",
+    "tests.unit.test_media_capture::test_remote_media_strips_userinfo_query_and_fragment_from_all_capture_fields",
+    "tests.unit.test_media_capture::test_large_inline_media_body_is_replaced_by_typed_unavailable_metadata",
+    "tests.unit.test_media_capture::test_anthropic_source_media_is_sanitized_without_losing_typed_metadata",
+    "tests.unit.test_media_capture::test_bedrock_nested_bytes_are_replaced_when_upload_is_unavailable",
+    "tests.unit.test_media_capture::test_backend_mime_aliases_and_bedrock_format_are_canonicalized",
+    "tests.unit.test_media_capture::test_media_signature_corrects_generic_or_incorrect_declared_mime",
+    "tests.unit.test_media_capture::test_duplicate_capture_and_semantic_discovery_share_store_capacity",
+    "tests.unit.test_media_capture::test_duplicate_media_within_one_value_does_not_leak_store_references",
+    "tests.unit.test_media_capture::test_serialized_provider_media_is_promoted_to_canonical_message_attributes",
+    "tests.unit.test_media_capture::test_malformed_and_case_varied_data_uris_fail_closed",
+    "tests.unit.test_media_capture::test_data_uris_in_generic_reference_fields_never_escape_as_raw_media[<lambda>0]",
+    "tests.unit.test_media_capture::test_data_uris_in_generic_reference_fields_never_escape_as_raw_media[<lambda>1]",
+    "tests.unit.test_media_capture::test_data_uris_in_generic_reference_fields_never_escape_as_raw_media[<lambda>2]",
+    "tests.unit.test_media_capture::test_malformed_remote_references_fail_closed_without_userinfo[https:////user:password@host.example/path?sig=secret]",
+    "tests.unit.test_media_capture::test_malformed_remote_references_fail_closed_without_userinfo[https:/user:password@host.example/path?sig=secret]",
+    "tests.unit.test_media_capture::test_malformed_remote_references_fail_closed_without_userinfo[https:\\\\\\\\user:password@host.example/path?sig=secret]",
+    "tests.unit.test_media_capture::test_malformed_remote_references_fail_closed_without_userinfo[https://user:password@[broken/path?sig=secret]",
+    "tests.unit.test_media_capture::test_oversized_or_malformed_inline_media_is_rejected_before_unbounded_processing",
+    "tests.unit.test_media_capture::test_hostile_mapping_and_string_hooks_cannot_escape_instrumentation",
+    "tests.unit.test_media_capture::test_media_walkers_are_bounded_and_provider_serializers_cannot_escape",
+    "tests.unit.test_media_capture::test_image_generation_base64_is_discovered_as_typed_output",
+    "tests.unit.test_media_exporter::test_cyclic_post_mask_values_are_bounded_and_do_not_break_release_or_rewrite",
+    "tests.unit.test_media_exporter::test_span_media_is_staged_then_resolved_after_mask_to_canonical_reference",
+    "tests.unit.test_media_exporter::test_mask_can_remove_media_before_any_upload_occurs",
+    "tests.unit.test_media_exporter::test_http_reclassification_releases_staged_media_without_uploading",
+    "tests.unit.test_media_exporter::test_masked_upload_token_fails_closed_without_uploading_or_exporting_token",
+    "tests.unit.test_media_exporter::test_media_failure_exports_secret_free_failed_reference_and_reports_failure",
+    "tests.unit.test_media_exporter::test_log_body_media_is_replaced_without_a_second_ordinary_payload",
+    "tests.unit.test_media_exporter::test_repeated_token_in_one_batch_uploads_once_and_resolves_every_span",
+    "tests.unit.test_media_exporter::test_repeated_token_across_batches_retains_bytes_until_last_reference",
+    "tests.unit.test_media_exporter::test_generic_provider_content_is_sanitized_and_promoted_after_mask[cohere]",
+    "tests.unit.test_media_exporter::test_generic_provider_content_is_sanitized_and_promoted_after_mask[groq]",
+    "tests.unit.test_media_exporter::test_generic_provider_content_is_sanitized_and_promoted_after_mask[mistral]",
+    "tests.unit.test_media_exporter::test_generic_provider_content_is_sanitized_and_promoted_after_mask[litellm]",
+    "tests.unit.test_media_exporter::test_generic_provider_content_is_sanitized_and_promoted_after_mask[together]",
+    "tests.unit.test_media_exporter::test_generic_provider_media_fails_closed_when_uploads_are_disabled",
+    "tests.unit.test_media_exporter::test_flattened_image_generation_base64_fails_closed",
+    "tests.unit.test_no_legacy_batch_exporter::test_legacy_json_batch_exporter_module_is_removed",
+    "tests.unit.test_openai_async_input_tool_call_id::test_async_openai_preserves_input_tool_call_id",
+    "tests.unit.test_openinference_isolation::test_openinference_current_spans_stay_private_from_foreign_pipeline",
+    "tests.unit.test_openinference_isolation::test_direct_openinference_use_span_and_set_span_in_context_are_private",
+    "tests.unit.test_openinference_isolation::test_unmarked_openinference_tracer_keeps_standard_otel_behavior",
+    "tests.unit.test_openinference_isolation::test_openinference_modules_importing_get_current_span_see_the_private_span",
+    "tests.unit.test_package_version::test_package_version_matches_pyproject",
+    "tests.unit.test_prompt_cache::test_closed_error_is_exported_from_prompt_and_package_namespaces",
+    "tests.unit.test_prompt_cache::test_sync_stale_refresh_is_coalesced_and_preserves_entry_ttl",
+    "tests.unit.test_prompt_cache::test_sync_pinned_version_is_not_refreshed_after_ttl",
+    "tests.unit.test_prompt_cache::test_cache_is_lru_bounded_and_crud_invalidation_preserves_other_prompts",
+    "tests.unit.test_prompt_cache::test_cache_keys_do_not_collide_for_names_containing_selector_text",
+    "tests.unit.test_prompt_cache::test_cached_prompt_nested_values_are_returned_as_defensive_copies",
+    "tests.unit.test_prompt_cache::test_chat_type_is_inferred_from_backend_messages",
+    "tests.unit.test_prompt_cache::test_sync_refresh_workers_are_bounded_and_close_rejects_new_work",
+    "tests.unit.test_prompt_cache::test_sync_close_rejects_every_public_network_method",
+    "tests.unit.test_prompt_cache::test_sync_cold_misses_are_coalesced",
+    "tests.unit.test_prompt_cache::test_prompt_api_error_does_not_copy_response_content",
+    "tests.unit.test_prompt_cache::test_prompt_transport_error_does_not_copy_network_details",
+    "tests.unit.test_prompt_cache::test_prompt_transport_error_does_not_copy_prompt_selectors",
+    "tests.unit.test_prompt_cache::test_prompt_not_found_error_does_not_copy_prompt_name",
+    "tests.unit.test_prompt_cache::test_async_prompt_transport_error_does_not_copy_network_details",
+    "tests.unit.test_prompt_cache::test_prompt_crud_invalidates_mutable_selectors_and_deleted_versions",
+    "tests.unit.test_prompt_cache::test_completed_stale_refresh_cannot_repopulate_cache_after_prompt_write",
+    "tests.unit.test_prompt_cache::test_sync_pinned_version_lookup_pages_beyond_first_500_results",
+    "tests.unit.test_prompt_cache::test_prompt_mutation_resolves_versions_beyond_first_500_results",
+    "tests.unit.test_prompt_cache::test_prompt_writes_match_backend_routes_and_field_names",
+    "tests.unit.test_prompt_cache::test_label_and_tag_mutations_use_resolved_uuid_routes",
+    "tests.unit.test_prompt_cache::test_save_as_version_rejects_empty_content_before_network",
+    "tests.unit.test_prompt_cache::test_prompt_writes_validate_labels_and_tags_before_network",
+    "tests.unit.test_prompt_cache::test_create_prompt_allows_an_unlabeled_version",
+    "tests.unit.test_prompt_cache::test_shared_sync_client_rotates_credentials_and_shutdown_detaches_it",
+    "tests.unit.test_prompt_cache::test_async_stale_refresh_is_coalesced_and_preserves_entry_ttl",
+    "tests.unit.test_prompt_cache::test_async_pinned_version_is_not_refreshed_after_ttl",
+    "tests.unit.test_prompt_cache::test_async_refresh_tasks_are_bounded_and_cancelled_on_close",
+    "tests.unit.test_prompt_cache::test_async_cold_misses_are_coalesced_and_close_cannot_repopulate_cache",
+    "tests.unit.test_prompt_cache::test_shared_async_client_rotates_credentials",
+    "tests.unit.test_prompt_cache::test_async_pinned_version_lookup_pages_beyond_first_500_results",
+    "tests.unit.test_prompt_template_name::test_named_system_template_reaches_normalized_llm_child[system_prompt_template]",
+    "tests.unit.test_prompt_template_name::test_named_system_template_reaches_normalized_llm_child[prompt_template]",
+    "tests.unit.test_prompt_template_name::test_name_only_and_user_only_trace_do_not_create_system_prompt_identity",
+    "tests.unit.test_prompt_template_name::test_nested_context_restores_outer_identity_and_ignores_group_names",
+    "tests.unit.test_prompt_template_name::test_async_tasks_keep_independent_prompt_names",
+    "tests.unit.test_prompt_template_name::test_canonical_system_keyword_wins_over_legacy_alias",
+    "tests.unit.test_prompt_template_name::test_existing_wire_prompt_key_wins_over_trace_name[neatlogs.llm.prompt_key]",
+    "tests.unit.test_prompt_template_name::test_existing_wire_prompt_key_wins_over_trace_name[traceloop.prompt.key]",
+    "tests.unit.test_prompt_template_name::test_exception_restores_outer_identity",
+    "tests.unit.test_prompt_template_name::test_new_template_with_empty_name_does_not_borrow_outer_name",
+    "tests.unit.test_prompt_template_name::test_template_object_and_auto_root_preserve_prompt_identity",
+    "tests.unit.test_prompt_template_name::test_prompt_identity_trims_name_without_renaming_the_trace_span",
+    "tests.unit.test_prompt_template_name::test_thread_contexts_keep_names_separate",
+    "tests.unit.test_prompt_template_name::test_streaming_child_keeps_identity_for_its_full_lifecycle",
+    "tests.unit.test_propagation_isolation::test_inject_emits_our_span_in_isolated_mode",
+    "tests.unit.test_propagation_isolation::test_inject_is_noop_with_only_a_foreign_span_active",
+    "tests.unit.test_propagation_isolation::test_inject_is_noop_when_nothing_active",
+    "tests.unit.test_propagation_isolation::test_extract_installs_remote_parent_privately_in_isolated_mode",
+    "tests.unit.test_propagation_isolation::test_extract_child_span_joins_remote_trace_and_is_not_root",
+    "tests.unit.test_propagation_isolation::test_extract_empty_carrier_is_noop_passthrough",
+    "tests.unit.test_propagation_isolation::test_extract_does_not_leak_into_a_cotenant_tracer",
+    "tests.unit.test_propagation_isolation::test_inject_does_not_clobber_upstream_traceparent",
+    "tests.unit.test_provider_choice_fidelity::test_openai_compatible_adapters_preserve_all_choices_and_tool_coordinates[_finalize_response]",
+    "tests.unit.test_provider_choice_fidelity::test_openai_compatible_adapters_preserve_all_choices_and_tool_coordinates[_finalize_chat]",
+    "tests.unit.test_provider_choice_fidelity::test_google_adapter_preserves_candidates_independently",
+    "tests.unit.test_provider_media_coverage::test_openai_image_resources_capture_url_only_outputs[_set_generated_image_media0]",
+    "tests.unit.test_provider_media_coverage::test_openai_image_resources_capture_url_only_outputs[_set_generated_image_media1]",
+    "tests.unit.test_provider_media_coverage::test_openai_speech_resources_capture_buffered_audio_outputs[_set_speech_response_media0]",
+    "tests.unit.test_provider_media_coverage::test_openai_speech_resources_capture_buffered_audio_outputs[_set_speech_response_media1]",
+    "tests.unit.test_provider_media_coverage::test_responses_sync_and_async_finalizers_capture_image_generation_results[_finalize_responses_response-<lambda>0]",
+    "tests.unit.test_provider_media_coverage::test_responses_sync_and_async_finalizers_capture_image_generation_results[_finalize_responses_response-<lambda>1]",
+    "tests.unit.test_provider_media_coverage::test_responses_sync_and_async_finalizers_capture_image_generation_results[_finalize_responses-<lambda>]",
+    "tests.unit.test_provider_media_coverage::test_responses_stream_finalizers_capture_image_generation_results[_finalize_responses_stream-<lambda>0]",
+    "tests.unit.test_provider_media_coverage::test_responses_stream_finalizers_capture_image_generation_results[_finalize_responses_stream-<lambda>1]",
+    "tests.unit.test_provider_media_coverage::test_responses_stream_finalizers_capture_image_generation_results[_finalize_responses_stream-<lambda>2]",
+    "tests.unit.test_retriever_namespace::test_retriever_postprocessor_emits_only_canonical_namespace",
+    "tests.unit.test_retriever_namespace::test_retriever_postprocessor_does_not_truncate_documents",
+    "tests.unit.test_secondary_client::test_client_is_additive_to_default_init",
+    "tests.unit.test_secondary_client::test_concurrent_clients_do_not_cross_projects",
+    "tests.unit.test_secondary_client::test_wrapper_lookup_uses_the_active_client",
+    "tests.unit.test_secondary_client::test_structured_logs_use_the_active_client",
+    "tests.unit.test_secondary_client::test_structured_logs_use_the_private_default_log_provider",
+    "tests.unit.test_secondary_client::test_flushing_one_client_touches_no_other_or_caller_owned_provider",
+    "tests.unit.test_secondary_client::test_flush_all_discovers_live_clients_and_unregisters_closed_clients",
+    "tests.unit.test_secondary_client::test_client_shutdown_ends_active_spans_and_blocks_cached_tracer",
+    "tests.unit.test_secondary_client::test_client_shutdown_does_not_end_foreign_span_on_caller_provider",
+    "tests.unit.test_secondary_client::test_client_inherits_temporary_verification_resource_marker",
+    "tests.unit.test_secondary_client::test_client_shutdown_same_thread_reentry_does_not_deadlock",
+    "tests.unit.test_secondary_client::test_custom_client_tracer_is_closed_and_finalized",
+    "tests.unit.test_secondary_client::test_client_upload_opt_in_uses_context_scoped_store_and_closes_authority",
+    "tests.unit.test_secondary_client::test_client_pipeline_drops_http_transport_spans",
+    "tests.unit.test_session_identity::test_apply_session_attributes_root",
+    "tests.unit.test_session_identity::test_apply_session_attributes_non_root_ignored",
+    "tests.unit.test_session_identity::test_apply_session_attributes_empty_noop",
+    "tests.unit.test_session_identity::test_span_decorator_sets_session_on_root",
+    "tests.unit.test_session_identity::test_span_decorator_child_does_not_inherit_session",
+    "tests.unit.test_session_identity::test_trace_sets_session_on_root",
+    "tests.unit.test_session_identity::test_identify_context_stamps_root",
+    "tests.unit.test_session_identity::test_wrap_context_stamps_workflow_metadata_on_llm_root",
+    "tests.unit.test_session_identity::test_percall_arg_wins_over_identify",
+    "tests.unit.test_session_identity::test_identify_restores_on_exit",
+    "tests.unit.test_session_identity::test_processor_stamps_identify_on_bare_framework_root",
+    "tests.unit.test_session_identity::test_processor_stamps_wrap_context_metadata_on_framework_root",
+    "tests.unit.test_session_identity::test_processor_skips_child_spans",
+    "tests.unit.test_session_identity::test_processor_noop_without_identify",
+    "tests.unit.test_stream_ttft_from_request_start::test_sync_stream_counts_wait_before_wrapper",
+    "tests.unit.test_stream_ttft_from_request_start::test_async_stream_counts_wait_before_wrapper",
+    "tests.unit.test_stream_ttft_from_request_start::test_span_without_start_time_falls_back_to_wrapper_start",
+    "tests.unit.test_telemetry_schema_v2::test_canonical_telemetry_schema_is_packaged_verbatim",
+    "tests.unit.test_telemetry_schema_v2::test_canonical_telemetry_policy_is_consumed_by_the_sdk",
+    "tests.unit.test_telemetry_schema_v2::test_diagnostic_exporter_normalizes_post_processor_llm_span",
+    "tests.unit.test_telemetry_schema_v2::test_canonical_llm_messages_include_typed_media_parts",
+    "tests.unit.test_telemetry_schema_v2::test_diagnostic_exporter_is_bounded_and_reports_eviction",
+    "tests.unit.test_telemetry_schema_v2::test_canonical_telemetry_preserves_evaluator_kind",
+    "tests.unit.test_trace_cli::test_healthy_trace_uses_public_api_with_bearer_and_project_id",
+    "tests.unit.test_trace_cli::test_follows_span_pages_until_next_cursor_is_empty",
+    "tests.unit.test_trace_cli::test_missing_parent_and_unnamed_span_fail",
+    "tests.unit.test_trace_cli::test_pending_fails_finalized_and_zero_tokens_passes",
+    "tests.unit.test_trace_cli::test_exit_codes_and_token_not_printed",
+    "tests.unit.test_trace_cli::test_409_on_spans_page_is_not_ready",
+    "tests.unit.test_trace_cli::test_dlq_is_a_terminal_failure_before_reading_spans",
+    "tests.unit.test_trace_cli::test_pending_with_409_on_spans_is_not_ready",
+    "tests.unit.test_trace_cli::test_pagination_cap_is_incomplete_not_a_failed_check",
+    "tests.unit.test_trace_cli::test_needs_token_and_project_id",
+    "tests.unit.test_trace_cli::test_host_override_and_id_encoding",
+    "tests.unit.test_trace_cli::test_check_trace_empty",
+    "tests.unit.test_trace_cli::test_main_dispatch_usage",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_init_never_claims_or_reuses_the_global_provider",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_zero_sample_rate_drops_the_whole_trace_not_individual_children",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_invalid_sample_rate_is_a_typed_configuration_error[-0.1]",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_invalid_sample_rate_is_a_typed_configuration_error[1.1]",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_invalid_sample_rate_is_a_typed_configuration_error[nan]",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_invalid_sample_rate_is_a_typed_configuration_error[inf]",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_invalid_sample_rate_is_a_typed_configuration_error[-inf]",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_invalid_sample_rate_is_a_typed_configuration_error[True]",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_invalid_sample_rate_is_a_typed_configuration_error[1]",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_caller_owned_provider_rejects_an_unenforceable_sample_rate",
+    "tests.unit.test_trace_sampling_and_provider_ownership::test_explicit_global_provider_is_rejected",
+    "tests.unit.test_transport_retry::test_python_transport_retries_429_post_without_overlapping_otel_5xx_policy",
+    "tests.unit.test_transport_retry::test_upstream_otel_retries_503_and_gzip_is_receiver_compatible",
+    "tests.unit.test_transport_retry::test_transport_bounds_read_timeout_retries",
+    "tests.unit.test_transport_retry::test_rate_limit_retry_after_cannot_escape_export_deadline",
+    "tests.unit.test_transport_retry::test_transport_uses_no_version_sensitive_urllib3_retry_configuration",
+    "tests.unit.test_transport_retry::test_upstream_exporter_rejects_work_after_shutdown",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_marks_http_client_span_as_http_kind",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_synthesizes_safe_http_canonical_io[attributes0]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_synthesizes_safe_http_canonical_io[attributes1]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_synthesizes_http_input_without_status_or_secret_payloads",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_http_url_sanitization_handles_ipv6_and_malformed_ports",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_http_path_attributes_cannot_preserve_url_credentials[url.path-/health?api_key=secret#fragment]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_http_path_attributes_cannot_preserve_url_credentials[http.target-https://user:pass@evil.example/health?api_key=secret#fragment]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_http_path_attributes_cannot_preserve_url_credentials[http.route-/users/{id}?token=secret#fragment]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_maps_generic_io_to_semantic_kind_namespace[GUARDRAIL]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_maps_generic_io_to_semantic_kind_namespace[EVALUATOR]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_maps_generic_io_to_semantic_kind_namespace[MEMORY]",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_infers_retriever_kind_from_db_system",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_mcp_response_only_when_mcp_signals_present",
+    "tests.unit.test_unified_attribute_processor_pipeline::test_process_drops_vectordb_embedding_model_on_non_embedding_spans",
+    "tests.unit.test_upload_authority::test_upload_activation_is_typed_and_default_off",
+    "tests.unit.test_upload_authority::test_media_prepare_put_complete_uses_exact_contract_and_scoped_headers",
+    "tests.unit.test_upload_authority::test_ready_prepare_replay_short_circuits_put_and_complete_and_is_cached",
+    "tests.unit.test_upload_authority::test_prepare_in_progress_resumes_completion_without_reuploading[200-uploaded]",
+    "tests.unit.test_upload_authority::test_prepare_in_progress_resumes_completion_without_reuploading[202-validating]",
+    "tests.unit.test_upload_authority::test_validating_completion_retry_exhaustion_is_explicit_and_bounded",
+    "tests.unit.test_upload_authority::test_uploaded_completion_is_retryable_and_can_become_ready[200]",
+    "tests.unit.test_upload_authority::test_uploaded_completion_is_retryable_and_can_become_ready[202]",
+    "tests.unit.test_upload_authority::test_complete_transport_retries_are_not_multiplied_and_timeout_uses_deadline",
+    "tests.unit.test_upload_authority::test_prepare_in_progress_still_requires_a_matching_reference",
+    "tests.unit.test_upload_authority::test_rejected_completion_surfaces_backend_diagnostic",
+    "tests.unit.test_upload_authority::test_prepare_response_is_strict[<lambda>-invalid_upload_id]",
+    "tests.unit.test_upload_authority::test_prepare_response_is_strict[<lambda>-invalid_expiry]",
+    "tests.unit.test_upload_authority::test_prepare_response_is_strict[<lambda>-invalid_upload_authority]",
+    "tests.unit.test_upload_authority::test_prepare_response_is_strict[<lambda>-invalid_upload_url]",
+    "tests.unit.test_upload_authority::test_prepare_response_is_strict[<lambda>-invalid_upload_headers]",
+    "tests.unit.test_upload_authority::test_prepare_response_is_strict[<lambda>-reference_mismatch]",
+    "tests.unit.test_upload_authority::test_retryable_http_is_bounded_and_closes_intermediate_responses",
+    "tests.unit.test_upload_authority::test_retryable_backend_500_is_retried_before_success",
+    "tests.unit.test_upload_authority::test_complete_status_must_match_state",
+    "tests.unit.test_upload_authority::test_payload_bounds_and_digest_are_checked_before_network",
+    "tests.unit.test_upload_authority::test_overflow_declares_trace_schema_and_never_uses_ordinary_ingest",
+    "tests.unit.test_upload_authority::test_transport_exceptions_are_safely_classified",
+    "tests.unit.test_upload_authority::test_backend_error_diagnostic_is_preserved_without_accepting_unsafe_text",
+    "tests.unit.test_upload_authority::test_backend_specific_media_and_overflow_limits_are_enforced_locally",
+    "tests.unit.test_upload_authority::test_gzip_overflow_expanded_size_and_integrity_are_checked_before_network",
+    "tests.unit.test_upload_authority::test_json_response_body_is_bounded",
+    "tests.unit.test_upload_authority::test_total_deadline_is_checked_after_a_slow_request_returns",
+    "tests.unit.test_upload_authority::test_total_deadline_includes_incremental_gzip_validation",
+    "tests.unit.test_upload_authority::test_log_overflow_is_not_mislabeled_as_the_trace_schema",
+    "tests.unit.test_upload_authority::test_diagnostic_fields_cannot_smuggle_signed_material_into_failure_telemetry"
+   ]
+  }
+ },
+ "sweep": {
+  "leads": {
+   "oa-chat-plain": [],
+   "oa-chat-stream-usage": [],
+   "oa-chat-stream-no-usage": [],
+   "oa-chat-tools": [],
+   "oa-chat-stream-tools": [],
+   "oa-chat-refusal": [
+    {
+     "field": "call 1 output text",
+     "truth": "I can't help with that.",
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    }
+   ],
+   "oa-chat-n2": [],
+   "oa-chat-500": [],
+   "oa-chat-stream-error-event": [],
+   "oa-chat-stream-cut": [],
+   "oa-chat-stream-break": [],
+   "oa-chat-async-stream": [],
+   "oa-resp-plain": [
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "completed"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-tool": [
+    {
+     "field": "call 1 tool calls",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "completed"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-reasoning": [
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "completed"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-failed": [
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "failed"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-incomplete": [
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "incomplete"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-stream": [
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "completed"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-stream-tool": [
+    {
+     "field": "call 1 tool calls",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "completed"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-stream-error-event": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised RuntimeError)",
+     "trace": "UNSET",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 span status",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "UNSET, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "oa-resp-stream-cut": [],
+   "an-plain": [],
+   "an-thinking": [],
+   "an-stream-helper": [
+    {
+     "field": "call 1 tokens",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "severity": "high",
+     "check": "tokens",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 output text",
+     "truth": "hello",
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "end_turn"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "an-stream-thinking": [
+    {
+     "field": "call 1 tokens",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "severity": "high",
+     "check": "tokens",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 output text",
+     "truth": "hello",
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "end_turn"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "an-stream-tools": [
+    {
+     "field": "call 1 tokens",
+     "truth": {
+      "input": 5,
+      "output": 3
+     },
+     "trace": {
+      "input": null,
+      "output": null
+     },
+     "severity": "high",
+     "check": "tokens",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 output text",
+     "truth": "hello",
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 tool calls",
+     "truth": [
+      [
+       "get_weather",
+       "{\"city\":\"Lagos\"}"
+      ]
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 finish",
+     "truth": [
+      "tool_use"
+     ],
+     "trace": null,
+     "severity": "medium",
+     "check": "finish",
+     "kind": "lead"
+    }
+   ],
+   "an-create-stream": [],
+   "an-stream-error-event": [],
+   "an-stream-cut": [],
+   "an-529": [],
+   "an-async": [],
+   "lc-invoke": [],
+   "lc-stream": [],
+   "lc-stream-error-event": [],
+   "lc-stream-cut": [],
+   "lc-refusal": [
+    {
+     "field": "call 1 output text",
+     "truth": "I can't help with that.",
+     "trace": null,
+     "severity": "medium",
+     "check": "output",
+     "kind": "lead"
+    }
+   ],
+   "lc-500": [],
+   "lg-agent": [],
+   "lg-tool-raises": [],
+   "lg-llm-fails": [],
+   "lg-parallel": [],
+   "lg-stream": [],
+   "lg-step-limit": [],
+   "ag-run": [],
+   "ag-tool-raises": [],
+   "ag-llm-fails": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised InternalServerError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 2 span status",
+     "truth": "ERROR with exception event (http_error)",
+     "trace": "ERROR, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "ag-max-turns": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised MaxTurnsExceeded)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    }
+   ],
+   "ag-bad-tool": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    }
+   ],
+   "ag-streamed": [],
+   "ag-streamed-error": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised ModelBehaviorError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 2 span status",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "ERROR, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "ag-streamed-cut": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised APIConnectionError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 2 span status",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "ERROR, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "p-an-async-stream-cut": [],
+   "p-an-stream-helper-cut": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised RemoteProtocolError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 span status",
+     "truth": "ERROR with exception event (cut)",
+     "trace": "OK, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "p-lc-tools": [],
+   "p-an-async-stream-error": [],
+   "p-an-stream-helper-error-event": [
+    {
+     "field": "top-level span status",
+     "truth": "ERROR (app raised APIStatusError)",
+     "trace": "OK",
+     "severity": "high",
+     "check": "run_status",
+     "kind": "lead"
+    },
+    {
+     "field": "call 1 span status",
+     "truth": "ERROR with exception event (error_event)",
+     "trace": "OK, no exception event",
+     "severity": "medium",
+     "check": "call_status",
+     "kind": "lead"
+    }
+   ],
+   "p-oa-chat-async-stream-error": []
+  },
+  "not_run": {},
+  "spans": {
+   "oa-chat-plain": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-stream-usage": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-stream-no-usage": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-tools": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-stream-tools": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-refusal": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-n2": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-500": [
+    [
+     "openai.chat.completions.create",
+     "ERROR",
+     "Error code: 500 - {'error': {'message': 'fake server error', 'type': 'server_err",
+     null
+    ]
+   ],
+   "oa-chat-stream-error-event": [
+    [
+     "openai.chat.completions.create",
+     "ERROR",
+     "fake stream error",
+     null
+    ]
+   ],
+   "oa-chat-stream-cut": [
+    [
+     "openai.chat.completions.create",
+     "ERROR",
+     "Connection error.",
+     null
+    ]
+   ],
+   "oa-chat-stream-break": [
+    [
+     "openai.chat.completions.create",
+     "UNSET",
+     "",
+     null
+    ]
+   ],
+   "oa-chat-async-stream": [
+    [
+     "openai.chat.completions.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-plain": [
+    [
+     "openai.responses.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-tool": [
+    [
+     "openai.responses.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-reasoning": [
+    [
+     "openai.responses.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-failed": [
+    [
+     "openai.responses.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-incomplete": [
+    [
+     "openai.responses.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-stream": [
+    [
+     "openai.responses.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-stream-tool": [
+    [
+     "openai.responses.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-stream-error-event": [
+    [
+     "openai.responses.create",
+     "UNSET",
+     "",
+     null
+    ]
+   ],
+   "oa-resp-stream-cut": [
+    [
+     "openai.responses.create",
+     "ERROR",
+     "Connection error.",
+     null
+    ]
+   ],
+   "an-plain": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "an-thinking": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "an-stream-helper": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "an-stream-thinking": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "an-stream-tools": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "an-create-stream": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "an-stream-error-event": [
+    [
+     "anthropic.messages.create",
+     "ERROR",
+     "{'type': 'error', 'error': {'type': 'overloaded_error', 'message': 'Overloaded'}",
+     null
+    ]
+   ],
+   "an-stream-cut": [
+    [
+     "anthropic.messages.create",
+     "ERROR",
+     "peer closed connection without sending complete message body (received 477 bytes",
+     null
+    ]
+   ],
+   "an-529": [
+    [
+     "anthropic.messages.create",
+     "ERROR",
+     "Error code: 529 - {'type': 'error', 'error': {'type': 'overloaded_error', 'messa",
+     null
+    ]
+   ],
+   "an-async": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "lc-invoke": [
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "lc-stream": [
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "lc-stream-error-event": [
+    [
+     "ChatOpenAI",
+     "ERROR",
+     "APIError('fake stream error')Traceback (most recent call last):\n\n\n  File \"~/",
+     null
+    ]
+   ],
+   "lc-stream-cut": [
+    [
+     "ChatOpenAI",
+     "ERROR",
+     "OpenAIConnectionError('Connection error.')Traceback (most recent call last):\n\n\n ",
+     null
+    ]
+   ],
+   "lc-refusal": [
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "lc-500": [
+    [
+     "ChatOpenAI",
+     "ERROR",
+     "OpenAIAPIError(\"Error code: 500 - {'error': {'message': 'fake server error', 'ty",
+     null
+    ]
+   ],
+   "lg-agent": [
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "tools"
+    ],
+    [
+     "tools",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "LangGraph",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "lg-tool-raises": [
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "ERROR",
+     "RuntimeError('weather service down')Traceback (most recent call last):\n\n\n  File ",
+     "tools"
+    ],
+    [
+     "tools",
+     "ERROR",
+     "RuntimeError('weather service down')Traceback (most recent call last):\n\n\n  File ",
+     "LangGraph"
+    ],
+    [
+     "LangGraph",
+     "ERROR",
+     "RuntimeError('weather service down')Traceback (most recent call last):\n\n\n  File ",
+     null
+    ]
+   ],
+   "lg-llm-fails": [
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "tools"
+    ],
+    [
+     "tools",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "ERROR",
+     "OpenAIAPIError(\"Error code: 500 - {'error': {'message': 'fake server error', 'ty",
+     "agent"
+    ],
+    [
+     "call_model",
+     "ERROR",
+     "OpenAIAPIError(\"Error code: 500 - {'error': {'message': 'fake server error', 'ty",
+     "agent"
+    ],
+    [
+     "agent",
+     "ERROR",
+     "OpenAIAPIError(\"Error code: 500 - {'error': {'message': 'fake server error', 'ty",
+     "LangGraph"
+    ],
+    [
+     "LangGraph",
+     "ERROR",
+     "OpenAIAPIError(\"Error code: 500 - {'error': {'message': 'fake server error', 'ty",
+     null
+    ]
+   ],
+   "lg-parallel": [
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "tools"
+    ],
+    [
+     "tools",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "tools"
+    ],
+    [
+     "tools",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "LangGraph",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "lg-stream": [
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "tools"
+    ],
+    [
+     "tools",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "LangGraph",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "lg-step-limit": [
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "tools"
+    ],
+    [
+     "tools",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "tools"
+    ],
+    [
+     "tools",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "Prompt",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "call_model",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "should_continue",
+     "OK",
+     "",
+     "agent"
+    ],
+    [
+     "agent",
+     "OK",
+     "",
+     "LangGraph"
+    ],
+    [
+     "LangGraph",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-run": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "helper",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-tool-raises": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "ERROR",
+     "Error running tool (non-fatal): {'tool_name': 'get_weather', 'error': 'Tool exec",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "helper",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-llm-fails": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "ERROR",
+     "Error getting response: {'error': \"Error code: 500 - {'error': {'message': 'fake",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "helper",
+     "ERROR",
+     "Error in agent run: {'error': \"Error code: 500 - {'error': {'message': 'fake ser",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-max-turns": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "helper",
+     "ERROR",
+     "Max turns exceeded: {'max_turns': 3}",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-bad-tool": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "ERROR",
+     "Tool not found: {'tool_name': 'no_such_tool'}",
+     "helper"
+    ],
+    [
+     "helper",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-streamed": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "helper",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-streamed-error": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "ERROR",
+     "Error streaming response: {'error': 'Responses stream ended with terminal event ",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "helper",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "ag-streamed-cut": [
+    [
+     "response",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "get_weather",
+     "OK",
+     "",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "response",
+     "ERROR",
+     "Error streaming response: {'error': 'Connection error.'}",
+     "turn"
+    ],
+    [
+     "turn",
+     "OK",
+     "",
+     "helper"
+    ],
+    [
+     "helper",
+     "ERROR",
+     "Error in agent run: {'error': 'Connection error.'}",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     "Agent workflow"
+    ],
+    [
+     "Agent workflow",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "p-an-async-stream-cut": [
+    [
+     "anthropic.messages.create",
+     "ERROR",
+     "Connection error.",
+     null
+    ]
+   ],
+   "p-an-stream-helper-cut": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "p-lc-tools": [
+    [
+     "ChatOpenAI",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "p-an-async-stream-error": [
+    [
+     "anthropic.messages.create",
+     "ERROR",
+     "Error code: 400 - {'type': 'error', 'error': {'type': 'invalid_request_error', '",
+     null
+    ]
+   ],
+   "p-an-stream-helper-error-event": [
+    [
+     "anthropic.messages.create",
+     "OK",
+     "",
+     null
+    ]
+   ],
+   "p-oa-chat-async-stream-error": [
+    [
+     "openai.chat.completions.create",
+     "ERROR",
+     "fake stream error",
+     null
+    ]
+   ]
+  }
+ }
+}

@@ -1,0 +1,1466 @@
+{
+ "checked_at": "2026-10-11T21:04:14Z",
+ "method": "each finding repro on every open PR touching its wrapper file",
+ "pull_requests": [
+  {
+   "commit": "0dff1fa708b449798f269f3b9604a6b37137d789",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 23,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:00:04 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:00:08 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:12 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:16 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:19 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:23 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "fix: make OpenAI wrapper fail open",
+   "url": "https://github.com/neatlogs/neatlogs/pull/23"
+  },
+  {
+   "commit": "ed512f26d4a0bde1a51023a39b789d5bf098227a",
+   "findings": [
+    "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+    "neatlogs-finish-anthropic-messages-stream-finish-missing",
+    "neatlogs-output-anthropic-messages-stream-output-text-missing",
+    "neatlogs-output-anthropic-messages-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 29,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+     "matching_leads": [
+      {
+       "check": "tokens",
+       "field": "call 1 tokens",
+       "kind": "lead",
+       "severity": "high",
+       "trace": {
+        "input": null,
+        "output": null
+       },
+       "truth": {
+        "input": 5,
+        "output": 3
+       }
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:28 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-anthropic-messages-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "end_turn"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:30 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-output-text-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 output text",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": "hello"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:33 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"tool_use\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:36 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "fix: Anthropic wrapper fail-open when telemetry setup fails",
+   "url": "https://github.com/neatlogs/neatlogs/pull/29"
+  },
+  {
+   "commit": "afbffbb70689febef7e82ff0fab38d895252f931",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-anthropic-messages-stream-finish-missing",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-anthropic-messages-stream-output-text-missing",
+    "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 71,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:00:40 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+     "matching_leads": [
+      {
+       "check": "tokens",
+       "field": "call 1 tokens",
+       "kind": "lead",
+       "severity": "high",
+       "trace": {
+        "input": null,
+        "output": null
+       },
+       "truth": {
+        "input": 5,
+        "output": 3
+       }
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:43 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:00:47 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-anthropic-messages-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "end_turn"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:49 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:53 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:00:57 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-output-text-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 output text",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": "hello"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:00 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"tool_use\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:03 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:06 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:10 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "fix(per-call): fail open when wrapper pre-execution or finalize throws",
+   "url": "https://github.com/neatlogs/neatlogs/pull/71"
+  },
+  {
+   "commit": "27f1c20167541a1d9588878b843bf60c63b9d333",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-anthropic-messages-stream-finish-missing",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-anthropic-messages-stream-output-text-missing",
+    "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 118,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:01:15 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+     "matching_leads": [
+      {
+       "check": "tokens",
+       "field": "call 1 tokens",
+       "kind": "lead",
+       "severity": "high",
+       "trace": {
+        "input": null,
+        "output": null
+       },
+       "truth": {
+        "input": 5,
+        "output": 3
+       }
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:18 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:01:22 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-anthropic-messages-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "end_turn"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:24 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:28 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:32 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-output-text-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 output text",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": "hello"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:35 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"tool_use\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:37 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:41 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:44 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "fix(providers): end async spans on cancellation across LLM wrappers",
+   "url": "https://github.com/neatlogs/neatlogs/pull/118"
+  },
+  {
+   "commit": "3842b19374ac2d81e4a9cc7a333743dd9fbe9589",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 136,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:01:49 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:01:53 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:01:57 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:01 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:04 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:08 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "fix(openai): end async spans on cancellation",
+   "url": "https://github.com/neatlogs/neatlogs/pull/136"
+  },
+  {
+   "commit": "c77e15907f88e2c5e7d59714d6c9d460a9d1bfe6",
+   "findings": [
+    "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+    "neatlogs-finish-anthropic-messages-stream-finish-missing",
+    "neatlogs-output-anthropic-messages-stream-output-text-missing",
+    "neatlogs-output-anthropic-messages-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 175,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+     "matching_leads": [
+      {
+       "check": "tokens",
+       "field": "call 1 tokens",
+       "kind": "lead",
+       "severity": "high",
+       "trace": {
+        "input": null,
+        "output": null
+       },
+       "truth": {
+        "input": 5,
+        "output": 3
+       }
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:13 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-anthropic-messages-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "end_turn"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:15 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-output-text-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 output text",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": "hello"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"end_turn\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:18 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tokens\", \"truth\": {\"input\": 5, \"output\": 3}, \"trace\": {\"input\": null, \"output\": null}, \"severity\": \"high\", \"check\": \"tokens\", \"kind\": \"lead\"}\n{\"field\": \"call 1 output text\", \"truth\": \"hello\", \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"tool_use\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:20 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "anthropic: end span when messages.stream() fails at open",
+   "url": "https://github.com/neatlogs/neatlogs/pull/175"
+  },
+  {
+   "commit": "2e8722b0e43f941c2cd99a38f7537ea727266049",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 177,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:02:25 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:02:29 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:33 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:37 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:41 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:02:45 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "fix(openai): skip Omit/NotGiven sentinels when recording invocation params",
+   "url": "https://github.com/neatlogs/neatlogs/pull/177"
+  },
+  {
+   "commit": "95440a57df3bf7b97004765751e16dc565361585",
+   "findings": [
+    "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+    "neatlogs-finish-anthropic-messages-stream-finish-missing",
+    "neatlogs-output-anthropic-messages-stream-output-text-missing",
+    "neatlogs-output-anthropic-messages-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 180,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-tokens-anthropic-messages-stream-tokens-wrong",
+     "matching_leads": [],
+     "stderr": "",
+     "stdout": "2026-10-11 21:02:50 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": false
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-anthropic-messages-stream-finish-missing",
+     "matching_leads": [],
+     "stderr": "",
+     "stdout": "2026-10-11 21:02:53 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": false
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-output-text-missing",
+     "matching_leads": [],
+     "stderr": "",
+     "stdout": "2026-10-11 21:02:55 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": false
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-anthropic-messages-stream-tool-calls-missing",
+     "matching_leads": [],
+     "stderr": "",
+     "stdout": "2026-10-11 21:02:58 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": false
+    }
+   ],
+   "title": "fix(anthropic): keep output and errors for messages.stream() helpers",
+   "url": "https://github.com/neatlogs/neatlogs/pull/180"
+  },
+  {
+   "commit": "1c815599aec5e7901a64c10c5e233c94d9502a30",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 184,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:03:03 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:03:07 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:11 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:15 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:18 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:22 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "openai wrapper: accept SDK message objects in chat history",
+   "url": "https://github.com/neatlogs/neatlogs/pull/184"
+  },
+  {
+   "commit": "c54aafde78a17b55402daafba1cbb2ff55f135a7",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 186,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:03:28 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:03:31 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:35 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:39 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:43 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": false
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:03:47 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "openai Responses API: record function_call items as tool calls",
+   "url": "https://github.com/neatlogs/neatlogs/pull/186"
+  },
+  {
+   "commit": "407233c0ec6ac682873e004c28a964d2390bb548",
+   "findings": [
+    "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+    "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+    "neatlogs-finish-openai-responses-create-finish-missing",
+    "neatlogs-finish-openai-responses-stream-finish-missing",
+    "neatlogs-output-openai-responses-create-tool-calls-missing",
+    "neatlogs-output-openai-responses-stream-tool-calls-missing"
+   ],
+   "installed": true,
+   "pr": 196,
+   "repros": [
+    {
+     "exit": 0,
+     "finding": "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset",
+     "matching_leads": [
+      {
+       "check": "run_status",
+       "field": "top-level span status",
+       "kind": "lead",
+       "severity": "high",
+       "trace": "UNSET",
+       "truth": "ERROR (app raised RuntimeError)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:03:53 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-call_status-openai-responses-stream-span-status-unset-no-exception-event",
+     "matching_leads": [
+      {
+       "check": "call_status",
+       "field": "call 1 span status",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": "UNSET, no exception event",
+       "truth": "ERROR with exception event (error_event)"
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"top-level span status\", \"truth\": \"ERROR (app raised RuntimeError)\", \"trace\": \"UNSET\", \"severity\": \"high\", \"check\": \"run_status\", \"kind\": \"lead\"}\n{\"field\": \"call 1 span status\", \"truth\": \"ERROR with exception event (error_event)\", \"trace\": \"UNSET, no exception event\", \"severity\": \"medium\", \"check\": \"call_status\", \"kind\": \"lead\"}\n2026-10-11 21:03:57 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-create-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:04:00 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-finish-openai-responses-stream-finish-missing",
+     "matching_leads": [
+      {
+       "check": "finish",
+       "field": "call 1 finish",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        "completed"
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:04:04 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-create-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:04:08 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    },
+    {
+     "exit": 0,
+     "finding": "neatlogs-output-openai-responses-stream-tool-calls-missing",
+     "matching_leads": [
+      {
+       "check": "output",
+       "field": "call 1 tool calls",
+       "kind": "lead",
+       "severity": "medium",
+       "trace": null,
+       "truth": [
+        [
+         "get_weather",
+         "{\"city\":\"Lagos\"}"
+        ]
+       ]
+      }
+     ],
+     "stderr": "",
+     "stdout": "{\"field\": \"call 1 tool calls\", \"truth\": [[\"get_weather\", \"{\\\"city\\\":\\\"Lagos\\\"}\"]], \"trace\": null, \"severity\": \"medium\", \"check\": \"output\", \"kind\": \"lead\"}\n{\"field\": \"call 1 finish\", \"truth\": [\"completed\"], \"trace\": null, \"severity\": \"medium\", \"check\": \"finish\", \"kind\": \"lead\"}\n2026-10-11 21:04:12 - neatlogs - INFO - Neatlogs SDK shutdown complete",
+     "still_reproduces": true
+    }
+   ],
+   "title": "keep reasoning summaries in openai responses spans",
+   "url": "https://github.com/neatlogs/neatlogs/pull/196"
+  }
+ ],
+ "run": "20261011T174813Z-neatlogs"
+}

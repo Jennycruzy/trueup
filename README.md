@@ -27,7 +27,7 @@ The work is split into small workers: planner, runner, comparer, checker, dedupe
 | OpenLLMetry | 9 | 6 | 3 |
 | **Total** | **32** | **15** | **17** |
 
-Three patches are proven against their target cases, package suites, and the full 57-scenario library, with zero
+Five patches are proven against their target cases, package suites, and the full 57-scenario library, with zero
 new mismatches. Five findings match an existing upstream issue or pull request. A “finding” here means every
 checker rule passed; leads that failed or could not complete a rule remain visible separately.
 
@@ -58,6 +58,8 @@ and [failed-then-passed Neatlogs traces](docs/neatlogs.md).
 | OpenInference failed agent root shown OK | 5 affected scenarios corrected | [proof](fixes/openinference-run_status-openai-agents-top-level-span-status-ok/summary.md) |
 | OpenLLMetry duplicate Agents LLM spans | `ag-run` 4 → 2 spans for 2 calls | [proof](fixes/openllmetry-call_count-openai-agents-llm-spans-wrong/summary.md) |
 | neatlogs failed `messages.stream()` shown OK | 2 affected scenarios corrected | [proof](fixes/neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok/summary.md) |
+| neatlogs OpenAI refusal output missing | output `None` → refusal text | [proof](fixes/neatlogs-output-openai-chat-create-output-text-missing/summary.md) |
+| neatlogs Responses error event shown OK | OK with 0 exception events → ERROR with 1 | [proof](fixes/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/summary.md) |
 
 ### Guarantees and boundaries
 
@@ -65,12 +67,12 @@ and [failed-then-passed Neatlogs traces](docs/neatlogs.md).
 |---|---|---|
 | Model output cannot confirm a finding | `src/trueup/core/checker.py` | `tests/test_checker.py` |
 | A patch must fail before and pass after | `src/trueup/fixer/verify.py` | `tests/test_fixer.py`; each `proof.json` |
-| Full-library regressions reject a patch | `src/trueup/fix.py` | all 3 fixed findings report 0 new mismatches |
+| Full-library regressions reject a patch | `src/trueup/fix.py` | all 5 fixed findings report 0 new mismatches |
 | Evidence numbers and bytes are reproducible | `src/trueup/evidence.py` | `uv run trueup verify` |
 | Scenario children cannot export user traces | `src/trueup/runner/run.py` | `test_inner_spans_never_leave_the_machine` |
 
-Real: controlled fake-provider truth, 32 checked findings, 3 locally proven patches, read-back Neatlogs evidence,
-two upstream issues with fix PRs and one confirmation of an existing fix. Partial: provider recording supports opted-in OpenAI/Anthropic calls, but no real provider
+Real: controlled fake-provider truth, 32 checked findings, 5 locally proven patches, read-back Neatlogs evidence,
+two upstream issues with fix PRs, two additional Neatlogs drafts, and one confirmation of an existing fix. Partial: provider recording supports opted-in OpenAI/Anthropic calls, but no real provider
 key was supplied for the final cross-check. Not claimed: universal agent correctness, safe automatic merging,
 upstream acceptance, customer traction, or public deployment of the report/video.
 
@@ -89,6 +91,8 @@ the patched files:
 | OpenInference: a failed agent run is exported with an OK root span | [Arize-ai/openinference#4023](https://github.com/Arize-ai/openinference/issues/4023) | [#4024](https://github.com/Arize-ai/openinference/pull/4024) | open, waiting for maintainer review |
 | OpenLLMetry: every Agents SDK model call is recorded as two LLM spans | [traceloop/openllmetry#4609](https://github.com/traceloop/openllmetry/issues/4609) | [#4610](https://github.com/traceloop/openllmetry/pull/4610) | open, waiting for maintainer review |
 | neatlogs: a failed `messages.stream()` is recorded as OK | already reported by the neatlogs team, [#179](https://github.com/neatlogs/neatlogs/issues/179) | their fix [#180](https://github.com/neatlogs/neatlogs/pull/180); [our check that it fixes our case](https://github.com/neatlogs/neatlogs/pull/180#issuecomment-6113318503) | no duplicate filed |
+| neatlogs: OpenAI refusal text is missing | [draft](upstream/neatlogs-output-openai-chat-create-output-text-missing/issue.md) | [draft](upstream/neatlogs-output-openai-chat-create-output-text-missing/pr.md) | proven locally; awaiting owner approval |
+| neatlogs: Responses error event leaves status unset | [draft](upstream/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/issue.md) | [draft](upstream/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/pr.md) | proven locally; awaiting owner approval |
 
 ## Status: working vertical slice
 
@@ -111,7 +115,7 @@ In CI: `uses: Jennycruzy/trueup@main` with `script` and `library` inputs runs `t
 
 `plan` asks a model (`claude-sonnet-4.6` through an OpenAI-compatible proxy) for new scenarios, given the library's wrapper source, the scenario library and the latest findings. A proposal is JSON data: an existing app plus an existing fake behaviour, with the truth it expects. Code checks the schema, that the app and fake behaviour exist and fit, that the pair is new, and runs the app untraced to confirm the truth. A rejected proposal goes back to the model with the reason, twice at most. Accepted ones are saved to `scenarios/proposed/<lib>/`; `trueup sweep <lib> --proposed [FROM]` runs them. Before every model call Trueup reads the key's spend from the proxy and stops at $15. It needs `TRUEUP_MODEL_KEY` and `TRUEUP_MODEL_BASE_URL`.
 
-`fix` works on one finding. It shallow-clones the library into `.trueup/clones/<lib>` and finds the wrapper and its callers (Entire's code graph first: `entire graph search`, `neighbors` and `impact`; ripgrep and Python's ast only as the fallback, and `locate.json` says which and why; `--locate-only` re-runs just this step and compares it with the verified patch). The model drafts the smallest change and a unit test in the package's own style; code applies it to the clone. A try is kept only if the new test fails before and passes after, the package's own test suite shows no new failure, the finding's scenarios now match truth, and the full scenario library (run in `.trueup/venvs/<lib>-fix` with the patched package) has no new mismatch. A failed try goes back to the model with the reason, 3 tries at most; then the finding stays unfixed and says so. It writes `fixes/<finding-id>/`: `patch.diff`, the test file, `before-after.md`, `suites.json`, `locate.json`, `tries.json`, `summary.md`, and every run's tries in `runs/`. Exit 0 fixed, 1 not fixed, 2 could not run. Fixes exist for three findings; see `fixes/`.
+`fix` works on one finding. It shallow-clones the library into `.trueup/clones/<lib>` and finds the wrapper and its callers (Entire's code graph first: `entire graph search`, `neighbors` and `impact`; exact seed symbols are always merged so an off-target graph result cannot hide the named wrapper; `locate.json` records both sources). The model drafts the smallest change and a unit test in the package's own style; code applies it to the clone. A try is kept only if the new test fails before and passes after, the package's own test suite shows no new failure, the finding's scenarios now match truth, and the full scenario library (run in `.trueup/venvs/<lib>-fix` with the patched package) has no new mismatch. A failed try goes back to the model with the reason, 3 tries at most; then the finding stays unfixed and says so. It writes `fixes/<finding-id>/`: `patch.diff`, the test file, `before-after.md`, `suites.json`, `locate.json`, `tries.json`, `summary.md`, and every run's tries in `runs/`. Exit 0 fixed, 1 not fixed, 2 could not run. Fixes exist for five findings; see `fixes/`.
 
 `upstream` drafts `issue.md` and `pr.md` into `upstream/<finding-id>/`, following the library's issue and PR templates. The text says what goes wrong, which cases are affected and which are not, the before/after table and the environment. It includes a repro under 40 lines that needs only the library and the provider SDK. The repro is run on the latest release and on the patched clone, and both outputs go into the text. Nothing is posted by Trueup; a person posts after re-checking.
 

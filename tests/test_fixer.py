@@ -148,7 +148,7 @@ def test_locate_uses_the_graph_first_and_writes_no_absolute_paths(repo: Path, tm
     run, calls = fake_graph()
     out = tmp_path / "out"
     res = loc.locate(repo, TARGET, out, run, finding=None)
-    assert res["method"] == "entire graph" and res["graph"]["used"]
+    assert res["method"] == "entire graph + seed symbols" and res["graph"]["used"]
     assert [(d["file"], d["qualname"], d["rank"]) for d in res["definitions"]] == [
         ("pkg/lib/w.py", "P.wrap", 1), ("pkg/lib/w.py", "top", 2)]  # test hits dropped, paths from the clone
     assert res["callers"][0]["in"] == "top" and res["callers"][0]["file"] == "pkg/lib/w.py"
@@ -157,6 +157,23 @@ def test_locate_uses_the_graph_first_and_writes_no_absolute_paths(repo: Path, tm
     text = (out / "locate.json").read_text()
     assert str(repo) not in text and str(Path.home()) + "/" not in text
     assert json.loads(text)["clone"] == ".trueup/clones/lib"
+
+
+def test_locate_keeps_seed_definition_when_graph_hits_are_off_target(
+    repo: Path, tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    which = loc.shutil.which
+    monkeypatch.setattr(loc.shutil, "which", lambda name: "/bin/entire" if name == "entire" else which(name))
+    monkeypatch.setattr(loc, "ensure_clone", lambda root, lib, run=None: (repo, "abc123"))
+    run, _ = fake_graph()
+    target = tg.Target(library="lib", code_path="x", packages=(tg.Package("pkg", "pkg"),),
+                       seeds=("use",), reference_seeds=())
+
+    res = loc.locate(repo, target, tmp_path / "out", run)
+
+    assert res["definitions"][0]["qualname"] == "P.wrap"  # ranked graph result remains first
+    assert any(d["qualname"] == "P.use" for d in res["definitions"])
+    assert "def use(self)" in loc.source_excerpts(repo, res)
 
 
 @pytest.mark.parametrize("missing, python, reason", [(True, True, "not available"), (False, False, "Python")])

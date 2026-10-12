@@ -1,0 +1,72 @@
+{
+ "finding": "neatlogs-output-openai-chat-create-output-text-missing",
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "method": "entire graph + seed symbols",
+ "graph_reason": "entire graph search, neighbors and impact",
+ "query": "openai chat create tracing: output text is None in the span but really I can't help with that. (neatlogs, openai chat create: output text not recorded)",
+ "patched_functions": [],
+ "graph": {
+  "patched": [],
+  "found": 0,
+  "in_top": 0,
+  "top": 3,
+  "same_function_first": false
+ },
+ "fallback": {
+  "patched": [],
+  "found": 0,
+  "in_top": 0,
+  "top": 3,
+  "same_function_first": false
+ },
+ "graph_top": [
+  {
+   "rank": 1,
+   "qualname": "neatlogs_span",
+   "file": "neatlogs/_wrap_utils.py",
+   "score": 39.4575
+  },
+  {
+   "rank": 2,
+   "qualname": "_decorate_span",
+   "file": "neatlogs/decorators/_base.py",
+   "score": 39.4475
+  },
+  {
+   "rank": 3,
+   "qualname": "_create_mcp_tool_decorator",
+   "file": "neatlogs/decorators/orchestration.py",
+   "score": 39.4475
+  },
+  {
+   "rank": 4,
+   "qualname": "InstrumentationManager._patch_crewai_tool_spans",
+   "file": "neatlogs/instrumentation/manager.py",
+   "score": 39.4475
+  },
+  {
+   "rank": 5,
+   "qualname": "_NeatlogsTraceProcessor.on_span_end",
+   "file": "neatlogs/openai_agents.py",
+   "score": 38.7874
+  },
+  {
+   "rank": 6,
+   "qualname": "NeatlogsSpanProcessor._mark_interrupted",
+   "file": "neatlogs/core/span_processor.py",
+   "score": 38.4951
+  },
+  {
+   "rank": 7,
+   "qualname": "_inject_trace_context",
+   "file": "neatlogs/instrumentation/http_context_propagation.py",
+   "score": 36.6308
+  },
+  {
+   "rank": 8,
+   "qualname": "_mark_doctor_span",
+   "file": "neatlogs/doctor_v2.py",
+   "score": 35.7652
+  }
+ ]
+}

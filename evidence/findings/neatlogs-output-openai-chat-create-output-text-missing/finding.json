@@ -37,7 +37,7 @@
  },
  "example_run": "20261010T203332Z-neatlogs",
  "field": "output text",
- "fixed": false,
+ "fixed": true,
  "found_in": [
   "20261010T203332Z-neatlogs",
   "20261011T174813Z-neatlogs"
@@ -81,5 +81,9 @@
  "severity": "medium",
  "title": "neatlogs, openai chat create: output text not recorded",
  "trace": "missing",
- "upstream": null
+ "upstream": {
+  "issue": "upstream/neatlogs-output-openai-chat-create-output-text-missing/issue.md",
+  "pr": "upstream/neatlogs-output-openai-chat-create-output-text-missing/pr.md",
+  "status": "not yet posted"
+ }
 }

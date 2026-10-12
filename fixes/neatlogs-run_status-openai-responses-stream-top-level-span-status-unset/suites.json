@@ -1,0 +1,45 @@
+{
+ "before": {
+  ".": {
+   "total": 532,
+   "passed": 527,
+   "failed": 0,
+   "errors": 1,
+   "skipped": 4,
+   "failing": [
+    "::tests.unit.test_google_finish_reason_value"
+   ],
+   "exit": 1
+  }
+ },
+ "after": {
+  "1": {
+   ".": {
+    "total": 534,
+    "passed": 529,
+    "failed": 0,
+    "errors": 1,
+    "skipped": 4,
+    "failing": [
+     "::tests.unit.test_google_finish_reason_value"
+    ],
+    "exit": 1,
+    "verdict": "same 1 failure(s) as before the patch"
+   }
+  },
+  "2": {
+   ".": {
+    "total": 534,
+    "passed": 529,
+    "failed": 0,
+    "errors": 1,
+    "skipped": 4,
+    "failing": [
+     "::tests.unit.test_google_finish_reason_value"
+    ],
+    "exit": 1,
+    "verdict": "same 1 failure(s) as before the patch"
+   }
+  }
+ }
+}

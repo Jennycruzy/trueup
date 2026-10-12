@@ -406,6 +406,28 @@ Everything above is left uncommitted for owner review. No public action was take
 - Not done from the finish list: a real fixer run that fails a try, to show the "fix attempt failed (retried)" detection firing.
 - X post, 11 Oct: https://x.com/jennyoliver57/status/2109360422029594753
 
+## 2026-10-12: more Neatlogs fixes, checked against every open wrapper PR
+
+- **OBSERVED:** Every confirmed Neatlogs finding repro was run on the head of every open PR that touches its
+  wrapper file. The machine-readable matrix covers 11 PRs. PR #180 fixes all four Anthropic stream data findings;
+  PR #186 fixes the non-streamed Responses tool-call finding but not the other five findings tested against it.
+  Those findings were not duplicated.
+- **OBSERVED:** The first refusal-output fixer run failed three times because Entire returned valid but unrelated
+  graph hits, and Trueup then skipped its exact seed-symbol lookup. The locator now always merges seed definitions
+  after graph results. Its regression test proves an off-target graph result cannot hide the named wrapper.
+- **OBSERVED:** The corrected run fixed non-streamed OpenAI refusal output on its first try. The new test fails on
+  the clean library and passes with the patch. The package suite has the same one pre-existing collection failure;
+  the 57-scenario sweep changed 35 leads to 34 with no new mismatch. The standalone repro prints `None` before
+  and the refusal text after. A maintainer-ready issue and PR draft are in `upstream/`.
+- **OBSERVED:** The Responses stream error-event fix passed on try 2. Try 1 passed its unit test but the real
+  scenario rejected it. The accepted patch changes the stream span from OK with no exception event to ERROR with
+  one exception event. The full sweep changed 35 leads to 33 (one high and one medium removed), with no new
+  mismatch. A maintainer-ready issue and PR draft are in `upstream/`.
+- **OBSERVED:** The OpenAI Agents root-status candidate was dropped after three tries. Every draft passed its
+  generated unit tests, but all five real failure scenarios still exported an OK root. No patch or PR is offered.
+- **OBSERVED:** Model-key spend for this milestone went from $7.6712 to $8.9404: $1.2692 total, below the $2.50
+  limit. Only `claude-sonnet-4.6` was called. Nothing was posted.
+
 ## 2026-10-11: first fixes sent upstream
 
 Before posting, each repro was re-run on the latest release, on `main`, and with every open PR that touches the patched files installed (OBSERVED):

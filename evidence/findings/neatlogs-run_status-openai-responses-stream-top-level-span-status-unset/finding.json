@@ -37,7 +37,7 @@
  },
  "example_run": "20261010T203332Z-neatlogs",
  "field": "top-level span status",
- "fixed": false,
+ "fixed": true,
  "found_in": [
   "20261010T203332Z-neatlogs",
   "20261011T174813Z-neatlogs"
@@ -81,5 +81,9 @@
  "severity": "high",
  "title": "neatlogs, openai responses stream: top-level span status is UNSET",
  "trace": "UNSET",
- "upstream": null
+ "upstream": {
+  "issue": "upstream/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/issue.md",
+  "pr": "upstream/neatlogs-run_status-openai-responses-stream-top-level-span-status-unset/pr.md",
+  "status": "not yet posted"
+ }
 }

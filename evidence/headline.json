@@ -30,11 +30,45 @@
   "total": 32
  },
  "fixes": {
+  "neatlogs-output-openai-chat-create-output-text-missing": {
+   "after": {
+    "high": 11,
+    "leads": 34,
+    "medium": 23,
+    "scenarios": 57
+   },
+   "before": {
+    "high": 11,
+    "leads": 35,
+    "medium": 24,
+    "scenarios": 57
+   },
+   "finding_scenarios_still_wrong": 0,
+   "new_mismatches": 0,
+   "proven": true
+  },
   "neatlogs-run_status-anthropic-messages-stream-top-level-span-status-ok": {
    "after": {
     "high": 9,
     "leads": 31,
     "medium": 22,
+    "scenarios": 57
+   },
+   "before": {
+    "high": 11,
+    "leads": 35,
+    "medium": 24,
+    "scenarios": 57
+   },
+   "finding_scenarios_still_wrong": 0,
+   "new_mismatches": 0,
+   "proven": true
+  },
+  "neatlogs-run_status-openai-responses-stream-top-level-span-status-unset": {
+   "after": {
+    "high": 10,
+    "leads": 33,
+    "medium": 23,
     "scenarios": 57
    },
    "before": {
@@ -82,8 +116,8 @@
    "proven": true
   }
  },
- "fixes_proven": 3,
- "upstream_drafts": 3,
+ "fixes_proven": 5,
+ "upstream_drafts": 5,
  "v1v2": [
   {
    "accepted": "5 of 6",

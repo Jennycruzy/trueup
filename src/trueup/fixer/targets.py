@@ -86,6 +86,33 @@ TARGETS: dict[tuple[str, str], Target] = {
         reference_note=("OTel conventions: a span whose operation failed has status ERROR with an exception "
                         "event. neatlogs already does this for messages.create(stream=True), through _err."),
     ),
+    ("neatlogs", "openai chat create"): Target(
+        library="neatlogs", code_path="openai chat create",
+        packages=(Package(".", "neatlogs", tests="tests/unit", test_deps=("group:dev", "anthropic", "openai")),),
+        seeds=("_finalize_response", "ChoiceAccumulator", "add_response", "apply"),
+        reference_seeds=("output_messages", "refusal"),
+        reference_note=("The OpenAI Chat Completions response can carry a refusal separately from content. "
+                        "When content is null, the refusal is still the assistant's recorded output."),
+    ),
+    ("neatlogs", "openai responses stream"): Target(
+        library="neatlogs", code_path="openai responses stream",
+        packages=(Package(".", "neatlogs", tests="tests/unit", test_deps=("group:dev", "anthropic", "openai")),),
+        seeds=("_patch_responses", "_patch_async_responses", "_finalize_responses_stream",
+               "SyncStreamWrapper", "AsyncStreamWrapper"),
+        reference_seeds=("_err", "record_exception"),
+        reference_note=("An OpenAI Responses stream can deliver a response.error event without raising in the "
+                        "SDK. The tracing wrapper must treat that terminal event as a failed call: ERROR status, "
+                        "an error record, and an ended span. OpenInference records the same event as an error."),
+    ),
+    ("neatlogs", "openai-agents"): Target(
+        library="neatlogs", code_path="openai-agents",
+        packages=(Package(".", "neatlogs", tests="tests/unit", test_deps=("group:dev", "anthropic", "openai")),),
+        seeds=("_NeatlogsTraceProcessor", "on_trace_start", "on_trace_end", "on_span_end"),
+        reference_seeds=("StatusCode.ERROR", "record_exception"),
+        reference_note=("The workflow root covers the whole Agents SDK run. When an unrecovered non-tool child "
+                        "error makes the run raise, the root must end ERROR. A tool error recovered by the agent "
+                        "must leave the successful root OK."),
+    ),
 }
 
 

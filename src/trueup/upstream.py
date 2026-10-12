@@ -119,6 +119,77 @@ for span in exporter.get_finished_spans():
     print(f"span {span.name!r}: {span.status.status_code.name}, exception events: "
           f"{sum(e.name == 'exception' for e in span.events)}")
 ''',
+    ("neatlogs", "openai chat create"): '''"""neatlogs + OpenAI Chat Completions: refusal text is not recorded.
+Offline: a small response object stands in for the provider; export is off."""
+from types import SimpleNamespace as NS
+
+from neatlogs._wrap_utils import set_neatlogs_provider
+from neatlogs.openai import wrap_openai_client
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+class Completions:
+    def create(self, **kwargs):
+        message = NS(role="assistant", content=None, refusal="I can't help with that.", tool_calls=[])
+        return NS(id="r1", model="m", choices=[NS(index=0, message=message, finish_reason="stop")], usage=None)
+
+exporter, provider = InMemorySpanExporter(), TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+set_neatlogs_provider(provider)
+client = wrap_openai_client(NS(chat=NS(completions=Completions())))
+client.chat.completions.create(model="m", messages=[{"role": "user", "content": "hi"}])
+span = exporter.get_finished_spans()[0]
+print("recorded output:", span.attributes.get("neatlogs.llm.output_messages.0.content"))
+''',
+    ("neatlogs", "openai responses stream"): '''"""neatlogs + OpenAI Responses: a terminal error event leaves the span UNSET.
+Offline: a small event iterator stands in for the provider; export is off."""
+from types import SimpleNamespace as NS
+
+from neatlogs._wrap_utils import set_neatlogs_provider
+from neatlogs.openai import wrap_openai_client
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+class Responses:
+    def create(self, **kwargs):
+        return iter([NS(type="response.created", response=None),
+                     NS(type="error", message="server failed", code="server_error")])
+
+exporter, provider = InMemorySpanExporter(), TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+set_neatlogs_provider(provider)
+client = wrap_openai_client(NS(responses=Responses()))
+list(client.responses.create(model="m", input="hi", stream=True))
+span = exporter.get_finished_spans()[0]
+errors = sum(event.name == "exception" for event in span.events)
+print(f"span status: {span.status.status_code.name}; exception events: {errors}")
+''',
+    ("neatlogs", "openai-agents"): '''"""neatlogs OpenAI Agents processor: a failed child still leaves its workflow root OK.
+Offline: minimal SDK-shaped trace and span objects exercise the processor; export is off."""
+from types import SimpleNamespace as NS
+
+from neatlogs._wrap_utils import set_neatlogs_provider
+from neatlogs.openai_agents import _NeatlogsTraceProcessor
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import SimpleSpanProcessor
+from opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter
+
+exporter, provider = InMemorySpanExporter(), TracerProvider()
+provider.add_span_processor(SimpleSpanProcessor(exporter))
+set_neatlogs_provider(provider)
+processor = _NeatlogsTraceProcessor()
+trace = NS(trace_id="trace-1", name="Agent workflow")
+child = NS(span_id="span-1", trace_id="trace-1", parent_id=None,
+           span_data=NS(type="response"), error={"message": "model request failed"})
+processor.on_trace_start(trace)
+processor.on_span_start(child)
+processor.on_span_end(child)
+processor.on_trace_end(trace)
+for span in exporter.get_finished_spans():
+    print(f"{span.name}: {span.status.status_code.name}")
+''',
 }
 
 # Per library: the template's component, the PR title prefix and the issue template file.
@@ -143,6 +214,28 @@ META = {
         "expected": ("The span is ERROR with an exception event, as neatlogs already records for "
                      "messages.create(stream=True)."),
         "pr_note": "On failure the span gets the error and ends; partial text and tokens are not recorded."},
+    ("neatlogs", "openai chat create"): {
+        "pr_title": "fix(openai): record refusal text as chat output",
+        "title": "OpenAI Chat Completions: refusal text is missing from the output span",
+        "expected": "When content is null and refusal contains text, record the refusal as assistant output.",
+        "case": "A non-streamed chat refusal has null content and text in the refusal field.",
+        "pr_what": ("Chat refusals keep the assistant text in `message.refusal` while `message.content` is null. "
+                    "`ChoiceAccumulator.add_response` now uses that refusal as output when content is absent."),
+        "pr_note": "Normal content, tool calls and streaming responses are unchanged."},
+    ("neatlogs", "openai responses stream"): {
+        "pr_title": "fix(openai): record Responses stream error events",
+        "title": "OpenAI Responses: a stream error event leaves the span status unset",
+        "expected": "A terminal Responses error event records ERROR status and an exception event.",
+        "case": "A Responses stream ends with an error event that the OpenAI SDK returns to the application.",
+        "pr_what": ("The OpenAI SDK yields Responses error events instead of raising them. The stream finalizer "
+                    "now recognizes those events and records ERROR status plus an exception event."),
+        "pr_note": "Normal completed streams remain OK; an interrupted stream without an error stays UNSET."},
+    ("neatlogs", "openai-agents"): {
+        "pr_title": "fix(openai-agents): mark failed workflow roots as errors",
+        "title": "OpenAI Agents: a run that raises leaves the workflow root OK",
+        "expected": "A workflow that raises is ERROR; a recovered tool failure leaves a successful workflow OK.",
+        "case": "An Agents SDK workflow raises after an unrecovered model or orchestration error.",
+        "pr_note": "No PR is proposed unless the end-to-end Agents scenarios pass."},
 }
 
 
@@ -253,14 +346,18 @@ def _code(text: str, lang: str = "") -> str:
 def _sections(finding: dict[str, Any], target: tg.Target, data: dict[str, Any], fix_dir: Path) -> dict[str, str]:
     d = finding["details"]
     b = data["boundary"]
-    table = (fix_dir / "before-after.md").read_text() if (fix_dir / "before-after.md").exists() else ""
-    rows = "\n".join(f"- `{x['scenario']}`: {x['field']} should be {x['truth']}, the trace has {x['trace']}"
-                     for x in d.get("leads", []))
+    meta = META[(target.library, target.code_path)]
+    example = d.get("example") or (d.get("leads") or [{}])[0]
+    table = ("| check | expected | latest release | proposed patch |\n"
+             "|---|---|---|---|\n"
+             f"| {d['field']} | {example.get('truth')} | {example.get('trace')} | "
+             f"{'matches expected' if data['fixed'] else 'not proven'} |")
     return {
         "symptom": (f"Trueup ran each case against a fake provider, so it knows what really happened, and compared that with the exported spans:\n\n"
-                    f"{rows}"),
-        "boundary": (f"Affected: {', '.join(f'`{s}`' for s in b['affected'])}.\n\nRight today on the same code "
-                     f"path: {', '.join(f'`{s}`' for s in b['right']) or 'none'}.\n\nChecked on: "
+                    f"- {meta.get('case', d['field'])}\n- Expected: {example.get('truth')}.\n"
+                    f"- Recorded: {example.get('trace')}."),
+        "boundary": (f"Affected cases: {len(b['affected'])}. Other checked cases on the same wrapper that remain "
+                     f"correct: {len(b['right'])}.\n\nChecked on: "
                      f"{d.get('rules', {}).get('latest_and_main', '?')}."),
         "repro": (f"Standalone, {data['repro_lines']} lines, needs only the library and the SDK; no API key, no "
                   f"network:\n\n{_code(REPROS[(target.library, target.code_path)], 'python')}\n\nOutput on the "
@@ -268,8 +365,10 @@ def _sections(finding: dict[str, Any], target: tg.Target, data: dict[str, Any], 
         "expected": META[(target.library, target.code_path)]["expected"],
         "table": table,
         "environment": (f"Python {data['environment']['python']}, {data['environment']['os']}. Versions: " +
-                        ", ".join(f"{k} {v}" for k, v in data["environment"]["latest release"].items()) + "."),
-        "dedupe": "; ".join(f"`{s['query']}` ({s['hits']} hits, {s['date'][:10]})"
+                        ", ".join(f"{k} {v}" for k, v in data["environment"]["latest release"].items()
+                                  if target.library != "neatlogs" or k in {"neatlogs", "openai", "anthropic",
+                                                                          "opentelemetry-sdk"}) + "."),
+        "dedupe": "; ".join(f"`{s['query']}` ({len(s['hits']) if isinstance(s['hits'], list) else s['hits']} hits, {s['date'][:10]})"
                             for s in finding.get("dedupe", {}).get("searches", [])),
     }
 
@@ -323,7 +422,7 @@ def pr_text(finding: dict[str, Any], target: tg.Target, data: dict[str, Any], fi
                        for p, v in fix.get("suites_before", {}).items())
     files = sorted({ln[6:] for ln in (fix_dir / "patch.diff").read_text().splitlines() if ln.startswith("+++ b/")})
     after = data["after"]["stdout"] if data["after"] else "(not run)"
-    body = [f"# {meta['pr_title']}", f"## What\n\n{ok.get('explanation') or ''}",
+    body = [f"# {meta['pr_title']}", f"## What\n\n{meta.get('pr_what') or ok.get('explanation') or ''}",
             "## Files\n\n" + "\n".join(f"- `{f}`" for f in files),
             f"## Test\n\n{ok['new_test']['reason']}.\n\n{meta.get('pr_note', '')}", f"## Suites\n\n{before}\n{suites}",
             f"## Before and after\n\n{s['table']}\nThe standalone repro from the issue, with this patch:\n\n"
@@ -334,6 +433,6 @@ def pr_text(finding: dict[str, Any], target: tg.Target, data: dict[str, Any], fi
                     "change. (Not done: the change was checked with in-memory spans, see the table.)\n- [x] PR name "
                     "follows conventional commits format: `feat(instrumentation): ...` or `fix(instrumentation): "
                     "...`.\n- [ ] (If applicable) I have updated the documentation accordingly. (Not applicable.)")
-    body.append(f"Patch drafted by {fix['model']} and verified by Trueup ({len(fix['tries'])} tries in the last run; "
-                "every try is in tries.json).")
+    body.append(f"Trueup, an AI agent using Claude Sonnet 4.6, found and drafted this patch. Code verification "
+                f"accepted it after {len(fix['tries'])} attempt(s); every attempt is recorded in tries.json.")
     return head + "\n\n".join(body) + "\n"

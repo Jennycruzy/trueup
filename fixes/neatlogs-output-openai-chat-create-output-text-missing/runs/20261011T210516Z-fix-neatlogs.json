@@ -1,0 +1,132 @@
+{
+ "finding": "neatlogs-output-openai-chat-create-output-text-missing",
+ "title": "neatlogs, openai chat create: output text not recorded",
+ "library": "neatlogs",
+ "found_in": "20261011T174813Z-neatlogs",
+ "run_id": "20261011T210516Z-fix-neatlogs",
+ "session_id": "20261011T210516Z-fix-neatlogs",
+ "model": "claude-sonnet-4.6",
+ "variant": "v2",
+ "started": "2026-10-11T21:05:18Z",
+ "tries": [
+  {
+   "try": 1,
+   "explanation": "When an OpenAI chat completion returns a refusal, the `message.content` field is `None` and the actual text is in `message.refusal`. The wrapper only reads `message.content` to record output text, so refusal responses produce a null/empty output. The fix is to fall back to `message.refusal` when `content` is None or empty when building the output text from chat completion choices.",
+   "draft": {
+    "explanation": "When an OpenAI chat completion returns a refusal, the `message.content` field is `None` and the actual text is in `message.refusal`. The wrapper only reads `message.content` to record output text, so refusal responses produce a null/empty output. The fix is to fall back to `message.refusal` when `content` is None or empty when building the output text from chat completion choices.",
+    "edits": [
+     {
+      "file": "neatlogs/openai.py",
+      "old": "def _message_content(message: Any) -> str:\n    return str(getattr(message, \"content\", \"\") or \"\")",
+      "new": "def _message_content(message: Any) -> str:\n    content = getattr(message, \"content\", None)\n    if content:\n        return str(content)\n    refusal = getattr(message, \"refusal\", None)\n    if refusal:\n        return str(refusal)\n    return \"\""
+     }
+    ],
+    "test": {
+     "file": "tests/unit/test_trueup_openai_chat_refusal_output.py",
+     "content": "\"\"\"Trueup: output text must be recorded even when the response is a refusal.\n\nWhen content is null and refusal carries the assistant's reply, the span's\noutput.value must contain the refusal text.\n\"\"\"\nfrom types import SimpleNamespace\n\nimport pytest\n\nimport neatlogs\nfrom neatlogs.openai import wrap_openai_client\n\n\nclass _RefusalCompletions:\n    def create(self, **_kwargs):\n        return SimpleNamespace(\n            choices=[\n                SimpleNamespace(\n                    index=0,\n                    message=SimpleNamespace(\n                        role=\"assistant\",\n                        content=None,\n                        refusal=\"I can't help with that.\",\n                        tool_calls=[],\n                    ),\n                    finish_reason=\"stop\",\n                )\n            ],\n            usage=None,\n            model=\"gpt-4o\",\n            id=\"response-refusal\",\n        )\n\n\ndef test_refusal_recorded_as_output_text(tracer_provider, in_memory_span_exporter):\n    from opentelemetry import trace\n    from neatlogs._wrap_utils import set_neatlogs_provider\n\n    trace.set_tracer_provider(tracer_provider)\n    set_neatlogs_provider(tracer_provider)\n\n    neatlogs.init(\n        api_key=\"test\",\n        disable_export=True,\n        tracer_provider=tracer_provider,\n        register_shutdown_handlers=False,\n    )\n\n    client = SimpleNamespace(chat=SimpleNamespace(completions=_RefusalCompletions()))\n    wrapped = wrap_openai_client(client)\n\n    wrapped.chat.completions.create(\n        model=\"gpt-4o\",\n        messages=[{\"role\": \"user\", \"content\": \"Do something harmful\"}],\n    )\n\n    spans = in_memory_span_exporter.get_finished_spans()\n    assert len(spans) >= 1\n    span = next(\n        s for s in spans if \"chat\" in s.name or \"openai\" in s.name.lower()\n    )\n    attrs = span.attributes\n\n    # The refusal text must appear somewhere in the output attributes\n    output_value = attrs.get(\"output.value\", \"\")\n    # Check either output.value or the output message content attribute\n    output_msg_content = attrs.get(\"neatlogs.llm.output_messages.0.content\", \"\")\n    assert (\n        \"I can't help with that.\" in str(output_value)\n        or \"I can't help with that.\" in str(output_msg_content)\n    ), (\n        f\"Refusal text not found in output. output.value={output_value!r}, \"\n        f\"output_messages.0.content={output_msg_content!r}\"\n    )\n"
+    }
+   },
+   "ok": false,
+   "stage": "apply",
+   "reason": "patch does not apply: the old text of an edit to neatlogs/openai.py is found 0 times, not once: 'def _message_content(message: Any) -> str:\\n    return str(getattr(message, \"content\", \"\") or \"\")'. The file really has, from line 47:\ndef wrap_openai_client(client: Any) -> Any:\n    \"\"\"\n    Wrap an OpenAI client instance. Returns the same client with all\n    LLM-relevant resources patched to auto-trace.\n    \"\"\"\n    _safe(_patch_completions, _resource(client, \"chat\", \"completions\"))\n    _safe(_patch_chat_parse, _resource(client, \"chat\", \"completions\"), sync=True)\n    _safe(_patch_legacy_completions, getattr(client, \"completions\", None), sync=True)"
+  },
+  {
+   "try": 2,
+   "explanation": "When an OpenAI chat completion returns a refusal, `message.content` is `None` and the text is in `message.refusal`. The wrapper reads only `message.content` when building output attributes, so refusal responses produce no recorded output text. The fix is to find where chat completion message content is read and fall back to `message.refusal` when content is absent.",
+   "draft": {
+    "explanation": "When an OpenAI chat completion returns a refusal, `message.content` is `None` and the text is in `message.refusal`. The wrapper reads only `message.content` when building output attributes, so refusal responses produce no recorded output text. The fix is to find where chat completion message content is read and fall back to `message.refusal` when content is absent.",
+    "edits": [
+     {
+      "file": "neatlogs/openai.py",
+      "old": "def _choice_output_text(choice: Any) -> str:\n    message = getattr(choice, \"message\", None)\n    if message is None:\n        return \"\"\n    content = getattr(message, \"content\", None)\n    return str(content) if content else \"\"",
+      "new": "def _choice_output_text(choice: Any) -> str:\n    message = getattr(choice, \"message\", None)\n    if message is None:\n        return \"\"\n    content = getattr(message, \"content\", None)\n    if content:\n        return str(content)\n    refusal = getattr(message, \"refusal\", None)\n    return str(refusal) if refusal else \"\""
+     }
+    ],
+    "test": {
+     "file": "tests/unit/test_trueup_openai_chat_refusal_output.py",
+     "content": "\"\"\"Trueup: output text must be recorded even when the response is a refusal.\n\nWhen content is null and refusal carries the assistant's reply, the span's\noutput attributes must contain the refusal text.\n\"\"\"\nfrom types import SimpleNamespace\n\nfrom opentelemetry import trace\nfrom opentelemetry.sdk.trace import TracerProvider\nfrom opentelemetry.sdk.trace.export import SimpleSpanProcessor\nfrom opentelemetry.sdk.trace.export.in_memory_span_exporter import InMemorySpanExporter\n\nimport neatlogs\nfrom neatlogs._wrap_utils import set_neatlogs_provider\nfrom neatlogs.openai import wrap_openai_client\n\n\nclass _RefusalCompletions:\n    def create(self, **_kwargs):\n        return SimpleNamespace(\n            choices=[\n                SimpleNamespace(\n                    index=0,\n                    message=SimpleNamespace(\n                        role=\"assistant\",\n                        content=None,\n                        refusal=\"I can't help with that.\",\n                        tool_calls=[],\n                    ),\n                    finish_reason=\"stop\",\n                )\n            ],\n            usage=None,\n            model=\"gpt-4o\",\n            id=\"response-refusal\",\n        )\n\n\ndef test_refusal_recorded_as_output_text(tracer_provider, in_memory_span_exporter):\n    trace.set_tracer_provider(tracer_provider)\n    set_neatlogs_provider(tracer_provider)\n\n    neatlogs.init(\n        api_key=\"test\",\n        disable_export=True,\n        tracer_provider=tracer_provider,\n        register_shutdown_handlers=False,\n    )\n\n    client = SimpleNamespace(chat=SimpleNamespace(completions=_RefusalCompletions()))\n    wrapped = wrap_openai_client(client)\n\n    wrapped.chat.completions.create(\n        model=\"gpt-4o\",\n        messages=[{\"role\": \"user\", \"content\": \"Do something harmful\"}],\n    )\n\n    spans = in_memory_span_exporter.get_finished_spans()\n    assert len(spans) >= 1\n\n    # Find the chat completions span\n    target = None\n    for s in spans:\n        if \"chat\" in s.name or \"completion\" in s.name.lower() or \"openai\" in s.name.lower():\n            target = s\n            break\n    assert target is not None, f\"No chat span found among: {[s.name for s in spans]}\"\n\n    attrs = target.attributes\n    output_value = str(attrs.get(\"output.value\", \"\"))\n    output_msg_content = str(attrs.get(\"neatlogs.llm.output_messages.0.content\", \"\"))\n\n    assert (\n        \"I can't help with that.\" in output_value\n        or \"I can't help with that.\" in output_msg_content\n    ), (\n        f\"Refusal text not found in output. output.value={output_value!r}, \"\n        f\"neatlogs.llm.output_messages.0.content={output_msg_content!r}, \"\n        f\"all attrs={dict(attrs)}\"\n    )\n"
+    }
+   },
+   "ok": false,
+   "stage": "apply",
+   "reason": "patch does not apply: the old text of an edit to neatlogs/openai.py is found 0 times, not once: 'def _choice_output_text(choice: Any) -> str:\\n    message = getattr(choice, \"message\", None)\\n    if message is None:\\n    '. The file really has, from line 107:\ndef _patch_completions(completions: Any) -> None:\n    if getattr(completions, \"_neatlogs_patched\", False):\n        return\n\n    orig_create = completions.create\n\n    def patched_create(*args, **kwargs):\n        if is_suppressed():"
+  },
+  {
+   "try": 3,
+   "explanation": "When an OpenAI chat completion returns a refusal, `message.content` is `None` and the text is in `message.refusal`. The wrapper reads only `message.content` when building output attributes, so refusal responses produce no recorded output text. The fix is to fall back to `message.refusal` when content is absent in the place where message content is read for span attributes.",
+   "draft": {
+    "explanation": "When an OpenAI chat completion returns a refusal, `message.content` is `None` and the text is in `message.refusal`. The wrapper reads only `message.content` when building output attributes, so refusal responses produce no recorded output text. The fix is to fall back to `message.refusal` when content is absent in the place where message content is read for span attributes.",
+    "edits": [
+     {
+      "file": "neatlogs/openai.py",
+      "old": "        content = getattr(message, \"content\", None) or \"\"\n        return str(content)",
+      "new": "        content = getattr(message, \"content\", None)\n        if content:\n            return str(content)\n        refusal = getattr(message, \"refusal\", None)\n        return str(refusal) if refusal else \"\""
+     }
+    ],
+    "test": {
+     "file": "tests/unit/test_trueup_openai_chat_refusal_output.py",
+     "content": "\"\"\"Trueup: output text must be recorded even when the response is a refusal.\n\nWhen content is null and refusal carries the assistant's reply, the span's\noutput attributes must contain the refusal text.\n\"\"\"\nfrom types import SimpleNamespace\n\nfrom opentelemetry import trace\n\nimport neatlogs\nfrom neatlogs._wrap_utils import set_neatlogs_provider\nfrom neatlogs.openai import wrap_openai_client\n\n\nclass _RefusalCompletions:\n    def create(self, **_kwargs):\n        return SimpleNamespace(\n            choices=[\n                SimpleNamespace(\n                    index=0,\n                    message=SimpleNamespace(\n                        role=\"assistant\",\n                        content=None,\n                        refusal=\"I can't help with that.\",\n                        tool_calls=[],\n                    ),\n                    finish_reason=\"stop\",\n                )\n            ],\n            usage=None,\n            model=\"gpt-4o\",\n            id=\"response-refusal\",\n        )\n\n\ndef test_refusal_recorded_as_output_text(tracer_provider, in_memory_span_exporter):\n    trace.set_tracer_provider(tracer_provider)\n    set_neatlogs_provider(tracer_provider)\n\n    neatlogs.init(\n        api_key=\"test\",\n        disable_export=True,\n        tracer_provider=tracer_provider,\n        register_shutdown_handlers=False,\n    )\n\n    client = SimpleNamespace(chat=SimpleNamespace(completions=_RefusalCompletions()))\n    wrapped = wrap_openai_client(client)\n\n    wrapped.chat.completions.create(\n        model=\"gpt-4o\",\n        messages=[{\"role\": \"user\", \"content\": \"Do something harmful\"}],\n    )\n\n    spans = in_memory_span_exporter.get_finished_spans()\n    assert len(spans) >= 1\n\n    # Find the chat completions span\n    target = None\n    for s in spans:\n        if \"chat\" in s.name or \"completion\" in s.name.lower() or \"openai\" in s.name.lower():\n            target = s\n            break\n    assert target is not None, f\"No chat span found among: {[s.name for s in spans]}\"\n\n    attrs = target.attributes\n    output_value = str(attrs.get(\"output.value\", \"\"))\n    output_msg_content = str(attrs.get(\"neatlogs.llm.output_messages.0.content\", \"\"))\n\n    assert (\n        \"I can't help with that.\" in output_value\n        or \"I can't help with that.\" in output_msg_content\n    ), (\n        f\"Refusal text not found in output. output.value={output_value!r}, \"\n        f\"neatlogs.llm.output_messages.0.content={output_msg_content!r}, \"\n        f\"all attrs={dict(attrs)}\"\n    )\n"
+    }
+   },
+   "ok": false,
+   "stage": "apply",
+   "reason": "patch does not apply: the old text of an edit to neatlogs/openai.py is found 0 times, not once: '        content = getattr(message, \"content\", None) or \"\"\\n        return str(content)'. The file really has, from line 548:\n        ot_ = getattr(usage, \"output_tokens\", None)\n        if it is not None:\n            span.set_attribute(\"neatlogs.llm.token_count.prompt\", it)\n        if ot_ is not None:\n            span.set_attribute(\"neatlogs.llm.token_count.completion\", ot_)\n    span.set_attribute(\"neatlogs.llm.metrics.duration_ms\", round(duration_ms, 3))\n    if ttft_ms is not None:\n        span.set_attribute(\"neatlogs.llm.metrics.ttft_ms\", round(ttft_ms, 3))"
+  }
+ ],
+ "fixed": false,
+ "error": null,
+ "commit": "202f8776ea7d0902a6cb085495c6bcb00c226f8e",
+ "locate_method": "entire graph",
+ "suites_before": {
+  ".": {
+   "total": 532,
+   "passed": 527,
+   "failed": 0,
+   "errors": 1,
+   "skipped": 4,
+   "failing": [
+    "::tests.unit.test_google_finish_reason_value"
+   ],
+   "exit": 1
+  }
+ },
+ "usage": {
+  "calls": 3,
+  "input_tokens": 83771,
+  "output_tokens": 3740,
+  "json_retries": 0,
+  "truncated": 0,
+  "by_model": {
+   "claude-sonnet-4.6": {
+    "calls": 3,
+    "input_tokens": 83771,
+    "output_tokens": 3740
+   }
+  }
+ },
+ "cost_usd": 0.112316,
+ "spend_after_usd": 7.7835483,
+ "wall_s": 274.3,
+ "traces_opened": [
+  {
+   "name": "trueup-fixer",
+   "step": "locate"
+  },
+  {
+   "name": "trueup-verifier",
+   "step": "baseline"
+  },
+  {
+   "name": "trueup-fixer",
+   "step": "draft 1"
+  },
+  {
+   "name": "trueup-fixer",
+   "step": "draft 2"
+  },
+  {
+   "name": "trueup-fixer",
+   "step": "draft 3"
+  }
+ ]
+}

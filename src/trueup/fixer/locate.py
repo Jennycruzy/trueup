@@ -7,9 +7,10 @@ and for the top hits `entire graph neighbors --relation CALLS --direction in` (c
 `entire graph impact`. The library's own reference pattern comes from a second search.
 Every command and its JSON output is kept, with paths relative to the clone.
 
-When the graph is not installed, does not cover Python, fails or finds nothing, the
-fallback is ripgrep for the target's seed symbols plus Python's ast for the enclosing
-definitions, and locate.json says the graph was not used and why.
+The target's seed symbols are always resolved with ripgrep plus Python's AST and merged
+after the ranked graph hits. This keeps a valid but off-target semantic search from
+hiding the wrapper code named by the target. When the graph is unavailable or empty,
+the seed lookup is the fallback and locate.json records why.
 """
 
 from __future__ import annotations
@@ -311,11 +312,28 @@ def locate(root: Path, target: Target, out_dir: Path, run: Runner = run_cmd,
         else:
             graph["reason"] = "entire graph found no function for the query; fallback used"
             located = None
+    symbols = locate_symbols(clone, target, run)
     if located is None:
-        located = locate_symbols(clone, target, run)
+        located = symbols
+    else:
+        # A semantic result can be valid without containing the wrapper named by the
+        # target. Keep graph rank first, then add exact seed definitions and their
+        # callers so the drafting model always sees both sources of evidence.
+        definition_keys = {(d["file"], d.get("qualname"), d.get("line")) for d in located["definitions"]}
+        for definition in symbols["definitions"]:
+            key = (definition["file"], definition.get("qualname"), definition.get("line"))
+            if key not in definition_keys:
+                definition["rank"] = len(located["definitions"]) + 1
+                located["definitions"].append(definition)
+                definition_keys.add(key)
+        for kind in ("callers", "reference"):
+            keys = {(x.get("file"), x.get("line"), x.get("symbol")) for x in located[kind]}
+            located[kind].extend(x for x in symbols[kind]
+                                 if (x.get("file"), x.get("line"), x.get("symbol")) not in keys)
     result = {"library": target.library, "code_path": target.code_path,
               "clone": f".trueup/clones/{target.library}", "commit": commit, "graph": graph,
-              "method": "entire graph" if graph["used"] else "ripgrep + ast (fallback)", **located}
+              "method": "entire graph + seed symbols" if graph["used"] else "ripgrep + ast (fallback)",
+              **located}
     out_dir.mkdir(parents=True, exist_ok=True)
     (out_dir / "locate.json").write_text(scrub(json.dumps(result, indent=1), clone, root))
     return {**result, "clone": str(clone)}

@@ -1,0 +1,25 @@
+{
+ "rows": [
+  {
+   "scenario": "oa-chat-refusal",
+   "field": "output text",
+   "truth": "?",
+   "before": "matches truth",
+   "after": "matches truth"
+  }
+ ],
+ "before": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 35,
+  "high": 11,
+  "medium": 24
+ },
+ "after": {
+  "scenarios_ran": 57,
+  "not_run": 0,
+  "leads": 34,
+  "high": 11,
+  "medium": 23
+ }
+}
