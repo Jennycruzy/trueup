@@ -1,0 +1,70 @@
+{
+  "cli_version": "0.11.4",
+  "checkpoint_id": "01M4RC4TVDMQNV83DWDDNH3VBS",
+  "session_id": "3550cecb-6ee1-4b3a-87f6-462ddab55169",
+  "strategy": "manual-commit",
+  "created_at": "2026-10-12T15:36:50.946051969Z",
+  "branch": "main",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "docs/x/6-cfo-plan.png"
+  ],
+  "agent": "Claude Code",
+  "model": "claude-opus-5-5",
+  "turn_id": "682fe7013c32",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 16,
+    "cache_creation_tokens": 28046,
+    "cache_read_tokens": 213286,
+    "output_tokens": 3122,
+    "api_call_count": 9
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-10-12T15:36:50.912313804Z",
+    "agent_lines": 0,
+    "agent_removed": 0,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 0,
+    "total_lines_changed": 0,
+    "agent_percentage": 0,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 1964,
+      "user_lines_removed": 375,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0,
+      "user_added_per_file": {
+        "README.md": 46,
+        "docs/built-with.md": 86,
+        "docs/getting-started.md": 115,
+        "docs/how-it-works.md": 101,
+        "docs/limits.md": 18,
+        "docs/neatlogs-email.md": 13,
+        "docs/witness-before-after.md": 22,
+        "live/build_fixes.py": 235,
+        "live/server.py": 16,
+        "live/static/built-with.html": 166,
+        "live/static/demo.html": 401,
+        "live/static/fixes.html": 90,
+        "live/static/how-it-works.html": 190,
+        "live/static/index.html": 158,
+        "live/static/site.css": 212,
+        "live/static/site.js": 39,
+        "tests/test_live_server.py": 56
+      },
+      "user_removed_per_file": {
+        "README.md": 14,
+        "docs/neatlogs-email.md": 10,
+        "docs/witness-before-after.md": 19,
+        "live/server.py": 2,
+        "live/static/index.html": 330
+      }
+    }
+  ]
+}
