@@ -470,15 +470,20 @@ A failed fixer run, kept as evidence (`fixes/openinference-.../runs/20261011T194
   attempt failed (retried)`: 6 on 11 Oct and 7 on 12 Oct. This closes the required proof that a real failed fixer
   try reaches the detection; the raw trend is in `evidence/neatlogs/detections.json`.
 
-## Hand-back, 12 Oct (witness)
+## The Witness build, step by step (12 Oct)
 
-- Earlier work: `8e50fe6`, complete; 364 tests passed before the commit.
-- W1 Witness: `c9cf1fe`, complete. Sync and async provider traffic, stream completion, cuts, error events, refusal, tools and usage are observed without changing application return values.
-- W2 live demo: `81ec337`, complete. Real LiteLLM traffic reproduced an Agents workflow shown OK and an Anthropic cable cut shown OK. Twenty normal calls produced zero disagreements.
-- W3 rerate: `1f5008a`, complete with a negative result. All three proven neatlogs patches applied together; targeted marks stayed 2 → 2. The one allowed new fixer attempt cost $0.30826290, but overlapping resume processes left its patch artifact empty, so it was rejected.
-- W4 words: this commit. README, page, video, posts and cfo.ai inputs lead with Witness and retain the failed after result.
-- Model-key spend: $9.53811870 before the gate; $9.85278360 after the live work and fixer; increase $0.31466490. The gate itself cost $0.00626780; the later fixer and probes account for the rest.
-- Not done: no alert destination was connected because MCP exposes detection creation but no alert-rule write tool. No patch was called fixed. Nothing was pushed or posted.
+- Starting point: the earlier unfinished work, saved in `8e50fe6`; 364 tests passed.
+- Step 1, build Witness (`c9cf1fe`): it watches each AI call (did it fail, did the reply finish, refusals, tools,
+  usage) without changing what the app does.
+- Step 2, the live demo (`81ec337`): real AI calls reproduced two wrong records (an agent run shown OK, a cut
+  connection shown OK). Twenty normal calls gave zero false alarms.
+- Step 3, test the fixes (`1f5008a`): the first try stayed at 2 wrong records out of 2. **This was fixed later the
+  same day: the light went from 2 to 0** (see "the light goes out (2 → 0)" below, commit `953ce26`). The one extra
+  fix attempt in this step cost $0.31 and was rejected because its file came out empty.
+- Step 4, the words (`20387d5`): README, page, video script, posts and cfo.ai inputs.
+- AI spend: $9.54 before, $9.85 after, so $0.31 for this work.
+- Not done in this step: no alert destination was connected, because the neatlogs MCP can create detections but
+  not alerts.
 
 ## 2026-10-12 12:15 UTC: the light goes out (2 → 0)
 
