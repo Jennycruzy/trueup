@@ -6,6 +6,14 @@ Draw two cockpit instruments and a red DISAGREE panel. No crash footage.
 
 “Planes compare independent instruments. On the 737 MAX, an AOA DISAGREE alert intended to warn when two readings differed did not work on most aircraft. Your AI agent flies on one instrument: its trace.”
 
+## Line to use (neatlogs' own email), about 10 seconds, after 0:55 or as the opening hook
+
+Show the real neatlogs daily email ("Recorded errors rose to 6.2%"), then the count.
+
+“neatlogs' own daily email said 6.2% of our runs failed. We checked all 81. Nine had crashed: 11.1%. These were test runs we crashed on purpose, recorded by the tracing tools as anyone downloads them today. The tracing code missed four crashes. The email only added up what it was given.”
+
+Must stay in: crashed on purpose, not real customers; released versions without our fixes; the tracing code caused it, not the email. Say "the tracing code", not "neatlogs' code" (Arize's and Traceloop's tools recorded some of the runs).
+
 ## 0:12–0:35
 
 Run the shop agent through the local cable-cut relay. Show the real provider response begin, then the application exception beside neatlogs' successful trace.

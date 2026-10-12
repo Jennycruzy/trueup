@@ -25,8 +25,10 @@ Persisted demo evidence:
   `6041090c2877aa7d78861796ee052fcb`, and `138533163e28239ec9181a42f7a7f899`.
 - OpenInference session `demo-openinference-20261012T015747Z`: traces `c874896c638944221ea13d90494c3a56`,
   `fbcb88f7e7564fb32c76273111c5ceb0`, and `35a7fc38358b72dda5734a3567395c31`.
-- OpenLLMetry ran and delivered nine spans through its OTLP exporter, but Neatlogs did not return them under the
-  requested `demo-openllmetry-*` session. This is recorded as a session-grouping limitation, not a successful demo.
+- OpenLLMetry: on 12 Oct its traces were readable in neatlogs: `83a4fc673acfe9816accd168dd7e5bf2` and two others in
+  `demo-openllmetry-20261012T020143Z`, three in `demo-openllmetry-20261012T020238Z`, and
+  `3ba07caf2cd4224bd1d81920f4e398fc` with no session. An earlier note said neatlogs did not return them under the
+  session; that is no longer true. See [neatlogs-email.md](neatlogs-email.md).
 
 All demo calls used the local fake provider. The exporter is off by default and refuses to run without the explicit
 flag; it prints its maximum span count before starting and aborts above 30 spans.

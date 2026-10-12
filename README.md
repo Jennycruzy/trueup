@@ -20,6 +20,10 @@ When the record is wrong, Witness adds a `TRACE DISAGREE` step to the same neatl
 
 The light remained **2 → 2**. That negative result matters: the existing patches did not fully repair these production cases. Across 20 normal real calls, Witness raised **0** disagreements. The gate traffic cost **$0.00626780**.
 
+## neatlogs' own email got it wrong
+
+neatlogs' daily email for this project said 6.2% of runs failed. We checked every one of the 81 runs: 9 had crashed, which is **11.1%**. Four crashes were recorded as success, and the five it did count still said SUCCESS on their top step. These were test runs we crashed on purpose (Trueup's practice AI server, not real customers), recorded by the released tracing code of neatlogs, Arize and Traceloop without our fixes. The tracing code caused it; the email only added up wrong records. [The runs, one by one](docs/neatlogs-email.md).
+
 [Live traces and method](docs/witness-before-after.md) · [Evidence page](docs/index.html) · [Build record](hackathon.md) · [cfo.ai plan](https://cfo.ai/s/a9JKll8UYmSHs7-F)
 
 The offline lab separately contains 32 confirmed findings and five locally proven patches across neatlogs, OpenInference and OpenLLMetry. Proposed patches are not upstream fixes until merged.
