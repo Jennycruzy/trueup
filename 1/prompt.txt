@@ -1,0 +1,20 @@
+You are working in the Trueup repository (this folder). Foreground only. Do not commit, push or post. Never print or write a key. No private paths. Plain words only (no: span, trace as a noun for people, lead, scenario, harness, adapter, instrumentation, OTel). Finish within 12 minutes. Edit README.md only.
+
+Goal: make README.md lead with the links a judge needs to open, then high-quality, copy-paste code. Keep it under about 450 words. Keep the existing sections that still matter, but restructure:
+
+1. `# Trueup Witness` + the one-line description (keep).
+2. **For judges, start here** — a short list of links, each with a few plain words saying what it proves:
+   - Live demo (break a real AI bot yourself): https://trueup.38-49-216-59.sslip.io/demo
+   - Product site: https://trueup.38-49-216-59.sslip.io
+   - neatlogs records, before and after the fix: https://app.neatlogs.com/traces/5322259c536eae9651b3f0819bfade85 and https://app.neatlogs.com/traces/7304699be40a6194bafc2a45478bcd4f (the page shows the same records step by step, for people without project access)
+   - How neatlogs caught and fixed Trueup's own mistakes: docs/built-with.md#neatlogs
+   - neatlogs' daily email said 6.2%, the truth was 11.1%: docs/neatlogs-email.md
+   - Fixes sent upstream: Arize https://github.com/Arize-ai/openinference/pull/4024 (reviewed by Arize's head of open source), neatlogs https://github.com/neatlogs/neatlogs/pull/207, Traceloop https://github.com/traceloop/openllmetry/pull/4610
+   - Entire: the fixer session https://entire.io/gh/Jennycruzy/trueup/commit/79210a45418246ceb95e2990d1c003b5fbc7b3d9 (checkpoint 01M4M8M1GSQ2BM1RX2JKDJHPD6), full build history https://entire.io/gh/Jennycruzy/trueup, how each fix was made: fixes/openinference-run_status-openai-agents-top-level-span-status-ok/PROVENANCE.md
+   - The mistake we made with Entire, and what we did: one line ("20 updates were made in sessions Entire did not record; we said so, faked nothing, and moved all work back in") linking hackathon.md section "What Entire recorded, and what it did not" (use the right anchor).
+   - Business plan in cfo.ai: https://cfo.ai/s/kVKIburWzn09Baoy (and docs/business-plan.md)
+   - Fixes gallery: https://trueup.38-49-216-59.sslip.io/fixes · Build log: hackathon.md
+3. The result table (2 → 0, 40 normal calls, 0 false alarms) — keep, short.
+4. **Install** and **Quick start**: keep the existing working code block; check it against src/trueup/witness/core.py and make sure it is exactly right and copy-pastes cleanly. Add a second short block showing `entire trueup --help` (Trueup runs as an Entire command) and `trueup audit examples/agent.py --library neatlogs` (check your own script against the practice AI server). Verify both commands run (`uv run trueup audit --help` is enough for the second if a full run is slow).
+5. How it works (4 lines), Docs list, License — keep, short.
+Run `uv run pytest -q` (some tests read README). Fix only README wording if a test needs it; never weaken a number check. Print the final README word count and the test result.
