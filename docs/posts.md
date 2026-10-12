@@ -24,3 +24,13 @@ Two lines give your AI trace a second sensor:
 `trueup.witness.watch()`
 
 It watches status, exceptions, stream completion, refusals, tools and usage. It never changes your app's result. Gate traffic cost: $0.00626780. #neatHack @EntireHQ
+
+## Posted
+
+- Post 3 (owner): https://x.com/jennyoliver57/status/2109546774025113763
+
+## Thread images (docs/x/)
+
+1. `1-arize-review.png`: Arize PR #4024 and the review by Arize's head of open source (GitHub screenshot, 12 Oct).
+2. `2-light-out.png`: before/after from the neatlogs records (real Claude Haiku calls through the event's model key).
+3. `3-neatlogs-pr.png`: neatlogs PR #207 (GitHub screenshot, 12 Oct).
