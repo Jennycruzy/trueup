@@ -5,11 +5,20 @@
 - **Trueup Witness** checks an AI agent's records against what really happened, adds a red `TRACE DISAGREE` step inside neatlogs when they disagree, and fixes the tracing code that got it wrong.
 - **Live result:** on real Claude and OpenAI Agents calls, wrong records went **2 → 0** with Trueup's fixes, with **0 false alarms in 40 normal calls**.
 - **neatlogs' own daily email** said 6.2% of our test runs failed; really 11.1% (9 of 81) had crashed. [Every run](docs/neatlogs-email.md).
-- **Three pull requests sent:** [Arize-ai/openinference#4024](https://github.com/Arize-ai/openinference/pull/4024), [traceloop/openllmetry#4610](https://github.com/traceloop/openllmetry/pull/4610), [neatlogs/neatlogs#207](https://github.com/neatlogs/neatlogs/pull/207).
+- **Three pull requests sent:** [Arize-ai/openinference#4024](https://github.com/Arize-ai/openinference/pull/4024), [traceloop/openllmetry#4610](https://github.com/traceloop/openllmetry/pull/4610), [neatlogs/neatlogs#207](https://github.com/neatlogs/neatlogs/pull/207). neatlogs merged #207 on 13 Oct and fixed the other 16 findings in #218 on 15 Oct (see the entry below).
 - **Live demo:** [trueup.38-49-216-59.sslip.io/demo](https://trueup.38-49-216-59.sslip.io/demo).
 - Below is the dated build log, kept as written.
 
 neatHack, 10-12 Oct 2026.
+
+## 2026-10-15: after the event, fixes merged upstream
+
+Written after submission. No code changed; this records what the tool teams did with the findings.
+
+- **neatlogs [#207](https://github.com/neatlogs/neatlogs/pull/207) merged on 13 Oct.** A failed OpenAI Agents run now ends with an ERROR workflow span, not OK. On 14 Oct the neatlogs team carried the same commit, authorship kept, into [#217](https://github.com/neatlogs/neatlogs/pull/217) and added a CI job that runs its 6 tests on openai-agents 0.20.0 and 0.23.1.
+- **neatlogs [#218](https://github.com/neatlogs/neatlogs/pull/218) merged on 15 Oct.** Written by the neatlogs team from the 17 findings Trueup published (`evidence/findings/neatlogs-*`). They checked each one against `main` (1.4.26); #207 covers one, and #218 fixes the other 16: Anthropic `messages.stream()` recording no output, tokens or errors; OpenAI Responses failures reported in the body or the stream shown as OK; chat refusals recorded as empty replies. Their reviewer re-ran the 16 new tests. So all 17 neatlogs findings are fixed on neatlogs `main`. Not yet checked against a release.
+- **Traceloop [#4610](https://github.com/traceloop/openllmetry/pull/4610):** approved by a reviewer on 15 Oct, after the end-to-end test was added on 13 Oct. Not merged; maintainer review still required.
+- **Arize [#4024](https://github.com/Arize-ai/openinference/pull/4024):** both maintainer requests applied on 12 Oct (300 tests pass on agents 0.11.0 and 0.23.1). A reviewer added more failure cases on 13 Oct and found two follow-up cases. Not merged.
 
 ## 2026-10-12: findings became Neatlogs detections
 
